@@ -153,26 +153,10 @@
 
   // Approved, individually cropped game portraits. Reaction aliases map the
   // original dialogue cues to the six available facial expressions per person.
-  const expressionChoices = {
-    Stephen: ["neutral", "amused", "laughing", "confused", "annoyed", "exasperated"],
-    David: ["neutral", "confident", "serious", "frustrated", "shocked", "systems-expert"],
-    Paul: ["neutral", "confused", "concerned", "blank", "pleased", "missing-the-point"]
-  };
-  const expressionAliases = {
-    Stephen: { concerned: "exasperated", confident: "amused", frustrated: "annoyed", smug: "amused" },
-    David: { smug: "confident", concerned: "serious", confused: "shocked", annoyed: "frustrated", blank: "neutral" },
-    Paul: { amused: "pleased", laughing: "pleased", frustrated: "concerned", annoyed: "concerned", smug: "pleased", confident: "pleased" }
-  };
-  const expressionAssetRoot = "./public/assets/generated/characters/expressions/";
-  const baselineAssets = {
-    Stephen: "./public/assets/generated/characters/stephen-martin-baseline.webp",
-    David: "./public/assets/generated/characters/david-baseline.webp",
-    Paul: "./public/assets/generated/characters/paul-baseline.webp"
-  };
-  function portraitExpression(name, cue) {
-    const resolved = expressionAliases[name][cue] || cue;
-    return expressionChoices[name].includes(resolved) ? resolved : "neutral";
-  }
+  // D1 composition playtest: one human-approved, transparent seated sprite
+  // per actor. Keep reaction cues in the scene state for the future D2 pass,
+  // but never swap misaligned head-and-shoulder portraits into seated bodies.
+  // Static sprite file paths live in index.html for immediate/offline rendering.
 
   function renderOffice() {
     reveal("office");
@@ -209,15 +193,11 @@
       el.classList.toggle("is-listening", beat.speaker in cast && !active);
       const reactions = (window.SMP_REACTIONS && window.SMP_REACTIONS[shot.id] && window.SMP_REACTIONS[shot.id][state.lineIndex]) || {};
       const expression = reactions[name] || (active ? (beat.expression || "neutral") : "neutral");
-      const resolved = portraitExpression(name, expression);
-      el.dataset.expression = resolved;
-      const portrait = $("portrait" + name);
-      const asset = name.toLowerCase() + "-" + resolved;
-      if (portrait.dataset.assetKey !== asset) {
-        portrait.dataset.assetKey = asset;
-        portrait.src = expressionAssetRoot + asset + ".webp";
-        portrait.alt = name + " illustrated expression: " + resolved.replaceAll("-", " ");
-      }
+      // Cue metadata is preserved for aligned seated expression work in D2.
+      el.dataset.expression = expression;
+      el.dataset.staging = "seated-neutral";
+      // Only highlight the current speaker with a subtle CSS colour treatment;
+      // actors do not jump, stretch, re-crop or change image in this checkpoint.
     }
     persist();
     if (beat.sound) beep(beat.sound);
@@ -320,13 +300,13 @@
   });
 
   for (const name of Object.keys(cast)) {
+    const actor = cast[name];
     const portrait = $("portrait" + name);
     portrait.addEventListener("error", () => {
-      // An unavailable derivative must never block the playable scene.
-      if (!portrait.dataset.fallbackUsed) {
-        portrait.dataset.fallbackUsed = "true";
-        portrait.src = baselineAssets[name];
-      }
+      // Don't silently insert the old oversized portrait sheets if an asset
+      // fails to load; keep the scene and dialogue usable.
+      actor.dataset.assetMissing = "true";
+      portrait.hidden = true;
     });
   }
   setSound(false);
