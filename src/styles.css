@@ -208,3 +208,91 @@ button:active:not(:disabled) { transform: translateY(1px); }
 @media(prefers-reduced-motion:reduce){
   *, *::before, *::after {transition:none !important;animation:none !important;scroll-behavior:auto !important;}
 }
+
+
+/* GAME-SP1.1: entire-screen cutaways. Copy remains in the accessible dialogue panel. */
+.cutaway-panel {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  isolation: isolate;
+  background: radial-gradient(circle at 50% 20%, #377c8a, #142a3f 66%);
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  border-block: 5px solid #142537;
+}
+.cutaway-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .18;
+  background: repeating-linear-gradient(0deg, transparent 0 5px, #111e2d 6px 7px);
+}
+.cutaway-inner { width: min(100%, 700px); max-height: 100%; display: grid; justify-items: center; position: relative; }
+.cutaway-heading {
+  font: 900 clamp(12px, 2vw, 19px) Impact, "Arial Black", sans-serif;
+  letter-spacing: .09em;
+  color: #ffdb76;
+  background: #15283a;
+  border: 3px solid #f4cb5b;
+  padding: 4px 12px;
+  transform: rotate(-2deg);
+  z-index: 1;
+  margin-bottom: 8px;
+}
+.cutaway-laptop { width: min(84%, 480px); filter: drop-shadow(11px 10px 0 #071625); }
+.cutaway-screen { border: 11px solid #1c2737; border-radius: 10px; background: #fdf4dd; padding: 13px; display: grid; gap: 4px; color: #1c2c3a; min-height: 192px; }
+.cutaway-screen > span { font: 900 17px Impact,sans-serif; letter-spacing: .05em; }
+.cutaway-screen > strong { font: 900 clamp(26px, 4vw, 41px) Impact,sans-serif; line-height: 1; letter-spacing: .04em; }
+.cutaway-screen small { font-size: 9px; font-weight: 900; }
+.cutaway-risk-grid { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; align-items: center; margin: 7px 0; }
+.cutaway-risk-grid span { font-size: clamp(8px,1.1vw,12px); font-weight: 900; }
+.cutaway-risk-grid b { padding: 2px 6px; background: #ee6656; color: #fffde5; font-size: clamp(9px,1.4vw,14px); }
+.cutaway-keyboard { height: 27px; background: repeating-linear-gradient(0deg,#33475a 0 5px,#152333 6px 8px); border: 6px solid #1c2737; border-radius: 3px 3px 17px 17px; transform: perspective(95px) rotateX(26deg); }
+.cutaway-printer { width: min(85%, 420px); min-height: 215px; position: relative; margin-top: 10px; }
+.cutaway-printer-body { position: absolute; bottom: 0; left: 10%; width: 80%; height: 105px; background: linear-gradient(#d5dfdc 0 48%, #b4c7c4 49% 100%); border: 9px solid #263846; border-radius: 13px; box-shadow: 12px 12px 0 #091d2b; z-index: 3; display:flex; align-items:end; justify-content:space-between; padding: 12px 16px; color:#243a47; font:900 16px Impact,sans-serif; }
+.cutaway-printer-body::before { content:"";position:absolute;inset:12px 12px auto;height:14px;border-radius:4px;background:#283d4c; }
+.printer-light { width: 11px; height: 11px; border-radius: 100%; background: #40b67a; box-shadow: 0 0 12px #40b67a; }
+.cutaway-output-sheet { position: absolute; background: #fffbe9; color: #17293c; border: 3px solid #263846; width: 126px; height: 153px; top: 1%; left: 30%; display:grid; place-items:center; align-content:center; gap: 3px; font-size: 61px; z-index:2; box-shadow: 5px 4px 0 #183344; }
+.cutaway-output-sheet small { font-size: 9px; font-weight: 900; }
+.cutaway-output-sheet.sheet-one { transform: rotate(-12deg) translate(-18px,0); animation: paper-emerge 2.2s ease-out both; }
+.cutaway-output-sheet.sheet-two { transform: rotate(10deg) translate(22px,0); animation: paper-emerge 2.2s .25s ease-out both; }
+.cutaway-paper-stack { position:absolute;bottom:-5px;right:2%;color:var(--paper);font-size:30px;transform:rotate(12deg); }
+@keyframes paper-emerge { from { top:60%; opacity:.6 } to { top:1%; opacity:1 } }
+.cutaway-phone { background:#102337;border:11px solid #070f1d;border-radius:27px; width:min(70%,260px); min-height:240px; position:relative;box-shadow: 9px 9px 0 #0a1927; padding:14px 9px 9px; }
+.phone-notch {width:38%;height:9px;background:#070f1d;border-radius:0 0 15px 15px;position:absolute;top:-3px;left:31%}
+.phone-screen {background:#e7f4f0;color:#142d3d;border-radius:6px;padding:14px 10px 10px;min-height:196px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;}
+.phone-screen > small { font:900 9px system-ui;letter-spacing:.12em;color:#297c74; }
+.phone-screen > strong { font:900 22px Impact,"Arial Black",sans-serif;line-height:1.05; }
+.phone-screen > span { font:900 12px system-ui; }
+.phone-avatars { border-radius:14px;color:#fff;font:900 14px system-ui;background:#245d70;padding:8px 15px;letter-spacing:.3em; }
+.phone-message {background:#fff;border:2px solid #c4ddd9;border-radius:12px;padding:3px 10px;font-size:20px;}
+.phone-message span {display:block;font:800 8px system-ui;letter-spacing:0;}
+/* Motion and reaction emphasis use *approved reference art only* until new portraits are approved. */
+.cast-card[data-expression="confident"] .cast-portrait img,
+.cast-card[data-expression="smug"] .cast-portrait img { transform:scale(1.07) rotate(-1deg); }
+.cast-card[data-expression="frustrated"] .cast-portrait img,
+.cast-card[data-expression="annoyed"] .cast-portrait img { filter:saturate(1.1) contrast(1.15); transform:scale(1.04) rotate(1deg); }
+.cast-card[data-expression="blank"] .cast-portrait img { filter:saturate(.82); }
+.cast-card[data-expression="laughing"] .cast-portrait img,
+.cast-card[data-expression="amused"] .cast-portrait img { transform:scale(1.08);filter:brightness(1.08); }
+.cast-card[data-expression="concerned"] .cast-portrait img,
+.cast-card[data-expression="confused"] .cast-portrait img { transform:scale(1.025) rotate(1deg); }
+.cast-portrait img { transition: transform .28s ease, filter .28s ease; }
+@media(max-width:490px){
+ .cutaway-heading {font-size:11px;padding:3px 7px;}
+ .cutaway-printer {min-height:178px;}
+ .cutaway-output-sheet {width:92px;height:106px;font-size:39px;}
+ .cutaway-printer-body {height:80px;font-size:11px;bottom:4px;}
+ .cutaway-phone {width:190px;min-height:198px;padding:8px;}
+ .phone-screen {min-height:155px;}.phone-screen > strong{font-size:16px;}
+ .cutaway-screen {padding:7px;min-height:150px;border-width:7px;}
+ .cutaway-keyboard {height:16px;}
+ .cutaway-risk-grid {gap:2px;}
+ .dialogue-hint {display:inline-block;font-size:9px;max-width:125px;}
+ .dialogue-buttons {width:auto;margin-left:auto;}
+ .dialogue-buttons .btn-small {padding:9px 8px;font-size:12px;}
+}
+@media(prefers-reduced-motion:reduce){.cutaway-output-sheet { animation:none !important; } .cast-portrait img { transition:none !important; }}
