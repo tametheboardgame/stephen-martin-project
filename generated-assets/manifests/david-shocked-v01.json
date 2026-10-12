@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1ZX-VHX_BiYNOTWEyoKhhJ5OQxD7mo2Cd"
+  },
+  "expectedSourceName": "david-shocked-v01.webp",
+  "destination": "public/assets/generated/characters/expressions/david-shocked.webp",
+  "transform": {
+    "maxWidth": 800,
+    "maxHeight": 800,
+    "quality": 88
+  },
+  "revision": 1
+}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1YQyozsvNWMuEag_vc3LUi8PZ2iTVVPSc"
+  },
+  "expectedSourceName": "david-systems-expert-v01.webp",
+  "destination": "public/assets/generated/characters/expressions/david-systems-expert.webp",
+  "transform": {
+    "maxWidth": 800,
+    "maxHeight": 800,
+    "quality": 88
+  },
+  "revision": 1
+}

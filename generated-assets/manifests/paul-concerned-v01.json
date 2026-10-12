@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1WgFECFa3uushyCOtW6sWjdIq2fI7aNVv"
+  },
+  "expectedSourceName": "paul-concerned-v01.webp",
+  "destination": "public/assets/generated/characters/expressions/paul-concerned.webp",
+  "transform": {
+    "maxWidth": 800,
+    "maxHeight": 800,
+    "quality": 88
+  },
+  "revision": 1
+}

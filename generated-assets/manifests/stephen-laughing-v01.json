@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1hBTWrRXypcGulqkbeWvbajXu7OdPEAlK"
+  },
+  "expectedSourceName": "stephen-laughing-v01.webp",
+  "destination": "public/assets/generated/characters/expressions/stephen-laughing.webp",
+  "transform": {
+    "maxWidth": 800,
+    "maxHeight": 800,
+    "quality": 88
+  },
+  "revision": 1
+}

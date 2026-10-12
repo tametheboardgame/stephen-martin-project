@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "15RpXrXJlSOCaegKRDSWQ2xP_WPxdoOT6"
+  },
+  "expectedSourceName": "david-frustrated-v01.webp",
+  "destination": "public/assets/generated/characters/expressions/david-frustrated.webp",
+  "transform": {
+    "maxWidth": 800,
+    "maxHeight": 800,
+    "quality": 88
+  },
+  "revision": 1
+}

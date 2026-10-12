@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1fHmX1ZBi303l1_2wmgGZ-lReB0fn3oSK"
+  },
+  "expectedSourceName": "paul-missing-the-point-v01.webp",
+  "destination": "public/assets/generated/characters/expressions/paul-missing-the-point.webp",
+  "transform": {
+    "maxWidth": 800,
+    "maxHeight": 800,
+    "quality": 88
+  },
+  "revision": 1
+}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "10hG6BZmN3TsAaw990ms0makZHv-MFBLD"
+  },
+  "expectedSourceName": "stephen-exasperated-v01.webp",
+  "destination": "public/assets/generated/characters/expressions/stephen-exasperated.webp",
+  "transform": {
+    "maxWidth": 800,
+    "maxHeight": 800,
+    "quality": 88
+  },
+  "revision": 1
+}

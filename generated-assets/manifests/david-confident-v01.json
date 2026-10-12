@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1WB-2n_IMslmmYgBSWGg03LtSayTrnfUp"
+  },
+  "expectedSourceName": "david-confident-v01.webp",
+  "destination": "public/assets/generated/characters/expressions/david-confident.webp",
+  "transform": {
+    "maxWidth": 800,
+    "maxHeight": 800,
+    "quality": 88
+  },
+  "revision": 1
+}
