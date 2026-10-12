@@ -19,7 +19,7 @@
       5: { Paul: "blank", Stephen: "confused", David: "frustrated" },
       6: { Stephen: "confused", Paul: "blank" },
       7: { Paul: "blank", Stephen: "annoyed" },
-      8: { David: "smug", Stephen: "annoyed", Paul: "blank" }
+      8: { David: "smug", Stephen: "exasperated", Paul: "blank" }
     },
     O03: {
       0: { David: "smug", Stephen: "annoyed" },
@@ -42,7 +42,7 @@
       4: { Paul: "blank", David: "concerned", Stephen: "annoyed" },
       5: { Stephen: "annoyed", Paul: "blank" },
       6: { Paul: "pleased", Stephen: "annoyed" },
-      7: { Stephen: "annoyed", David: "concerned", Paul: "pleased" },
+      7: { Stephen: "exasperated", David: "concerned", Paul: "pleased" },
       8: { David: "frustrated", Paul: "blank" },
       9: { Paul: "blank", David: "frustrated" },
       10: { David: "frustrated" },
@@ -54,12 +54,12 @@
       0: { David: "smug", Stephen: "concerned" },
       1: { Stephen: "annoyed", David: "smug" },
       2: { Paul: "blank", David: "smug" },
-      3: { Stephen: "annoyed", David: "smug", Paul: "pleased" },
+      3: { Stephen: "exasperated", David: "smug", Paul: "pleased" },
       4: { Stephen: "confused", David: "smug" },
       5: { David: "smug", Stephen: "annoyed" },
       6: { Stephen: "concerned" },
       7: { Paul: "blank", Stephen: "concerned" },
-      8: { David: "confident", Stephen: "annoyed" },
+      8: { David: "confident", Stephen: "exasperated" },
       9: { Stephen: "annoyed", Paul: "blank" }
     },
     O06: {
@@ -68,7 +68,7 @@
       2: { Paul: "blank" },
       3: { Stephen: "confused" },
       4: { Paul: "blank", Stephen: "confused" },
-      5: { Stephen: "annoyed", David: "confident" },
+      5: { Stephen: "exasperated", David: "confident" },
       6: { David: "concerned", Paul: "blank" },
       7: { David: "concerned", Paul: "blank" },
       8: { David: "confident", Paul: "blank" },
