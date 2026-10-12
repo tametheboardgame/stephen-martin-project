@@ -40,6 +40,7 @@ jobs:
           test -f dist/src/reactions.js
           test -f dist/src/styles.css
           test -f dist/public/assets/generated/locations/office-clean-01-v01.webp
+          test -f dist/public/assets/generated/locations/office-foreground-01-v01.webp
           test -f dist/public/assets/generated/characters/david-office-seated-neutral-v01.webp
           test -f dist/public/assets/generated/characters/stephen-office-seated-neutral-v01.webp
           test -f dist/public/assets/generated/characters/paul-office-seated-neutral-v01.webp
