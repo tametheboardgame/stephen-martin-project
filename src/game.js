@@ -107,7 +107,7 @@
 
   function setSound(enabled) {
     soundEnabled = enabled;
-    for (const id of ["soundButton", "sceneSoundButton"]) {
+    for (const id of ["soundButton", "sceneSoundButton", "menuSoundButton"]) {
       const button = $(id);
       button.textContent = enabled ? "Sound: On" : "Sound: Off";
       button.setAttribute("aria-pressed", String(enabled));
@@ -286,6 +286,7 @@
   $("homeButton").addEventListener("click", showMenu);
   $("soundButton").addEventListener("click", () => setSound(!soundEnabled));
   $("sceneSoundButton").addEventListener("click", () => setSound(!soundEnabled));
+  $("menuSoundButton").addEventListener("click", () => setSound(!soundEnabled));
   $("playPauseButton").addEventListener("click", () => setAutoplay(!autoPlaying));
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
