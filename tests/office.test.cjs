@@ -334,6 +334,7 @@ test("D1D cinematic office fills laptop screen and keeps controls in-stage", () 
   assert.ok(css.includes("position: absolute;\n    z-index: 20"), "Scene toolbar must overlay the artwork");
   assert.ok(css.includes("body:has(#officeScreen:not([hidden])) .topbar"), "Old global header must be hidden during office scene");
   assert.ok(css.includes("1672px"), "Stage should grow toward its native resolution");
+  assert.ok(css.includes("177.68dvh - 128px"), "Use safe viewport arithmetic for image aspect ratio");
   assert.ok(html.includes('id="sceneSoundButton"'), "Sound remains accessible when global header is hidden");
   assert.ok(gameSource.includes('["soundButton", "sceneSoundButton"]'), "Both sound controls must stay synchronised");
 });
