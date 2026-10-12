@@ -31,7 +31,7 @@
 
 ## Next work package: SP-WP1.2
 
-Define the succinct story/comedy bible, individual speaking voices and the shared mystery with three compact endings. Keep the 15–25 minute game-length target and avoid premature game-engine or comic scope expansion.
+**Story/script approved by owner 12 October 2026:** `docs/story/SP-WP1.2-OFFICE-OPENING.md`, `docs/story/SP-WP1.2-GAME-TREATMENT.md`, and `docs/story/SP-WP1.2-IMPLEMENTATION-HANDOFF.md`. These detail a 3-minute scripted office opening, playable Stephen activity selection, a brief David-and-Paul rescue investigation, three small mini-games and respective cutscenes, all targeting 15–25 minutes. **All three stories, mini-games and the comic false-alarm reconstruction ending are approved for development.** SP-WP1.2 is complete. **Next: GAME-SP1**, a standalone playable three-minute office opening using existing approved character assets, advancing to a basic Stephen holiday placeholder. Preserve the 15–25 minute total target, the privacy boundary, and keep new artwork and engine complexity minimal.
 
 ## SP-WP1.2: Story and comedy bible (in progress)
 

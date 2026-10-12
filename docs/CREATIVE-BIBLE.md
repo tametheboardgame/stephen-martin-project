@@ -25,6 +25,15 @@ Stephen travels to China, then becomes unexpectedly difficult to locate. David a
 ## Continuity and framing
 The game, song and optional comic use shared character designs and recognisable recurring jokes. Tone is satire; the story is not a factual allegation about real people or groups. Sexual innuendo and cartoon darkness may appear, but all suggestive characters must be adults and no explicit sexual depiction of real people should be created.
 
+## SP-WP1.2 story-script proposal (pending owner review)
+
+**Approved story and implementation baselines (12 October 2026)** are in:
+- `docs/story/SP-WP1.2-OFFICE-OPENING.md`: timed shot-by-shot office cutscene and complete dialogue.
+- `docs/story/SP-WP1.2-GAME-TREATMENT.md`: player-as-Stephen route selection, David/Paul rescue, A/B/C mini-game and ending scripts.
+- `docs/story/SP-WP1.2-IMPLEMENTATION-HANDOFF.md`: simple scene graph, game state, assets, acceptance checks and fast-build units.
+
+Do not describe fictional companion/family events as real facts. The central route selector is Stephen's fictional choice of holiday activity; David and Paul interpret his clipped messages as evidence of kidnapping. Keep the target runtime 15–25 minutes. These scenes are approved canon for the first game build. Changes to route structure, endings or privacy commitments require owner review.
+
 ## Remaining SP-WP1.2 decisions
 - Define Paul's distinct speaking voice and personality beyond his approved deadpan visual reactions.
 - Clear short mystery progression, recurring jokes and three ending beats.
