@@ -2,6 +2,14 @@
 
 **Status:** Stephen, David and Paul visual baselines approved and committed under SP-WP1.1. Personality, dialogue and short narrative to be developed under SP-WP1.2.
 
+## Privacy and reality-versus-fiction policy
+
+Only **Stephen Martin** may appear as a real-world full name. David and Paul are first-name fictional character labels; no surnames, specific employer or office name, real travel dates, identifiable addresses, profiles or names of partners and relatives may enter the story, lyric drafts, comic dialogue, artwork metadata or publication materials.
+
+The game uses a fictionalised holiday, invented romantic complications and fictional family/spy-thriller misunderstandings. No private details of real relationships, sexuality disclosures or relatives' awareness are established facts in the story bible. Any family visit, romantic relationship, disappearance, detention, cult or organ-market claim must be unmistakably comedic fiction, not reporting about a real person. Avoid replicating verbatim private messages.
+
+The approved stylised character portraits remain the visual baseline, but public display of real-name artwork cannot be called anonymous. Perform a privacy check before publication.
+
 ## Tone
 Adult absurdist British comedy, knowingly ridiculous international-espionage parody. The running gag is that David and Paul think they are action heroes but lack most of the necessary skills. Keep it funny, short and overtly fictional.
 
