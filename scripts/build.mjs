@@ -46,11 +46,16 @@ for (const name of expectedNames) {
 }
 // The background is separate from all three actors, allowing a matching
 // foreground desk layer without flattening characters or interactive controls.
-const officeBackground = "public/assets/generated/locations/office-clean-01-v01.webp";
-const officeSource = path.join(root, officeBackground);
-if (!(await stat(officeSource)).size) throw new Error("Missing approved office background");
-await mkdir(path.dirname(path.join(output, officeBackground)), { recursive: true });
-await copyFile(officeSource, path.join(output, officeBackground));
+const officeImages = [
+  "public/assets/generated/locations/office-clean-01-v01.webp",
+  "public/assets/generated/locations/office-foreground-01-v01.webp"
+];
+for (const relative of officeImages) {
+  const officeSource = path.join(root, relative);
+  if (!(await stat(officeSource)).size) throw new Error("Missing office layer: " + relative);
+  await mkdir(path.dirname(path.join(output, relative)), { recursive: true });
+  await copyFile(officeSource, path.join(output, relative));
+}
 
 console.log("Cloudflare Pages static output: dist/");
-console.log("Only game HTML, scripts, styles, approved background, 3 seated sprites, approved base portraits and 18 expression WebPs were included.");
+console.log("Only game HTML, scripts, styles, approved background and separate foreground desk, 3 seated sprites, approved base portraits and 18 expression WebPs were included.");
