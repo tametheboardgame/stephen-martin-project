@@ -417,3 +417,67 @@ test("D1E start and saved-game continuation work from floating action panel", ()
   assert.equal(el("officeScreen").hidden, false);
   assert.equal(el("lineText").textContent, "Quite.");
 });
+
+
+test("D2 Stephen seated neutral/amused pair is alpha-preserving, canvas-aligned and shipped", () => {
+  const neutralPath = "public/assets/generated/characters/stephen-office-seated-neutral-v01.webp";
+  const amusedPath = "public/assets/generated/characters/stephen-office-seated-amused-v01.webp";
+  const getWebpDimensions = (relative) => {
+    const bytes = fs.readFileSync(path.join(root, relative));
+    assert.equal(bytes.toString("ascii", 0, 4), "RIFF");
+    assert.equal(bytes.toString("ascii", 8, 16), "WEBPVP8X");
+    assert.ok((bytes[20] & 0x10) !== 0, "Transparent WebP alpha required: " + relative);
+    return [bytes.readUIntLE(24, 3) + 1, bytes.readUIntLE(27, 3) + 1];
+  };
+  assert.deepEqual(getWebpDimensions(amusedPath), getWebpDimensions(neutralPath));
+  assert.deepEqual(getWebpDimensions(amusedPath), [1086, 1448]);
+  assert.ok(read("scripts/build.mjs").includes("stephen-office-seated-amused-v01.webp"));
+  assert.ok(html.includes('id="portraitStephenAmused"'));
+  const css = read("src/styles.css");
+  assert.ok(css.includes('#castStephen[data-seated-sprite="amused"] #portraitStephenAmused'));
+  assert.ok(css.includes("prefers-reduced-motion: reduce"));
+});
+
+test("D2 Stephen reaction cues render amused and fallback neutral, without disturbing other actors", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  el("startButton").click();
+  assert.equal(el("castStephen").dataset.expression, "amused");
+  assert.equal(el("castStephen").dataset.seatedSprite, "amused");
+  el("nextButton").click();
+  assert.equal(el("castStephen").dataset.seatedSprite, "amused");
+  el("nextButton").click();
+  assert.equal(el("castStephen").dataset.expression, "confused");
+  assert.equal(el("castStephen").dataset.seatedSprite, "neutral");
+  assert.equal(el("castDavid").dataset.staging, "seated-neutral");
+  assert.equal(el("castPaul").dataset.staging, "seated-neutral");
+  el("backButton").click();
+  assert.equal(el("castStephen").dataset.seatedSprite, "amused");
+});
+
+test("D2 Stephen manual A/B cycles Auto Neutral Amused without changing dialogue or autoplay", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  el("startButton").click();
+  const baselineText = el("lineText").textContent;
+  const pendingTimerCount = p.timeouts.size;
+  assert.equal(el("castStephen").dataset.seatedSprite, "amused");
+  el("stephenProofButton").click();
+  assert.equal(el("castStephen").dataset.seatedSprite, "neutral");
+  assert.match(el("stephenProofButton").textContent, /Neutral/);
+  el("stephenProofButton").click();
+  assert.equal(el("castStephen").dataset.seatedSprite, "amused");
+  el("stephenProofButton").click();
+  assert.equal(el("castStephen").dataset.seatedSprite, "amused"); // auto cue: O01:0
+  assert.match(el("stephenProofButton").textContent, /Auto/);
+  assert.equal(el("lineText").textContent, baselineText);
+  assert.equal(p.timeouts.size, pendingTimerCount);
+  assert.equal(el("playPauseButton").attributes["aria-pressed"], "true");
+  // Manual override persists across dialogue changes until changed again.
+  el("stephenProofButton").click();
+  el("stephenProofButton").click();
+  el("nextButton").click();
+  el("nextButton").click();
+  assert.equal(el("castStephen").dataset.expression, "confused");
+  assert.equal(el("castStephen").dataset.seatedSprite, "amused");
+});
