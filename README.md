@@ -31,6 +31,22 @@ The approved full office dialogue and short intro are implemented as a **small s
 
 Alternatively, with Node.js installed, run `npm start` in the repository folder and open `http://localhost:8080/`. This serves only from `127.0.0.1` on your machine and does not publish the preview. Use `npm run verify` for the small syntax and story-flow tests.
 
+### Cloudflare Pages deployment settings
+
+The static game is intentionally built without a third-party framework. **Use GitHub-integrated Cloudflare Pages, not Workers:**
+
+- Project name: `stephen-martin-project`
+- Production branch: `main` **after the approved game preview PR has merged**. Until then, the current game files and `npm run build` command exist **only** on the `agent/game-sp1-office-vertical-slice` branch; a first production deployment of `main` cannot build the game.
+- Framework preset: **None**
+- Build command: `npm run build`
+- Build output directory: `dist` (no leading slash)
+- Root directory: leave blank (repository root)
+- No environment variables, secrets or install/build preset are required.
+
+The build copies only `index.html`, game scripts/CSS and the three approved character WebP files to `dist/`. Do not set output to the repository root, which would also serve project planning documents and other development artefacts. Previews from PR branches are for review. Do not publish unreleased private details in project copy, metadata or screenshots; Cloudflare preview URLs may be publicly accessible unless access protection is configured.
+
+**If you need a working Cloudflare site before merging:** temporarily set the production branch to `agent/game-sp1-office-vertical-slice` (this is a public web deployment), or wait for review and the merge to `main`. Change the production branch back to `main` when ready for normal release management.
+
 **Controls:** Next/Back, click the dialogue box to advance, Space/Enter/right arrow advance when a button is not focused, left arrow goes back. Restart, Skip intro, Sound on/off and Resume are available. Skipping or completing the intro takes you to a clearly marked **Stephen holiday placeholder**. The actual holiday choice, rescue investigation and three mini-games are reserved for the next approved build packets.
 
 **Story scripts and build handoff:** `docs/story/SP-WP1.2-OFFICE-OPENING.md`, `docs/story/SP-WP1.2-GAME-TREATMENT.md`, `docs/story/SP-WP1.2-IMPLEMENTATION-HANDOFF.md`.
