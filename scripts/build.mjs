@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const output = path.join(root, "dist");
-const files = ["index.html", "src/office-data.js", "src/game.js", "src/styles.css"];
+const files = ["index.html", "src/office-data.js", "src/reactions.js", "src/game.js", "src/styles.css"];
 const imageSource = "public/assets/generated/characters";
 const images = ["stephen-martin-baseline.webp", "david-baseline.webp", "paul-baseline.webp"];
 
