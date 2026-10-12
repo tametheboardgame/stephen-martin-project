@@ -50,6 +50,13 @@
 - Cheap local `npm run verify` syntax and behaviour tests run in a dedicated GitHub Actions workflow. It packages a self-contained office-preview archive after a successful smoke run.
 - **Gate cleared:** owner approved the office preview and explicitly requested merge to `main`. Check public Cloudflare build and owner feedback after merging. Do not silently start all three game routes.
 
+## GAME-SP1.1: Opening polish pass (in development)
+
+- **Owner-approved scope:** Autoplay by default, manual Pause/Play/Next/Back, per-line timing and timer safeguards; expressive character reactions; comic close-ups for risk assessment, printer and rescue chat.
+- **Working branch:** `agent/game-sp1.1-opening-polish`, separate from the deployed, owner-approved GAME-SP1 on `main`. Do **not** merge while new character art/cutaways await visual sign-off.
+- **Execution:** A) timer and controls; B) small individually human-reviewed Stephen/David/Paul expression variants; C) three cutaways and transitions; D) focused CI and hosted branch preview, then approval.
+- **Next after polish:** GAME-SP2, Stephen's selectable holiday and shared rescue investigation. Maintain the 15–25 minute total scope and fictional/non-identifying character rule.
+
 ## Operating notes
 
 - Keep changes small and reviewable in short-lived feature branches.
