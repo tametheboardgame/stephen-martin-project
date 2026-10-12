@@ -22,7 +22,7 @@
 **Human gate required for each new likeness.**
 
 1. Confirm Stephen's approved character sheet remains the anchor.
-2. **David design approved:** 6 ft 2 in, bald, blue eyes, short dark ginger/auburn beard. Original `david-character-baseline-v01.png` in Drive (`1DJLH4ni0z81_SMrslKx99z_U2agTm8vS`); manifest at `generated-assets/manifests/character-david-baseline.json`; target `public/assets/generated/characters/david-baseline.webp`. Generated asset materialisation and branch merge are being finalised.
+2. **David design approved:** 6 ft 2 in, bald, blue eyes, short dark ginger/auburn beard. Original `david-character-baseline-v01.png` in Drive (`1DJLH4ni0z81_SMrslKx99z_U2agTm8vS`); manifest at `generated-assets/manifests/character-david-baseline.json`; target `public/assets/generated/characters/david-baseline.webp`. The asset was materialised successfully by GitHub Actions run `38225490240`. Output `public/assets/generated/characters/david-baseline.webp` has blob SHA `0324afa1d3dee0a070701a31bc210c529c6061a4`, matching an independent WebP conversion from the approved PNG. Approved David art and canon are ready for merge.
 3. **Next:** obtain visual references for Paul and generate/review his comic character sheet.
 4. Create concise canonical appearance/personality notes and register approved assets using the Drive pipeline.
 5. Define/design a fictionalised boyfriend when story requirements justify it, keeping the mystery ambiguous.
