@@ -285,3 +285,11 @@ test("D1 scene keeps speaker text, transport and cutaways separate from the art"
   assert.ok(html.includes('id="cutawayPanel"'));
   assert.ok(read("src/styles.css").includes("max-width: 650px"), "Touch layout must keep dialogue below art");
 });
+
+test("D1A desk asset is a real alpha WebP, not an opaque flattened scene", () => {
+  const desk = fs.readFileSync(path.join(root, "public/assets/generated/locations/office-foreground-01-v01.webp"));
+  assert.equal(desk.toString("ascii", 0, 4), "RIFF");
+  assert.equal(desk.toString("ascii", 8, 12), "WEBP");
+  assert.equal(desk.toString("ascii", 12, 16), "VP8X", "Transparent WebP must have VP8X metadata");
+  assert.ok((desk[20] & 0x10) !== 0, "Foreground WebP must retain alpha transparency");
+});
