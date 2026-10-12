@@ -481,8 +481,8 @@ button:active:not(:disabled) { transform: translateY(1px); }
 /*
  * GAME-SP1.1-D1 composition checkpoint.
  * Real, individually approved layers: backdrop + 3 transparent actor sprites +
- * foreground desk (the same backdrop image clipped to the desk area).
- * D1 is static-neutral staging: expression cues are retained but do not change
+ * independent transparent foreground desk + props overlay.
+ * D1A tests the foreground layer: expression cues are retained but do not change
  * these differently registered seated sprites.
  */
 #officeScreen .stage {
@@ -498,7 +498,6 @@ button:active:not(:disabled) { transform: translateY(1px); }
   inset: 0;
   width: 100%;
   height: 100%;
-  background-image: url("../public/assets/generated/locations/office-clean-01-v01.webp");
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
@@ -506,11 +505,12 @@ button:active:not(:disabled) { transform: translateY(1px); }
 }
 #officeScreen .office-scene-backdrop {
   z-index: 0;
+  background-image: url("../public/assets/generated/locations/office-clean-01-v01.webp");
 }
 #officeScreen .office-scene-backdrop::after { display: none; }
 #officeScreen .office-foreground {
   z-index: 4;
-  clip-path: inset(67.4% 0 0 0);
+  background-image: url("../public/assets/generated/locations/office-foreground-01-v01.webp");
 }
 /* Individually positioned actors; no portrait cards or artificial cropping. */
 #officeScreen .cast-seated {
@@ -623,7 +623,6 @@ button:active:not(:disabled) { transform: translateY(1px); }
     min-height: 2.3em;
     overflow: visible;
   }
-  #officeScreen .office-foreground { clip-path: inset(67.4% 0 0 0); }
 }
 @media (prefers-reduced-motion: reduce) {
   #officeScreen .cast-seated .cast-actor { transition: none; }
