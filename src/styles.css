@@ -476,3 +476,155 @@ button:active:not(:disabled) { transform: translateY(1px); }
 @media(prefers-reduced-motion:reduce) {
  .cast-card, .cast-portrait img {transition:none!important;}
 }
+
+
+/*
+ * GAME-SP1.1-D1 composition checkpoint.
+ * Real, individually approved layers: backdrop + 3 transparent actor sprites +
+ * foreground desk (the same backdrop image clipped to the desk area).
+ * D1 is static-neutral staging: expression cues are retained but do not change
+ * these differently registered seated sprites.
+ */
+#officeScreen .stage {
+  aspect-ratio: 1672 / 941;
+  height: auto;
+  min-height: 0;
+  background: #89bfcd;
+}
+#officeScreen .stage::after { display: none; }
+#officeScreen .office-scene-backdrop,
+#officeScreen .office-foreground {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("../public/assets/generated/locations/office-clean-01-v01.webp");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none;
+}
+#officeScreen .office-scene-backdrop {
+  z-index: 0;
+}
+#officeScreen .office-scene-backdrop::after { display: none; }
+#officeScreen .office-foreground {
+  z-index: 4;
+  clip-path: inset(67.4% 0 0 0);
+}
+/* Individually positioned actors; no portrait cards or artificial cropping. */
+#officeScreen .cast-seated {
+  position: absolute;
+  inset: 0;
+  display: block;
+  z-index: 2;
+  pointer-events: none;
+}
+#officeScreen .cast-seated .cast-actor {
+  position: absolute;
+  bottom: 18%;
+  width: 30%;
+  max-width: none;
+  margin: 0;
+  filter: none;
+  opacity: 1;
+  transform: none;
+  transition: filter 140ms ease;
+}
+#officeScreen .cast-seated #castDavid { left: 3.5%; }
+#officeScreen .cast-seated #castStephen { left: 35%; width: 30%; }
+#officeScreen .cast-seated #castPaul { right: 3.5%; }
+#officeScreen .cast-seated .actor-portrait {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1086 / 1448;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+#officeScreen .cast-seated .actor-portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  transform: none !important;
+  filter: none !important;
+  transition: none !important;
+}
+#officeScreen .cast-seated .cast-actor figcaption { display: none; }
+#officeScreen .cast-seated .cast-actor.is-listening {
+  opacity: .94;
+  transform: none;
+  filter: saturate(.94);
+}
+#officeScreen .cast-seated .cast-actor.is-speaking {
+  opacity: 1;
+  transform: none;
+  filter: saturate(1.07) brightness(1.03);
+}
+#officeScreen .stage[data-moment="title"] .office-foreground { opacity: .19; }
+#officeScreen .stage[data-cutaway]:not([data-cutaway="none"]) .cast-seated {
+  visibility: hidden;
+}
+#officeScreen .dialogue {
+  bottom: 2%;
+  left: 2%;
+  width: min(72%, 760px);
+  z-index: 9;
+}
+#officeScreen .scene-effect { z-index: 6; }
+#officeScreen .cutaway-panel { z-index: 7; }
+@media (max-width: 650px) {
+  /* Keep the complete widescreen picture, put live dialogue underneath rather
+   * than covering small faces on touch screens. */
+  #officeScreen .stage {
+    display: block;
+    aspect-ratio: auto;
+    height: auto;
+  }
+  #officeScreen .stage::before {
+    content: "";
+    display: block;
+    padding-top: 56.28%;
+  }
+  #officeScreen .office-scene-backdrop,
+  #officeScreen .office-foreground,
+  #officeScreen .cast-seated {
+    inset: 0 0 auto 0;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1672 / 941;
+  }
+  #officeScreen .cutaway-panel {
+    inset: 0 0 auto 0;
+    aspect-ratio: 1672 / 941;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    padding: 3px;
+  }
+  #officeScreen .scene-effect { top: 1%; right: 2%; max-width: 32%; }
+  #officeScreen .dialogue {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+    min-height: 0;
+    box-shadow: none;
+  }
+  #officeScreen .dialogue-header { top: -29px; }
+  #officeScreen .dialogue-text {
+    max-height: none;
+    min-height: 2.3em;
+    overflow: visible;
+  }
+  #officeScreen .office-foreground { clip-path: inset(67.4% 0 0 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #officeScreen .cast-seated .cast-actor { transition: none; }
+}
