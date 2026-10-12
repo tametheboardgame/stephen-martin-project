@@ -373,6 +373,7 @@ test("D1E menu overlays real office art, not three stacked page sections", () =>
   const menu = html.slice(menuStart, menuEnd);
   assert.ok(menu.includes('class="menu-office-art"'), "Approved scenery should be one contained layer");
   assert.ok(menu.includes('class="menu-hero-title"'), "Menu needs a floating title");
+  assert.ok(menu.includes('class="menu-hero-tagline"'), "Subtitle must sit on the desk, away from faces");
   assert.ok(menu.includes('class="menu-hero-actions"'), "Start/Continue must be in a floating desk panel");
   assert.ok(menu.includes('id="menuSoundButton"'), "Sound control must be reachable when old topbar is hidden");
   assert.ok(!menu.includes('class="menu-office-heading"'), "Old stacked heading should be removed");
