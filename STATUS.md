@@ -27,7 +27,11 @@
 4. Main-character appearance references are recorded in `docs/CREATIVE-BIBLE.md` and `docs/ART-DIRECTION.md`; approved art is registered in the manifests.
 5. Define/design a fictionalised boyfriend when story requirements justify it, keeping the mystery ambiguous.
 
-**Status:** All three principal character baselines (Stephen, David and Paul) are approved and committed to `main`. SP-WP1.1 main-character visual baseline complete. The boyfriend's fictional appearance remains deliberately deferred until needed by the story.\n\n## Next work package: SP-WP1.2\n\nDefine the succinct story/comedy bible, individual speaking voices and the shared mystery with three compact endings. Keep the 15–25 minute game-length target and avoid premature game-engine or comic scope expansion.
+**Status:** All three principal character baselines (Stephen, David and Paul) are approved and committed to `main`. SP-WP1.1 main-character visual baseline complete. The boyfriend's fictional appearance remains deliberately deferred until needed by the story.
+
+## Next work package: SP-WP1.2
+
+Define the succinct story/comedy bible, individual speaking voices and the shared mystery with three compact endings. Keep the 15–25 minute game-length target and avoid premature game-engine or comic scope expansion.
 
 ## Operating notes
 
