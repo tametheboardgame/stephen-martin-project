@@ -433,6 +433,12 @@ test("D2 Stephen seated neutral/amused pair is alpha-preserving, canvas-aligned 
   assert.deepEqual(getWebpDimensions(amusedPath), [1086, 1448]);
   assert.ok(read("scripts/build.mjs").includes("stephen-office-seated-amused-v01.webp"));
   assert.ok(html.includes('id="portraitStephenAmused"'));
+  assert.ok(html.includes("stephen-office-seated-amused-v01.webp?v=3"), "Updated v03 image must bypass cached proof v01");
+  const manifest = JSON.parse(read("generated-assets/manifests/stephen-office-seated-amused-v01.json"));
+  assert.equal(manifest.revision, 2);
+  assert.equal(manifest.expectedSourceName, "stephen-office-seated-amused-d2-v03.png");
+  assert.equal(manifest.destination, amusedPath);
+
   const css = read("src/styles.css");
   assert.ok(css.includes('#castStephen[data-seated-sprite="amused"] #portraitStephenAmused'));
   assert.ok(css.includes("prefers-reduced-motion: reduce"));
