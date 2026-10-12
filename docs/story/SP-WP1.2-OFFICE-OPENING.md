@@ -1,6 +1,6 @@
 # SP-WP1.2: Opening office cutscene, complete first-pass script
 
-**Status:** Working script, not yet human-approved.  
+**Status:** **Approved by project owner 12 October 2026** as GAME-SP1 opening baseline. Dialogue may be tightened during human playtesting without silently changing the approved story structure.  
 **Screen ID:** OFFICE-INTRO  
 **Target runtime:** 2 minutes 45 seconds to 3 minutes 30 seconds, skippable.  
 **Input:** Click/tap to advance dialogue; optional skip / replay from menu.  
