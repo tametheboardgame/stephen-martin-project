@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1hyPFE9weHJOONeJWT5IWTKaKINPbUW_Y"
+  },
+  "expectedSourceName": "office-clean-01-approved-v01.png",
+  "destination": "public/assets/generated/locations/office-clean-01-v01.webp",
+  "transform": {
+    "maxWidth": 1920,
+    "maxHeight": 1080,
+    "quality": 90
+  },
+  "revision": 1
+}
