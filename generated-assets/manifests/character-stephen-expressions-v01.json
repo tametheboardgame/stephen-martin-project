@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1ds0NaYTXQl2c-mQFgeJ6YZt0Lv8VFVZW"
+  },
+  "expectedSourceName": "stephen-expressions-v01.png",
+  "destination": "public/assets/generated/characters/stephen-expressions-sheet-v01.webp",
+  "transform": {
+    "maxWidth": 1600,
+    "maxHeight": 1600,
+    "quality": 88
+  },
+  "revision": 1
+}
