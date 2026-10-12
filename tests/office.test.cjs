@@ -30,13 +30,29 @@ test("approved office script is complete and ordered", () => {
   assert.ok(shots.some((s) => s.lines.some((b) => b.text.includes("Yet."))));
 });
 
-test("cinematic cast starts with approved individual neutral portraits and has fallback", () => {
-  for (const character of ["stephen", "david", "paul"]) {
-    assert.ok(html.includes("public/assets/generated/characters/expressions/" + character + "-neutral.webp"));
+test("D1 stages the four approved layers, not oversized expression cards", () => {
+  const assets = [
+    "public/assets/generated/locations/office-clean-01-v01.webp",
+    "public/assets/generated/locations/office-foreground-01-v01.webp",
+    ...["david", "stephen", "paul"].map((name) =>
+      "public/assets/generated/characters/" + name + "-office-seated-neutral-v01.webp"
+    )
+  ];
+  for (const asset of assets) {
+    assert.ok(fs.statSync(path.join(root, asset)).size > 0, "Missing approved asset " + asset);
+    assert.ok(read("scripts/build.mjs").includes(asset.split("/").at(-1)));
   }
-  for (const filename of ["stephen-martin-baseline.webp", "david-baseline.webp", "paul-baseline.webp"]) {
-    assert.ok(gameSource.includes("public/assets/generated/characters/" + filename));
+  for (const name of ["David", "Stephen", "Paul"]) {
+    assert.ok(html.includes('id="portrait' + name + '"'));
+    assert.ok(html.includes('id="cast' + name + '"'));
   }
+  assert.ok(html.includes('class="office-world office-scene-backdrop"'));
+  assert.ok(html.includes('class="office-foreground"'));
+  assert.ok(html.includes('class="cast cast-seated"'));
+  assert.ok(!html.includes('class="cast-portrait"'), "Legacy giant-face card still present");
+  const css = read("src/styles.css");
+  assert.ok(css.includes('office-foreground-01-v01.webp'), "Foreground must use independent transparent asset");
+  assert.ok(!css.includes("clip-path: inset(67.4%"), "Clipped-background workaround must not survive");
   assert.ok(!html.includes("http://") && !html.includes("https://"));
   assert.ok(!gameSource.includes("fetch(") && !gameSource.includes("XMLHttpRequest"));
   assert.ok(html.indexOf('id="dialogueBox"') < html.indexOf('id="storyProgress"'));
@@ -220,19 +236,23 @@ test("reaction cues and three cutaways are registered without unapproved portrai
   assert.ok(!reactionSource.includes("http"));
 });
 
-test("approved portrait files change for both speakers and listening characters", () => {
+test("static seated actors preserve speaker and listener expression metadata across the whole intro", () => {
   const p = setupFakeGame();
   const el = p.getElementById;
   el("startButton").click();
-  assert.ok(el("portraitPaul").src.endsWith("/paul-blank.webp"), "Paul starts with deadpan reaction");
-  assert.ok(el("portraitStephen").src.endsWith("/stephen-amused.webp"), "Stephen reacts as listener");
-  // O02 begins after four beats in O01. David enters with a serious assessment.
+  assert.equal(el("castPaul").dataset.expression, "blank");
+  assert.equal(el("castStephen").dataset.expression, "amused");
+  assert.equal(el("castDavid").dataset.staging, "seated-neutral");
   for (let i = 0; i < 5; i++) el("nextButton").click();
-  assert.ok(el("portraitDavid").src.endsWith("/david-confident.webp"));
-  assert.ok(el("portraitStephen").src.endsWith("/stephen-confused.webp"));
-  assert.ok(el("portraitPaul").src.endsWith("/paul-blank.webp"));
   assert.equal(el("castDavid").dataset.expression, "confident");
   assert.equal(el("castStephen").dataset.expression, "confused");
+  assert.equal(el("castPaul").dataset.expression, "blank");
+  assert.equal(el("castDavid").dataset.staging, "seated-neutral");
+  // D1 deliberately does not splice close-up facial images onto the seated bodies.
+  assert.ok(!gameSource.includes("portrait.src = expressionAssetRoot"));
+  assert.equal(el("portraitDavid").src, undefined);
+  assert.equal(el("portraitStephen").src, undefined);
+  assert.equal(el("portraitPaul").src, undefined);
 });
 
 test("a visual cutaway leaves the dialogue text and manual controls interactive", () => {
@@ -249,4 +269,151 @@ test("a visual cutaway leaves the dialogue text and manual controls interactive"
   el("nextButton").click();
   assert.equal(el("cutawayPanel").hidden, true);
   assert.equal(el("lineText").textContent, "You've done what?");
+});
+
+test("D1 scene keeps speaker text, transport and cutaways separate from the art", () => {
+  const stage = html.indexOf('id="stage"');
+  const david = html.indexOf('id="castDavid"');
+  const stephen = html.indexOf('id="castStephen"');
+  const paul = html.indexOf('id="castPaul"');
+  const foreground = html.indexOf('class="office-foreground"');
+  const dialog = html.indexOf('id="dialogueBox"');
+  const progress = html.indexOf('id="storyProgress"');
+  const controls = html.indexOf('id="playPauseButton"');
+  assert.ok(stage < david && david < stephen && stephen < paul);
+  assert.ok(paul < foreground && foreground < dialog && dialog < progress && progress < controls);
+  assert.ok(html.includes('id="cutawayPanel"'));
+  assert.ok(read("src/styles.css").includes("max-width: 650px"), "Touch layout must keep dialogue below art");
+});
+
+test("D1A desk asset is a real alpha WebP, not an opaque flattened scene", () => {
+  const desk = fs.readFileSync(path.join(root, "public/assets/generated/locations/office-foreground-01-v01.webp"));
+  assert.equal(desk.toString("ascii", 0, 4), "RIFF");
+  assert.equal(desk.toString("ascii", 8, 12), "WEBP");
+  assert.equal(desk.toString("ascii", 12, 16), "VP8X", "Transparent WebP must have VP8X metadata");
+  assert.ok((desk[20] & 0x10) !== 0, "Foreground WebP must retain alpha transparency");
+});
+
+test("D1C menu and office share the real approved art and fit laptop viewport", () => {
+  const css = read("src/styles.css");
+  assert.ok(html.includes('class="screen menu-screen menu-office-screen"'), "Old abstract menu has not been replaced");
+  assert.ok(!html.includes('class="menu-circle"'), "Old abstract artwork survived");
+  assert.ok(html.includes('class="menu-office-stage"'));
+  for (const name of ["david", "stephen", "paul"]) {
+    assert.ok(html.includes('class="menu-office-actor menu-office-' + name + '"'), "Menu actor missing: " + name);
+  }
+  assert.ok(css.includes('.game-shell:has(#officeScreen:not([hidden]))'), "Office viewport fit missing");
+  assert.ok(css.includes('.game-shell:has(#menuScreen:not([hidden]))'), "Menu viewport fit missing");
+  assert.ok(css.includes("177.68dvh - 128px"), "Cinematic office must size from viewport height with minimal transport reserve");
+  assert.ok(css.includes("100dvh - 253px"), "Menu must reserve height for title and start controls");
+  assert.ok(!css.includes("max(760px"), "Old minimum width forced unnecessary scrolling on small laptops");
+  assert.ok(css.includes("aspect-ratio: 1672 / 941"), "Preserve foreground and background registration");
+  assert.ok(css.includes("max-width: 650px"), "Keep mobile stacked layout");
+  assert.ok(gameSource.includes('typeof window.scrollTo === "function"'), "Screen changes must reset inherited scroll");
+  for (const asset of ["office-clean-01-v01.webp", "office-foreground-01-v01.webp"]) {
+    assert.ok(css.includes(asset), "Office layer missing " + asset);
+  }
+});
+
+test("entire existing intro remains playable with the rebuilt title screen", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  el("startButton").click();
+  assert.equal(el("officeScreen").hidden, false);
+  for (let i = 0; i < 64; i++) el("nextButton").click();
+  assert.equal(el("holidayScreen").hidden, false);
+  el("homeButton").click();
+  assert.equal(el("menuScreen").hidden, false);
+  el("replayButton").click();
+  assert.equal(el("lineText").textContent, "Is China far?");
+});
+
+test("D1D cinematic office fills laptop screen and keeps controls in-stage", () => {
+  const css = read("src/styles.css");
+  assert.ok(css.includes("GAME-SP1.1-D1D: cinematic viewport composition"));
+  assert.ok(css.includes("position: absolute;\n    z-index: 20"), "Scene toolbar must overlay the artwork");
+  assert.ok(css.includes("body:has(#officeScreen:not([hidden])) .topbar"), "Old global header must be hidden during office scene");
+  assert.ok(css.includes("1672px"), "Stage should grow toward its native resolution");
+  assert.ok(css.includes("177.68dvh - 128px"), "Use safe viewport arithmetic for image aspect ratio");
+  assert.ok(html.includes('id="sceneSoundButton"'), "Sound remains accessible when global header is hidden");
+  assert.ok(gameSource.includes('["soundButton", "sceneSoundButton", "menuSoundButton"]'), "All three sound controls must stay synchronised");
+});
+
+test("D1D floating risk graphic never covers Paul's face between cutaways", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  el("startButton").click();
+  for (let i = 0; i < 7; i++) el("nextButton").click();
+  // O02/line 3 is Stephen's response, not the dedicated risk cutaway.
+  assert.equal(el("stage").dataset.cutaway, "none");
+  assert.equal(el("sceneEffect").innerHTML, "");
+  assert.equal(el("cutawayPanel").hidden, true);
+  el("backButton").click();
+  el("backButton").click();
+  assert.equal(el("stage").dataset.cutaway, "risk");
+  assert.equal(el("cutawayPanel").hidden, false);
+  assert.ok(el("cutawayContent").innerHTML.includes("UNREASONABLY HIGH"));
+});
+
+test("D1D stage sound button toggles sound from the overlay toolbar", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  el("startButton").click();
+  el("sceneSoundButton").click();
+  assert.equal(el("sceneSoundButton").textContent, "Sound: On");
+  assert.equal(el("soundButton").textContent, "Sound: On");
+  el("soundButton").click();
+  assert.equal(el("sceneSoundButton").textContent, "Sound: Off");
+});
+
+test("D1E menu overlays real office art, not three stacked page sections", () => {
+  const css = read("src/styles.css");
+  const menuStart = html.indexOf('id="menuScreen"');
+  const menuEnd = html.indexOf('id="officeScreen"', menuStart);
+  const menu = html.slice(menuStart, menuEnd);
+  assert.ok(menu.includes('class="menu-office-art"'), "Approved scenery should be one contained layer");
+  assert.ok(menu.includes('class="menu-hero-title"'), "Menu needs a floating title");
+  assert.ok(menu.includes('class="menu-hero-tagline"'), "Subtitle must sit on the desk, away from faces");
+  assert.ok(menu.includes('class="menu-hero-actions"'), "Start/Continue must be in a floating desk panel");
+  assert.ok(menu.includes('id="menuSoundButton"'), "Sound control must be reachable when old topbar is hidden");
+  assert.ok(!menu.includes('class="menu-office-heading"'), "Old stacked heading should be removed");
+  assert.ok(!menu.includes('class="menu-office-transport"'), "Old stacked bottom transport should be removed");
+  assert.ok(menu.indexOf('menu-office-art') < menu.indexOf('menu-hero-title'));
+  assert.ok(menu.indexOf('menu-hero-title') < menu.indexOf('menu-hero-actions'));
+  assert.ok(css.includes('body:has(#menuScreen:not([hidden])) .topbar'), "Global topbar must be hidden in hero mode");
+  assert.ok(css.includes('#menuScreen .menu-office-stage'), "Layered hero stage must exist");
+  assert.ok(css.includes('177.68dvh - 25px'), "Hero must fit laptop viewport height");
+  assert.ok(css.includes('#menuScreen .menu-hero-buttons .btn'), "Menu buttons must remain usable");
+  assert.ok(css.includes('@media (max-width: 650px)'), "Touch layout must keep controls outside the art");
+});
+
+test("D1E floating sound control remains in sync across menu and office", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  el("menuSoundButton").click();
+  for (const id of ["menuSoundButton", "sceneSoundButton", "soundButton"]) {
+    assert.equal(el(id).textContent, "Sound: On");
+    assert.equal(el(id).attributes["aria-pressed"], "true");
+  }
+  el("startButton").click();
+  el("sceneSoundButton").click();
+  for (const id of ["menuSoundButton", "sceneSoundButton", "soundButton"]) {
+    assert.equal(el(id).textContent, "Sound: Off");
+  }
+  el("homeButton").click();
+  assert.equal(el("menuScreen").hidden, false);
+});
+
+test("D1E start and saved-game continuation work from floating action panel", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  assert.equal(el("resumeButton").hidden, true);
+  el("startButton").click();
+  el("nextButton").click();
+  assert.equal(el("lineText").textContent, "Quite.");
+  el("homeButton").click();
+  assert.equal(el("resumeButton").hidden, false);
+  el("resumeButton").click();
+  assert.equal(el("officeScreen").hidden, false);
+  assert.equal(el("lineText").textContent, "Quite.");
 });

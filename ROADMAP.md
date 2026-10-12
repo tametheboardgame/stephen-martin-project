@@ -288,6 +288,28 @@ Contains at least one environment, two characters, a dialogue exchange, an inven
 
 **Acceptance:** The three seated actors look grounded directly behind the same desk, with natural foreground overlap and **no visible horizontal cut, floating gap, doubled props or face/hand obstruction** at both desktop and tablet sizes. The owner explicitly approves the real preview before merging the composition into `main`.
 
+#### GAME-SP1.1-D1E — Cinematic main-menu hero (approved by owner 12 October 2026 (PR #12))
+
+**Owner direction:** The full cinematic office cutscene is preferable to its former portrait-card layout, but the initial menu still looked like a narrow stack of website sections. Rebuild the opening menu using the **same approved background, independently layered seated trio and foreground desk** as the in-game office, with real interactive HTML floating panels.
+
+**Deliverable:** One complete aspect-locked office hero filling the available laptop viewport. Position a bold, compact title above faces; put the Start/Continue controls and a subtitle on the desk; retain Sound on/off in a minimal top-right overlay. Maintain accessibility, focus states, correct save/resume, and a mobile layout that puts the controls outside the smaller illustration. Preserve the complete office scene, original story, cutaways, asset approvals and game-length constraints.
+
+**Acceptance:** No character faces hidden by UI, no former stacked menu header/footer, working Start/Continue/sound, no scrolling at typical 1366×768 and 1856×825 desktop windows, and readable/mobile touch controls. Targeted smoke and a real Chromium visual check before owner reviews the Cloudflare **branch** preview. Owner accepted the final cinematic office and full-hero menu on 12 October 2026; see PR #12.
+
+#### GAME-SP1.1-D2 — Seated expression variants and reaction swapping (next after D1 approval)
+
+**Goal:** Give each of Stephen, David and Paul convincing expressions throughout the existing office dialogue **without disturbing the approved seated body, head registration, clothing, lighting, or desk composition**.
+
+**Implementation checkpoints:**
+1. **Expression registration proof:** Choose one safe, repeatable technique (aligned replacement full seated sprite, or separately masked modular head where natural). Use the approved neutral seated trio and 18 prior close-up expression references, but **never paste the old unmatched portraits directly onto the bodies**.
+2. **Stephen first:** Produce seated variants for Neutral, Amused, Laughing, Confused, Annoyed, Exasperated. Human-check each against his approved seated baseline and a real composite in the office before registering.
+3. **David:** Neutral, Confident, Serious, Frustrated, Shocked, Systems Expert; preserve the approved bald head, short ginger beard, navy hoodie and framing.
+4. **Paul:** Neutral, Confused, Concerned, Blank, Pleased, Missing the Point; preserve clean-shaven face, glasses, white polo and matching framing.
+5. **Integrate metadata:** Map existing speaker/listener reaction cues to the approved seat-aligned WebPs, use gentle swaps/crossfades only, keep cutaways and independent actors. Prefer sensible reaction pacing over elaborate animation.
+6. **Review:** Test all 64 beats at desktop/tablet widths and check no jumping, face seams, cropping, mismatched desk intersections, or removed dialogue/transport; provide a Cloudflare branch preview for approval before merging.
+
+**Scope:** Art, expression registration and controlled display only. Faster dialogue, 1× / 1.25× / 1.5× playback and cutaway polish remain later GAME-SP1.1-D slices. Do not begin GAME-SP2.
+
 **Explicitly deferred to D2/D3:** Aligned expressive seated variants or modular heads; faster timing and the 1×/1.25×/1.5× control; fully illustrated refined cutaways; final visual approval. These remain approved within GAME-SP1.1-D, but must **not block the basic D1 scene preview**.
 
 **Constraints:** All work stays within GAME-SP1.1. Do not begin GAME-SP2 holiday gameplay or mini-games. No additional framework, 3D scene, full animation rig or six different flattened background paintings. Reuse approved character canon and SP-D009 privacy rules. Split implementation into reviewable feature slices; new artwork remains subject to individual visual approval and the established asset pipeline.
