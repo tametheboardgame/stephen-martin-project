@@ -18,14 +18,15 @@
   const cast = { Stephen: $("castStephen"), David: $("castDavid"), Paul: $("castPaul") };
   // D2 proof-only control: the approved neutral/amused image pair shares one
   // canvas; the toggle allows owner A/B checks without restarting the story.
-  const proofModes = ["auto", "neutral", "amused", "confused", "annoyed"];
+  const proofModes = ["auto", "neutral", "amused", "confused", "annoyed", "exasperated"];
   let stephenProofMode = "auto";
 
   const stephenSeatedSources = {
     neutral: "./public/assets/generated/characters/stephen-office-seated-neutral-v01.webp",
     amused: "./public/assets/generated/characters/stephen-office-seated-amused-v01.webp?v=3",
     confused: "./public/assets/generated/characters/stephen-office-seated-confused-v01.webp?v=1",
-    annoyed: "./public/assets/generated/characters/stephen-office-seated-annoyed-v01.webp?v=1"
+    annoyed: "./public/assets/generated/characters/stephen-office-seated-annoyed-v01.webp?v=1",
+    exasperated: "./public/assets/generated/characters/stephen-office-seated-exasperated-v01.webp?v=3"
   };
 
   function applyStephenSeatedExpression() {
@@ -50,7 +51,7 @@
     const label = stephenProofMode[0].toUpperCase() + stephenProofMode.slice(1);
     const button = $("stephenProofButton");
     button.textContent = "Stephen: " + label + " ↻";
-    button.setAttribute("aria-label", "Stephen expression preview: " + label + ". Click to cycle Auto, Neutral, Amused, Confused and Annoyed");
+    button.setAttribute("aria-label", "Stephen expression preview: " + label + ". Click to cycle Auto, Neutral, Amused, Confused, Annoyed and Exasperated");
     // Never render a fresh dialogue beat or restart the autoplay timer just
     // because the user is comparing images.
     applyStephenSeatedExpression();
