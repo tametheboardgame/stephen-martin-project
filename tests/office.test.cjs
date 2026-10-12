@@ -336,7 +336,7 @@ test("D1D cinematic office fills laptop screen and keeps controls in-stage", () 
   assert.ok(css.includes("1672px"), "Stage should grow toward its native resolution");
   assert.ok(css.includes("177.68dvh - 128px"), "Use safe viewport arithmetic for image aspect ratio");
   assert.ok(html.includes('id="sceneSoundButton"'), "Sound remains accessible when global header is hidden");
-  assert.ok(gameSource.includes('["soundButton", "sceneSoundButton"]'), "Both sound controls must stay synchronised");
+  assert.ok(gameSource.includes('["soundButton", "sceneSoundButton", "menuSoundButton"]'), "All three sound controls must stay synchronised");
 });
 
 test("D1D floating risk graphic never covers Paul's face between cutaways", () => {
@@ -364,4 +364,55 @@ test("D1D stage sound button toggles sound from the overlay toolbar", () => {
   assert.equal(el("soundButton").textContent, "Sound: On");
   el("soundButton").click();
   assert.equal(el("sceneSoundButton").textContent, "Sound: Off");
+});
+
+test("D1E menu overlays real office art, not three stacked page sections", () => {
+  const css = read("src/styles.css");
+  const menuStart = html.indexOf('id="menuScreen"');
+  const menuEnd = html.indexOf('id="officeScreen"', menuStart);
+  const menu = html.slice(menuStart, menuEnd);
+  assert.ok(menu.includes('class="menu-office-art"'), "Approved scenery should be one contained layer");
+  assert.ok(menu.includes('class="menu-hero-title"'), "Menu needs a floating title");
+  assert.ok(menu.includes('class="menu-hero-actions"'), "Start/Continue must be in a floating desk panel");
+  assert.ok(menu.includes('id="menuSoundButton"'), "Sound control must be reachable when old topbar is hidden");
+  assert.ok(!menu.includes('class="menu-office-heading"'), "Old stacked heading should be removed");
+  assert.ok(!menu.includes('class="menu-office-transport"'), "Old stacked bottom transport should be removed");
+  assert.ok(menu.indexOf('menu-office-art') < menu.indexOf('menu-hero-title'));
+  assert.ok(menu.indexOf('menu-hero-title') < menu.indexOf('menu-hero-actions'));
+  assert.ok(css.includes('body:has(#menuScreen:not([hidden])) .topbar'), "Global topbar must be hidden in hero mode");
+  assert.ok(css.includes('#menuScreen .menu-office-stage'), "Layered hero stage must exist");
+  assert.ok(css.includes('177.68dvh - 25px'), "Hero must fit laptop viewport height");
+  assert.ok(css.includes('#menuScreen .menu-hero-buttons .btn'), "Menu buttons must remain usable");
+  assert.ok(css.includes('@media (max-width: 650px)'), "Touch layout must keep controls outside the art");
+});
+
+test("D1E floating sound control remains in sync across menu and office", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  el("menuSoundButton").click();
+  for (const id of ["menuSoundButton", "sceneSoundButton", "soundButton"]) {
+    assert.equal(el(id).textContent, "Sound: On");
+    assert.equal(el(id).attributes["aria-pressed"], "true");
+  }
+  el("startButton").click();
+  el("sceneSoundButton").click();
+  for (const id of ["menuSoundButton", "sceneSoundButton", "soundButton"]) {
+    assert.equal(el(id).textContent, "Sound: Off");
+  }
+  el("homeButton").click();
+  assert.equal(el("menuScreen").hidden, false);
+});
+
+test("D1E start and saved-game continuation work from floating action panel", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  assert.equal(el("resumeButton").hidden, true);
+  el("startButton").click();
+  el("nextButton").click();
+  assert.equal(el("lineText").textContent, "Quite.");
+  el("homeButton").click();
+  assert.equal(el("resumeButton").hidden, false);
+  el("resumeButton").click();
+  assert.equal(el("officeScreen").hidden, false);
+  assert.equal(el("lineText").textContent, "Quite.");
 });
