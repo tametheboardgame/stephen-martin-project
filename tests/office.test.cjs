@@ -304,7 +304,7 @@ test("D1C menu and office share the real approved art and fit laptop viewport", 
   }
   assert.ok(css.includes('.game-shell:has(#officeScreen:not([hidden]))'), "Office viewport fit missing");
   assert.ok(css.includes('.game-shell:has(#menuScreen:not([hidden]))'), "Menu viewport fit missing");
-  assert.ok(css.includes("100dvh - 72px"), "Cinematic office must reserve only the bottom transport");
+  assert.ok(css.includes("177.68dvh - 128px"), "Cinematic office must size from viewport height with minimal transport reserve");
   assert.ok(css.includes("100dvh - 253px"), "Menu must reserve height for title and start controls");
   assert.ok(!css.includes("max(760px"), "Old minimum width forced unnecessary scrolling on small laptops");
   assert.ok(css.includes("aspect-ratio: 1672 / 941"), "Preserve foreground and background registration");
