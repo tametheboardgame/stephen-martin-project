@@ -253,7 +253,7 @@ test("static seated actors preserve speaker and listener expression metadata acr
   assert.equal(el("portraitDavid").src, undefined);
   // Stephen is intentionally the ONLY seated character whose single img
   // source switches; David and Paul stay as the approved neutral sprites.
-  assert.match(el("portraitStephen").src, /stephen-office-seated-neutral-v01\.webp$/);
+  assert.match(el("portraitStephen").src, /stephen-office-seated-confused-v01\.webp\?v=1$/);
   assert.equal(el("portraitPaul").src, undefined);
 });
 
