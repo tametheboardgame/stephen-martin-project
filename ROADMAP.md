@@ -271,6 +271,23 @@ Contains at least one environment, two characters, a dialogue exchange, an inven
 
 **D1 acceptance:** The entire opening can be played hands-free or manually, with three seated actors correctly placed behind the desk, readable captions, intact cutaways, no portrait-card faces and no unexpected clipping at desktop/tablet widths. Submit a genuine playable preview for the owner's visual review. D1 is **composition validation**, not final GAME-SP1.1-D completion.
 
+#### GAME-SP1.1-D1A — Dedicated foreground desk overlay (next visual correction, approved 12 October 2026)
+
+**Trigger:** The owner inspected the real deployed D1 office assembly ([draft PR #12](https://github.com/tametheboardgame/stephen-martin-project/pull/12)) and approved the overall composition, but noticed a conspicuous horizontal gap/seam where the seated characters meet the foreground desk. D1 currently reuses a **clipped portion of the background illustration** as a fake foreground. Do not patch this with character scaling or arbitrary CSS nudges.
+
+**Asset: OFFICE-FOREGROUND-01.** Produce an **independent transparent original** containing only the foreground tabletop, front/near desk edge, and foreground objects (mugs, paper stacks/folders and optional edge foliage). It must visually match the owner-approved OFFICE-CLEAN-01 perspective, lighting, colours and desk position. Keep a full-size **transparent canvas registered to the exact background bounds**, so compositing needs no guessed horizontal/vertical offsets. Export an optimised alpha WebP via the established approved Google Drive → manifest → GitHub pipeline. The PNG source stays in Drive.
+
+**Do not bake in** any of the three characters, office background/windows, dialogue, controls, company identifiers, or a whole flattened scene. Preserve existing fiction/privacy rules and obtain owner visual approval of the **actual isolated overlay** before publishing it as canon.
+
+**Implementation:**
+1. Prepare the overlay against OFFICE-CLEAN-01 and present it **alone on transparency plus a composite alignment proof** (without changing the approved background or sprites).
+2. Stage and materialise the approved asset on the existing D1 development stream (or a small dependent art PR); preserve provenance.
+3. Layer exactly: **clean office background → three independent seated sprites → new foreground transparent desk → existing cutaway layer → live editable dialogue and functional transport**. Replace/remove the CSS `clip-path` background-duplication foreground, so there is no repeated desk image, horizontal crop edge or gap.
+4. Keep David left, Stephen centre and Paul right, the complete 64-beat intro, autoplay, pause/back/next/skip/restart/resume and the existing three cutaways. No new portraits, expression system, speed UI or gameplay in D1A.
+5. Rebuild and deploy an **isolated Cloudflare branch preview**, run focused asset/build checks, then visually inspect desktop/tablet for a continuous tabletop-to-sprite join, correct hand/torso occlusion, stable perspective and readable dialogue.
+
+**Acceptance:** The three seated actors look grounded directly behind the same desk, with natural foreground overlap and **no visible horizontal cut, floating gap, doubled props or face/hand obstruction** at both desktop and tablet sizes. The owner explicitly approves the real preview before merging the composition into `main`.
+
 **Explicitly deferred to D2/D3:** Aligned expressive seated variants or modular heads; faster timing and the 1×/1.25×/1.5× control; fully illustrated refined cutaways; final visual approval. These remain approved within GAME-SP1.1-D, but must **not block the basic D1 scene preview**.
 
 **Constraints:** All work stays within GAME-SP1.1. Do not begin GAME-SP2 holiday gameplay or mini-games. No additional framework, 3D scene, full animation rig or six different flattened background paintings. Reuse approved character canon and SP-D009 privacy rules. Split implementation into reviewable feature slices; new artwork remains subject to individual visual approval and the established asset pipeline.
