@@ -31,3 +31,17 @@ jobs:
       - uses: actions/checkout@v4
       - name: Verify game scripts and scene flow (no dependencies)
         run: npm run verify
+      - name: Package offline office preview for owner review
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-sp1-office-preview
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            index.html
+            src/office-data.js
+            src/game.js
+            src/styles.css
+            public/assets/generated/characters/stephen-martin-baseline.webp
+            public/assets/generated/characters/david-baseline.webp
+            public/assets/generated/characters/paul-baseline.webp
