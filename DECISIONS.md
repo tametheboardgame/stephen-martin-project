@@ -19,3 +19,7 @@ One song can progress in parallel with the game. The comic is optional and start
 
 ## SP-D006, 12 October 2026: Roadmap approved
 The full Phase 0–7 roadmap in `ROADMAP.md` is accepted for development, subject to SP-D004's hard size limit. Start SP-WP1.1 after foundation documentation is on `main`.
+
+## SP-D007, 12 October 2026: David's visual baseline approved
+
+David's first comic character sheet was expressly approved by the project owner under SP-WP1.1. Appearance: 6 ft 2 in, bald, blue eyes, short dark ginger/auburn beard, wearing a charcoal hoodie over an olive T-shirt, jeans and trainers in the approved sheet. This design, including its range of comic reactions, becomes the character reference in `public/assets/generated/characters/david-baseline.webp`. Original PNG is staged in Google Drive as `david-character-baseline-v01.png` (file ID `1DJLH4ni0z81_SMrslKx99z_U2agTm8vS`). SP-WP1.1 remains open for Paul and any deferred supporting character work.

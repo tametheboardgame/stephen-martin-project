@@ -7,7 +7,7 @@ Adult absurdist British comedy, knowingly ridiculous international-espionage par
 
 ## Established core cast
 - **Stephen Martin:** Central character and rescue target. Delighted by attractive adult Asian men; impulsive holiday enthusiasm may be interpreted as a disappearance. Visual baseline: `public/assets/generated/characters/stephen-martin-baseline.webp`, approved. Do not modify his likeness without approval.
-- **David:** Capable IT specialist but ludicrously unqualified international rescuer. Appearance and specific personality details: awaiting SP-WP1.1 approval.
+- **David:** Visually approved under SP-WP1.1. Tall (6 ft 2 in / 188 cm), bald, blue-eyed, with a short dark ginger/auburn beard. His approved comic-sheet outfit is a dark charcoal hooded jacket over an olive-green T-shirt, jeans and casual trainers; a wristwatch is part of the illustrated reference. He is a capable IT specialist but ludicrously unqualified international rescuer: confident and determined until reality intervenes. Canonical asset: `public/assets/generated/characters/david-baseline.webp`. Visual gestures and expressions include crossed-arms determination, suspicious side-eye, smug confidence, chin-stroking analysis, frustration with hands on head, and finger-gun bravado. Clothing may vary by scene when explicitly agreed; retain face, build and recognisable mannerisms.
 - **Paul:** Other rescuer, distinct comic foil rather than David clone. Appearance/personality details: awaiting SP-WP1.1 approval.
 - **The boyfriend:** Fictionalised ambiguous catalyst. Whether he's a spy, villain or simply normal is intentionally unresolved. Appearance: awaiting SP-WP1.1 discussion.
 

@@ -22,7 +22,7 @@ Precedence: explicit current user instruction > accepted implementation/approved
 
 ## Creative canon and artwork
 - Stephen's approved reference is `public/assets/generated/characters/stephen-martin-baseline.webp`, provenance in `generated-assets/manifests/character-stephen-martin-baseline.json`. Keep facial traits and core silhouette consistent.
-- David and Paul must receive separately approved character references during SP-WP1.1. Do not fabricate likeness approval.
+- David's approved reference is `public/assets/generated/characters/david-baseline.webp`, provenance in `generated-assets/manifests/character-david-baseline.json`. David is tall (6 ft 2 in), bald, blue-eyed, with short dark ginger facial hair; preserve his characteristic looks and approved comic expressions. Paul still requires separately approved artwork under SP-WP1.1.
 - Share art style and recurring jokes between game, music and comic, while allowing different pacing between media.
 - The narrative is openly fictional adult satire, including the ambiguous fictional boyfriend, exaggerated detention, mountain devotees and silly body-reconstruction jokes. Never portray real-world allegations as established fact.
 - All suggestive characters are adults; favour caricature and punchlines over group-targeted abuse.
