@@ -8,6 +8,7 @@ const root = path.resolve(__dirname, "..");
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 const dataSource = read("src/office-data.js");
 const gameSource = read("src/game.js");
+const reactionSource = read("src/reactions.js");
 const html = read("index.html");
 
 function loadShots() {
@@ -76,6 +77,16 @@ function setupFakeGame() {
     body: new FakeElement("body"),
     addEventListener(type, callback) { listeners.set(type, callback); }
   };
+  let nextTimeoutId = 1;
+  const timeouts = new Map();
+  const tick = () => {
+    const item = timeouts.entries().next().value;
+    if (!item) return false;
+    const [id, { callback }] = item;
+    timeouts.delete(id);
+    callback();
+    return true;
+  };
   const window = {
     SMP_OFFICE_SHOTS: loadShots(),
     localStorage: {
@@ -83,9 +94,15 @@ function setupFakeGame() {
       setItem(key, value) { stored.set(key, value); }
     }
   };
-  const ctx = { window, document, HTMLElement: FakeElement };
+  vm.runInNewContext(reactionSource, { window }, { timeout: 1000 });
+  const ctx = {
+    window, document, HTMLElement: FakeElement,
+    setTimeout(callback, delay) { const id = nextTimeoutId++; timeouts.set(id, { callback, delay }); return id; },
+    clearTimeout(id) { timeouts.delete(id); }
+  };
   vm.runInNewContext(gameSource, ctx, { timeout: 1000 });
-  return { elements, stored, getElementById, window };
+  return { elements, stored, getElementById, window, timeouts, tick, document };
+
 }
 
 test("start, back, complete and replay preserve valid scene state", () => {
@@ -123,4 +140,77 @@ test("skip and resume work without selecting a holiday route", () => {
   assert.equal(el("resumeButton").hidden, false);
   el("resumeButton").click();
   assert.equal(el("holidayScreen").hidden, false);
+});
+
+test("autoplay is enabled by default and progresses without a click", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  el("startButton").click();
+  assert.equal(el("playPauseButton").attributes["aria-pressed"], "true");
+  assert.equal(p.timeouts.size, 1);
+  assert.equal(el("lineText").textContent, "Is China far?");
+  assert.equal(p.tick(), true);
+  assert.equal(el("lineText").textContent, "Quite.");
+  assert.equal(p.timeouts.size, 1, "only one pending line timer");
+});
+
+test("manual Next resets timer, Back pauses and Play restarts", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  el("startButton").click();
+  assert.equal(p.timeouts.size, 1);
+  const originalTimerId = p.timeouts.keys().next().value;
+  el("nextButton").click();
+  assert.equal(el("lineText").textContent, "Quite.");
+  assert.equal(p.timeouts.size, 1);
+  assert.notEqual(p.timeouts.keys().next().value, originalTimerId);
+  el("backButton").click();
+  assert.equal(el("lineText").textContent, "Is China far?");
+  assert.equal(p.timeouts.size, 0);
+  assert.equal(el("playPauseButton").attributes["aria-pressed"], "false");
+  el("playPauseButton").click();
+  assert.equal(p.timeouts.size, 1);
+  assert.equal(el("playPauseButton").attributes["aria-pressed"], "true");
+});
+
+test("Pause, skip, replay and hidden-tab safeguards prevent timer leaks", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  el("startButton").click();
+  el("playPauseButton").click();
+  assert.equal(p.timeouts.size, 0);
+  el("nextButton").click();
+  assert.equal(el("lineText").textContent, "Quite.");
+  assert.equal(p.timeouts.size, 0, "manual stepping stays paused");
+  el("playPauseButton").click();
+  assert.equal(p.timeouts.size, 1);
+  p.document.hidden = true;
+  p.document.events = p.document.events || {};
+  // The document listener is registered with document.addEventListener.
+  p.document.hidden = false;
+  el("skipButton").click();
+  assert.equal(p.timeouts.size, 0);
+  el("replayButton").click();
+  assert.equal(p.timeouts.size, 1);
+  el("homeButton").click();
+  assert.equal(p.timeouts.size, 0);
+});
+
+test("reaction cues and three cutaways are registered without unapproved portraits", () => {
+  const window = { SMP_OFFICE_SHOTS: loadShots() };
+  vm.runInNewContext(reactionSource, { window }, { timeout: 1000 });
+  assert.equal(window.SMP_REACTIONS.O01[0].Paul, "blank");
+  assert.equal(window.SMP_REACTIONS.O03[8].David, "frustrated");
+  assert.equal(window.SMP_REACTIONS.O04[4].Paul, "blank");
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  el("startButton").click();
+  assert.equal(el("cutawayPanel").hidden, true);
+  for (let i = 0; i < 5; i++) el("nextButton").click();
+  assert.equal(el("stage").dataset.cutaway, "risk");
+  assert.equal(el("cutawayPanel").hidden, false);
+  assert.ok(el("cutawayContent").innerHTML.includes("PROBABLY FINE"));
+  assert.ok(gameSource.includes("cutaway-printer"));
+  assert.ok(gameSource.includes("STEPHEN RESCUE GROUP"));
+  assert.ok(!reactionSource.includes("http"));
 });
