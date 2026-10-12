@@ -28,6 +28,15 @@ Preserve David's tall (6 ft 2 in) silhouette, bald head, blue eyes and short aub
 
 Preserve his approximately 5 ft 10 in stocky/heavier silhouette, bald crown with short side/back hair stubble, **no facial hair**, glasses and characteristic white polo shirt. In the approved reference he also wears blue jeans and casual trainers. His neutral or vaguely confused face is the most important expression; others include bewilderment, mild concern, hands-on-head stress and palms-up uncertainty. Do not inadvertently revert to the rejected earlier design that gave him beard stubble or a smug expression.
 
+## GAME-SP1.1 approved expression sheets (12 October 2026)
+
+These are **human-approved composite expression masters**, using the established comic character styles. They are not yet sliced into individual per-line portrait files.
+
+- **Stephen:** `public/assets/generated/characters/stephen-expressions-sheet-v01.webp` (manifest `generated-assets/manifests/character-stephen-expressions-v01.json`). Original Google Drive source: `stephen-expressions-v01.png` (ID `1ds0NaYTXQl2c-mQFgeJ6YZt0Lv8VFVZW`). Six reactions: neutral, amused, laughing, confused, annoyed, exasperated.
+- **David:** `public/assets/generated/characters/david-expressions-sheet-v01.webp` (manifest `generated-assets/manifests/character-david-expressions-v01.json`). Original Google Drive source: `david-expressions-v01.png` (ID `1ucx1v3v3bPPD4FX7CML6gIntgxvZs-z6`). Six reactions: neutral, confident, serious, frustrated, shocked, systems expert.
+- These original PNGs are staged in the project-specific Drive asset folder, with GitHub Actions materialising deterministic, validated WebPs.
+- **Next implementation:** create consistent individual portrait crops from approved masters, adjust dialogue asset wiring and inspect in browser. Do not mistake a single master-sheet composite for a ready-to-use individual portrait.
+
 ## Production conventions
 - David's and Paul's character and expression sheets are approved. Keep their proportions and demeanours distinct.
 - Reuse approved character designs across game, music and comic.
