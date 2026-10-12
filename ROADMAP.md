@@ -218,6 +218,33 @@ Contains at least one environment, two characters, a dialogue exchange, an inven
 
 ---
 
+### GAME-SP1.1 — Opening polish pass (approved 12 October 2026)
+
+**Purpose:** Make the owner-approved GAME-SP1 office intro watchable hands-free and visually dynamic without adding any new plot or gameplay. This is the **next delivery package before GAME-SP2**.
+
+**GAME-SP1.1-A: Playback**
+- Autoplay dialogue **on by default**, with line duration based on text length (about 2.2–5.8 seconds, with deliberate longer pauses for key jokes/song).
+- Persistent, visible **Auto / Pause / Play** control plus existing Next, Back, Restart and Skip intro. Next advances immediately and reschedules the timer; Back goes back and **pauses** playback to allow rereading.
+- Correct timer cleanup during pause, scene changes, browser tab hidden, skip and restart. Show clear playback state and optional subtle line progress. Do not risk navigating past a line while the page is hidden.
+- Manual mode lets the player advance one line at a time indefinitely; existing save/resume behaviour stays compatible.
+
+**GAME-SP1.1-B: Character reaction art**
+- Generate **small consistent expression packs** for Stephen (amused, neutral, laughing, confused, annoyed, exasperated), David (neutral, smug, briefing, frustrated, shocked, intense), and Paul (blank, confused, worried, especially blank, pleased, misunderstanding).
+- Match their approved likeness, outfits and proportions. Each newly generated sheet remains a **human visual approval gate**; stage originals in Google Drive and import approved WebP into the existing asset pipeline. No unrelated stock art, no silently approved AI images.
+- Use data-driven expression and **listener reaction** mapping so characters can visibly respond to other people's dialogue, not only when speaking. Fall back to existing approved reference art where an expression asset is unavailable.
+
+**GAME-SP1.1-C: Comic cutaways**
+- Use the approved office scene, but insert **three deliberate close-up cutaways**: David's OPERATION: PROBABLY FINE risk assessment, the printer actually printing fictional bear pages, and the fictional "STEPHEN RESCUE GROUP (PRE-EMPTIVE)" chat creation.
+- A goodbye-song player cutaway is optional if it improves timing.
+- Keep cutaway visuals lightweight, legible and consistent with the fictional office. Animated printer paper can be DOM/CSS; any generated art requires approval before becoming canon.
+- Return naturally to the speaking characters. Each cutaway must be accessible (text remains in normal dialogue box) and obey pause / reduced-motion preferences.
+
+**Non-goals:** New story scenes, Stephen's holiday gameplay, mini-games, new engine/framework, full rigged animation, voice acting, real employer information, real images of political figures.
+
+**Acceptance:** Hands-free opening with tested manual controls; visibly changing character reactions where approved assets are available; at least three integrated visual cutaways; responsive desktop/touch rendering; focused autoplay/skip/back/visibility tests; Cloudflare preview works. Keep changes in a short-lived PR until owner accepts the visual presentation.
+
+---
+
 ## 6. Phase 3: Full game narrative (single compact adventure)
 
 **Total first-run target: 15–25 minutes**, including conversations, puzzles and one ending. Act allocations are planning guidelines, not mandated filler.
