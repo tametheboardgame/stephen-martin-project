@@ -6,7 +6,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const output = path.join(root, "dist");
 const files = ["index.html", "src/office-data.js", "src/reactions.js", "src/game.js", "src/styles.css"];
 const imageSource = "public/assets/generated/characters";
-const images = ["stephen-martin-baseline.webp", "david-baseline.webp", "paul-baseline.webp"];
+const images = ["stephen-martin-baseline.webp", "david-baseline.webp", "paul-baseline.webp", "stephen-office-seated-neutral-v01.webp", "david-office-seated-neutral-v01.webp", "paul-office-seated-neutral-v01.webp"];
 
 await rm(output, { recursive: true, force: true });
 await mkdir(path.join(output, "src"), { recursive: true });
@@ -44,5 +44,13 @@ for (const name of expectedNames) {
   if (!(await stat(source)).size) throw new Error("Empty approved expression: " + relative);
   await copyFile(source, path.join(output, relative));
 }
+// The background is separate from all three actors, allowing a matching
+// foreground desk layer without flattening characters or interactive controls.
+const officeBackground = "public/assets/generated/locations/office-clean-01-v01.webp";
+const officeSource = path.join(root, officeBackground);
+if (!(await stat(officeSource)).size) throw new Error("Missing approved office background");
+await mkdir(path.dirname(path.join(output, officeBackground)), { recursive: true });
+await copyFile(officeSource, path.join(output, officeBackground));
+
 console.log("Cloudflare Pages static output: dist/");
-console.log("Only game HTML, scripts, styles, 3 approved base portraits and 18 expression WebPs were included.");
+console.log("Only game HTML, scripts, styles, approved background, 3 seated sprites, approved base portraits and 18 expression WebPs were included.");
