@@ -4,6 +4,12 @@
 **Master roadmap:** Approved version 1.0, `ROADMAP.md`  
 **Primary scope:** Complete **15–25 minute** point-and-click/touch comedy game; three concise endings; approximately 2–3 substantial mini-games. Song alongside; comic optional.
 
+## GAME-SP1.1-D2 proof — Stephen seated Neutral ↔ Amused (owner visual review pending)
+
+- **Asset:** Owner-approved second-pass amused Stephen PNG staged as `stephen-office-seated-amused-d2-proof-v01.png` in project Google Drive; source ID `11e1Km4M6NvLcbZNXc48Ez0_p23EoGkXi`. Provenance manifest `generated-assets/manifests/stephen-office-seated-amused-v01.json` creates `public/assets/generated/characters/stephen-office-seated-amused-v01.webp`. Both neutral and amused sprites have transparent **1086 × 1448** canvases. This preserves the original approved image; pixel-perfect shoulder/hand alignment still needs owner inspection.
+- **Proof behaviour:** The live office scene holds both seated Stephen images in the same CSS frame, with a 140 ms fade to amused when existing reaction metadata requests it (other expressions fall back to neutral). A clearly marked temporary `Stephen: Auto → Neutral → Amused` button allows direct A/B switching while paused or autoplaying, without advancing/restarting dialogue. David and Paul stay on their approved seated neutral sprites.
+- **Scope/QA:** No changes to the 64-beat office script, title menu, cutaways or production `main`; only the tiny expression proof on a development-branch Cloudflare preview. Smoke checks require the new WebP, alpha transparency, correct canvas and manual/automatic behaviour. Owner must judge the visible head/shoulder/hand registration before expanding to the rest of Stephen's emotions.
+
 ## Current checkpoint — GAME-SP1.1-D1 through D1E owner approved
 
 - **12 October 2026:** Owner approved the complete three-person seated office, independent transparent desk, cinematic laptop-fit opening, dedicated risk/printer/chat cutaways and floating full-office title/start menu after testing the Cloudflare preview. **PR #12 is the implementation merge gate**; its included five layered WebP assets supersede the separate draft asset-only PR #10.
