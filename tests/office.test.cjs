@@ -348,6 +348,7 @@ test("D1D floating risk graphic never covers Paul's face between cutaways", () =
   assert.equal(el("sceneEffect").innerHTML, "");
   assert.equal(el("cutawayPanel").hidden, true);
   el("backButton").click();
+  el("backButton").click();
   assert.equal(el("stage").dataset.cutaway, "risk");
   assert.equal(el("cutawayPanel").hidden, false);
   assert.ok(el("cutawayContent").innerHTML.includes("UNREASONABLY HIGH"));
