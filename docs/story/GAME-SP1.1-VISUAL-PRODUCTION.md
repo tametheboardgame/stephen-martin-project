@@ -15,6 +15,16 @@ The live Cloudflare playtest revealed oversized faces positioned too low, unwant
 
 **The layered production components are the deliverable; full-scene concept images alone are not.**
 
+## D1 composition-validation checkpoint (owner approved)
+
+**Next:** GAME-SP1.1-D1 assembles the original `OFFICE-CLEAN-01` illustration and the independently approved transparent neutral seated sprites from [asset PR #10](https://github.com/tametheboardgame/stephen-martin-project/pull/10). This replaces the three huge face-card panels **without** claiming we have solved articulated expression sprites.
+
+- **Stage:** Office background full width; transparent seated David left, Stephen centre and Paul right, all similarly scaled, with the actual desk visually in front of the hands/bodies. Keep actors separately addressable for later reactions.
+- **Interactive UI:** Original 7 shots and 64 dialogue beats play with current autoplay, live editable speech, Pause/Play, Back, Next, Restart, Skip and local resume. Preserve the three existing cutaway sequences at this stage.
+- **Review target:** Natural composition, no obscured faces/overlap or clipping on desktop/tablet, readable speech over lower desk, usable transport beneath stage. A working branch preview is mandatory before merging.
+- **Explicit staging limitation:** Only one neutral seated sprite exists per actor. Existing six-expression close-up crops per character have different poses and must **not** be directly pasted onto the new seated busts. Keep them registered for a separate, properly aligned expression-swap implementation after D1 is visually accepted.
+- **Not in D1:** New seated variants, advanced actor animation, revised cutaway artwork or playback-speed UI. These are retained as later accepted GAME-SP1.1-D requirements.
+
 ## The reference versus the game
 
 The owner-approved composite infographic is the **composition and aesthetic reference**, NOT a background screenshot or an asset to crop wholesale into the game. It includes rasterised mock dialogue and controls that must never replace real interactive UI.
