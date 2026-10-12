@@ -16,6 +16,30 @@
   const totalLines = shotLineCounts.reduce((sum, n) => sum + n, 0);
   const screens = { menu: $("menuScreen"), office: $("officeScreen"), holiday: $("holidayScreen") };
   const cast = { Stephen: $("castStephen"), David: $("castDavid"), Paul: $("castPaul") };
+  // D2 proof-only control: the approved neutral/amused image pair shares one
+  // canvas; the toggle allows owner A/B checks without restarting the story.
+  const proofModes = ["auto", "neutral", "amused"];
+  let stephenProofMode = "auto";
+
+  function applyStephenSeatedExpression() {
+    const reaction = cast.Stephen.dataset.expression || "neutral";
+    const sprite = stephenProofMode === "auto"
+      ? (reaction === "amused" ? "amused" : "neutral")
+      : stephenProofMode;
+    cast.Stephen.dataset.seatedSprite = sprite;
+    cast.Stephen.dataset.staging = "seated-expression-proof";
+  }
+
+  function cycleStephenProof() {
+    stephenProofMode = proofModes[(proofModes.indexOf(stephenProofMode) + 1) % proofModes.length];
+    const label = stephenProofMode[0].toUpperCase() + stephenProofMode.slice(1);
+    const button = $("stephenProofButton");
+    button.textContent = "Stephen: " + label + " ↻";
+    button.setAttribute("aria-label", "Stephen expression preview: " + label + ". Click to cycle Auto, Neutral and Amused");
+    // Never render a fresh dialogue beat or restart the autoplay timer just
+    // because the user is comparing images.
+    applyStephenSeatedExpression();
+  }
 
   let autoPlaying = true;
   let advanceTimer = null;
@@ -207,9 +231,9 @@
       // Cue metadata is preserved for aligned seated expression work in D2.
       el.dataset.expression = expression;
       el.dataset.staging = "seated-neutral";
-      // Only highlight the current speaker with a subtle CSS colour treatment;
-      // actors do not jump, stretch, re-crop or change image in this checkpoint.
+      // David and Paul remain their approved static-neutral seated sprites.
     }
+    applyStephenSeatedExpression();
     persist();
     if (beat.sound) beep(beat.sound);
     scheduleAdvance();
@@ -288,6 +312,7 @@
   $("sceneSoundButton").addEventListener("click", () => setSound(!soundEnabled));
   $("menuSoundButton").addEventListener("click", () => setSound(!soundEnabled));
   $("playPauseButton").addEventListener("click", () => setAutoplay(!autoPlaying));
+  $("stephenProofButton").addEventListener("click", cycleStephenProof);
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       // Pausing on hidden tabs prevents timed dialogue from being skipped while away.
