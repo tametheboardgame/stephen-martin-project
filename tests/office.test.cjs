@@ -30,13 +30,27 @@ test("approved office script is complete and ordered", () => {
   assert.ok(shots.some((s) => s.lines.some((b) => b.text.includes("Yet."))));
 });
 
-test("cinematic cast starts with approved individual neutral portraits and has fallback", () => {
-  for (const character of ["stephen", "david", "paul"]) {
-    assert.ok(html.includes("public/assets/generated/characters/expressions/" + character + "-neutral.webp"));
+test("D1 stages the four approved layers, not oversized expression cards", () => {
+  const assets = [
+    "public/assets/generated/locations/office-clean-01-v01.webp",
+    ...["david", "stephen", "paul"].map((name) =>
+      "public/assets/generated/characters/" + name + "-office-seated-neutral-v01.webp"
+    )
+  ];
+  for (const asset of assets) {
+    assert.ok(fs.statSync(path.join(root, asset)).size > 0, "Missing approved asset " + asset);
+    assert.ok(read("scripts/build.mjs").includes(asset.split("/").at(-1)));
   }
-  for (const filename of ["stephen-martin-baseline.webp", "david-baseline.webp", "paul-baseline.webp"]) {
-    assert.ok(gameSource.includes("public/assets/generated/characters/" + filename));
+  for (const name of ["David", "Stephen", "Paul"]) {
+    assert.ok(html.includes('id="portrait' + name + '"'));
+    assert.ok(html.includes('id="cast' + name + '"'));
   }
+  assert.ok(html.includes('class="office-world office-scene-backdrop"'));
+  assert.ok(html.includes('class="office-foreground"'));
+  assert.ok(html.includes('class="cast cast-seated"'));
+  assert.ok(!html.includes('class="cast-portrait"'), "Legacy giant-face card still present");
+  const css = read("src/styles.css");
+  assert.ok(css.includes("clip-path: inset(67.4%"), "Foreground desk must cover the actor layers");
   assert.ok(!html.includes("http://") && !html.includes("https://"));
   assert.ok(!gameSource.includes("fetch(") && !gameSource.includes("XMLHttpRequest"));
   assert.ok(html.indexOf('id="dialogueBox"') < html.indexOf('id="storyProgress"'));
@@ -220,19 +234,23 @@ test("reaction cues and three cutaways are registered without unapproved portrai
   assert.ok(!reactionSource.includes("http"));
 });
 
-test("approved portrait files change for both speakers and listening characters", () => {
+test("static seated actors preserve speaker and listener expression metadata across the whole intro", () => {
   const p = setupFakeGame();
   const el = p.getElementById;
   el("startButton").click();
-  assert.ok(el("portraitPaul").src.endsWith("/paul-blank.webp"), "Paul starts with deadpan reaction");
-  assert.ok(el("portraitStephen").src.endsWith("/stephen-amused.webp"), "Stephen reacts as listener");
-  // O02 begins after four beats in O01. David enters with a serious assessment.
+  assert.equal(el("castPaul").dataset.expression, "blank");
+  assert.equal(el("castStephen").dataset.expression, "amused");
+  assert.equal(el("castDavid").dataset.staging, "seated-neutral");
   for (let i = 0; i < 5; i++) el("nextButton").click();
-  assert.ok(el("portraitDavid").src.endsWith("/david-confident.webp"));
-  assert.ok(el("portraitStephen").src.endsWith("/stephen-confused.webp"));
-  assert.ok(el("portraitPaul").src.endsWith("/paul-blank.webp"));
   assert.equal(el("castDavid").dataset.expression, "confident");
   assert.equal(el("castStephen").dataset.expression, "confused");
+  assert.equal(el("castPaul").dataset.expression, "blank");
+  assert.equal(el("castDavid").dataset.staging, "seated-neutral");
+  // D1 deliberately does not splice close-up facial images onto the seated bodies.
+  assert.ok(!gameSource.includes("portrait.src = expressionAssetRoot"));
+  assert.equal(el("portraitDavid").src, undefined);
+  assert.equal(el("portraitStephen").src, undefined);
+  assert.equal(el("portraitPaul").src, undefined);
 });
 
 test("a visual cutaway leaves the dialogue text and manual controls interactive", () => {
@@ -249,4 +267,19 @@ test("a visual cutaway leaves the dialogue text and manual controls interactive"
   el("nextButton").click();
   assert.equal(el("cutawayPanel").hidden, true);
   assert.equal(el("lineText").textContent, "You've done what?");
+});
+
+test("D1 scene keeps speaker text, transport and cutaways separate from the art", () => {
+  const stage = html.indexOf('id="stage"');
+  const david = html.indexOf('id="castDavid"');
+  const stephen = html.indexOf('id="castStephen"');
+  const paul = html.indexOf('id="castPaul"');
+  const foreground = html.indexOf('class="office-foreground"');
+  const dialog = html.indexOf('id="dialogueBox"');
+  const progress = html.indexOf('id="storyProgress"');
+  const controls = html.indexOf('id="playPauseButton"');
+  assert.ok(stage < david && david < stephen && stephen < paul);
+  assert.ok(paul < foreground && foreground < dialog && dialog < progress && progress < controls);
+  assert.ok(html.includes('id="cutawayPanel"'));
+  assert.ok(read("src/styles.css").includes("max-width: 650px"), "Touch layout must keep dialogue below art");
 });
