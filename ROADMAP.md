@@ -271,13 +271,44 @@ Contains at least one environment, two characters, a dialogue exchange, an inven
 
 **D1 acceptance:** The entire opening can be played hands-free or manually, with three seated actors correctly placed behind the desk, readable captions, intact cutaways, no portrait-card faces and no unexpected clipping at desktop/tablet widths. Submit a genuine playable preview for the owner's visual review. D1 is **composition validation**, not final GAME-SP1.1-D completion.
 
-#### GAME-SP1.1-D1E — Cinematic main-menu hero (implemented for preview, owner sign-off pending)
+#### GAME-SP1.1-D1A — Dedicated foreground desk overlay (next visual correction, approved 12 October 2026)
+
+**Trigger:** The owner inspected the real deployed D1 office assembly ([draft PR #12](https://github.com/tametheboardgame/stephen-martin-project/pull/12)) and approved the overall composition, but noticed a conspicuous horizontal gap/seam where the seated characters meet the foreground desk. D1 currently reuses a **clipped portion of the background illustration** as a fake foreground. Do not patch this with character scaling or arbitrary CSS nudges.
+
+**Asset: OFFICE-FOREGROUND-01.** Produce an **independent transparent original** containing only the foreground tabletop, front/near desk edge, and foreground objects (mugs, paper stacks/folders and optional edge foliage). It must visually match the owner-approved OFFICE-CLEAN-01 perspective, lighting, colours and desk position. Keep a full-size **transparent canvas registered to the exact background bounds**, so compositing needs no guessed horizontal/vertical offsets. Export an optimised alpha WebP via the established approved Google Drive → manifest → GitHub pipeline. The PNG source stays in Drive.
+
+**Do not bake in** any of the three characters, office background/windows, dialogue, controls, company identifiers, or a whole flattened scene. Preserve existing fiction/privacy rules and obtain owner visual approval of the **actual isolated overlay** before publishing it as canon.
+
+**Implementation:**
+1. Prepare the overlay against OFFICE-CLEAN-01 and present it **alone on transparency plus a composite alignment proof** (without changing the approved background or sprites).
+2. Stage and materialise the approved asset on the existing D1 development stream (or a small dependent art PR); preserve provenance.
+3. Layer exactly: **clean office background → three independent seated sprites → new foreground transparent desk → existing cutaway layer → live editable dialogue and functional transport**. Replace/remove the CSS `clip-path` background-duplication foreground, so there is no repeated desk image, horizontal crop edge or gap.
+4. Keep David left, Stephen centre and Paul right, the complete 64-beat intro, autoplay, pause/back/next/skip/restart/resume and the existing three cutaways. No new portraits, expression system, speed UI or gameplay in D1A.
+5. Rebuild and deploy an **isolated Cloudflare branch preview**, run focused asset/build checks, then visually inspect desktop/tablet for a continuous tabletop-to-sprite join, correct hand/torso occlusion, stable perspective and readable dialogue.
+
+**Acceptance:** The three seated actors look grounded directly behind the same desk, with natural foreground overlap and **no visible horizontal cut, floating gap, doubled props or face/hand obstruction** at both desktop and tablet sizes. The owner explicitly approves the real preview before merging the composition into `main`.
+
+#### GAME-SP1.1-D1E — Cinematic main-menu hero (approved by owner 12 October 2026 (PR #12))
 
 **Owner direction:** The full cinematic office cutscene is preferable to its former portrait-card layout, but the initial menu still looked like a narrow stack of website sections. Rebuild the opening menu using the **same approved background, independently layered seated trio and foreground desk** as the in-game office, with real interactive HTML floating panels.
 
 **Deliverable:** One complete aspect-locked office hero filling the available laptop viewport. Position a bold, compact title above faces; put the Start/Continue controls and a subtitle on the desk; retain Sound on/off in a minimal top-right overlay. Maintain accessibility, focus states, correct save/resume, and a mobile layout that puts the controls outside the smaller illustration. Preserve the complete office scene, original story, cutaways, asset approvals and game-length constraints.
 
-**Acceptance:** No character faces hidden by UI, no former stacked menu header/footer, working Start/Continue/sound, no scrolling at typical 1366×768 and 1856×825 desktop windows, and readable/mobile touch controls. Targeted smoke and a real Chromium visual check before owner reviews the Cloudflare **branch** preview. This does not authorise merging the final art or layout until the owner accepts it.
+**Acceptance:** No character faces hidden by UI, no former stacked menu header/footer, working Start/Continue/sound, no scrolling at typical 1366×768 and 1856×825 desktop windows, and readable/mobile touch controls. Targeted smoke and a real Chromium visual check before owner reviews the Cloudflare **branch** preview. Owner accepted the final cinematic office and full-hero menu on 12 October 2026; see PR #12.
+
+#### GAME-SP1.1-D2 — Seated expression variants and reaction swapping (next after D1 approval)
+
+**Goal:** Give each of Stephen, David and Paul convincing expressions throughout the existing office dialogue **without disturbing the approved seated body, head registration, clothing, lighting, or desk composition**.
+
+**Implementation checkpoints:**
+1. **Expression registration proof:** Choose one safe, repeatable technique (aligned replacement full seated sprite, or separately masked modular head where natural). Use the approved neutral seated trio and 18 prior close-up expression references, but **never paste the old unmatched portraits directly onto the bodies**.
+2. **Stephen first:** Produce seated variants for Neutral, Amused, Laughing, Confused, Annoyed, Exasperated. Human-check each against his approved seated baseline and a real composite in the office before registering.
+3. **David:** Neutral, Confident, Serious, Frustrated, Shocked, Systems Expert; preserve the approved bald head, short ginger beard, navy hoodie and framing.
+4. **Paul:** Neutral, Confused, Concerned, Blank, Pleased, Missing the Point; preserve clean-shaven face, glasses, white polo and matching framing.
+5. **Integrate metadata:** Map existing speaker/listener reaction cues to the approved seat-aligned WebPs, use gentle swaps/crossfades only, keep cutaways and independent actors. Prefer sensible reaction pacing over elaborate animation.
+6. **Review:** Test all 64 beats at desktop/tablet widths and check no jumping, face seams, cropping, mismatched desk intersections, or removed dialogue/transport; provide a Cloudflare branch preview for approval before merging.
+
+**Scope:** Art, expression registration and controlled display only. Faster dialogue, 1× / 1.25× / 1.5× playback and cutaway polish remain later GAME-SP1.1-D slices. Do not begin GAME-SP2.
 
 **Explicitly deferred to D2/D3:** Aligned expressive seated variants or modular heads; faster timing and the 1×/1.25×/1.5× control; fully illustrated refined cutaways; final visual approval. These remain approved within GAME-SP1.1-D, but must **not block the basic D1 scene preview**.
 

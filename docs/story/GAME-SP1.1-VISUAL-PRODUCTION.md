@@ -15,6 +15,16 @@ The live Cloudflare playtest revealed oversized faces positioned too low, unwant
 
 **The layered production components are the deliverable; full-scene concept images alone are not.**
 
+## D1A foreground desk production contract (approved)
+
+**Observed in real D1 preview:** The characters look correctly arranged, but the cropped-background foreground creates a visible horizontal join and makes their bodies appear separated from the table. The owner approved **a new standalone transparent desk layer**, not additional portrait repositioning.
+
+- **OFFICE-FOREGROUND-01:** Build one independent original PNG on a transparent canvas, with the **same width, height, registration and viewpoint** as the approved `OFFICE-CLEAN-01` background. Include the tabletop/front edge and near foreground objects that should occlude character hands/lower bodies; do not include distant office areas, characters, dialogue, logos or controls.
+- **Alignment proof:** Review the standalone transparent overlay **and** a temporary composited preview with all three current seated actor WebPs behind it before approving the art. Colour, perspective and props should match the established background exactly. Avoid visible duplication at the image seam.
+- **Runtime layering:** Replace D1's `office-foreground` copied-background `clip-path` hack with the new alpha WebP. Layer from back to front: `OFFICE-CLEAN-01` → David/Stephen/Paul independent sprites → alpha desk/props → isolated cutaway visuals → live speech/UI. Preserve the three existing cutaway beats and all 64 dialogue beats.
+- **Asset process:** Human approve → original staged to the dedicated Drive folder → provenance manifest → materialised WebP with transparency → Cloudflare branch build, with a test for asset existence and no remaining clipped duplicate CSS.
+- **Human acceptance:** Natural visible contact with the desk; no floating gap, duplicated mugs/books, horizontal crop line or UI/face occlusion at desktop/tablet widths. No expression, speed or GAME-SP2 work here.
+
 ## D1 composition-validation checkpoint (owner approved)
 
 **Next:** GAME-SP1.1-D1 assembles the original `OFFICE-CLEAN-01` illustration and the independently approved transparent neutral seated sprites from [asset PR #10](https://github.com/tametheboardgame/stephen-martin-project/pull/10). This replaces the three huge face-card panels **without** claiming we have solved articulated expression sprites.
