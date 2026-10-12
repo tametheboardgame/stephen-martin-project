@@ -21,11 +21,24 @@
   const proofModes = ["auto", "neutral", "amused"];
   let stephenProofMode = "auto";
 
+  const stephenSeatedSources = {
+    neutral: "./public/assets/generated/characters/stephen-office-seated-neutral-v01.webp",
+    amused: "./public/assets/generated/characters/stephen-office-seated-amused-v01.webp?v=3"
+  };
+
   function applyStephenSeatedExpression() {
     const reaction = cast.Stephen.dataset.expression || "neutral";
     const sprite = stephenProofMode === "auto"
       ? (reaction === "amused" ? "amused" : "neutral")
       : stephenProofMode;
+    // A transparent full-body pose MUST replace the previous image, never
+    // stack on it. Crossfading two different silhouettes causes double arms
+    // and faces where the new sprite is transparent.
+    const portrait = $("portraitStephen");
+    if (portrait.dataset.sprite !== sprite) {
+      portrait.src = stephenSeatedSources[sprite];
+      portrait.dataset.sprite = sprite;
+    }
     cast.Stephen.dataset.seatedSprite = sprite;
     cast.Stephen.dataset.staging = "seated-expression-proof";
   }
