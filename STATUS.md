@@ -7,7 +7,7 @@
 ## Foundation
 
 - Repo: `tametheboardgame/stephen-martin-project`, currently **public**.
-- Foundation delivery: [PR #1](https://github.com/tametheboardgame/stephen-martin-project/pull/1) (refer to GitHub for live merge state).
+- Foundation delivery: [PR #1](https://github.com/tametheboardgame/stephen-martin-project/pull/1), merged into `main`.
 - Image pipeline: tested successfully end to end in GitHub Actions run `38221823786` on 12 October 2026.
 - Staging folder: `1C6kezJBL_sexyHmxeLnFnzpj-Zbn9iC6`.
 - WIF provider: `projects/878071288497/locations/global/workloadIdentityPools/github/providers/stephen-martin-github`.
@@ -22,12 +22,12 @@
 **Human gate required for each new likeness.**
 
 1. Confirm Stephen's approved character sheet remains the anchor.
-2. Obtain visual references for David and generate/review a consistent comic character sheet.
-3. Obtain visual references for Paul and generate/review his comic character sheet.
+2. **David design approved:** 6 ft 2 in, bald, blue eyes, short dark ginger/auburn beard. Original `david-character-baseline-v01.png` in Drive (`1DJLH4ni0z81_SMrslKx99z_U2agTm8vS`); manifest at `generated-assets/manifests/character-david-baseline.json`; target `public/assets/generated/characters/david-baseline.webp`. Generated asset materialisation and branch merge are being finalised.
+3. **Next:** obtain visual references for Paul and generate/review his comic character sheet.
 4. Create concise canonical appearance/personality notes and register approved assets using the Drive pipeline.
 5. Define/design a fictionalised boyfriend when story requirements justify it, keeping the mystery ambiguous.
 
-**Done when:** David and Paul sheets are visually approved, materialised into GitHub, and character canon reflects those approvals. Then proceed to SP-WP1.2 (short narrative/comedy bible).
+**Done when:** David and Paul sheets are visually approved, materialised into GitHub, and character canon reflects those approvals. David's visual approval has been granted; Paul remains pending. Then proceed to SP-WP1.2 (short narrative/comedy bible).
 
 ## Operating notes
 
