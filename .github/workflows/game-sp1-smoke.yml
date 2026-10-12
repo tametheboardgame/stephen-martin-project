@@ -39,23 +39,20 @@ jobs:
           test -f dist/src/game.js
           test -f dist/src/reactions.js
           test -f dist/src/styles.css
+          test -f dist/public/assets/generated/locations/office-clean-01-v01.webp
+          test -f dist/public/assets/generated/characters/david-office-seated-neutral-v01.webp
+          test -f dist/public/assets/generated/characters/stephen-office-seated-neutral-v01.webp
+          test -f dist/public/assets/generated/characters/paul-office-seated-neutral-v01.webp
           test -f dist/public/assets/generated/characters/stephen-martin-baseline.webp
           test -f dist/public/assets/generated/characters/david-baseline.webp
           test -f dist/public/assets/generated/characters/paul-baseline.webp
           test ! -e dist/AGENTS.md
           test ! -e dist/docs
           test ! -e dist/.github
-      - name: Package offline office preview for owner review
+      - name: Package complete D1 office preview for visual review
         uses: actions/upload-artifact@v4
         with:
-          name: game-sp1-office-preview
+          name: game-sp11d1-seated-office-preview
           if-no-files-found: error
           retention-days: 14
-          path: |
-            index.html
-            src/office-data.js
-            src/game.js
-            src/styles.css
-            public/assets/generated/characters/stephen-martin-baseline.webp
-            public/assets/generated/characters/david-baseline.webp
-            public/assets/generated/characters/paul-baseline.webp
+          path: dist/
