@@ -421,7 +421,7 @@ test("D1E start and saved-game continuation work from floating action panel", ()
 });
 
 
-test("D2 Stephen Neutral, Amused, Confused and Annoyed preserve alpha and canvas registration", () => {
+test("D2 Stephen Neutral, Amused, Confused, Annoyed and Exasperated preserve alpha and canvas registration", () => {
   const sourceRoot = "public/assets/generated/characters/";
   const getWebpDimensions = (relative) => {
     const bytes = fs.readFileSync(path.join(root, relative));
@@ -434,10 +434,13 @@ test("D2 Stephen Neutral, Amused, Confused and Annoyed preserve alpha and canvas
   const amusedPath = sourceRoot + "stephen-office-seated-amused-v01.webp";
   const confusedPath = sourceRoot + "stephen-office-seated-confused-v01.webp";
   const annoyedPath = sourceRoot + "stephen-office-seated-annoyed-v01.webp";
+  const exasperatedPath = sourceRoot + "stephen-office-seated-exasperated-v01.webp";
   assert.deepEqual(getWebpDimensions(neutralPath), [1086, 1448]);
   assert.deepEqual(getWebpDimensions(amusedPath), [1086, 1448]);
   assert.deepEqual(getWebpDimensions(confusedPath), [1086, 1448]);
   assert.deepEqual(getWebpDimensions(annoyedPath), [1086, 1448]);
+  assert.deepEqual(getWebpDimensions(exasperatedPath), [1086, 1448]);
+  assert.ok(read("scripts/build.mjs").includes("stephen-office-seated-exasperated-v01.webp"));
   assert.ok(read("scripts/build.mjs").includes("stephen-office-seated-annoyed-v01.webp"));
   assert.ok(read("scripts/build.mjs").includes("stephen-office-seated-confused-v01.webp"));
 
@@ -449,6 +452,7 @@ test("D2 Stephen Neutral, Amused, Confused and Annoyed preserve alpha and canvas
   assert.ok(html.includes("stephen-office-seated-amused-v01.webp?v=3"));
   assert.ok(html.includes("stephen-office-seated-confused-v01.webp?v=1"));
   assert.ok(html.includes("stephen-office-seated-annoyed-v01.webp?v=1"));
+  assert.ok(html.includes("stephen-office-seated-exasperated-v01.webp?v=3"));
   const amusedManifest = JSON.parse(read("generated-assets/manifests/stephen-office-seated-amused-v01.json"));
   assert.equal(amusedManifest.revision, 2);
   assert.equal(amusedManifest.expectedSourceName, "stephen-office-seated-amused-d2-v03.png");
@@ -461,6 +465,10 @@ test("D2 Stephen Neutral, Amused, Confused and Annoyed preserve alpha and canvas
   assert.equal(annoyedManifest.revision, 1);
   assert.equal(annoyedManifest.expectedSourceName, "stephen-office-seated-annoyed-d2-v01.png");
   assert.equal(annoyedManifest.destination, annoyedPath);
+  const exasperatedManifest = JSON.parse(read("generated-assets/manifests/stephen-office-seated-exasperated-v01.json"));
+  assert.equal(exasperatedManifest.revision, 1);
+  assert.equal(exasperatedManifest.expectedSourceName, "stephen-office-seated-exasperated-d2-v03.png");
+  assert.equal(exasperatedManifest.destination, exasperatedPath);
   const css = read("src/styles.css");
   assert.ok(css.includes('#officeScreen .cast-seated #castStephen #portraitStephen'));
   assert.ok(!css.includes("#portraitStephenAmused"));
@@ -492,7 +500,47 @@ test("D2 Stephen dialogue cues select Amused, Confused and Annoyed with safe fal
   assert.equal(el("castPaul").dataset.staging, "seated-neutral");
 });
 
-test("D2 proof cycles Auto Neutral Amused Confused Annoyed without changing dialogue or autoplay", () => {
+
+test("D2 Exasperated cues occur at five story-appropriate beats, with fallback remaining neutral", () => {
+  const window = { SMP_OFFICE_SHOTS: loadShots() };
+  vm.runInNewContext(reactionSource, { window }, { timeout: 1000 });
+  const cues = window.SMP_REACTIONS;
+  const expected = ["O02:8", "O04:7", "O05:3", "O05:8", "O06:5"];
+  assert.deepEqual(
+    Object.entries(cues).flatMap(([shot, beats]) =>
+      Object.entries(beats).filter(([, reactions]) => reactions.Stephen === "exasperated")
+        .map(([index]) => shot + ":" + index)
+    ),
+    expected
+  );
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  const shots = loadShots();
+  el("startButton").click();
+  let covered = 0;
+  let checkedFallback = 0;
+  for (const shot of shots) {
+    for (let i = 0; i < shot.lines.length; i++) {
+      const actualCue = cues[shot.id]?.[i]?.Stephen ||
+        (shot.lines[i].speaker === "Stephen" ? shot.lines[i].expression || "neutral" : "neutral");
+      if (actualCue === "exasperated") {
+        assert.equal(el("castStephen").dataset.expression, "exasperated", shot.id + ":" + i);
+        assert.equal(el("castStephen").dataset.seatedSprite, "exasperated", shot.id + ":" + i);
+        assert.match(el("portraitStephen").src, /exasperated-v01\.webp\?v=3$/);
+        covered++;
+      } else if (actualCue === "concerned" || actualCue === "laughing") {
+        assert.equal(el("castStephen").dataset.seatedSprite, "neutral", shot.id + ":" + i);
+        checkedFallback++;
+      }
+      el("nextButton").click();
+    }
+  }
+  assert.equal(covered, 5);
+  assert.ok(checkedFallback >= 1, "Incomplete future expressions should still use Neutral");
+  assert.equal(el("holidayScreen").hidden, false, "Office sequence must remain playable");
+});
+
+test("D2 proof cycles Auto Neutral Amused Confused Annoyed Exasperated without changing dialogue or autoplay", () => {
   const p = setupFakeGame();
   const el = p.getElementById;
   el("startButton").click(); // O01:0 naturally amused
@@ -513,6 +561,10 @@ test("D2 proof cycles Auto Neutral Amused Confused Annoyed without changing dial
   assert.match(el("portraitStephen").src, /annoyed-v01\.webp\?v=1$/);
   assert.match(el("stephenProofButton").attributes["aria-label"], /Annoyed/);
   el("stephenProofButton").click();
+  assert.equal(el("castStephen").dataset.seatedSprite, "exasperated");
+  assert.match(el("portraitStephen").src, /exasperated-v01\.webp\?v=3$/);
+  assert.match(el("stephenProofButton").attributes["aria-label"], /Exasperated/);
+  el("stephenProofButton").click();
   assert.equal(el("castStephen").dataset.seatedSprite, "amused"); // back to Auto
   assert.match(el("stephenProofButton").textContent, /Auto/);
   assert.equal(el("lineText").textContent, initialText);
@@ -524,9 +576,10 @@ test("D2 proof cycles Auto Neutral Amused Confused Annoyed without changing dial
   el("stephenProofButton").click(); // amused
   el("stephenProofButton").click(); // confused
   el("stephenProofButton").click(); // annoyed
+  el("stephenProofButton").click(); // exasperated
   el("nextButton").click();
   assert.equal(el("castStephen").dataset.expression, "amused");
-  assert.equal(el("castStephen").dataset.seatedSprite, "annoyed");
+  assert.equal(el("castStephen").dataset.seatedSprite, "exasperated");
   el("stephenProofButton").click(); // Auto
   assert.equal(el("castStephen").dataset.seatedSprite, "amused");
 });
