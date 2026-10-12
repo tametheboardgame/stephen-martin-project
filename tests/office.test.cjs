@@ -293,3 +293,16 @@ test("D1A desk asset is a real alpha WebP, not an opaque flattened scene", () =>
   assert.equal(desk.toString("ascii", 12, 16), "VP8X", "Transparent WebP must have VP8X metadata");
   assert.ok((desk[20] & 0x10) !== 0, "Foreground WebP must retain alpha transparency");
 });
+
+test("D1B cuts office scene height to available laptop viewport without distorting layers", () => {
+  const css = read("src/styles.css");
+  assert.ok(css.includes('.game-shell:has(#officeScreen:not([hidden]))'), "Viewport-fit must only apply during the office opening");
+  assert.ok(css.includes("100dvh - 208px"), "Office shell width must account for laptop viewport height and controls");
+  assert.ok(css.includes("max(760px"), "Keep captions usable in exceptionally shallow browser windows");
+  assert.ok(css.includes("aspect-ratio: 1672 / 941"), "Maintain source aspect ratio for background and foreground registration");
+  assert.ok(css.includes("max-width: 650px"), "Retain mobile stacked dialogue rather than shrinking it into the art");
+  assert.ok(css.includes("#officeScreen .dialogue-text"), "Ensure captions scale along with the scene");
+  for (const asset of ["office-clean-01-v01.webp", "office-foreground-01-v01.webp"]) {
+    assert.ok(css.includes(asset), "Missing composited office layer " + asset);
+  }
+});
