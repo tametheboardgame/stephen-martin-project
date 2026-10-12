@@ -251,7 +251,9 @@ test("static seated actors preserve speaker and listener expression metadata acr
   // D1 deliberately does not splice close-up facial images onto the seated bodies.
   assert.ok(!gameSource.includes("portrait.src = expressionAssetRoot"));
   assert.equal(el("portraitDavid").src, undefined);
-  assert.equal(el("portraitStephen").src, undefined);
+  // Stephen is intentionally the ONLY seated character whose single img
+  // source switches; David and Paul stay as the approved neutral sprites.
+  assert.match(el("portraitStephen").src, /stephen-office-seated-neutral-v01\.webp$/);
   assert.equal(el("portraitPaul").src, undefined);
 });
 
