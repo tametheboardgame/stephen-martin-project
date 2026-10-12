@@ -304,7 +304,7 @@ test("D1C menu and office share the real approved art and fit laptop viewport", 
   }
   assert.ok(css.includes('.game-shell:has(#officeScreen:not([hidden]))'), "Office viewport fit missing");
   assert.ok(css.includes('.game-shell:has(#menuScreen:not([hidden]))'), "Menu viewport fit missing");
-  assert.ok(css.includes("100dvh - 218px"), "Office must reserve height for toolbar and transport");
+  assert.ok(css.includes("100dvh - 72px"), "Cinematic office must reserve only the bottom transport");
   assert.ok(css.includes("100dvh - 253px"), "Menu must reserve height for title and start controls");
   assert.ok(!css.includes("max(760px"), "Old minimum width forced unnecessary scrolling on small laptops");
   assert.ok(css.includes("aspect-ratio: 1672 / 941"), "Preserve foreground and background registration");
@@ -326,4 +326,40 @@ test("entire existing intro remains playable with the rebuilt title screen", () 
   assert.equal(el("menuScreen").hidden, false);
   el("replayButton").click();
   assert.equal(el("lineText").textContent, "Is China far?");
+});
+
+test("D1D cinematic office fills laptop screen and keeps controls in-stage", () => {
+  const css = read("src/styles.css");
+  assert.ok(css.includes("GAME-SP1.1-D1D: cinematic viewport composition"));
+  assert.ok(css.includes("position: absolute;\n    z-index: 20"), "Scene toolbar must overlay the artwork");
+  assert.ok(css.includes("body:has(#officeScreen:not([hidden])) .topbar"), "Old global header must be hidden during office scene");
+  assert.ok(css.includes("1672px"), "Stage should grow toward its native resolution");
+  assert.ok(html.includes('id="sceneSoundButton"'), "Sound remains accessible when global header is hidden");
+  assert.ok(gameSource.includes('["soundButton", "sceneSoundButton"]'), "Both sound controls must stay synchronised");
+});
+
+test("D1D floating risk graphic never covers Paul's face between cutaways", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  el("startButton").click();
+  for (let i = 0; i < 7; i++) el("nextButton").click();
+  // O02/line 3 is Stephen's response, not the dedicated risk cutaway.
+  assert.equal(el("stage").dataset.cutaway, "none");
+  assert.equal(el("sceneEffect").innerHTML, "");
+  assert.equal(el("cutawayPanel").hidden, true);
+  el("backButton").click();
+  assert.equal(el("stage").dataset.cutaway, "risk");
+  assert.equal(el("cutawayPanel").hidden, false);
+  assert.ok(el("cutawayContent").innerHTML.includes("UNREASONABLY HIGH"));
+});
+
+test("D1D stage sound button toggles sound from the overlay toolbar", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  el("startButton").click();
+  el("sceneSoundButton").click();
+  assert.equal(el("sceneSoundButton").textContent, "Sound: On");
+  assert.equal(el("soundButton").textContent, "Sound: On");
+  el("soundButton").click();
+  assert.equal(el("sceneSoundButton").textContent, "Sound: Off");
 });
