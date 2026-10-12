@@ -19,7 +19,7 @@
         <div><strong>OPERATION: PROBABLY FINE</strong><span>AN ENTIRELY FICTIONAL COMEDY</span></div>
       </div>
       <div class="topbar-right">
-        <span class="build-label">GAME-SP1.1 · CINEMATIC PREVIEW</span>
+        <span class="build-label">GAME-SP1.1-D1 · OFFICE ASSEMBLY PREVIEW</span>
         <button class="header-button" id="soundButton" type="button" aria-pressed="false" title="Toggle short sound effects">Sound: Off</button>
       </div>
     </header>
@@ -58,32 +58,25 @@
         </div>
 
         <div class="stage" id="stage" data-moment="establishing">
-          <div class="office-world" aria-hidden="true">
-            <div class="window-panel window-left"><span></span><span></span></div>
-            <div class="window-panel window-right"><span></span><span></span></div>
-            <div class="wall-clock"><div class="clock-hand"></div></div>
-            <div class="office-floor"></div>
-            <div class="desk desk-left"><div class="screen-prop"></div></div>
-            <div class="desk desk-right"><div class="printer-prop"><span>PRINT</span></div></div>
-            <div class="floor-case"></div>
+          <div class="office-world office-scene-backdrop" aria-hidden="true"></div>
+          <div class="cast cast-seated" aria-label="David, Stephen and Paul seated together in a fictional office">
+            <figure class="cast-card cast-actor" id="castDavid" data-character="david">
+              <div class="cast-portrait actor-portrait"><img loading="eager" id="portraitDavid" src="./public/assets/generated/characters/david-office-seated-neutral-v01.webp" alt="David seated in the office"></div>
+              <figcaption>DAVID</figcaption>
+            </figure>
+            <figure class="cast-card cast-actor" id="castStephen" data-character="stephen">
+              <div class="cast-portrait actor-portrait"><img loading="eager" id="portraitStephen" src="./public/assets/generated/characters/stephen-office-seated-neutral-v01.webp" alt="Stephen seated in the office"></div>
+              <figcaption>STEPHEN</figcaption>
+            </figure>
+            <figure class="cast-card cast-actor" id="castPaul" data-character="paul">
+              <div class="cast-portrait actor-portrait"><img loading="eager" id="portraitPaul" src="./public/assets/generated/characters/paul-office-seated-neutral-v01.webp" alt="Paul seated in the office"></div>
+              <figcaption>PAUL</figcaption>
+            </figure>
           </div>
+          <div class="office-foreground" aria-hidden="true"></div>
           <div id="sceneEffect" class="scene-effect" aria-hidden="true"></div>
           <div id="cutawayPanel" class="cutaway-panel" hidden aria-hidden="true">
             <div class="cutaway-inner" id="cutawayContent"></div>
-          </div>
-          <div class="cast" aria-label="Stephen, David and Paul in the office">
-            <figure class="cast-card" id="castStephen" data-character="stephen">
-              <div class="cast-portrait"><img loading="eager" id="portraitStephen" src="./public/assets/generated/characters/expressions/stephen-neutral.webp" alt="Approved illustrated character sheet of Stephen Martin"></div>
-              <figcaption><strong>STEPHEN</strong><span>20s · ON HIS WAY OUT</span></figcaption>
-            </figure>
-            <figure class="cast-card" id="castDavid" data-character="david">
-              <div class="cast-portrait"><img loading="eager" id="portraitDavid" src="./public/assets/generated/characters/expressions/david-neutral.webp" alt="Approved illustrated character sheet of David"></div>
-              <figcaption><strong>DAVID</strong><span>30s · SELF-APPOINTED EXPERT</span></figcaption>
-            </figure>
-            <figure class="cast-card" id="castPaul" data-character="paul">
-              <div class="cast-portrait"><img loading="eager" id="portraitPaul" src="./public/assets/generated/characters/expressions/paul-neutral.webp" alt="Approved illustrated character sheet of Paul"></div>
-              <figcaption><strong>PAUL</strong><span>40s · PRESENT, SOMEHOW</span></figcaption>
-            </figure>
           </div>
         <div class="dialogue" id="dialogueBox">
           <div class="dialogue-accent" aria-hidden="true"></div>
@@ -124,7 +117,7 @@
             <button id="replayButton" type="button" class="btn btn-primary">Replay the office <span aria-hidden="true">↺</span></button>
             <button id="homeButton" type="button" class="btn btn-secondary">Main menu</button>
           </div>
-          <p class="preview-label">This is the approved GAME-SP1 vertical slice, not the complete adventure.</p>
+          <p class="preview-label">GAME-SP1.1-D1: a static seated-character composition preview; expressive seated animation is a later pass.</p>
         </div>
       </section>
     </main>
