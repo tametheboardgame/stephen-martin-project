@@ -1,4 +1,4 @@
-import { cp, copyFile, mkdir, readdir, rm, stat } from "node:fs/promises";
+import { cp, copyFile, mkdir, readFile, readdir, rm, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -50,6 +50,15 @@ const officeImages = [
   "public/assets/generated/locations/office-clean-01-v01.webp",
   "public/assets/generated/locations/office-foreground-01-v01.webp"
 ];
+// Fail the public preview build if the independent desk accidentally becomes an
+// opaque image: a black/solid rectangle would cover all three actors.
+const foregroundPath = path.join(root, "public/assets/generated/locations/office-foreground-01-v01.webp");
+const foregroundHeader = (await readFile(foregroundPath)).subarray(0, 30);
+if (foregroundHeader.toString("ascii", 0, 4) !== "RIFF" ||
+    foregroundHeader.toString("ascii", 8, 16) !== "WEBPVP8X" ||
+    (foregroundHeader[20] & 0x10) === 0) {
+  throw new Error("OFFICE-FOREGROUND-01 must retain WebP alpha transparency.");
+}
 for (const relative of officeImages) {
   const officeSource = path.join(root, relative);
   if (!(await stat(officeSource)).size) throw new Error("Missing office layer: " + relative);
