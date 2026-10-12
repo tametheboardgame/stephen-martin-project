@@ -1,6 +1,6 @@
 # SP-WP1.2: Full game story and comedy treatment (v1)
 
-**Status:** Full first-pass proposal; NOT yet approved canon or implementation authorisation.  
+**Status:** **Approved story baseline, 12 October 2026**, for implementation. The three routes, scenes, mini-games and endings are authorised for development. Minor dialogue/pacing improvements remain permissible; major story changes require review.  
 **Working title:** Rescue Stephen Martin from China  
 **Format:** One short 2D comedy adventure: comic cutscene → play Stephen → cutscene → play David and Paul → branch-specific cutscene → one of three mini-games → matching end cutscene.  
 **First-run target:** **15–25 minutes**, ideal about 19–21 minutes including one ending.  
