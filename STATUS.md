@@ -4,11 +4,17 @@
 **Master roadmap:** Approved version 1.0, `ROADMAP.md`  
 **Primary scope:** Complete **15–25 minute** point-and-click/touch comedy game; three concise endings; approximately 2–3 substantial mini-games. Song alongside; comic optional.
 
-## GAME-SP1.1-D2 — Stephen Confused sprite added (awaiting owner visual approval)
+## GAME-SP1.1-D2 — Stephen Annoyed seated sprite (owner preview pending)
+
+- **Owner-approved artwork:** `annoyed_stephen_with_clasped_hands.png` (transparent 1086 × 1448) staged via project Drive as `stephen-office-seated-annoyed-d2-v01.png`, source Drive ID `1DVCowiLgSjl9NQ69ATxClXC8cMhFqjb1`. Provenance manifest `generated-assets/manifests/stephen-office-seated-annoyed-v01.json` materialises `public/assets/generated/characters/stephen-office-seated-annoyed-v01.webp` via the established GitHub workflow.
+- **In-game mapping:** Stephen's `annoyed` reaction metadata selects the new full seated sprite automatically, alongside Neutral/Amused/Confused. The proof button cycles Auto → Neutral → Amused → Confused → Annoyed, preserving the single-image-only replacement that prevents ghosted arms or faces. New image preloaded/cache-versioned for smooth comparison.
+- **QA and release gate:** Build and smoke checks confirm the new 1086 × 1448 alpha WebP, preservation of all existing lines, per-beat reaction mapping and the manual selector. The owner must visually review the real Cloudflare branch preview before merging PR #14. No production deployment and no changes to David, Paul, desk or cutaways.
+
+## GAME-SP1.1-D2 — Stephen Confused sprite added (visually approved)
 
 - **Reconnection and asset:** GitHub PR #14 was still open. Owner-approved `puzzled_man_with_clasped_hands.png` (transparent 1086 × 1448) staged in project Drive as `stephen-office-seated-confused-d2-v01.png` (ID `1AgdYklMgvLFkPNo153UEqfIV4KwApzqU`), manifest `generated-assets/manifests/stephen-office-seated-confused-v01.json`; the established GitHub pipeline materialised `public/assets/generated/characters/stephen-office-seated-confused-v01.webp`.
 - **In-engine:** Preserve the **single-image-only** swap mechanism. Existing Stephen `confused` reaction cues now select Confused automatically; `amused` selects Amused; uncreated emotions fall back to Neutral. Temporary proof button cycles **Auto → Neutral → Amused → Confused** without stopping or resetting the script. Confused WebP is preloaded and cache-versioned.
-- **Boundaries:** No changes to the approved office background, David/Paul artwork, 64 beats, pacing, desk layering or production `main`. Cloudflare branch preview and targeted 1086 × 1448 alpha/behaviour checks must pass. Human owner to review pose registration and emotional readability before merging PR #14 or starting Annoyed.
+- **Boundaries:** No changes to the approved office background, David/Paul artwork, 64 beats, pacing, desk layering or production `main`. Cloudflare branch preview and targeted 1086 × 1448 alpha/behaviour checks must pass. Owner reviewed the real Confused pose in the preview and approved its visual alignment and readability. PR #14 remains open for the rest of Stephen's D2 set.
 
 ## GAME-SP1.1-D2 proof — Stephen seated Neutral ↔ Amused (owner visual review pending)
 
