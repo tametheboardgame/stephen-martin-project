@@ -39,7 +39,7 @@
             <button type="button" id="startButton" class="btn btn-primary">Start the story <span aria-hidden="true">→</span></button>
             <button type="button" id="resumeButton" class="btn btn-secondary" hidden>Continue preview</button>
           </div>
-          <small>Approx. 3 minutes · Click/tap to advance · Space or Enter also works · Fictional characters and events</small>
+          <small>Plays automatically · Pause for manual control · Space or Enter advances · Fictional characters and events</small>
         </div>
       </section>
 
@@ -67,6 +67,9 @@
             <div class="floor-case"></div>
           </div>
           <div id="sceneEffect" class="scene-effect" aria-hidden="true"></div>
+          <div id="cutawayPanel" class="cutaway-panel" hidden aria-hidden="true">
+            <div class="cutaway-inner" id="cutawayContent"></div>
+          </div>
           <div class="cast" aria-label="Stephen, David and Paul in the office">
             <figure class="cast-card" id="castStephen" data-character="stephen">
               <div class="cast-portrait"><img loading="eager" src="./public/assets/generated/characters/stephen-martin-baseline.webp" alt="Approved illustrated character sheet of Stephen Martin"></div>
@@ -93,8 +96,9 @@
             <p id="lineText" class="dialogue-text" aria-live="polite" aria-atomic="true"></p>
             <div id="stageNote" class="stage-note" hidden></div>
             <div class="dialogue-actions">
-              <span class="dialogue-hint">CLICK NEXT OR PRESS SPACE</span>
+              <span id="playbackStatus" class="dialogue-hint" role="status" aria-live="off">AUTO · NEXT LINE IN A MOMENT</span>
               <div class="dialogue-buttons">
+                <button id="playPauseButton" type="button" class="btn btn-small btn-secondary" aria-pressed="true">Ⅱ Pause</button>
                 <button id="backButton" type="button" class="btn btn-small btn-secondary">← Back</button>
                 <button id="nextButton" type="button" class="btn btn-small btn-primary">Next <span aria-hidden="true">→</span></button>
               </div>
