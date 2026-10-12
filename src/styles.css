@@ -738,10 +738,6 @@ button:active:not(:disabled) { transform: translateY(1px); }
     width: min(calc(100% - 20px), 1380px, max(500px, calc((100dvh - 253px) * 1.7768)));
     margin: 4px auto;
   }
-  .game-shell:has(#officeScreen:not([hidden])) {
-    width: min(calc(100% - 20px), 1380px, max(500px, calc((100dvh - 218px) * 1.7768)));
-    margin: 4px auto;
-  }
   .game-shell:has(#menuScreen:not([hidden])) .topbar,
   .game-shell:has(#officeScreen:not([hidden])) .topbar {
     padding: 3px 3px 7px;
@@ -794,4 +790,129 @@ button:active:not(:disabled) { transform: translateY(1px); }
   }
   .menu-office-transport .menu-actions { margin: 7px 0 0; }
   .menu-office-transport .btn { min-height: 44px; }
+}
+
+
+/*
+ * GAME-SP1.1-D1D: cinematic viewport composition.
+ * The old stage was tiny because the global header and a large scene toolbar
+ * consumed height before the background was laid out. Reserve only 66px for
+ * transport, then put a compact, interactive toolbar OVER the top of the stage.
+ * All image layers are descendants of one original-aspect-ratio stage.
+ */
+@media (min-width: 801px) {
+  body:has(#officeScreen:not([hidden])) {
+    overflow-x: hidden;
+  }
+  body:has(#officeScreen:not([hidden])) .game-shell {
+    width: 100%;
+    max-width: none;
+    min-height: 100dvh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  body:has(#officeScreen:not([hidden])) .topbar,
+  body:has(#officeScreen:not([hidden])) .footnote {
+    display: none;
+  }
+  body:has(#officeScreen:not([hidden])) main {
+    width: 100%;
+    flex: 1;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+  }
+  #officeScreen {
+    position: relative;
+    width: min(
+      calc(100vw - 22px),
+      calc((100dvh - 72px) * (1672 / 941)),
+      1672px
+    );
+    max-width: none;
+    margin: 0 auto;
+  }
+  #officeScreen .scene-toolbar {
+    position: absolute;
+    z-index: 20;
+    top: 0;
+    left: 0;
+    right: 0;
+    min-height: 43px;
+    padding: 5px 12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(180deg, rgba(4, 19, 38, .95), rgba(4, 19, 38, .79));
+    border-bottom: 1px solid rgba(73, 187, 233, .35);
+    pointer-events: none;
+  }
+  #officeScreen .scene-heading {
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+  }
+  #officeScreen .scene-heading .small-caps {
+    flex: none;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  #officeScreen .scene-heading h2 {
+    min-width: 0;
+    margin: 0;
+    font-size: clamp(15px, 1.45vw, 21px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #officeScreen .scene-heading p { display: none; }
+  #officeScreen .scene-toolbar-actions {
+    flex: none;
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    pointer-events: auto;
+  }
+  #officeScreen .mini-button {
+    padding: 7px 10px;
+    font-size: 12px;
+    min-height: 33px;
+  }
+  #officeScreen .stage {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1672 / 941;
+  }
+  #officeScreen .dialogue {
+    left: 2%;
+    bottom: 3%;
+    width: min(70%, 860px);
+  }
+  #officeScreen .dialogue-main {
+    padding: 14px 15px 11px;
+    min-height: 0;
+  }
+  #officeScreen .dialogue-text {
+    font-size: clamp(17px, 1.6vw, 23px);
+    line-height: 1.32;
+    max-height: 110px;
+  }
+  #officeScreen .progress-track {
+    height: 8px;
+    margin: 6px 11px 0;
+  }
+  #officeScreen .dialogue-actions {
+    min-height: 45px;
+    padding: 3px 12px 6px;
+  }
+}
+@media (min-width: 801px) and (max-height: 565px) {
+  /* Very short embedded/browser windows may scroll rather than hiding controls. */
+  body:has(#officeScreen:not([hidden])) .game-shell { min-height: 0; }
+  #officeScreen { width: min(calc(100vw - 20px), 900px); }
 }
