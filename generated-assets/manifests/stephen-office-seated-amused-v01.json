@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "source": {
     "provider": "google-drive",
-    "fileId": "11e1Km4M6NvLcbZNXc48Ez0_p23EoGkXi"
+    "fileId": "1gfRmnWft10XbzPvWc0dJ0tS-B2Vi8-8_"
   },
-  "expectedSourceName": "stephen-office-seated-amused-d2-proof-v01.png",
+  "expectedSourceName": "stephen-office-seated-amused-d2-v03.png",
   "destination": "public/assets/generated/characters/stephen-office-seated-amused-v01.webp",
   "transform": {
     "maxWidth": 1200,
     "maxHeight": 1600,
     "quality": 90
   },
-  "revision": 1
+  "revision": 2
 }
