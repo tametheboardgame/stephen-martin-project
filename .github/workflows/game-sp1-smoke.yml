@@ -1,0 +1,33 @@
+name: GAME-SP1 targeted smoke
+
+on:
+  push:
+    branches:
+      - 'agent/game-sp1-*'
+    paths:
+      - 'index.html'
+      - 'src/**'
+      - 'tests/**'
+      - 'scripts/preview-server.mjs'
+      - 'package.json'
+      - '.github/workflows/game-sp1-smoke.yml'
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'src/**'
+      - 'tests/**'
+      - 'scripts/preview-server.mjs'
+      - 'package.json'
+      - '.github/workflows/game-sp1-smoke.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify game scripts and scene flow (no dependencies)
+        run: npm run verify
