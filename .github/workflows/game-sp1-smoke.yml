@@ -1,0 +1,60 @@
+name: GAME-SP1 targeted smoke
+
+on:
+  push:
+    branches:
+      - 'agent/game-sp1-*'
+    paths:
+      - 'index.html'
+      - 'src/**'
+      - 'tests/**'
+      - 'scripts/preview-server.mjs'
+      - 'scripts/build.mjs'
+      - 'package.json'
+      - '.github/workflows/game-sp1-smoke.yml'
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'src/**'
+      - 'tests/**'
+      - 'scripts/preview-server.mjs'
+      - 'scripts/build.mjs'
+      - 'package.json'
+      - '.github/workflows/game-sp1-smoke.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify game scripts and scene flow (no dependencies)
+        run: npm run verify
+      - name: Verify published output excludes project and personal documentation
+        run: |
+          test -f dist/index.html
+          test -f dist/src/game.js
+          test -f dist/src/styles.css
+          test -f dist/public/assets/generated/characters/stephen-martin-baseline.webp
+          test -f dist/public/assets/generated/characters/david-baseline.webp
+          test -f dist/public/assets/generated/characters/paul-baseline.webp
+          test ! -e dist/AGENTS.md
+          test ! -e dist/docs
+          test ! -e dist/.github
+      - name: Package offline office preview for owner review
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-sp1-office-preview
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            index.html
+            src/office-data.js
+            src/game.js
+            src/styles.css
+            public/assets/generated/characters/stephen-martin-baseline.webp
+            public/assets/generated/characters/david-baseline.webp
+            public/assets/generated/characters/paul-baseline.webp
