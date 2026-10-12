@@ -1,6 +1,6 @@
 # Art direction
 
-**Status:** Stephen and David character reference sheets human-approved under SP-WP1.1. Paul and the fictional boyfriend remain to be designed.
+**Status:** Stephen, David and Paul reference sheets human-approved under SP-WP1.1. The fictional boyfriend's design is deferred until story work requires it.
 
 ## Visual language
 Use a bold, slightly worn comic-poster / graphic-novel illustration approach compatible with Berserk Llama Syndrome's existing album covers: expressive faces, thick illustrated linework, textured print/halftone shading, vibrant warm accents and purposeful exaggeration.
@@ -21,12 +21,19 @@ Preserve the approved side-parted fair/light-brown hair, neat facial stubble, ex
 
 Preserve David's tall (6 ft 2 in) silhouette, bald head, blue eyes and short auburn/dark ginger beard. The approved comic reference wears a charcoal hoodie/jacket, olive-green T-shirt, blue jeans and casual trainers. Maintain the comic sheet's consistent facial shape, expressive brows and characteristic mixture of misplaced confidence, suspicion and frustration across future illustrations.
 
+## Canonical Paul reference
+- `public/assets/generated/characters/paul-baseline.webp`
+- `generated-assets/manifests/character-paul-baseline.json`
+- Original PNG in Google Drive: `paul-character-baseline-v01.png` (ID `1J-_Zxy7U7VGAnUS9S3L7CAAR54KNaSYk`).
+
+Preserve his approximately 5 ft 10 in stocky/heavier silhouette, bald crown with short side/back hair stubble, **no facial hair**, glasses and characteristic white polo shirt. In the approved reference he also wears blue jeans and casual trainers. His neutral or vaguely confused face is the most important expression; others include bewilderment, mild concern, hands-on-head stress and palms-up uncertainty. Do not inadvertently revert to the rejected earlier design that gave him beard stubble or a smug expression.
+
 ## Production conventions
-- David's expression/pose sheet is approved. Establish and approve Paul's separately.
+- David's and Paul's character and expression sheets are approved. Keep their proportions and demeanours distinct.
 - Reuse approved character designs across game, music and comic.
 - Keep text and dialogue editable in the final medium; don't rely on generated illustrations for long accurately spelt dialogue.
 - Source images in Google Drive, approved optimised WebP in GitHub; manifest and revision ensure provenance.
 - Character sheet approvals are a human gate. Verify the actual file pixels instead of an unrelated placeholder or illustrative thumbnail.
 
 ## Pending design choices
-Paul likeness and fictional boyfriend design; scene dimensions, character sprite treatment and comic panel typography are to be scoped with the relevant work package.
+Fictional boyfriend design; scene dimensions, character sprite treatment and comic panel typography are to be scoped with the relevant work package.
