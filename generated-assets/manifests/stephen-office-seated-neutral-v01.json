@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1-p8JJD006SbeixxsMjcOjAbKf8z11-DM"
+  },
+  "expectedSourceName": "stephen-office-seated-neutral-approved-v01.png",
+  "destination": "public/assets/generated/characters/stephen-office-seated-neutral-v01.webp",
+  "transform": {
+    "maxWidth": 1200,
+    "maxHeight": 1600,
+    "quality": 90
+  },
+  "revision": 1
+}
