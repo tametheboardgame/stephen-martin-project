@@ -51,6 +51,10 @@ The build copies only `index.html`, game scripts/CSS and the three approved char
 
 **Story scripts and build handoff:** `docs/story/SP-WP1.2-OFFICE-OPENING.md`, `docs/story/SP-WP1.2-GAME-TREATMENT.md`, `docs/story/SP-WP1.2-IMPLEMENTATION-HANDOFF.md`.
 
+## Next approved work package: GAME-SP1.1 — Opening polish pass
+
+The hosted office preview is approved as a baseline. The next bounded feature PR adds hands-free auto-advance with a Play/Pause toggle, line timing, character-expression variants and three key comic cutaways (the risk assessment, printing bear pages, and rescue group chat). No new game scenes or mini-games are part of this pass. Fresh character expression artwork must be visually approved before becoming canon; Cloudflare production remains on `main` until the owner approves the polish PR.
+
 ## Immediate next work package
 
 GAME-SP1 office preview was approved for merge. Collect the owner's smaller opening feedback in a follow-up PR, then implement **GAME-SP2: Stephen holiday choice and shared rescue hub**. Refer to [STATUS.md](STATUS.md) for current merge/review state.
