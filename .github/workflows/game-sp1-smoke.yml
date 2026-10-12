@@ -3,7 +3,7 @@ name: GAME-SP1 targeted smoke
 on:
   push:
     branches:
-      - 'agent/game-sp1-*'
+      - 'agent/game-sp1*'
     paths:
       - 'index.html'
       - 'src/**'
