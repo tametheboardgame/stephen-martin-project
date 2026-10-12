@@ -5,6 +5,7 @@ on:
     branches:
       - 'agent/game-sp1*'
       - 'agent/sp11d1*'
+      - 'agent/sp11d2*'
     paths:
       - 'index.html'
       - 'src/**'
@@ -44,6 +45,7 @@ jobs:
           test -f dist/public/assets/generated/locations/office-foreground-01-v01.webp
           test -f dist/public/assets/generated/characters/david-office-seated-neutral-v01.webp
           test -f dist/public/assets/generated/characters/stephen-office-seated-neutral-v01.webp
+          test -f dist/public/assets/generated/characters/stephen-office-seated-amused-v01.webp
           test -f dist/public/assets/generated/characters/paul-office-seated-neutral-v01.webp
           test -f dist/public/assets/generated/characters/stephen-martin-baseline.webp
           test -f dist/public/assets/generated/characters/david-baseline.webp
@@ -54,7 +56,7 @@ jobs:
       - name: Package complete D1 office preview for visual review
         uses: actions/upload-artifact@v4
         with:
-          name: game-sp11d1-seated-office-preview
+          name: game-sp11d2-stephen-expression-proof
           if-no-files-found: error
           retention-days: 14
           path: dist/
