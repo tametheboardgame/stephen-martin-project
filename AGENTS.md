@@ -28,6 +28,15 @@ Precedence: explicit current user instruction > accepted implementation/approved
 - All suggestive characters are adults; favour caricature and punchlines over group-targeted abuse.
 - **Never present a stock or unrelated generated thumbnail as if it were canonical artwork.** Verify the actual image from source or checked output.
 
+## Identity, privacy and fictionalisation (approved SP-WP1.2 rule)
+
+- **Stephen Martin is the sole real-world full name permitted in any project content.** Other cast members may be identified by fictional first-name character labels (David and Paul) but must never be linked to real surnames, profiles or contact information.
+- Do not publish real employer names, specific office identity, job locations, home areas, personal contact details, social media profiles, precise travel dates or itineraries, actual photographs, third-party names, or any other identifying metadata. A generic fictional office is fine.
+- Treat real relationship details, real relatives, private coming-out/disclosure circumstances and private messages as **off limits as factual details**. Inspired comic situations must be invented, anonymised and expressly presented as fiction. Do not commit exact real-life relationship timelines or family circumstances.
+- The mysterious boyfriend, his relatives, authorities and any alleged conspiracies are all fictional characters or invented scenarios. Do not infer or allege real wrongdoing, sexuality, or family knowledge about any real third party.
+- Keep character and setting information limited to what is needed for comedy and gameplay. Before any public-facing copy or asset is published, do a privacy check for names, work identifiers, personal revelations, visible text in screenshots, file metadata and identifiable backgrounds.
+- **Do not claim full anonymity:** a real full name plus an approved stylised likeness can still identify a person. No public release or distribution without the project owner's explicit approval and an appropriate privacy review. The repository is currently public, so committed content must already follow this rule.
+
 ## Development streams
 - Shared canon/assets, game, music and comic can develop independently using short-lived `agent/*` branches and PRs into `main`.
 - No permanent integration stream branches. Name work packages in commits and PRs where helpful.

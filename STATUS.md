@@ -33,6 +33,14 @@
 
 Define the succinct story/comedy bible, individual speaking voices and the shared mystery with three compact endings. Keep the 15–25 minute game-length target and avoid premature game-engine or comic scope expansion.
 
+## SP-WP1.2: Story and comedy bible (in progress)
+
+- Owner-approved privacy rule recorded in `DECISIONS.md` (SP-D009), `AGENTS.md`, `PROJECT.md`, `ROADMAP.md` and `docs/CREATIVE-BIBLE.md`.
+- **Stephen Martin** is the only real-world full name allowed in public project content. Other protagonist names are first-name fictional labels; don't publish actual employer/office, partner/relative identities, real contact information, private relationship/family details or precise real-world itinerary.
+- All conspiracies, holiday misunderstandings, relationship/family complications, detention scenarios and body-parts plots are **comedic inventions**, never assertions about the people who inspired them.
+- A real named protagonist and stylised likeness may still be recognisable. Keep publication behind the existing explicit owner approval and privacy review gate.
+- Detailed narrative beats and jokes are not yet human-approved. **Next:** outline a concise shared office opening, a comic 'heaven-to-hell' holiday arc and three endings, using entirely fictionalised circumstances, for owner review.
+
 ## Operating notes
 
 - Keep changes small and reviewable in short-lived feature branches.
