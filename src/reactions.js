@@ -31,7 +31,7 @@
       6: { David: "confident" },
       7: { Paul: "confused", David: "concerned", Stephen: "amused" },
       8: { David: "frustrated", Stephen: "amused" },
-      9: { Paul: "blank", David: "frustrated" },
+      9: { Paul: "blank", David: "frustrated", Stephen: "laughing" },
       10: { Paul: "blank", Stephen: "laughing", David: "frustrated" }
     },
     O04: {
