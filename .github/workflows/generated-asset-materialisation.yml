@@ -1,0 +1,203 @@
+name: Materialise Generated Asset from Drive
+
+on:
+  workflow_dispatch:
+    inputs:
+      manifest_path:
+        description: Repository-relative generated asset manifest path
+        required: true
+        type: string
+      target_branch:
+        description: Existing development branch to update
+        required: true
+        type: string
+  push:
+    branches:
+      - 'agent/**'
+    paths:
+      - generated-assets/manifests/*.json
+
+permissions:
+  contents: write
+  id-token: write
+
+concurrency:
+  group: generated-asset-materialisation-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  materialise:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve target branch
+        id: target
+        shell: bash
+        env:
+          WORKFLOW_TARGET_BRANCH: ${{ inputs.target_branch }}
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            branch="$WORKFLOW_TARGET_BRANCH"
+          else
+            branch="${{ github.ref_name }}"
+          fi
+          if [[ -z "$branch" || "$branch" == "main" || "$branch" != agent/* || "$branch" == *..* ]]; then
+            echo "::error::Generated assets must materialise onto an agent/* development branch, never main."
+            exit 1
+          fi
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ steps.target.outputs.branch }}
+          fetch-depth: 2
+
+      - name: Resolve Workload Identity Provider
+        id: provider
+        shell: bash
+        env:
+          CONFIGURED_PROVIDER: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+        run: |
+          set -euo pipefail
+          provider="${CONFIGURED_PROVIDER#https://iam.googleapis.com/}"
+          provider="${provider#//iam.googleapis.com/}"
+          expected="projects/878071288497/locations/global/workloadIdentityPools/github/providers/stephen-martin-github"
+          if [[ "$provider" != "$expected" ]]; then
+            echo "::error::GCP_WORKLOAD_IDENTITY_PROVIDER must identify the Stephen Martin provider resource (without a URL prefix)."
+            exit 1
+          fi
+          echo "resource=$provider" >> "$GITHUB_OUTPUT"
+
+      - id: google-auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          create_credentials_file: true
+          workload_identity_provider: ${{ steps.provider.outputs.resource }}
+          service_account: ${{ vars.GCP_ASSET_SERVICE_ACCOUNT }}
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Install image and Drive tooling
+        run: python -m pip install --disable-pip-version-check pillow google-api-python-client google-auth
+
+      - name: Resolve manifests
+        id: manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          output="$RUNNER_TEMP/generated-asset-manifests.txt"
+          : > "$output"
+
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            manifest="${{ inputs.manifest_path }}"
+            if [[ ! "$manifest" =~ ^generated-assets/manifests/[A-Za-z0-9._-]+\.json$ ]]; then
+              echo "::error::manifest_path must be a JSON file directly under generated-assets/manifests/"
+              exit 1
+            fi
+            printf '%s\n' "$manifest" >> "$output"
+          else
+            git diff --name-only HEAD^ HEAD -- 'generated-assets/manifests/*.json'               | grep -E '^generated-assets/manifests/[A-Za-z0-9._-]+\.json$'               >> "$output" || true
+          fi
+
+          if [[ ! -s "$output" ]]; then
+            echo "::error::No generated-asset manifest was selected."
+            exit 1
+          fi
+
+          echo "path=$output" >> "$GITHUB_OUTPUT"
+          echo "Selected manifests:"
+          cat "$output"
+
+      - name: Materialise staged images
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r manifest; do
+            python scripts/generated-assets/materialise_drive_asset.py --manifest "$manifest"
+          done < "${{ steps.manifests.outputs.path }}"
+
+      - name: Verify generated WebP files
+        shell: python
+        env:
+          MANIFEST_LIST: ${{ steps.manifests.outputs.path }}
+        run: |
+          import json
+          import os
+          from pathlib import Path
+          from PIL import Image
+
+          manifests = [
+              Path(line.strip())
+              for line in Path(os.environ["MANIFEST_LIST"]).read_text(encoding="utf-8").splitlines()
+              if line.strip()
+          ]
+          if not manifests:
+              raise SystemExit("No generated-asset manifests were selected.")
+
+          outputs = []
+          for manifest_path in manifests:
+              manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+              destination = Path(manifest["destination"])
+              if not destination.exists():
+                  raise SystemExit(f"Materialised output is missing: {destination}")
+              if destination.suffix.lower() != ".webp":
+                  raise SystemExit(f"Materialised output is not WebP: {destination}")
+              with Image.open(destination) as image:
+                  image.verify()
+              outputs.append(destination)
+              print(f"verified {destination} ({destination.stat().st_size} bytes)")
+
+          Path(os.environ["RUNNER_TEMP"], "generated-asset-outputs.txt").write_text(
+              "\n".join(str(path) for path in outputs) + "\n",
+              encoding="utf-8",
+          )
+
+      - name: Commit materialised assets
+        shell: python
+        env:
+          TARGET_BRANCH: ${{ steps.target.outputs.branch }}
+        run: |
+          import subprocess
+          from pathlib import Path
+          import os
+
+          subprocess.run(["git", "config", "user.name", "github-actions[bot]"], check=True)
+          subprocess.run(
+              [
+                  "git",
+                  "config",
+                  "user.email",
+                  "41898282+github-actions[bot]@users.noreply.github.com",
+              ],
+              check=True,
+          )
+
+          output_list = Path(os.environ["RUNNER_TEMP"], "generated-asset-outputs.txt")
+          outputs = [
+              line.strip()
+              for line in output_list.read_text(encoding="utf-8").splitlines()
+              if line.strip()
+          ]
+          if not outputs:
+              raise SystemExit("No materialised outputs were recorded.")
+
+          subprocess.run(["git", "add", "--", *outputs], check=True)
+          staged = subprocess.run(["git", "diff", "--cached", "--quiet"])
+          if staged.returncode == 0:
+              print("Materialised bytes are unchanged; nothing to commit.")
+              raise SystemExit(0)
+          if staged.returncode != 1:
+              raise SystemExit(staged.returncode)
+
+          subprocess.run(
+              ["git", "commit", "-m", "Assets: materialise generated image from Drive"],
+              check=True,
+          )
+          subprocess.run(
+              ["git", "push", "origin", f"HEAD:{os.environ['TARGET_BRANCH']}"],
+              check=True,
+          )

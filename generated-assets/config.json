@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "stagingFolderId": "1C6kezJBL_sexyHmxeLnFnzpj-Zbn9iC6",
+  "allowedDestinationRoots": [
+    "public/assets/generated/"
+  ],
+  "allowedMimeTypes": [
+    "image/png",
+    "image/jpeg",
+    "image/webp"
+  ],
+  "maxSourceBytes": 12582912,
+  "maxOutputBytes": 2097152,
+  "allowedDestinationPatterns": []
+}
