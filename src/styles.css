@@ -916,3 +916,253 @@ button:active:not(:disabled) { transform: translateY(1px); }
   body:has(#officeScreen:not([hidden])) .game-shell { min-height: 0; }
   #officeScreen { width: min(calc(100vw - 20px), 900px); }
 }
+
+
+/*
+ * GAME-SP1.1-D1E — a true cinematic main menu.
+ * The clean office, separately registered actors and transparent foreground
+ * desk stay in one 1672:941 stage. Title/buttons/sound are interactive,
+ * accessible HTML overlays rather than baked art or stacked page sections.
+ */
+body:has(#menuScreen:not([hidden])) {
+  overflow-x: hidden;
+}
+body:has(#menuScreen:not([hidden])) .game-shell {
+  width: 100%;
+  max-width: none;
+  min-height: 100dvh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+body:has(#menuScreen:not([hidden])) .topbar,
+body:has(#menuScreen:not([hidden])) .footnote {
+  display: none;
+}
+body:has(#menuScreen:not([hidden])) main {
+  width: 100%;
+  flex: 1;
+  display: grid;
+  place-items: center;
+}
+#menuScreen.menu-office-screen {
+  display: block;
+  width: min(calc(100vw - 20px), calc(177.68dvh - 25px), 1672px);
+  max-width: none;
+  min-height: 0;
+  margin: 0 auto;
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid #129cdb;
+  border-radius: 13px;
+  background: #071b36;
+  box-shadow: 0 16px 42px rgba(1, 8, 20, .55);
+}
+#menuScreen .menu-office-stage {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1672 / 941;
+  position: relative;
+  overflow: hidden;
+}
+#menuScreen .menu-office-art {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+#menuScreen .menu-office-backdrop,
+#menuScreen .menu-office-desk {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+#menuScreen .menu-office-backdrop { z-index: 0; }
+#menuScreen .menu-office-actors { z-index: 2; }
+#menuScreen .menu-office-desk { z-index: 3; }
+#menuScreen .menu-office-actor { bottom: 18%; width: 30%; }
+#menuScreen .menu-office-david { left: 3.5%; }
+#menuScreen .menu-office-stephen { left: 35%; }
+#menuScreen .menu-office-paul { right: 3.5%; }
+
+#menuScreen .menu-hero-title {
+  position: absolute;
+  z-index: 5;
+  top: 2.3%;
+  left: 2.3%;
+  width: min(63%, 870px);
+  padding: clamp(10px, 1.2vw, 19px) clamp(13px, 1.5vw, 24px);
+  color: #fff8e9;
+  background: linear-gradient(105deg, rgba(3, 18, 38, .96), rgba(3, 27, 49, .88) 74%, rgba(3, 27, 49, .46));
+  border: 1px solid rgba(135, 208, 231, .55);
+  border-radius: 11px;
+  box-shadow: 5px 7px 0 rgba(2, 15, 32, .3);
+}
+#menuScreen .menu-hero-kicker {
+  display: block;
+  color: #65dbf4;
+  font-size: clamp(10px, 1vw, 14px);
+  font-weight: 900;
+  letter-spacing: .12em;
+  line-height: 1.2;
+}
+#menuScreen .menu-hero-title h1 {
+  margin: 5px 0 4px;
+  font-family: Impact, "Arial Black", sans-serif;
+  font-size: clamp(23px, 3.05vw, 49px);
+  line-height: 1.04;
+  letter-spacing: -.005em;
+  text-transform: uppercase;
+  text-shadow: 2px 3px 0 #071525;
+}
+#menuScreen .menu-hero-title h1 > span {
+  display: block;
+  white-space: nowrap;
+}
+#menuScreen .menu-hero-title h1 em { color: #ffd056; font-style: normal; }
+#menuScreen .menu-hero-title p {
+  margin: 4px 0 0;
+  font-size: clamp(11px, 1.03vw, 15px);
+  line-height: 1.28;
+  color: #d2e9ed;
+}
+#menuScreen .menu-hero-utility {
+  position: absolute;
+  z-index: 6;
+  top: 2.6%;
+  right: 2.3%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+#menuScreen .menu-hero-preview {
+  color: #f4f6f1;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .12em;
+  padding: 6px 9px;
+  border-radius: 6px;
+  background: rgba(5, 26, 47, .85);
+}
+#menuScreen .menu-hero-utility .mini-button {
+  color: white;
+  background: rgba(5, 26, 47, .92);
+  min-height: 36px;
+  padding: 7px 12px;
+}
+#menuScreen .menu-hero-actions {
+  position: absolute;
+  z-index: 6;
+  right: 2.5%;
+  bottom: 3%;
+  width: clamp(250px, 30%, 390px);
+  padding: 13px 14px 12px;
+  background: rgba(4, 24, 49, .93);
+  border: 1px solid rgba(93, 187, 231, .85);
+  border-radius: 11px;
+  color: #ffefd1;
+  box-shadow: 5px 7px 0 rgba(3, 18, 39, .4);
+}
+#menuScreen .menu-hero-actions > strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #ffd056;
+  font-size: clamp(11px, 1.05vw, 14px);
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+#menuScreen .menu-hero-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+#menuScreen .menu-hero-buttons .btn {
+  width: 100%;
+  min-height: 44px;
+  text-align: center;
+  padding: 10px 12px;
+  font-size: clamp(13px, 1.15vw, 16px);
+}
+#menuScreen .menu-hero-actions > small {
+  display: block;
+  color: #b4d8e0;
+  font-size: 10px;
+  margin-top: 8px;
+  line-height: 1.3;
+}
+@media (min-width: 651px) and (max-width: 1000px) {
+  #menuScreen .menu-hero-title { width: 65%; padding: 11px 13px; }
+  #menuScreen .menu-hero-title h1 { font-size: clamp(21px, 3vw, 31px); }
+  #menuScreen .menu-hero-actions { padding: 10px 11px; }
+  #menuScreen .menu-hero-preview { display: none; }
+}
+@media (max-width: 650px) {
+  /* On phones the artwork remains uninterrupted; actionable controls are
+     stacked outside the small image rather than blocking the actors. */
+  body:has(#menuScreen:not([hidden])) .game-shell {
+    min-height: 0;
+    display: block;
+  }
+  body:has(#menuScreen:not([hidden])) main { display: block; }
+  #menuScreen.menu-office-screen {
+    width: min(calc(100% - 12px), 540px);
+    min-height: 0;
+    margin: 6px auto;
+  }
+  #menuScreen .menu-office-stage {
+    display: flex;
+    flex-direction: column;
+    aspect-ratio: auto;
+    overflow: visible;
+  }
+  #menuScreen .menu-office-art {
+    position: relative;
+    inset: auto;
+    order: 2;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1672 / 941;
+    overflow: hidden;
+  }
+  #menuScreen .menu-hero-utility {
+    position: relative;
+    inset: auto;
+    order: 0;
+    justify-content: space-between;
+    padding: 7px 10px;
+    background: #071d3a;
+  }
+  #menuScreen .menu-hero-preview { display: inline; font-size: 9px; }
+  #menuScreen .menu-hero-title {
+    position: relative;
+    inset: auto;
+    order: 1;
+    width: 100%;
+    padding: 10px 12px 12px;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  #menuScreen .menu-hero-title h1 {
+    font-size: clamp(22px, 5.9vw, 36px);
+  }
+  #menuScreen .menu-hero-title p { font-size: 12px; }
+  #menuScreen .menu-hero-actions {
+    position: relative;
+    inset: auto;
+    order: 3;
+    width: 100%;
+    padding: 12px;
+    border-radius: 0;
+    border-width: 1px 0 0;
+    box-shadow: none;
+  }
+  #menuScreen .menu-hero-buttons .btn { min-height: 44px; }
+}
