@@ -8,6 +8,7 @@
   <title>Rescue Stephen Martin from China | GAME-SP1 Office Preview</title>
   <link rel="stylesheet" href="./src/styles.css">
   <script defer src="./src/office-data.js"></script>
+  <script defer src="./src/reactions.js"></script>
   <script defer src="./src/game.js"></script>
 </head>
 <body>
@@ -18,7 +19,7 @@
         <div><strong>OPERATION: PROBABLY FINE</strong><span>AN ENTIRELY FICTIONAL COMEDY</span></div>
       </div>
       <div class="topbar-right">
-        <span class="build-label">GAME-SP1 · OFFICE PREVIEW</span>
+        <span class="build-label">GAME-SP1.1 · CINEMATIC PREVIEW</span>
         <button class="header-button" id="soundButton" type="button" aria-pressed="false" title="Toggle short sound effects">Sound: Off</button>
       </div>
     </header>
@@ -39,14 +40,14 @@
             <button type="button" id="startButton" class="btn btn-primary">Start the story <span aria-hidden="true">→</span></button>
             <button type="button" id="resumeButton" class="btn btn-secondary" hidden>Continue preview</button>
           </div>
-          <small>Approx. 3 minutes · Click/tap to advance · Space or Enter also works · Fictional characters and events</small>
+          <small>Plays automatically · Pause for manual control · Space or Enter advances · Fictional characters and events</small>
         </div>
       </section>
 
       <section id="officeScreen" class="screen office-screen" hidden aria-label="Office opening scene">
         <div class="scene-toolbar">
           <div class="scene-heading">
-            <span id="sceneNumber" class="small-caps">SCENE 01 / 07</span>
+            <span id="sceneNumber" class="small-caps">CHAPTER 1 · SCENE 01 / 07</span>
             <h2 id="sceneTitle">Somewhere in an office</h2>
             <p id="sceneCaption">Last day before the holiday</p>
           </div>
@@ -67,22 +68,23 @@
             <div class="floor-case"></div>
           </div>
           <div id="sceneEffect" class="scene-effect" aria-hidden="true"></div>
+          <div id="cutawayPanel" class="cutaway-panel" hidden aria-hidden="true">
+            <div class="cutaway-inner" id="cutawayContent"></div>
+          </div>
           <div class="cast" aria-label="Stephen, David and Paul in the office">
             <figure class="cast-card" id="castStephen" data-character="stephen">
-              <div class="cast-portrait"><img loading="eager" src="./public/assets/generated/characters/stephen-martin-baseline.webp" alt="Approved illustrated character sheet of Stephen Martin"></div>
+              <div class="cast-portrait"><img loading="eager" id="portraitStephen" src="./public/assets/generated/characters/expressions/stephen-neutral.webp" alt="Approved illustrated character sheet of Stephen Martin"></div>
               <figcaption><strong>STEPHEN</strong><span>20s · ON HIS WAY OUT</span></figcaption>
             </figure>
             <figure class="cast-card" id="castDavid" data-character="david">
-              <div class="cast-portrait"><img loading="eager" src="./public/assets/generated/characters/david-baseline.webp" alt="Approved illustrated character sheet of David"></div>
+              <div class="cast-portrait"><img loading="eager" id="portraitDavid" src="./public/assets/generated/characters/expressions/david-neutral.webp" alt="Approved illustrated character sheet of David"></div>
               <figcaption><strong>DAVID</strong><span>30s · SELF-APPOINTED EXPERT</span></figcaption>
             </figure>
             <figure class="cast-card" id="castPaul" data-character="paul">
-              <div class="cast-portrait"><img loading="eager" src="./public/assets/generated/characters/paul-baseline.webp" alt="Approved illustrated character sheet of Paul"></div>
+              <div class="cast-portrait"><img loading="eager" id="portraitPaul" src="./public/assets/generated/characters/expressions/paul-neutral.webp" alt="Approved illustrated character sheet of Paul"></div>
               <figcaption><strong>PAUL</strong><span>40s · PRESENT, SOMEHOW</span></figcaption>
             </figure>
           </div>
-        </div>
-
         <div class="dialogue" id="dialogueBox">
           <div class="dialogue-accent" aria-hidden="true"></div>
           <div class="dialogue-main">
@@ -92,16 +94,20 @@
             </div>
             <p id="lineText" class="dialogue-text" aria-live="polite" aria-atomic="true"></p>
             <div id="stageNote" class="stage-note" hidden></div>
+
+          </div>
+        </div>
+        </div>
+
+        <div class="progress-track" role="progressbar" aria-label="Opening scene progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="storyProgress"><div class="progress-fill" id="progressFill"></div></div>
             <div class="dialogue-actions">
-              <span class="dialogue-hint">CLICK NEXT OR PRESS SPACE</span>
+              <span id="playbackStatus" class="dialogue-hint" role="status" aria-live="off">AUTO · NEXT LINE IN A MOMENT</span>
               <div class="dialogue-buttons">
+                <button id="playPauseButton" type="button" class="btn btn-small btn-secondary" aria-pressed="true">Ⅱ Pause</button>
                 <button id="backButton" type="button" class="btn btn-small btn-secondary">← Back</button>
                 <button id="nextButton" type="button" class="btn btn-small btn-primary">Next <span aria-hidden="true">→</span></button>
               </div>
             </div>
-          </div>
-        </div>
-        <div class="progress-track" role="progressbar" aria-label="Opening scene progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="storyProgress"><div class="progress-fill" id="progressFill"></div></div>
       </section>
 
       <section id="holidayScreen" class="screen holiday-screen" hidden>

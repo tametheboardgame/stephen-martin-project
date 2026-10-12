@@ -50,6 +50,18 @@
 - Cheap local `npm run verify` syntax and behaviour tests run in a dedicated GitHub Actions workflow. It packages a self-contained office-preview archive after a successful smoke run.
 - **Gate cleared:** owner approved the office preview and explicitly requested merge to `main`. Check public Cloudflare build and owner feedback after merging. Do not silently start all three game routes.
 
+## GAME-SP1.1: Opening polish pass (in development)
+
+- **Owner-approved scope:** Autoplay by default, manual Pause/Play/Next/Back, per-line timing and timer safeguards; expressive character reactions; comic close-ups for risk assessment, printer and rescue chat.
+- **Visual playtest release approved 12 October 2026:** The owner explicitly requested merging the current expression-swapping/cinematic version onto `main` for hands-on Cloudflare review. New assets were individually approved and targeted checks passed. This merge is a **playtest checkpoint, not final sign-off** on the new layout, cutaways, or pacing. Record owner feedback in a subsequent bounded PR before declaring GAME-SP1.1 visually complete.
+- **Implemented on this branch:** Phase A autoplay/timing with Pause/Play/Next/Back, restart/skip and hidden-tab timer safeguards; initial scene-wide DOM/CSS risk-assessment, printer and group-chat cutaways; data-driven speaker/listener reaction cues and approved portrait fallback. Browser visual and pacing review is still required.
+- **All three expression masters and all 18 individual crops approved and committed:** Stephen, David and Paul each have six human-approved portraits in `public/assets/generated/characters/expressions/`, validated in the GitHub materialisation job with individual Drive provenance manifests. Paul's separately approved master is `paul-expressions-sheet-v01.webp`. All 18 images are included in the Cloudflare build output.
+- **Now implemented:** The approved 18 portrait crops are mapped to speaker and listener reactions, and the markup/CSS has been restructured into a dominant stage with a live lower-left dialogue overlay and separate autoplay transport. Three independent cutaways remain as lightweight DOM/CSS visuals. The visual production handoff is in `docs/story/GAME-SP1.1-VISUAL-PRODUCTION.md`.
+- **Outstanding visual gap:** The owner-approved infographic is only a design target, not real scene assets. To match its fully illustrated seating/office composition, produce a clean no-people office background and properly aligned transparent character staging; separate cutaway art can replace CSS placeholders later. Existing head-and-shoulders portraits are functional interim components.
+- **Next:** After merging the tested release candidate to `main`, the owner should play the live Cloudflare version on desktop/mobile and report expression placement, cutaway pacing and layout issues. Record corrections in a new branch. The clean office and character-body art remain future visual-polish work, not a prerequisite for this playtest.
+- **Remaining execution:** confirm targeted tests and Cloudflare preview, obtain human approval for any new character art, refine presentation, and merge only after owner review.
+- **Next after polish:** GAME-SP2, Stephen's selectable holiday and shared rescue investigation. Maintain the 15–25 minute total scope and fictional/non-identifying character rule.
+
 ## Operating notes
 
 - Keep changes small and reviewable in short-lived feature branches.

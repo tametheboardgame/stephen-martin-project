@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1uF05raZs3Fb7WpFCbQJQdKPl_kTkBfBg"
+  },
+  "expectedSourceName": "stephen-annoyed-v01.webp",
+  "destination": "public/assets/generated/characters/expressions/stephen-annoyed.webp",
+  "transform": {
+    "maxWidth": 800,
+    "maxHeight": 800,
+    "quality": 88
+  },
+  "revision": 1
+}

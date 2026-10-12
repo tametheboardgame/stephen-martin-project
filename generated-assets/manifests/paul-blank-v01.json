@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1SphuOEbE5cYHwOhaPPUiS8MJcnKtcngV"
+  },
+  "expectedSourceName": "paul-blank-v01.webp",
+  "destination": "public/assets/generated/characters/expressions/paul-blank.webp",
+  "transform": {
+    "maxWidth": 800,
+    "maxHeight": 800,
+    "quality": 88
+  },
+  "revision": 1
+}

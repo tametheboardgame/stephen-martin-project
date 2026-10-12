@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1PEAEp2W5KEOZ46XcYJujON4lIrP6-An-"
+  },
+  "expectedSourceName": "paul-expressions-v01.png",
+  "destination": "public/assets/generated/characters/paul-expressions-sheet-v01.webp",
+  "transform": {
+    "maxWidth": 800,
+    "maxHeight": 800,
+    "quality": 88
+  },
+  "revision": 1
+}

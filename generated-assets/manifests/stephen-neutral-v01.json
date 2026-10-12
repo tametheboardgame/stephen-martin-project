@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1YeL9xKhheSMgA8eTlQwab9mynVxUay8S"
+  },
+  "expectedSourceName": "stephen-neutral-v01.webp",
+  "destination": "public/assets/generated/characters/expressions/stephen-neutral.webp",
+  "transform": {
+    "maxWidth": 800,
+    "maxHeight": 800,
+    "quality": 88
+  },
+  "revision": 1
+}

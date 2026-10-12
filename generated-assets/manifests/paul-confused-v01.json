@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1VIOnw2qOvDBTdy8V1DTh2EySPCQZCiKT"
+  },
+  "expectedSourceName": "paul-confused-v01.webp",
+  "destination": "public/assets/generated/characters/expressions/paul-confused.webp",
+  "transform": {
+    "maxWidth": 800,
+    "maxHeight": 800,
+    "quality": 88
+  },
+  "revision": 1
+}

@@ -3,7 +3,7 @@ name: GAME-SP1 targeted smoke
 on:
   push:
     branches:
-      - 'agent/game-sp1-*'
+      - 'agent/game-sp1*'
     paths:
       - 'index.html'
       - 'src/**'
@@ -37,6 +37,7 @@ jobs:
         run: |
           test -f dist/index.html
           test -f dist/src/game.js
+          test -f dist/src/reactions.js
           test -f dist/src/styles.css
           test -f dist/public/assets/generated/characters/stephen-martin-baseline.webp
           test -f dist/public/assets/generated/characters/david-baseline.webp

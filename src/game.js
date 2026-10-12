@@ -17,6 +17,51 @@
   const screens = { menu: $("menuScreen"), office: $("officeScreen"), holiday: $("holidayScreen") };
   const cast = { Stephen: $("castStephen"), David: $("castDavid"), Paul: $("castPaul") };
 
+  let autoPlaying = true;
+  let advanceTimer = null;
+  const MIN_LINE_MS = 2200;
+  const MAX_LINE_MS = 5800;
+
+  function clearAdvanceTimer() {
+    if (advanceTimer !== null) {
+      clearTimeout(advanceTimer);
+      advanceTimer = null;
+    }
+  }
+
+  function lineDuration(beat) {
+    const plainTextLength = beat.text.length;
+    const calculated = Math.min(MAX_LINE_MS, Math.max(MIN_LINE_MS, 1800 + plainTextLength * 45));
+    if (beat.sound === "song") return 6000;
+    if (beat.prop === "title") return Math.max(4800, calculated);
+    if (beat.speaker === "Narrator") return Math.max(3200, calculated);
+    return calculated;
+  }
+
+  function syncPlaybackControls() {
+    const button = $("playPauseButton");
+    button.textContent = autoPlaying ? "Ⅱ Pause" : "▶ Play";
+    button.setAttribute("aria-pressed", String(autoPlaying));
+    $("playbackStatus").textContent = autoPlaying ? "AUTO PLAYING · TAP PAUSE TO READ" : "PAUSED · USE NEXT / BACK";
+    $("officeScreen").dataset.playback = autoPlaying ? "auto" : "paused";
+  }
+
+  function scheduleAdvance() {
+    clearAdvanceTimer();
+    syncPlaybackControls();
+    if (!autoPlaying || screens.office.hidden || document.hidden) return;
+    const beat = shots[state.shotIndex].lines[state.lineIndex];
+    advanceTimer = setTimeout(() => {
+      advanceTimer = null;
+      if (autoPlaying && !screens.office.hidden && !document.hidden) next();
+    }, lineDuration(beat));
+  }
+
+  function setAutoplay(enabled) {
+    autoPlaying = Boolean(enabled);
+    scheduleAdvance();
+  }
+
   let soundEnabled = false;
   let audioContext = null;
   let state = { version: 1, scene: "menu", shotIndex: 0, lineIndex: 0, openingSeen: false };
@@ -51,6 +96,7 @@
   }
 
   function reveal(screenName) {
+    if (screenName !== "office") clearAdvanceTimer();
     for (const [name, screen] of Object.entries(screens)) screen.hidden = name !== screenName;
   }
 
@@ -91,6 +137,43 @@
     return shotLineCounts.slice(0, state.shotIndex).reduce((sum, n) => sum + n, 0) + state.lineIndex + 1;
   }
 
+  const cutaways = {
+    risk: '<div class="cutaway-heading">DAVID’S LAPTOP · TOP SECRET*</div><div class="cutaway-laptop"><div class="cutaway-screen"><span>OPERATION:</span><strong>PROBABLY FINE</strong><div class="cutaway-risk-grid"><span>INTERNATIONAL TRAVEL</span><b>HIGH RISK</b><span>HOLIDAY ROMANCE</span><b>HIGH RISK</b><span>DAVID’S CONFIDENCE</span><b>UNREASONABLY HIGH</b></div><small>*NOT ACTUALLY SECRET</small></div><div class="cutaway-keyboard"></div></div>',
+    printer: '<div class="cutaway-heading">OFFICE PRINTER · 40 DOCUMENTS QUEUED</div><div class="cutaway-printer"><div class="cutaway-output-sheet sheet-one">🐻<small>HONEY BEAR #01</small></div><div class="cutaway-output-sheet sheet-two">🐻<small>HONEY BEAR #02</small></div><div class="cutaway-printer-body"><span>PRINTING…</span><span class="printer-light"></span></div><div class="cutaway-paper-stack">▤ ▤ ▤</div></div>',
+    chat: '<div class="cutaway-heading">A COMPLETELY UNNECESSARY GROUP CHAT</div><div class="cutaway-phone"><div class="phone-notch"></div><div class="phone-screen"><small>NEW GROUP CREATED ✓</small><strong>STEPHEN RESCUE GROUP</strong><span>(PRE-EMPTIVE)</span><div class="phone-avatars">S　D　P</div><div class="phone-message">🐻🍯<span>Paul: added a picture</span></div></div></div>'
+  };
+
+  function cutawayFor(shotIndex, lineIndex) {
+    const shotId = shots[shotIndex].id;
+    if (shotId === "O02" && (lineIndex === 1 || lineIndex === 8)) return "risk";
+    if (shotId === "O04" && lineIndex <= 2) return "printer";
+    if (shotId === "O04" && (lineIndex === 6 || lineIndex === 7)) return "chat";
+    return null;
+  }
+
+  // Approved, individually cropped game portraits. Reaction aliases map the
+  // original dialogue cues to the six available facial expressions per person.
+  const expressionChoices = {
+    Stephen: ["neutral", "amused", "laughing", "confused", "annoyed", "exasperated"],
+    David: ["neutral", "confident", "serious", "frustrated", "shocked", "systems-expert"],
+    Paul: ["neutral", "confused", "concerned", "blank", "pleased", "missing-the-point"]
+  };
+  const expressionAliases = {
+    Stephen: { concerned: "exasperated", confident: "amused", frustrated: "annoyed", smug: "amused" },
+    David: { smug: "confident", concerned: "serious", confused: "shocked", annoyed: "frustrated", blank: "neutral" },
+    Paul: { amused: "pleased", laughing: "pleased", frustrated: "concerned", annoyed: "concerned", smug: "pleased", confident: "pleased" }
+  };
+  const expressionAssetRoot = "./public/assets/generated/characters/expressions/";
+  const baselineAssets = {
+    Stephen: "./public/assets/generated/characters/stephen-martin-baseline.webp",
+    David: "./public/assets/generated/characters/david-baseline.webp",
+    Paul: "./public/assets/generated/characters/paul-baseline.webp"
+  };
+  function portraitExpression(name, cue) {
+    const resolved = expressionAliases[name][cue] || cue;
+    return expressionChoices[name].includes(resolved) ? resolved : "neutral";
+  }
+
   function renderOffice() {
     reveal("office");
     const shot = shots[state.shotIndex];
@@ -105,7 +188,11 @@
     $("speakerName").textContent = beat.speaker === "System" ? "NOTIFICATION" : beat.speaker.toUpperCase();
     $("lineCount").textContent = String(state.lineIndex + 1).padStart(2, "0") + " / " + String(shot.lines.length).padStart(2, "0");
     $("lineText").textContent = beat.text;
-    $("sceneEffect").innerHTML = effects[prop] || "";
+    const cutaway = cutawayFor(state.shotIndex, state.lineIndex);
+    $("cutawayPanel").hidden = !cutaway;
+    $("cutawayContent").innerHTML = cutaway ? cutaways[cutaway] : "";
+    $("stage").dataset.cutaway = cutaway || "none";
+    $("sceneEffect").innerHTML = cutaway ? "" : (effects[prop] || "");
     $("stage").dataset.moment = shot.moment;
     $("stage").dataset.prop = prop;
     $("stage").dataset.expression = beat.expression || "neutral";
@@ -120,12 +207,26 @@
       const active = beat.speaker === name;
       el.classList.toggle("is-speaking", active);
       el.classList.toggle("is-listening", beat.speaker in cast && !active);
+      const reactions = (window.SMP_REACTIONS && window.SMP_REACTIONS[shot.id] && window.SMP_REACTIONS[shot.id][state.lineIndex]) || {};
+      const expression = reactions[name] || (active ? (beat.expression || "neutral") : "neutral");
+      const resolved = portraitExpression(name, expression);
+      el.dataset.expression = resolved;
+      const portrait = $("portrait" + name);
+      const asset = name.toLowerCase() + "-" + resolved;
+      if (portrait.dataset.assetKey !== asset) {
+        portrait.dataset.assetKey = asset;
+        portrait.src = expressionAssetRoot + asset + ".webp";
+        portrait.alt = name + " illustrated expression: " + resolved.replaceAll("-", " ");
+      }
     }
     persist();
     if (beat.sound) beep(beat.sound);
+    scheduleAdvance();
   }
 
   function startOffice() {
+    clearAdvanceTimer();
+    autoPlaying = true;
     state = { version: 1, scene: "office", shotIndex: 0, lineIndex: 0, openingSeen: false };
     renderOffice();
   }
@@ -147,6 +248,8 @@
 
   function previous() {
     if (screens.office.hidden) return;
+    // A manual rewind should never immediately skip the line the player re-read.
+    autoPlaying = false;
     if (state.lineIndex > 0) {
       state.lineIndex--;
     } else if (state.shotIndex > 0) {
@@ -173,6 +276,8 @@
   }
 
   function resume() {
+    clearAdvanceTimer();
+    autoPlaying = true;
     const saved = readSave();
     if (!saved) { startOffice(); return; }
     state = saved;
@@ -189,6 +294,15 @@
   $("replayButton").addEventListener("click", startOffice);
   $("homeButton").addEventListener("click", showMenu);
   $("soundButton").addEventListener("click", () => setSound(!soundEnabled));
+  $("playPauseButton").addEventListener("click", () => setAutoplay(!autoPlaying));
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      // Pausing on hidden tabs prevents timed dialogue from being skipped while away.
+      clearAdvanceTimer();
+      autoPlaying = false;
+      syncPlaybackControls();
+    }
+  });
   $("dialogueBox").addEventListener("click", (event) => {
     if (!event.target.closest("button")) next();
   });
@@ -205,6 +319,16 @@
     }
   });
 
+  for (const name of Object.keys(cast)) {
+    const portrait = $("portrait" + name);
+    portrait.addEventListener("error", () => {
+      // An unavailable derivative must never block the playable scene.
+      if (!portrait.dataset.fallbackUsed) {
+        portrait.dataset.fallbackUsed = "true";
+        portrait.src = baselineAssets[name];
+      }
+    });
+  }
   setSound(false);
   showMenu();
 })();

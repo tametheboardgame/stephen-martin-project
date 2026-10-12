@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1OTbQ2uvHH46kbyYcNwMvPrthNX6svf0Q"
+  },
+  "expectedSourceName": "paul-pleased-v01.webp",
+  "destination": "public/assets/generated/characters/expressions/paul-pleased.webp",
+  "transform": {
+    "maxWidth": 800,
+    "maxHeight": 800,
+    "quality": 88
+  },
+  "revision": 1
+}

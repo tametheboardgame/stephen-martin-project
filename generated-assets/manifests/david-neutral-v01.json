@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1zi08IE2hW9BTwrEH8zyEvHUgcyXwV4ys"
+  },
+  "expectedSourceName": "david-neutral-v01.webp",
+  "destination": "public/assets/generated/characters/expressions/david-neutral.webp",
+  "transform": {
+    "maxWidth": 800,
+    "maxHeight": 800,
+    "quality": 88
+  },
+  "revision": 1
+}
