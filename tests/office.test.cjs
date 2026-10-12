@@ -294,15 +294,36 @@ test("D1A desk asset is a real alpha WebP, not an opaque flattened scene", () =>
   assert.ok((desk[20] & 0x10) !== 0, "Foreground WebP must retain alpha transparency");
 });
 
-test("D1B cuts office scene height to available laptop viewport without distorting layers", () => {
+test("D1C menu and office share the real approved art and fit laptop viewport", () => {
   const css = read("src/styles.css");
-  assert.ok(css.includes('.game-shell:has(#officeScreen:not([hidden]))'), "Viewport-fit must only apply during the office opening");
-  assert.ok(css.includes("100dvh - 208px"), "Office shell width must account for laptop viewport height and controls");
-  assert.ok(css.includes("max(760px"), "Keep captions usable in exceptionally shallow browser windows");
-  assert.ok(css.includes("aspect-ratio: 1672 / 941"), "Maintain source aspect ratio for background and foreground registration");
-  assert.ok(css.includes("max-width: 650px"), "Retain mobile stacked dialogue rather than shrinking it into the art");
-  assert.ok(css.includes("#officeScreen .dialogue-text"), "Ensure captions scale along with the scene");
-  for (const asset of ["office-clean-01-v01.webp", "office-foreground-01-v01.webp"]) {
-    assert.ok(css.includes(asset), "Missing composited office layer " + asset);
+  assert.ok(html.includes('class="screen menu-screen menu-office-screen"'), "Old abstract menu has not been replaced");
+  assert.ok(!html.includes('class="menu-circle"'), "Old abstract artwork survived");
+  assert.ok(html.includes('class="menu-office-stage"'));
+  for (const name of ["david", "stephen", "paul"]) {
+    assert.ok(html.includes('class="menu-office-actor menu-office-' + name + '"'), "Menu actor missing: " + name);
   }
+  assert.ok(css.includes('.game-shell:has(#officeScreen:not([hidden]))'), "Office viewport fit missing");
+  assert.ok(css.includes('.game-shell:has(#menuScreen:not([hidden]))'), "Menu viewport fit missing");
+  assert.ok(css.includes("100dvh - 218px"), "Office must reserve height for toolbar and transport");
+  assert.ok(css.includes("100dvh - 253px"), "Menu must reserve height for title and start controls");
+  assert.ok(!css.includes("max(760px"), "Old minimum width forced unnecessary scrolling on small laptops");
+  assert.ok(css.includes("aspect-ratio: 1672 / 941"), "Preserve foreground and background registration");
+  assert.ok(css.includes("max-width: 650px"), "Keep mobile stacked layout");
+  assert.ok(gameSource.includes('typeof window.scrollTo === "function"'), "Screen changes must reset inherited scroll");
+  for (const asset of ["office-clean-01-v01.webp", "office-foreground-01-v01.webp"]) {
+    assert.ok(css.includes(asset), "Office layer missing " + asset);
+  }
+});
+
+test("entire existing intro remains playable with the rebuilt title screen", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  el("startButton").click();
+  assert.equal(el("officeScreen").hidden, false);
+  for (let i = 0; i < 64; i++) el("nextButton").click();
+  assert.equal(el("holidayScreen").hidden, false);
+  el("homeButton").click();
+  assert.equal(el("menuScreen").hidden, false);
+  el("replayButton").click();
+  assert.equal(el("lineText").textContent, "Is China far?");
 });
