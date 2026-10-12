@@ -49,6 +49,7 @@ jobs:
           test -f dist/public/assets/generated/characters/stephen-office-seated-confused-v01.webp
           test -f dist/public/assets/generated/characters/stephen-office-seated-annoyed-v01.webp
           test -f dist/public/assets/generated/characters/stephen-office-seated-exasperated-v01.webp
+          test -f dist/public/assets/generated/characters/stephen-office-seated-laughing-v01.webp
           test -f dist/public/assets/generated/characters/paul-office-seated-neutral-v01.webp
           test -f dist/public/assets/generated/characters/stephen-martin-baseline.webp
           test -f dist/public/assets/generated/characters/david-baseline.webp
