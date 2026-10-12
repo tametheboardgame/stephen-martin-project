@@ -7,6 +7,15 @@
 **Audience:** Adults  
 **Language:** British English
 
+## Privacy and fictionalisation rule (approved 12 October 2026)
+
+- **Stephen Martin is the sole real-world full name permitted.** David and Paul may be used as fictional first-name character labels, not as real-world identifying profiles.
+- No additional real names, employers/office identity, precise travel information, personal messages, identifiable backgrounds, social accounts, or private third-party relationship and family facts may enter the project.
+- Real-life anecdotes are **inspiration only**. New-partner, secret-family, international-incident, detainment and other plot situations must be fictional inventions presented as satire, not claims about real people.
+- Do not attempt to identify the fictional boyfriend's real-world counterpart or include real relatives. A shared office may exist in-story, but it must be an unnamed fictional workplace.
+- Apply this rule to scripts, songs, comics, promotional copy, asset filenames and metadata. Perform a privacy review before any public-facing release.
+- Because the title contains a real full name and comic character portraits may resemble their inspirations, **these measures minimise identification rather than guaranteeing anonymity**.
+
 ## 1. Vision and scope
 
 Create a compact, deliberately ridiculous fictional comedy universe inspired by Stephen Martin's trip to China. David and Paul attempt an international rescue despite possessing almost none of the skills necessary to succeed.
