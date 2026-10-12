@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'agent/game-sp1*'
+      - 'agent/sp11d1*'
     paths:
       - 'index.html'
       - 'src/**'
