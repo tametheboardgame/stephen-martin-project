@@ -1,6 +1,6 @@
 # SP-WP1.2: Fast-build game hand-off (draft)
 
-**Status:** Implementation specification for owner review; no coding begins solely because this file exists.
+**Status:** **Approved for phased implementation 12 October 2026.** Begin with bounded GAME-SP1 office scene before building the other routes.
 
 ## 1. MVP player flow
 
