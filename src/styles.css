@@ -828,7 +828,7 @@ button:active:not(:disabled) { transform: translateY(1px); }
     position: relative;
     width: min(
       calc(100vw - 22px),
-      calc((100dvh - 72px) * (1672 / 941)),
+      calc(177.68dvh - 128px),
       1672px
     );
     max-width: none;
