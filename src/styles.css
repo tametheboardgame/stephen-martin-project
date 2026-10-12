@@ -630,49 +630,168 @@ button:active:not(:disabled) { transform: translateY(1px); }
 
 
 /*
- * GAME-SP1.1-D1B: viewport-fit office preview.
- * A 14-inch laptop often has just 700-850 CSS pixels of vertical space.
- * Size the entire stage by available height, rather than letting the artwork
- * become a 750px+ panel simply because the browser window is wide.
- * We constrain the containing shell, so the background, all three sprites,
- * alpha desk overlay, live speech, and cutaways keep matching proportions.
- * Menus and the mobile stacked-dialogue layout retain their current sizing.
+ * GAME-SP1.1-D1C: a common height-aware visual shell for menu and office.
+ * 14-inch / shorter laptop viewports need room for the toolbar, speech and
+ * playback controls. Keep every art layer on the same 1672:941 coordinate
+ * grid. Do not independently resize/crop the foreground or actors.
  */
+.menu-office-screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  grid-template-columns: none;
+  align-items: stretch;
+  isolation: isolate;
+  background: #061e3d;
+  border: 2px solid #1399d6;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.menu-office-heading {
+  padding: 14px 22px 12px;
+  position: relative;
+  background: linear-gradient(110deg,#041a34,#08385f);
+  border-bottom: 3px solid #2b9bbf;
+}
+.menu-office-eyebrow {
+  color: #64d6ee;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+.menu-office-heading h1 {
+  font-family: Impact, "Arial Black", sans-serif;
+  font-size: clamp(30px, 3.3vw, 49px);
+  letter-spacing: .015em;
+  line-height: 1.08;
+  margin: 5px 0 3px;
+  text-shadow: 3px 3px #031124;
+}
+.menu-office-heading h1 em { color: #ffd056; font-style: normal; }
+.menu-office-heading p {
+  color: #c9e6e9;
+  font-size: 13px;
+  margin: 4px 0 0;
+}
+.menu-office-stage {
+  position: relative;
+  aspect-ratio: 1672 / 941;
+  width: 100%;
+  overflow: hidden;
+  flex: none;
+}
+.menu-office-backdrop, .menu-office-desk {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.menu-office-backdrop {
+  z-index: 0;
+  background-image: url("../public/assets/generated/locations/office-clean-01-v01.webp");
+}
+.menu-office-desk {
+  z-index: 3;
+  background-image: url("../public/assets/generated/locations/office-foreground-01-v01.webp");
+}
+.menu-office-actors {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+.menu-office-actor {
+  position: absolute;
+  bottom: 18%;
+  display: block;
+  width: 30%;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+}
+.menu-office-david { left: 3.5%; }
+.menu-office-stephen { left: 35%; }
+.menu-office-paul { right: 3.5%; }
+.menu-office-transport {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  padding: 13px 19px;
+  min-height: 80px;
+  background: #061d3d;
+}
+.menu-office-description { display: flex; flex-direction: column; gap: 2px; }
+.menu-office-description strong { font-size: 13px; color: #ffd056; letter-spacing: .07em; }
+.menu-office-description span { color: #c3d8e2; font-size: 12px; }
+.menu-office-transport .menu-actions { margin: 0; flex: none; }
+.menu-office-transport .btn { padding: 10px 15px; font-size: 13px; }
+
 @media (min-width: 651px) {
+  /* Menu reserves extra space for its real title and start/continue buttons. */
+  .game-shell:has(#menuScreen:not([hidden])) {
+    width: min(calc(100% - 20px), 1380px, max(500px, calc((100dvh - 253px) * 1.7768)));
+    margin: 4px auto;
+  }
   .game-shell:has(#officeScreen:not([hidden])) {
-    width: min(
-      calc(100% - 20px),
-      1380px,
-      max(760px, calc((100dvh - 208px) * 1.7768))
-    );
-    margin: 6px auto;
+    width: min(calc(100% - 20px), 1380px, max(500px, calc((100dvh - 218px) * 1.7768)));
+    margin: 4px auto;
   }
+  .game-shell:has(#menuScreen:not([hidden])) .topbar,
   .game-shell:has(#officeScreen:not([hidden])) .topbar {
-    padding: 4px 3px 8px;
+    padding: 3px 3px 7px;
   }
+  .game-shell:has(#menuScreen:not([hidden])) .footnote,
   .game-shell:has(#officeScreen:not([hidden])) .footnote {
     display: none;
   }
   #officeScreen .scene-toolbar {
-    padding: 8px 14px;
+    padding: 7px 13px;
   }
   #officeScreen .scene-heading h2 {
-    font-size: clamp(20px, 2.1vw, 28px);
+    margin-top: 1px;
+    font-size: clamp(19px, 2vw, 26px);
+    line-height: 1.05;
   }
+  #officeScreen .scene-heading p { margin-top: 1px; }
   #officeScreen .dialogue-main {
-    padding: 13px 14px 10px;
+    padding: 11px 13px 8px;
     min-height: 0;
   }
   #officeScreen .dialogue-text {
-    font-size: clamp(16px, 1.6vw, 21px);
-    line-height: 1.3;
-    max-height: 91px;
+    font-size: clamp(16px, 1.55vw, 21px);
+    line-height: 1.29;
+    max-height: 78px;
   }
   #officeScreen .dialogue-actions {
-    min-height: 45px;
+    min-height: 43px;
     padding: 4px 12px 7px;
   }
-  #officeScreen .progress-track {
-    margin-top: 7px;
+  #officeScreen .progress-track { margin-top: 7px; }
+  .menu-office-heading { padding: 9px 17px 8px; }
+  .menu-office-heading h1 { font-size: clamp(28px, 3vw, 43px); }
+  .menu-office-transport { min-height: 69px; padding: 8px 14px; }
+}
+@media (max-width: 800px) {
+  .menu-office-description span { font-size: 11px; }
+  .menu-office-transport { gap: 9px; }
+}
+@media (max-width: 650px) {
+  /* Narrow touch screens keep a full-width picture and stacked live controls. */
+  .menu-office-heading { padding: 10px 12px 12px; }
+  .menu-office-heading h1 { font-size: clamp(26px, 6.8vw, 38px); }
+  .menu-office-heading p { font-size: 12px; }
+  .menu-office-eyebrow { font-size: 9px; }
+  .menu-office-transport {
+    padding: 12px;
+    align-items: stretch;
+    flex-direction: column;
   }
+  .menu-office-transport .menu-actions { margin: 7px 0 0; }
+  .menu-office-transport .btn { min-height: 44px; }
 }
