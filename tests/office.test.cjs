@@ -33,6 +33,7 @@ test("approved office script is complete and ordered", () => {
 test("D1 stages the four approved layers, not oversized expression cards", () => {
   const assets = [
     "public/assets/generated/locations/office-clean-01-v01.webp",
+    "public/assets/generated/locations/office-foreground-01-v01.webp",
     ...["david", "stephen", "paul"].map((name) =>
       "public/assets/generated/characters/" + name + "-office-seated-neutral-v01.webp"
     )
@@ -50,7 +51,8 @@ test("D1 stages the four approved layers, not oversized expression cards", () =>
   assert.ok(html.includes('class="cast cast-seated"'));
   assert.ok(!html.includes('class="cast-portrait"'), "Legacy giant-face card still present");
   const css = read("src/styles.css");
-  assert.ok(css.includes("clip-path: inset(67.4%"), "Foreground desk must cover the actor layers");
+  assert.ok(css.includes('office-foreground-01-v01.webp'), "Foreground must use independent transparent asset");
+  assert.ok(!css.includes("clip-path: inset(67.4%"), "Clipped-background workaround must not survive");
   assert.ok(!html.includes("http://") && !html.includes("https://"));
   assert.ok(!gameSource.includes("fetch(") && !gameSource.includes("XMLHttpRequest"));
   assert.ok(html.indexOf('id="dialogueBox"') < html.indexOf('id="storyProgress"'));
