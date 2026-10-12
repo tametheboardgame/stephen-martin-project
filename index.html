@@ -19,28 +19,36 @@
         <div><strong>OPERATION: PROBABLY FINE</strong><span>AN ENTIRELY FICTIONAL COMEDY</span></div>
       </div>
       <div class="topbar-right">
-        <span class="build-label">GAME-SP1.1-D1 · OFFICE ASSEMBLY PREVIEW</span>
+        <span class="build-label">GAME-SP1.1 · OFFICE PREVIEW</span>
         <button class="header-button" id="soundButton" type="button" aria-pressed="false" title="Toggle short sound effects">Sound: Off</button>
       </div>
     </header>
 
     <main>
-      <section id="menuScreen" class="screen menu-screen">
-        <div class="menu-art" aria-hidden="true">
-          <div class="menu-circle"></div>
-          <div class="menu-stripe"></div>
-          <div class="menu-stars">✦　★　✦</div>
-          <div class="menu-bear">🐻</div>
-        </div>
-        <div class="menu-copy">
-          <span class="kicker">THREE MATES. ONE TERRIBLE IDEA.</span>
+      <section id="menuScreen" class="screen menu-screen menu-office-screen" aria-label="Main menu">
+        <div class="menu-office-heading">
+          <div class="menu-office-eyebrow"><span>OPERATION: PROBABLY FINE</span><span>CHAPTER ONE · THE OFFICE</span></div>
           <h1>RESCUE <em>STEPHEN MARTIN</em> FROM CHINA<span class="title-period">.</span></h1>
-          <p>The origin story of the world's least qualified rescue operation. Start with a fully scripted comic office cutscene.</p>
+          <p>Three mates. One spectacularly unnecessary international rescue.</p>
+        </div>
+        <div class="menu-office-stage" aria-hidden="true">
+          <div class="menu-office-backdrop"></div>
+          <div class="menu-office-actors">
+            <img class="menu-office-actor menu-office-david" src="./public/assets/generated/characters/david-office-seated-neutral-v01.webp" alt="" loading="eager">
+            <img class="menu-office-actor menu-office-stephen" src="./public/assets/generated/characters/stephen-office-seated-neutral-v01.webp" alt="" loading="eager">
+            <img class="menu-office-actor menu-office-paul" src="./public/assets/generated/characters/paul-office-seated-neutral-v01.webp" alt="" loading="eager">
+          </div>
+          <div class="menu-office-desk"></div>
+        </div>
+        <div class="menu-office-transport">
+          <div class="menu-office-description">
+            <strong>THE PRE-HOLIDAY BRIEFING</strong>
+            <span>A fully scripted comic opening. Plays automatically, or take control of the dialogue.</span>
+          </div>
           <div class="menu-actions">
             <button type="button" id="startButton" class="btn btn-primary">Start the story <span aria-hidden="true">→</span></button>
             <button type="button" id="resumeButton" class="btn btn-secondary" hidden>Continue preview</button>
           </div>
-          <small>Plays automatically · Pause for manual control · Space or Enter advances · Fictional characters and events</small>
         </div>
       </section>
 
