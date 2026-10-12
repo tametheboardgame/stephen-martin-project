@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1FuWnD1-srqK1albFH4gDd2D6xvjw-Qdt"
+  },
+  "expectedSourceName": "office-foreground-01-candidate-v01.png",
+  "destination": "public/assets/generated/locations/office-foreground-01-v01.webp",
+  "transform": {
+    "maxWidth": 1920,
+    "maxHeight": 1080,
+    "quality": 90
+  },
+  "revision": 1
+}
