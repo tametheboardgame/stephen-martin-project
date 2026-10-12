@@ -107,8 +107,11 @@
 
   function setSound(enabled) {
     soundEnabled = enabled;
-    $("soundButton").textContent = enabled ? "Sound: On" : "Sound: Off";
-    $("soundButton").setAttribute("aria-pressed", String(enabled));
+    for (const id of ["soundButton", "sceneSoundButton"]) {
+      const button = $(id);
+      button.textContent = enabled ? "Sound: On" : "Sound: Off";
+      button.setAttribute("aria-pressed", String(enabled));
+    }
   }
 
   function beep(note = "ping") {
@@ -181,7 +184,10 @@
     $("cutawayPanel").hidden = !cutaway;
     $("cutawayContent").innerHTML = cutaway ? cutaways[cutaway] : "";
     $("stage").dataset.cutaway = cutaway || "none";
-    $("sceneEffect").innerHTML = cutaway ? "" : (effects[prop] || "");
+    // Paperwork belongs in David's real risk-assessment cutaway.
+    // Don't float giant prop graphics over Paul (or any other seated actor).
+    // Only the deliberate final-title beat uses a stage-wide effect.
+    $("sceneEffect").innerHTML = !cutaway && prop === "title" ? effects.title : "";
     $("stage").dataset.moment = shot.moment;
     $("stage").dataset.prop = prop;
     $("stage").dataset.expression = beat.expression || "neutral";
@@ -279,6 +285,7 @@
   $("replayButton").addEventListener("click", startOffice);
   $("homeButton").addEventListener("click", showMenu);
   $("soundButton").addEventListener("click", () => setSound(!soundEnabled));
+  $("sceneSoundButton").addEventListener("click", () => setSound(!soundEnabled));
   $("playPauseButton").addEventListener("click", () => setAutoplay(!autoPlaying));
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
