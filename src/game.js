@@ -97,7 +97,12 @@
 
   function reveal(screenName) {
     if (screenName !== "office") clearAdvanceTimer();
+    const entering = screens[screenName].hidden;
     for (const [name, screen] of Object.entries(screens)) screen.hidden = name !== screenName;
+    // Starting on a scrolled menu used to leave the office scene's toolbar
+    // outside the visible laptop viewport. Reset only on actual screen changes,
+    // not on every spoken line, Back, or Next.
+    if (entering && typeof window.scrollTo === "function") window.scrollTo(0, 0);
   }
 
   function setSound(enabled) {
