@@ -421,9 +421,8 @@ test("D1E start and saved-game continuation work from floating action panel", ()
 });
 
 
-test("D2 Stephen seated neutral/amused pair is alpha-preserving, canvas-aligned and shipped", () => {
-  const neutralPath = "public/assets/generated/characters/stephen-office-seated-neutral-v01.webp";
-  const amusedPath = "public/assets/generated/characters/stephen-office-seated-amused-v01.webp";
+test("D2 Stephen Neutral, Amused and Confused are alpha-preserving, canvas-aligned and shipped", () => {
+  const sourceRoot = "public/assets/generated/characters/";
   const getWebpDimensions = (relative) => {
     const bytes = fs.readFileSync(path.join(root, relative));
     assert.equal(bytes.toString("ascii", 0, 4), "RIFF");
@@ -431,72 +430,90 @@ test("D2 Stephen seated neutral/amused pair is alpha-preserving, canvas-aligned 
     assert.ok((bytes[20] & 0x10) !== 0, "Transparent WebP alpha required: " + relative);
     return [bytes.readUIntLE(24, 3) + 1, bytes.readUIntLE(27, 3) + 1];
   };
-  assert.deepEqual(getWebpDimensions(amusedPath), getWebpDimensions(neutralPath));
+  const neutralPath = sourceRoot + "stephen-office-seated-neutral-v01.webp";
+  const amusedPath = sourceRoot + "stephen-office-seated-amused-v01.webp";
+  const confusedPath = sourceRoot + "stephen-office-seated-confused-v01.webp";
+  assert.deepEqual(getWebpDimensions(neutralPath), [1086, 1448]);
   assert.deepEqual(getWebpDimensions(amusedPath), [1086, 1448]);
-  assert.ok(read("scripts/build.mjs").includes("stephen-office-seated-amused-v01.webp"));
-  // One transparent image is rendered, never a neutral + amused alpha stack.
+  assert.deepEqual(getWebpDimensions(confusedPath), [1086, 1448]);
+  assert.ok(read("scripts/build.mjs").includes("stephen-office-seated-confused-v01.webp"));
+
+  // One transparent whole-body sprite at a time, not stacked silhouettes.
   const stephenStage = html.slice(html.indexOf('id="castStephen"'), html.indexOf('id="castPaul"'));
   assert.equal((stephenStage.match(/<img /g) || []).length, 1);
   assert.ok(stephenStage.includes('id="portraitStephen"'));
   assert.ok(!html.includes('id="portraitStephenAmused"'));
-  assert.ok(html.includes('rel="preload" as="image" type="image/webp"'), "Preload the replacement to avoid visible loading flashes");
-  assert.ok(html.includes("stephen-office-seated-amused-v01.webp?v=3"), "Updated v03 image must bypass cached proof v01");
-  const manifest = JSON.parse(read("generated-assets/manifests/stephen-office-seated-amused-v01.json"));
-  assert.equal(manifest.revision, 2);
-  assert.equal(manifest.expectedSourceName, "stephen-office-seated-amused-d2-v03.png");
-  assert.equal(manifest.destination, amusedPath);
-
+  assert.ok(html.includes("stephen-office-seated-amused-v01.webp?v=3"));
+  assert.ok(html.includes("stephen-office-seated-confused-v01.webp?v=1"));
+  const amusedManifest = JSON.parse(read("generated-assets/manifests/stephen-office-seated-amused-v01.json"));
+  assert.equal(amusedManifest.revision, 2);
+  assert.equal(amusedManifest.expectedSourceName, "stephen-office-seated-amused-d2-v03.png");
+  assert.equal(amusedManifest.destination, amusedPath);
+  const confusedManifest = JSON.parse(read("generated-assets/manifests/stephen-office-seated-confused-v01.json"));
+  assert.equal(confusedManifest.revision, 1);
+  assert.equal(confusedManifest.expectedSourceName, "stephen-office-seated-confused-d2-v01.png");
+  assert.equal(confusedManifest.destination, confusedPath);
   const css = read("src/styles.css");
   assert.ok(css.includes('#officeScreen .cast-seated #castStephen #portraitStephen'));
-  assert.ok(!css.includes("#portraitStephenAmused"), "Old overlapping amused CSS must be removed");
-  assert.ok(!css.includes("transition: opacity 140ms"), "Transparent poses must not be cross-faded");
-  assert.ok(gameSource.includes('portrait.src = stephenSeatedSources[sprite]'), "Expression must replace src on one image");
+  assert.ok(!css.includes("#portraitStephenAmused"));
+  assert.ok(!css.includes("transition: opacity 140ms"));
+  assert.ok(gameSource.includes('portrait.src = stephenSeatedSources[sprite]'));
 });
 
-test("D2 Stephen reaction cues render amused and fallback neutral, without disturbing other actors", () => {
+test("D2 existing Stephen dialogue reaction cues select Amused, Confused and Neutral fallback", () => {
   const p = setupFakeGame();
   const el = p.getElementById;
   el("startButton").click();
   assert.equal(el("castStephen").dataset.expression, "amused");
   assert.equal(el("castStephen").dataset.seatedSprite, "amused");
   assert.match(el("portraitStephen").src, /amused-v01\.webp\?v=3$/);
-  el("nextButton").click();
+  el("nextButton").click(); // O01:1 Stephen: Quite
   assert.equal(el("castStephen").dataset.seatedSprite, "amused");
-  el("nextButton").click();
+  el("nextButton").click(); // O01:2 Paul: Right
   assert.equal(el("castStephen").dataset.expression, "confused");
+  assert.equal(el("castStephen").dataset.seatedSprite, "confused");
+  assert.match(el("portraitStephen").src, /confused-v01\.webp\?v=1$/);
+  el("backButton").click();
+  assert.equal(el("castStephen").dataset.seatedSprite, "amused");
+  // Across the full intro, unsupported emotions still use the neutral base.
+  for (let i = 0; i < 6; i++) el("nextButton").click();
+  assert.equal(el("castStephen").dataset.expression, "annoyed");
   assert.equal(el("castStephen").dataset.seatedSprite, "neutral");
   assert.match(el("portraitStephen").src, /stephen-office-seated-neutral-v01\.webp$/);
   assert.equal(el("castDavid").dataset.staging, "seated-neutral");
   assert.equal(el("castPaul").dataset.staging, "seated-neutral");
-  el("backButton").click();
-  assert.equal(el("castStephen").dataset.seatedSprite, "amused");
 });
 
-test("D2 Stephen manual A/B cycles Auto Neutral Amused without changing dialogue or autoplay", () => {
+test("D2 proof cycles Auto Neutral Amused Confused without changing dialogue or autoplay", () => {
   const p = setupFakeGame();
   const el = p.getElementById;
-  el("startButton").click();
-  const baselineText = el("lineText").textContent;
-  const pendingTimerCount = p.timeouts.size;
+  el("startButton").click(); // O01:0 naturally amused
+  const initialText = el("lineText").textContent;
+  const pendingTimers = p.timeouts.size;
   assert.equal(el("castStephen").dataset.seatedSprite, "amused");
   el("stephenProofButton").click();
   assert.equal(el("castStephen").dataset.seatedSprite, "neutral");
   assert.match(el("portraitStephen").src, /stephen-office-seated-neutral-v01\.webp$/);
-  assert.match(el("stephenProofButton").textContent, /Neutral/);
   el("stephenProofButton").click();
   assert.equal(el("castStephen").dataset.seatedSprite, "amused");
-  assert.match(el("portraitStephen").src, /amused-v01\.webp\?v=3$/);
   el("stephenProofButton").click();
-  assert.equal(el("castStephen").dataset.seatedSprite, "amused"); // auto cue: O01:0
+  assert.equal(el("castStephen").dataset.seatedSprite, "confused");
+  assert.match(el("portraitStephen").src, /confused-v01\.webp\?v=1$/);
+  assert.match(el("stephenProofButton").attributes["aria-label"], /Confused/);
+  el("stephenProofButton").click();
+  assert.equal(el("castStephen").dataset.seatedSprite, "amused"); // back to Auto
   assert.match(el("stephenProofButton").textContent, /Auto/);
-  assert.equal(el("lineText").textContent, baselineText);
-  assert.equal(p.timeouts.size, pendingTimerCount);
+  assert.equal(el("lineText").textContent, initialText);
+  assert.equal(p.timeouts.size, pendingTimers);
   assert.equal(el("playPauseButton").attributes["aria-pressed"], "true");
-  // Manual override persists across dialogue changes until changed again.
-  el("stephenProofButton").click();
-  el("stephenProofButton").click();
+
+  // Manual forced emotion overrides auto reactions across subsequent beats.
+  el("stephenProofButton").click(); // neutral
+  el("stephenProofButton").click(); // amused
+  el("stephenProofButton").click(); // confused
   el("nextButton").click();
-  el("nextButton").click();
-  assert.equal(el("castStephen").dataset.expression, "confused");
+  assert.equal(el("castStephen").dataset.expression, "amused");
+  assert.equal(el("castStephen").dataset.seatedSprite, "confused");
+  el("stephenProofButton").click(); // Auto
   assert.equal(el("castStephen").dataset.seatedSprite, "amused");
 });
