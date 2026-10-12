@@ -22,12 +22,12 @@
 **Human gate required for each new likeness.**
 
 1. Confirm Stephen's approved character sheet remains the anchor.
-2. **David design approved:** 6 ft 2 in, bald, blue eyes, short dark ginger/auburn beard. Original `david-character-baseline-v01.png` in Drive (`1DJLH4ni0z81_SMrslKx99z_U2agTm8vS`); manifest at `generated-assets/manifests/character-david-baseline.json`; target `public/assets/generated/characters/david-baseline.webp`. The asset was materialised successfully by GitHub Actions run `38225490240`. Output `public/assets/generated/characters/david-baseline.webp` has blob SHA `0324afa1d3dee0a070701a31bc210c529c6061a4`, matching an independent WebP conversion from the approved PNG. Approved David art and canon are ready for merge.
-3. **Next:** obtain visual references for Paul and generate/review his comic character sheet.
+2. **David design approved:** 6 ft 2 in, bald, blue eyes, short dark ginger/auburn beard. Original `david-character-baseline-v01.png` in Drive (`1DJLH4ni0z81_SMrslKx99z_U2agTm8vS`); manifest at `generated-assets/manifests/character-david-baseline.json`; target `public/assets/generated/characters/david-baseline.webp`. The asset was materialised successfully by GitHub Actions run `38225490240`. Output `public/assets/generated/characters/david-baseline.webp` has blob SHA `0324afa1d3dee0a070701a31bc210c529c6061a4`, matching an independent WebP conversion from the approved PNG. David's approved art and canon were merged in [PR #2](https://github.com/tametheboardgame/stephen-martin-project/pull/2).
+3. **Paul approved:** Revised character sheet with clean-shaven face and characteristic blank expression. Original `paul-character-baseline-v01.png` in Drive (`1J-_Zxy7U7VGAnUS9S3L7CAAR54KNaSYk`), manifest `generated-assets/manifests/character-paul-baseline.json`, destination `public/assets/generated/characters/paul-baseline.webp`. GitHub Actions image materialisation **succeeded** in run `38228062469`. The committed WebP has Git blob SHA `2ec53c41eac4d4e9da9b81fdfaf059796a4dcc53`, independently reproduced from the exact human-approved source PNG. The character reference is approved, pending PR #3 merge.
 4. Create concise canonical appearance/personality notes and register approved assets using the Drive pipeline.
 5. Define/design a fictionalised boyfriend when story requirements justify it, keeping the mystery ambiguous.
 
-**Done when:** David and Paul sheets are visually approved, materialised into GitHub, and character canon reflects those approvals. David's visual approval has been granted; Paul remains pending. Then proceed to SP-WP1.2 (short narrative/comedy bible).
+**Status:** All three main character reference designs (Stephen, David and Paul) are human-approved. After Paul's WebP has materialised and the PR has merged, the main-character baseline part of SP-WP1.1 is complete. Boyfriend design is deliberately deferred until the story calls for it. **Next: SP-WP1.2, concise story/comedy bible and three short endings.**
 
 ## Operating notes
 
