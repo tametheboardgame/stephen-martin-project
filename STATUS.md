@@ -41,6 +41,15 @@
 - A real named protagonist and stylised likeness may still be recognisable. Keep publication behind the existing explicit owner approval and privacy review gate.
 - Detailed narrative beats and jokes are not yet human-approved. **Next:** outline a concise shared office opening, a comic 'heaven-to-hell' holiday arc and three endings, using entirely fictionalised circumstances, for owner review.
 
+## GAME-SP1: Office opening preview (in review)
+
+- Owner approved the SP-WP1.2 story package, merged in [PR #6](https://github.com/tametheboardgame/stephen-martin-project/pull/6) at `22d7806b5c36dacc0cea4a8c0f9bedc8ab204e4f`.
+- A playable dependency-free office preview is implemented on `agent/game-sp1-office-vertical-slice`, pending owner visual and pacing review.
+- Seven approved scene shots and 64 dialogue beats are recorded in `src/office-data.js`. `index.html`, `src/game.js` and `src/styles.css` provide responsive comic staging, the three approved character sheet assets, back/next/skip/replay controls, optional local sound cues, simple resume, and a clearly labelled Stephen holiday placeholder.
+- No boyfriend drawing, game engine, third-party service or public deployment. Full Stephen's playable route and rescue mini-games remain GAME-SP2/3.
+- Cheap local `npm run verify` syntax and behaviour tests run in a dedicated GitHub Actions workflow. It packages a self-contained office-preview archive after a successful smoke run.
+- **Approval gate:** play the office scene and review timing, humour, presentation of the real approved art, mobile readability and controls. Keep the PR open for revisions until that approval; do not silently start all three game routes.
+
 ## Operating notes
 
 - Keep changes small and reviewable in short-lived feature branches.
