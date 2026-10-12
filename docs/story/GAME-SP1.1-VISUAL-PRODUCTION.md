@@ -1,6 +1,19 @@
 # GAME-SP1.1: Cinematic opening production hand-off
 
-**Status:** Approved design direction; actual live component implementation in PR #8, awaiting owner visual review.
+**Status:** GAME-SP1.1-D owner-approved rebuild, 12 October 2026. PR #8 was merged for testing and its portrait-card presentation was rejected. The layered in-office scene is the current production goal; this document and `ROADMAP.md` hold the next approved tasks.
+
+## Owner playtest decision — supersedes portrait-card layout
+
+The live Cloudflare playtest revealed oversized faces positioned too low, unwanted overlapping/cropping, and overly slow transitions. The owner explicitly chose to **move directly to the in-office version**, not polish the existing portrait frames.
+
+- Build clean `OFFICE-CLEAN-01` first, **without** characters, visible text, branding or interface. Human-approve before materialising.
+- Place three independent actors **inside** that scene at consistent scale, using seated/waist-up illustrations and aligned expression swapping. The current 18 approved close-up WebPs can remain references or be used in a registered modular head/bust solution; never enlarge them as three free-standing portrait cards.
+- Speech must remain editable HTML over the lower desk area **without covering faces**. Progress and transport stay separate below the stage.
+- Make dialogue snappier, add **1×, 1.25× and 1.5×** speed settings, preserve Pause/Back/Next/Skip/Resume, and keep intentionally comedic pauses.
+- Retain three independent cutaways for risk-assessment laptop, bear printer and fictional rescue chat. Do not paint messages or controls into a fixed illustration; all copy must remain editable.
+- Verify actual desktop and tablet framing and cutaway/playback transitions on a branch preview before approval and merge. Retain a roughly three-minute opening and no GAME-SP2 gameplay in scope.
+
+**The layered production components are the deliverable; full-scene concept images alone are not.**
 
 ## The reference versus the game
 
@@ -39,7 +52,7 @@ The production opening has these **independent layers**:
 
 **Human approval gate:** Each visual must use approved character designs, respect SP-D009 privacy, and be individually reviewed before import through Google Drive manifests. Do not use the reference infographic as a flattened production image.
 
-## Implemented now on PR #8
+## Implemented in the prior playtest PR #8 (merged to main)
 
 - Autoplay, Pause/Play, Back and Next plus timing and hidden-tab safety.
 - All 18 cropped WebP expressions, plus correct source mapping for reactions and a baseline-fallback if assets cannot load.
@@ -47,12 +60,12 @@ The production opening has these **independent layers**:
 - Three separate full-stage CSS cutaways and associated scene cues.
 - Focused tests for the cast asset mapping, live speech, and playback/cutaway interaction.
 
-## Still to verify
+## Next rebuild and visual qualification
 
 - Actual Cloudflare preview on wide desktop, small desktop and mobile or tablet.
 - Character framing: no unintended crop of glasses, chins, hair, shoulders or raised hands.
 - Full environment art and seated-body presentation if the initial production component layout remains too obviously 'portrait cards'.
 - Cutaway legibility under autoplay at real reading speed.
-- Owner visual sign-off before PR merge into `main`.
+- Owner visual sign-off before the **new rebuild PR** merges into `main`.
 
 The desired outcome is a **playable 3-minute cutscene**, not a static poster pretending to be one.
