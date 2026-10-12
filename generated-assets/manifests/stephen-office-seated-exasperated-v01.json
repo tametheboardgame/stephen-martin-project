@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1N7q9RIt2b4KKt6ydr4BCZGFRr-uX34Xw"
+  },
+  "expectedSourceName": "stephen-office-seated-exasperated-d2-v03.png",
+  "destination": "public/assets/generated/characters/stephen-office-seated-exasperated-v01.webp",
+  "transform": {
+    "maxWidth": 1200,
+    "maxHeight": 1600,
+    "quality": 90
+  },
+  "revision": 1
+}
