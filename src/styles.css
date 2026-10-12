@@ -1196,26 +1196,17 @@ body:has(#menuScreen:not([hidden])) main {
 }
 
 
-/* GAME-SP1.1-D2: registered two-layer Stephen seated-expression proof.
-   Artwork keeps the exact 1086x1448 canvas and stays in the approved office
-   compositing grid, under the independent transparent foreground desk. */
-#officeScreen .cast-seated #castStephen .actor-portrait {
-  position: relative;
-}
-#officeScreen .cast-seated #castStephen #portraitStephenAmused {
-  position: absolute;
-  inset: 0;
+/* GAME-SP1.1-D2: single registered actor image. The pose changes at
+   dialogue beats without alpha-crossfading two differently shaped bodies.
+   Never reveal the previous transparent sprite underneath the new one. */
+#officeScreen .cast-seated #castStephen #portraitStephen {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
   object-position: center bottom;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 140ms ease-out !important;
-}
-#officeScreen .cast-seated #castStephen[data-seated-sprite="amused"] #portraitStephenAmused {
   opacity: 1;
+  transition: none !important;
 }
 #officeScreen .d2-proof-button {
   color: #fcf4d7;
@@ -1237,8 +1228,4 @@ body:has(#menuScreen:not([hidden])) main {
   #officeScreen .dialogue-actions { flex-wrap: wrap; }
   #officeScreen .d2-proof-button { order: 2; }
 }
-@media (prefers-reduced-motion: reduce) {
-  #officeScreen .cast-seated #castStephen #portraitStephenAmused {
-    transition: none !important;
-  }
-}
+
