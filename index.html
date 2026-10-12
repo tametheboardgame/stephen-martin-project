@@ -26,28 +26,35 @@
 
     <main>
       <section id="menuScreen" class="screen menu-screen menu-office-screen" aria-label="Main menu">
-        <div class="menu-office-heading">
-          <div class="menu-office-eyebrow"><span>OPERATION: PROBABLY FINE</span><span>CHAPTER ONE · THE OFFICE</span></div>
-          <h1>RESCUE <em>STEPHEN MARTIN</em> FROM CHINA<span class="title-period">.</span></h1>
-          <p>Three mates. One spectacularly unnecessary international rescue.</p>
-        </div>
-        <div class="menu-office-stage" aria-hidden="true">
-          <div class="menu-office-backdrop"></div>
-          <div class="menu-office-actors">
-            <img class="menu-office-actor menu-office-david" src="./public/assets/generated/characters/david-office-seated-neutral-v01.webp" alt="" loading="eager">
-            <img class="menu-office-actor menu-office-stephen" src="./public/assets/generated/characters/stephen-office-seated-neutral-v01.webp" alt="" loading="eager">
-            <img class="menu-office-actor menu-office-paul" src="./public/assets/generated/characters/paul-office-seated-neutral-v01.webp" alt="" loading="eager">
+        <div class="menu-office-stage">
+          <div class="menu-office-art" aria-hidden="true">
+            <div class="menu-office-backdrop"></div>
+            <div class="menu-office-actors">
+              <img class="menu-office-actor menu-office-david" src="./public/assets/generated/characters/david-office-seated-neutral-v01.webp" alt="" loading="eager">
+              <img class="menu-office-actor menu-office-stephen" src="./public/assets/generated/characters/stephen-office-seated-neutral-v01.webp" alt="" loading="eager">
+              <img class="menu-office-actor menu-office-paul" src="./public/assets/generated/characters/paul-office-seated-neutral-v01.webp" alt="" loading="eager">
+            </div>
+            <div class="menu-office-desk"></div>
           </div>
-          <div class="menu-office-desk"></div>
-        </div>
-        <div class="menu-office-transport">
-          <div class="menu-office-description">
+
+          <div class="menu-hero-title">
+            <span class="menu-hero-kicker">OPERATION: PROBABLY FINE</span>
+            <h1><span>RESCUE <em>STEPHEN MARTIN</em></span><span>FROM CHINA<span class="title-period">.</span></span></h1>
+            <p>Three mates. One spectacularly unnecessary international rescue.</p>
+          </div>
+
+          <div class="menu-hero-utility">
+            <span class="menu-hero-preview">CHAPTER ONE · OFFICE PREVIEW</span>
+            <button id="menuSoundButton" type="button" class="mini-button" aria-pressed="false" title="Toggle short sound effects">Sound: Off</button>
+          </div>
+
+          <div class="menu-hero-actions">
             <strong>THE PRE-HOLIDAY BRIEFING</strong>
-            <span>A fully scripted comic opening. Plays automatically, or take control of the dialogue.</span>
-          </div>
-          <div class="menu-actions">
-            <button type="button" id="startButton" class="btn btn-primary">Start the story <span aria-hidden="true">→</span></button>
-            <button type="button" id="resumeButton" class="btn btn-secondary" hidden>Continue preview</button>
+            <div class="menu-hero-buttons">
+              <button type="button" id="startButton" class="btn btn-primary">Start the story <span aria-hidden="true">→</span></button>
+              <button type="button" id="resumeButton" class="btn btn-secondary" hidden>Continue preview</button>
+            </div>
+            <small>Autoplays · Pause, Back and Next available</small>
           </div>
         </div>
       </section>
