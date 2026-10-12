@@ -54,7 +54,9 @@
 
 - **Owner-approved scope:** Autoplay by default, manual Pause/Play/Next/Back, per-line timing and timer safeguards; expressive character reactions; comic close-ups for risk assessment, printer and rescue chat.
 - **Working branch:** `agent/game-sp1.1-opening-polish`, separate from the deployed, owner-approved GAME-SP1 on `main`. Do **not** merge while new character art/cutaways await visual sign-off.
-- **Execution:** A) timer and controls; B) small individually human-reviewed Stephen/David/Paul expression variants; C) three cutaways and transitions; D) focused CI and hosted branch preview, then approval.
+- **Implemented on this branch:** Phase A autoplay/timing with Pause/Play/Next/Back, restart/skip and hidden-tab timer safeguards; initial scene-wide DOM/CSS risk-assessment, printer and group-chat cutaways; data-driven speaker/listener reaction cues and approved portrait fallback. Browser visual and pacing review is still required.
+- **Outstanding human art gate:** create separate expression artwork for Stephen, David and Paul, show genuine generated results, obtain explicit visual approval, and only then use the Drive manifest pipeline to replace existing portraits. The current reaction styles deliberately reuse the approved baseline images.
+- **Remaining execution:** confirm targeted tests and Cloudflare preview, obtain human approval for any new character art, refine presentation, and merge only after owner review.
 - **Next after polish:** GAME-SP2, Stephen's selectable holiday and shared rescue investigation. Maintain the 15–25 minute total scope and fictional/non-identifying character rule.
 
 ## Operating notes
