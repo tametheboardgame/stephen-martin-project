@@ -53,12 +53,28 @@ jobs:
           ref: ${{ steps.target.outputs.branch }}
           fetch-depth: 2
 
+      - name: Resolve Workload Identity Provider
+        id: provider
+        shell: bash
+        env:
+          CONFIGURED_PROVIDER: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+        run: |
+          set -euo pipefail
+          provider="${CONFIGURED_PROVIDER#https://iam.googleapis.com/}"
+          provider="${provider#//iam.googleapis.com/}"
+          expected="projects/878071288497/locations/global/workloadIdentityPools/github/providers/stephen-martin-github"
+          if [[ "$provider" != "$expected" ]]; then
+            echo "::error::GCP_WORKLOAD_IDENTITY_PROVIDER must identify the Stephen Martin provider resource (without a URL prefix)."
+            exit 1
+          fi
+          echo "resource=$provider" >> "$GITHUB_OUTPUT"
+
       - id: google-auth
         name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v3
         with:
           create_credentials_file: true
-          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          workload_identity_provider: ${{ steps.provider.outputs.resource }}
           service_account: ${{ vars.GCP_ASSET_SERVICE_ACCOUNT }}
 
       - uses: actions/setup-python@v6
@@ -182,6 +198,6 @@ jobs:
               check=True,
           )
           subprocess.run(
-              ["git", "push", "origin", f"HEAD:${{ steps.target.outputs.branch }}"],
+              ["git", "push", "origin", f"HEAD:{os.environ['TARGET_BRANCH']}"],
               check=True,
           )
