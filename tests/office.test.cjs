@@ -30,12 +30,17 @@ test("approved office script is complete and ordered", () => {
   assert.ok(shots.some((s) => s.lines.some((b) => b.text.includes("Yet."))));
 });
 
-test("all source image paths match approved character assets", () => {
+test("cinematic cast starts with approved individual neutral portraits and has fallback", () => {
+  for (const character of ["stephen", "david", "paul"]) {
+    assert.ok(html.includes("public/assets/generated/characters/expressions/" + character + "-neutral.webp"));
+  }
   for (const filename of ["stephen-martin-baseline.webp", "david-baseline.webp", "paul-baseline.webp"]) {
-    assert.ok(html.includes("public/assets/generated/characters/" + filename));
+    assert.ok(gameSource.includes("public/assets/generated/characters/" + filename));
   }
   assert.ok(!html.includes("http://") && !html.includes("https://"));
   assert.ok(!gameSource.includes("fetch(") && !gameSource.includes("XMLHttpRequest"));
+  assert.ok(html.indexOf('id="dialogueBox"') < html.indexOf('id="storyProgress"'));
+  assert.ok(html.indexOf('id="storyProgress"') < html.indexOf('id="playPauseButton"'));
 });
 
 test("static HTML exposes the named controls and scripts in dependency order", () => {
@@ -213,4 +218,35 @@ test("reaction cues and three cutaways are registered without unapproved portrai
   assert.ok(gameSource.includes("cutaway-printer"));
   assert.ok(gameSource.includes("STEPHEN RESCUE GROUP"));
   assert.ok(!reactionSource.includes("http"));
+});
+
+test("approved portrait files change for both speakers and listening characters", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  el("startButton").click();
+  assert.ok(el("portraitPaul").src.endsWith("/paul-blank.webp"), "Paul starts with deadpan reaction");
+  assert.ok(el("portraitStephen").src.endsWith("/stephen-amused.webp"), "Stephen reacts as listener");
+  // O02 begins after four beats in O01. David enters with a serious assessment.
+  for (let i = 0; i < 5; i++) el("nextButton").click();
+  assert.ok(el("portraitDavid").src.endsWith("/david-confident.webp"));
+  assert.ok(el("portraitStephen").src.endsWith("/stephen-confused.webp"));
+  assert.ok(el("portraitPaul").src.endsWith("/paul-blank.webp"));
+  assert.equal(el("castDavid").dataset.expression, "confident");
+  assert.equal(el("castStephen").dataset.expression, "confused");
+});
+
+test("a visual cutaway leaves the dialogue text and manual controls interactive", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  el("startButton").click();
+  for (let i = 0; i < 5; i++) el("nextButton").click();
+  assert.equal(el("stage").dataset.cutaway, "risk");
+  assert.equal(el("cutawayPanel").hidden, false);
+  assert.equal(el("speakerName").textContent, "DAVID");
+  assert.ok(el("lineText").textContent.includes("preliminary risk assessment"));
+  el("playPauseButton").click();
+  assert.equal(p.timeouts.size, 0);
+  el("nextButton").click();
+  assert.equal(el("cutawayPanel").hidden, true);
+  assert.equal(el("lineText").textContent, "You've done what?");
 });
