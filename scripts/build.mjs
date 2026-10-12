@@ -6,7 +6,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const output = path.join(root, "dist");
 const files = ["index.html", "src/office-data.js", "src/reactions.js", "src/game.js", "src/styles.css"];
 const imageSource = "public/assets/generated/characters";
-const images = ["stephen-martin-baseline.webp", "david-baseline.webp", "paul-baseline.webp", "stephen-office-seated-neutral-v01.webp", "david-office-seated-neutral-v01.webp", "paul-office-seated-neutral-v01.webp"];
+const images = ["stephen-martin-baseline.webp", "david-baseline.webp", "paul-baseline.webp", "stephen-office-seated-neutral-v01.webp", "stephen-office-seated-amused-v01.webp", "david-office-seated-neutral-v01.webp", "paul-office-seated-neutral-v01.webp"];
 
 await rm(output, { recursive: true, force: true });
 await mkdir(path.join(output, "src"), { recursive: true });
@@ -67,4 +67,4 @@ for (const relative of officeImages) {
 }
 
 console.log("Cloudflare Pages static output: dist/");
-console.log("Only game HTML, scripts, styles, approved background and separate foreground desk, 3 seated sprites, approved base portraits and 18 expression WebPs were included.");
+console.log("Only game HTML, scripts, styles, approved background and separate foreground desk, 3 neutral seated sprites plus Stephen amused proof, approved base portraits and 18 expression WebPs were included.");
