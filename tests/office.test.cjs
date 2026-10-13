@@ -194,10 +194,10 @@ test("six scripted cutaways are visible, readable and return to the same office"
 test("approved full seated Stephen and David poses swap independently, Paul remains Neutral",()=>{
   const p=preview();p.start();p.at("office.021");
   assert.equal(p.el("castStephen").dataset.expression,"laughing");
-  assert.match(p.el("portraitStephen").src,/stephen-office-seated-laughing-v01\\.webp/);
+  assert.match(p.el("portraitStephen").src,/stephen-office-seated-laughing-v01\.webp/);
   assert.equal(p.el("castDavid").dataset.expression,"frustrated");
   assert.equal(p.el("castDavid").dataset.seatedSprite,"frustrated");
-  assert.match(p.el("portraitDavid").src,/david-office-seated-frustrated-v01\\.webp\\?v=1$/);
+  assert.match(p.el("portraitDavid").src,/david-office-seated-frustrated-v01\.webp\?v=1$/);
   assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
   const davidSrc=p.el("portraitDavid").src;
   p.el("stephenProofButton").click();
@@ -217,7 +217,7 @@ test("David's full approved six-state set is mapped to every scripted beat",()=>
     assert.equal(p.el("castDavid").dataset.expression,cue,all[i].id+" acting cue");
     assert.equal(p.el("castDavid").dataset.seatedSprite,expected[cue],all[i].id+" source");
     assert.match(p.el("portraitDavid").src,
-      new RegExp("david-office-seated-"+expected[cue]+"-v01\\\\.webp"),all[i].id);
+      new RegExp("david-office-seated-"+expected[cue]+"-v01\\.webp"),all[i].id);
     assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral",all[i].id+" Paul fallback");
   }
 });
@@ -226,7 +226,7 @@ test("David proof cycles all six states without changing scene or the other acto
   const p=preview();p.start();p.at("office.006");
   assert.equal(p.el("castDavid").dataset.expression,"confident");
   assert.equal(p.el("castDavid").dataset.seatedSprite,"confident");
-  assert.match(p.el("portraitDavid").src,/david-office-seated-confident-v01\\.webp\\?v=4$/);
+  assert.match(p.el("portraitDavid").src,/david-office-seated-confident-v01\.webp\?v=4$/);
   const paulSrc=p.el("portraitPaul").src,stephenSrc=p.el("portraitStephen").src;
   const timerCount=p.timeouts.size;
   for(const [mode,suffix] of [
