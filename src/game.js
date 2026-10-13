@@ -30,21 +30,40 @@
     laughing: "./public/assets/generated/characters/stephen-office-seated-laughing-v01.webp?v=1"
   };
 
-  function applyStephenSeatedExpression() {
-    const reaction = cast.Stephen.dataset.expression || "neutral";
-    const sprite = stephenProofMode === "auto"
-      ? (Object.hasOwn(stephenSeatedSources, reaction) ? reaction : "neutral")
-      : stephenProofMode;
-    // A transparent full-body pose MUST replace the previous image, never
-    // stack on it. Crossfading two different silhouettes causes double arms
-    // and faces where the new sprite is transparent.
-    const portrait = $("portraitStephen");
+  // Approved seated art: one complete transparent sprite per person.
+  // David/Paul start with their existing neutral assets; add future approved
+  // expressions to their maps without changing renderOffice or stacking images.
+  const seatedExpressionSources = {
+    Stephen: stephenSeatedSources,
+    David: {
+      neutral: "./public/assets/generated/characters/david-office-seated-neutral-v01.webp"
+    },
+    Paul: {
+      neutral: "./public/assets/generated/characters/paul-office-seated-neutral-v01.webp"
+    }
+  };
+
+  function applySeatedExpression(name) {
+    const sources = seatedExpressionSources[name];
+    const reaction = cast[name].dataset.expression || "neutral";
+    const requested = name === "Stephen" && stephenProofMode !== "auto" ? stephenProofMode : reaction;
+    // The dialogue already carries reactions for all three people. Until the
+    // corresponding whole-body art is approved, keep the original neutral body.
+    const sprite = Object.hasOwn(sources, requested) ? requested : "neutral";
+    const portrait = $("portrait" + name);
     if (portrait.dataset.sprite !== sprite) {
-      portrait.src = stephenSeatedSources[sprite];
+      // Change one image src, never crossfade two translucent silhouettes.
+      portrait.src = sources[sprite];
       portrait.dataset.sprite = sprite;
     }
-    cast.Stephen.dataset.seatedSprite = sprite;
-    cast.Stephen.dataset.staging = "seated-expression-proof";
+    cast[name].dataset.seatedSprite = sprite;
+    cast[name].dataset.staging = name === "Stephen" || sprite !== "neutral"
+      ? "seated-expression-proof" : "seated-neutral";
+  }
+
+  function applyStephenSeatedExpression() {
+    // The Stephen-only comparison button must not reset David or Paul.
+    applySeatedExpression("Stephen");
   }
 
   function cycleStephenProof() {
@@ -250,7 +269,7 @@
       el.dataset.staging = "seated-neutral";
       // David and Paul remain their approved static-neutral seated sprites.
     }
-    applyStephenSeatedExpression();
+    for (const name of Object.keys(cast)) applySeatedExpression(name);
     persist();
     if (beat.sound) beep(beat.sound);
     scheduleAdvance();
