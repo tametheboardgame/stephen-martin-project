@@ -207,6 +207,33 @@ test("approved full seated Stephen sprites swap, missing David/Paul poses remain
   assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
 });
 
+test("David Confident uses approved seated WebP and proof override never moves other actors",()=>{
+  const p=preview(); p.start();
+  p.at("office.006");
+  assert.equal(p.el("castDavid").dataset.expression,"confident");
+  assert.equal(p.el("castDavid").dataset.seatedSprite,"confident");
+  assert.match(p.el("portraitDavid").src,/david-office-seated-confident-v01\\.webp\\?v=1$/);
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
+  const stephenSrc=p.el("portraitStephen").src;
+  const timerCount=p.timeouts.size;
+  p.el("davidProofButton").click(); // Auto → Neutral, same dialogue beat
+  assert.equal(p.el("castDavid").dataset.seatedSprite,"neutral");
+  assert.match(p.el("portraitDavid").src,/david-office-seated-neutral-v01\\.webp$/);
+  assert.equal(saved(p).beatId,"office.006");
+  assert.equal(p.timeouts.size,timerCount);
+  p.el("davidProofButton").click(); // Neutral → Confident
+  assert.equal(p.el("castDavid").dataset.seatedSprite,"confident");
+  assert.match(p.el("portraitDavid").src,/david-office-seated-confident-v01\\.webp\\?v=1$/);
+  assert.equal(p.el("portraitStephen").src,stephenSrc);
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
+  p.el("davidProofButton").click(); // Confident → Auto
+  assert.equal(p.el("castDavid").dataset.seatedSprite,"confident");
+  p.el("nextButton").click();
+  assert.equal(p.el("castDavid").dataset.expression,"systems-expert");
+  assert.equal(p.el("castDavid").dataset.seatedSprite,"neutral","Not-yet-approved David poses remain Neutral");
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
+});
+
 test("departure hides Stephen, rewind brings him back, then he stays absent",()=>{
   const p=preview();p.start();p.at("office.v08");
   assert.equal(p.el("castStephen").hidden,true);
@@ -272,7 +299,8 @@ test("no unapproved body artwork or legacy portrait overlays",()=>{
 test("existing artwork remains present with original alpha and dimensions",()=>{
   const allNames=[
     ...["david","stephen","paul"].map(n=>n+"-office-seated-neutral-v01.webp"),
-    ...["amused","confused","annoyed","exasperated","laughing"].map(n=>"stephen-office-seated-"+n+"-v01.webp")
+    ...["amused","confused","annoyed","exasperated","laughing"].map(n=>"stephen-office-seated-"+n+"-v01.webp"),
+    "david-office-seated-confident-v01.webp"
   ];
   for(const asset of allNames){
     const file=fs.readFileSync(path.join(root,"public/assets/generated/characters",asset));

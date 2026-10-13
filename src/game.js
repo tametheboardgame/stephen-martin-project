@@ -22,6 +22,8 @@
   // canvas; the toggle allows owner A/B checks without restarting the story.
   const proofModes = ["auto", "neutral", "amused", "confused", "annoyed", "exasperated", "laughing"];
   let stephenProofMode = "auto";
+  const davidProofModes = ["auto", "neutral", "confident"];
+  let davidProofMode = "auto";
 
   const stephenSeatedSources = {
     neutral: "./public/assets/generated/characters/stephen-office-seated-neutral-v01.webp",
@@ -38,7 +40,8 @@
   const seatedExpressionSources = {
     Stephen: stephenSeatedSources,
     David: {
-      neutral: "./public/assets/generated/characters/david-office-seated-neutral-v01.webp"
+      neutral: "./public/assets/generated/characters/david-office-seated-neutral-v01.webp",
+      confident: "./public/assets/generated/characters/david-office-seated-confident-v01.webp?v=1"
     },
     Paul: {
       neutral: "./public/assets/generated/characters/paul-office-seated-neutral-v01.webp"
@@ -48,7 +51,11 @@
   function applySeatedExpression(name) {
     const sources = seatedExpressionSources[name];
     const reaction = cast[name].dataset.expression || "neutral";
-    const requested = name === "Stephen" && stephenProofMode !== "auto" ? stephenProofMode : reaction;
+    const requested = name === "Stephen" && stephenProofMode !== "auto"
+      ? stephenProofMode
+      : name === "David" && davidProofMode !== "auto"
+        ? davidProofMode
+        : reaction;
     // The dialogue already carries reactions for all three people. Until the
     // corresponding whole-body art is approved, keep the original neutral body.
     const sprite = Object.hasOwn(sources, requested) ? requested : "neutral";
@@ -77,6 +84,16 @@
     // Never render a fresh dialogue beat or restart the autoplay timer just
     // because the user is comparing images.
     applyStephenSeatedExpression();
+  }
+
+  function cycleDavidProof() {
+    davidProofMode = davidProofModes[(davidProofModes.indexOf(davidProofMode) + 1) % davidProofModes.length];
+    const label = davidProofMode[0].toUpperCase() + davidProofMode.slice(1);
+    const button = $("davidProofButton");
+    button.textContent = "David: " + label + " ↻";
+    button.setAttribute("aria-label", "David expression preview: " + label + ". Click to cycle Auto, Neutral and Confident");
+    // Preview only David's approved complete sprite; leave story timing and other actors unchanged.
+    applySeatedExpression("David");
   }
 
   let autoPlaying = true;
@@ -344,6 +361,7 @@
   $("menuSoundButton").addEventListener("click", () => setSound(!soundEnabled));
   $("playPauseButton").addEventListener("click", () => setAutoplay(!autoPlaying));
   $("stephenProofButton").addEventListener("click", cycleStephenProof);
+  $("davidProofButton").addEventListener("click", cycleDavidProof);
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       // Pausing on hidden tabs prevents timed dialogue from being skipped while away.

@@ -1281,3 +1281,16 @@ body:has(#menuScreen:not([hidden])) main {
   #officeScreen .cutaway-special { padding: 8px; border-width: 3px; box-shadow: 4px 5px 0 #071627; }
   #officeScreen .cutaway-special p { margin-top: 5px; }
 }
+
+/* GAME-SP1.1-D4: compact independent expression proof controls. */
+#officeScreen .expression-proof-controls {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+@media (max-width: 800px) {
+  #officeScreen .expression-proof-controls { order: 2; }
+  #officeScreen .d2-proof-button { order: initial; }
+}

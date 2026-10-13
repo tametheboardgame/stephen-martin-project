@@ -2,6 +2,13 @@
 
 **Updated:** 13 October 2026
 
+## GAME-SP1.1-D4 — David Confident seated artwork (draft PR #14, 13 October 2026)
+
+- Owner approved David Confident v01 direction: bald, auburn beard, charcoal hoodie, olive T-shirt, hands clasped, rectangular smartwatch, no chair, transparent 1086 × 1448 canvas, looking right in the picture toward the other two characters. Staged in the project Drive asset folder as `david-office-seated-confident-d2-v01.png`, Drive file ID `1loYRJjx1YDa3K_9rDhaiVchvdGmPKEg7`, then materialised through the existing manifest `generated-assets/manifests/david-office-seated-confident-v01.json` to `public/assets/generated/characters/david-office-seated-confident-v01.webp`.
+- David's Confident dialogue cue now selects the approved seated WebP. All other David expressions and all Paul's cues continue to fall back to Neutral. Stephen's six expressions are unchanged.
+- A temporary David Auto → Neutral → Confident proof button allows instant in-scene comparison without changing story position or playback. CI checks registration, 1086 × 1448 alpha, fallback, asset inclusion and the comparison control.
+- Next owner gate: inspect the Cloudflare PR preview for body/hand alignment across David's Neutral ↔ Confident swap before generating David's remaining expressions. No production merge or public release approved.
+
 ## GAME-SP1.1-D3 — approved continuous screenplay and expression architecture (draft PR #14)
 
 - Approved 13 October 2026: Stephen opens with his holiday announcement; one office conversation after the approved exterior. 54 spoken lines remain verbatim, plus the opening narrator and 12 silent reactions, inserts and title beats, giving 67 total beats.
