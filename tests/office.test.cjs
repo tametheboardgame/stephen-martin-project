@@ -421,6 +421,33 @@ test("D1E start and saved-game continuation work from floating action panel", ()
 });
 
 
+test("D2 opacity regression: non-speaking Stephen stays solid without changing David, Paul or office lighting", () => {
+  const css = read("src/styles.css");
+  const originalListener = /#officeScreen \.cast-seated \.cast-actor\.is-listening\s*\{([^}]*)\}/;
+  const sharedMatch = css.match(originalListener);
+  assert.ok(sharedMatch, "Shared actor listening state must remain present");
+  assert.match(sharedMatch[1], /opacity:\s*\.94\s*;/, "David and Paul retain their established listening opacity");
+  assert.match(sharedMatch[1], /filter:\s*saturate\(\.94\)/, "Do not alter the scene's existing listener lighting");
+  const originalSpeaker = css.match(/#officeScreen \.cast-seated \.cast-actor\.is-speaking\s*\{([^}]*)\}/);
+  assert.ok(originalSpeaker, "Shared actor speaking state must remain present");
+  assert.match(originalSpeaker[1], /opacity:\s*1\s*;/);
+  assert.match(originalSpeaker[1], /brightness\(1\.03\)/, "Retain existing speaker illumination");
+  const stephenListener = css.match(/#officeScreen \.cast-seated #castStephen\.is-listening\s*\{([^}]*)\}/);
+  assert.ok(stephenListener, "Stephen needs his own more-specific listening override");
+  assert.match(stephenListener[1], /opacity:\s*1\s*;/, "Window highlights must not bleed through Stephen");
+  assert.ok(css.indexOf("#officeScreen .cast-seated #castStephen.is-listening") >
+    css.indexOf("#officeScreen .cast-seated .cast-actor.is-listening"),
+  "Stephen's override must follow the generic listening rule");
+  assert.ok(!stephenListener[1].includes("filter:"), "Stephen's existing dialogue lighting must remain unchanged");
+  const stephenSprite = css.match(/#officeScreen \.cast-seated #castStephen #portraitStephen\s*\{([^}]*)\}/);
+  assert.ok(stephenSprite);
+  assert.match(stephenSprite[1], /opacity:\s*1\s*;/, "Stephen's image itself must be opaque");
+  assert.ok(gameSource.includes('el.classList.toggle("is-listening", beat.speaker in cast && !active);'));
+  assert.ok(gameSource.includes('el.classList.toggle("is-speaking", active);'));
+  assert.ok(!css.includes("#castDavid.is-listening") && !css.includes("#castPaul.is-listening"),
+    "Do not add person-specific overrides for David and Paul");
+});
+
 test("D2 all six Stephen expressions preserve alpha and canvas registration", () => {
   const sourceRoot = "public/assets/generated/characters/";
   const getWebpDimensions = (relative) => {
