@@ -6,6 +6,12 @@
 
   window.SMP_OFFICE_SHOTS = [
     {
+      id: "O00", label: "Somewhere in the heart of somewhere", caption: "An unassuming office", moment: "exterior", prop: "none",
+      lines: [
+        line("Narrator", "In an unassuming office in the heart of somewhere, three idiots discuss one idiot's holiday plans.", { expression: "none" })
+      ]
+    },
+    {
       id: "O01", label: "Somewhere in an office. Unfortunately.", caption: "Last day before the holiday", moment: "establishing", prop: "suitcase",
       lines: [
         line("Paul", "Is China far?", { expression: "blank" }),
