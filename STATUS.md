@@ -4,6 +4,14 @@
 **Master roadmap:** Approved version 1.0, `ROADMAP.md`  
 **Primary scope:** Complete **15–25 minute** point-and-click/touch comedy game; three concise endings; approximately 2–3 substantial mini-games. Song alongside; comic optional.
 
+## GAME-SP1.1 — New exterior establishing shot and dialogue counter removal (preview pending)
+
+- **Approved exterior:** `sunny_modern_office_entrance.png` at exactly 1672 × 941, staged in project Drive as `office-exterior-opening-v01.png` (ID `17cvEpaC41G5MpUg55NKWe3DYoiNVm13O`). Manifest `generated-assets/manifests/office-exterior-opening-v01.json` materialises `public/assets/generated/locations/office-exterior-opening-v01.webp`. No labels, characters or UI were burned into the image.
+- **Opening:** Add a one-line narrated exterior shot `O00` before unchanged `O01`–`O07`: "In an unassuming office in the heart of somewhere, three idiots discuss one idiot's holiday plans." The full exterior overlays the existing office layers only during this shot; its 850 ms CSS opacity fade reveals the seated scene when advancing by Next/autoplay. Back restores the exterior. Respect reduced motion.
+- **Dialogue UX:** Remove the **per-shot dialogue counter** beside the speaker entirely (e.g. `04 / 04`). Keep scene heading `SCENE 01 / 08`, the overall progress bar and existing interactive controls.
+- **Preservation:** Opening now totals eight shots / 65 beats; the approved original seven shots and their 64 lines, expression cue keys, office lighting, three seated sprites, desk, cutaways and playback behaviour remain unchanged. Migrate old version-1 saves to version 2 by offsetting historical shot indexes +1, including finished holiday records. No script edits elsewhere yet; broader review of show-versus-tell and expression assignment is a distinct owner-led next pass.
+- **QA:** Verify rendered opaque exterior WebP dimensions, narration and O00→O01→O00 navigation, Save/Resume migration, counter absence, all original 64 beats, smoke and Pages deployment. Keep draft PR #14 pending visual review.
+
 ## GAME-SP1.1-D2 — All three actors opaque; David and Paul expression-ready (owner preview)
 
 - **Bug fix:** The office scene's shared seated `.cast-actor.is-listening` CSS previously used `opacity: .94`, letting floor/window light show through David and Paul (and formerly Stephen). It now uses **`opacity: 1` for all three actors**, whether speaking or listening. The existing `saturate(.94)` listener filter, `saturate(1.07) brightness(1.03)` speaker filter, scene backdrop, foreground desk, framing and cinematic title dissolve remain unchanged. The Stephen-only override is unnecessary and was removed.
