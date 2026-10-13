@@ -158,9 +158,11 @@ test("exterior narrator shot precedes unchanged office scene and counters are ab
   assert.ok(read("scripts/build.mjs").includes("office-exterior-opening-v01.webp"));
   const webp = fs.readFileSync(path.join(root, "public/assets/generated/locations/office-exterior-opening-v01.webp"));
   assert.equal(webp.toString("ascii", 0, 4), "RIFF");
-  assert.equal(webp.toString("ascii", 8, 16), "WEBPVP8X");
-  assert.equal(webp.readUIntLE(24, 3) + 1, 1672);
-  assert.equal(webp.readUIntLE(27, 3) + 1, 941);
+  // This background is opaque, so the converter correctly uses plain VP8
+  // rather than the VP8X/alpha header used by transparent seated sprites.
+  assert.equal(webp.toString("ascii", 8, 16), "WEBPVP8 ");
+  assert.equal(webp.readUInt16LE(26) & 0x3fff, 1672);
+  assert.equal(webp.readUInt16LE(28) & 0x3fff, 941);
   el("nextButton").click();
   assert.equal(el("lineText").textContent, "Is China far?");
   assert.equal(el("sceneNumber").textContent, "SCENE 02 / 08");
