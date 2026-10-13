@@ -5,15 +5,17 @@
   "use strict";
 
   const shots = window.SMP_OFFICE_SHOTS;
-  if (!Array.isArray(shots) || shots.length !== 8 || shots[0].id !== "O00") {
+  if (!Array.isArray(shots) || shots.length !== 2 || shots[0].id !== "O00") {
     document.body.textContent = "The opening scene could not load. Please refresh.";
     return;
   }
 
   const $ = (id) => document.getElementById(id);
   const STORE_KEY = "stephen-martin-game-sp1-save-v1";
-  const shotLineCounts = shots.map((shot) => shot.lines.length);
-  const totalLines = shotLineCounts.reduce((sum, n) => sum + n, 0);
+  const beats = shots.flatMap(shot => shot.lines);
+  const totalLines = beats.length;
+  const beatIndexById = new Map(beats.map((beat, i) => [beat.id, i]));
+  const finalBeatId = beats[beats.length - 1].id;
   const screens = { menu: $("menuScreen"), office: $("officeScreen"), holiday: $("holidayScreen") };
   const cast = { Stephen: $("castStephen"), David: $("castDavid"), Paul: $("castPaul") };
   // D2 proof-only control: the approved neutral/amused image pair shares one
@@ -79,8 +81,8 @@
 
   let autoPlaying = true;
   let advanceTimer = null;
-  const MIN_LINE_MS = 2200;
-  const MAX_LINE_MS = 5800;
+  const MIN_LINE_MS = 1800;
+  const MAX_LINE_MS = 4700;
 
   function clearAdvanceTimer() {
     if (advanceTimer !== null) {
@@ -90,12 +92,9 @@
   }
 
   function lineDuration(beat) {
-    const plainTextLength = beat.text.length;
-    const calculated = Math.min(MAX_LINE_MS, Math.max(MIN_LINE_MS, 1800 + plainTextLength * 45));
-    if (beat.sound === "song") return 6000;
-    if (beat.prop === "title") return Math.max(4800, calculated);
-    if (beat.speaker === "Narrator") return Math.max(3200, calculated);
-    return calculated;
+    if (beat.type !== "dialogue") return beat.duration || 1600;
+    if (beat.duration) return beat.duration;
+    return Math.min(MAX_LINE_MS, Math.max(MIN_LINE_MS, 1250 + beat.text.length * 36));
   }
 
   function syncPlaybackControls() {
@@ -110,7 +109,7 @@
     clearAdvanceTimer();
     syncPlaybackControls();
     if (!autoPlaying || screens.office.hidden || document.hidden) return;
-    const beat = shots[state.shotIndex].lines[state.lineIndex];
+    const beat = beats[beatIndexById.get(state.beatId)];
     advanceTimer = setTimeout(() => {
       advanceTimer = null;
       if (autoPlaying && !screens.office.hidden && !document.hidden) next();
@@ -124,7 +123,7 @@
 
   let soundEnabled = false;
   let audioContext = null;
-  let state = { version: 2, scene: "menu", shotIndex: 0, lineIndex: 0, openingSeen: false };
+  let state = { version: 3, scene: "menu", beatId: "intro.exterior", openingSeen: false };
 
   // All snippets below are our own fictional UI props. No user-entered HTML.
   const effects = {
@@ -139,19 +138,26 @@
 
   function readSave() {
     try {
-      const data = JSON.parse(window.localStorage.getItem(STORE_KEY) || "null");
-      if (!data || !["office", "holiday"].includes(data.scene)) return null;
-      // The new exterior is scene 0. Preserve saves from the approved seven-shot
-      // office cutscene by shifting their indexes forward exactly once.
-      if (data.version === 1 && Number.isInteger(data.shotIndex) &&
-          data.shotIndex >= 0 && data.shotIndex < shots.length - 1) {
-        data.shotIndex += 1;
-        data.version = 2;
+      const stored = JSON.parse(window.localStorage.getItem(STORE_KEY) || "null");
+      if (!stored || !["office", "holiday"].includes(stored.scene)) return null;
+      if (stored.version === 3) {
+        if (!beatIndexById.has(stored.beatId)) return null;
+        return stored;
       }
-      if (data.version !== 2) return null;
-      if (!Number.isInteger(data.shotIndex) || data.shotIndex < 0 || data.shotIndex >= shots.length) return null;
-      if (!Number.isInteger(data.lineIndex) || data.lineIndex < 0 || data.lineIndex >= shots[data.shotIndex].lines.length) return null;
-      return data;
+      if (![1, 2].includes(stored.version)) return null;
+      if (stored.scene === "holiday") {
+        return { version: 3, scene: "holiday", beatId: finalBeatId, openingSeen: true };
+      }
+      const shot = stored.version === 1 ? stored.shotIndex : stored.shotIndex - 1;
+      if (!Number.isInteger(stored.lineIndex) || !Number.isInteger(stored.shotIndex)) return null;
+      if (stored.version === 2 && stored.shotIndex === 0 && stored.lineIndex === 0) {
+        return { version: 3, scene: "office", beatId: "intro.exterior", openingSeen: false };
+      }
+      const oldIds = window.SMP_LEGACY_BEAT_IDS;
+      if (!oldIds || !oldIds[shot] || !oldIds[shot][stored.lineIndex]) return null;
+      const id = oldIds[shot][stored.lineIndex];
+      if (!beatIndexById.has(id)) return null;
+      return { version: 3, scene: "office", beatId: id, openingSeen: false };
     } catch (_) {
       return null;
     }
@@ -210,21 +216,20 @@
   }
 
   function completedLineCount() {
-    return shotLineCounts.slice(0, state.shotIndex).reduce((sum, n) => sum + n, 0) + state.lineIndex + 1;
+    return beatIndexById.get(state.beatId) + 1;
   }
 
   const cutaways = {
     risk: '<div class="cutaway-heading">DAVID’S LAPTOP · TOP SECRET*</div><div class="cutaway-laptop"><div class="cutaway-screen"><span>OPERATION:</span><strong>PROBABLY FINE</strong><div class="cutaway-risk-grid"><span>INTERNATIONAL TRAVEL</span><b>HIGH RISK</b><span>HOLIDAY ROMANCE</span><b>HIGH RISK</b><span>DAVID’S CONFIDENCE</span><b>UNREASONABLY HIGH</b></div><small>*NOT ACTUALLY SECRET</small></div><div class="cutaway-keyboard"></div></div>',
-    printer: '<div class="cutaway-heading">OFFICE PRINTER · 40 DOCUMENTS QUEUED</div><div class="cutaway-printer"><div class="cutaway-output-sheet sheet-one">🐻<small>HONEY BEAR #01</small></div><div class="cutaway-output-sheet sheet-two">🐻<small>HONEY BEAR #02</small></div><div class="cutaway-printer-body"><span>PRINTING…</span><span class="printer-light"></span></div><div class="cutaway-paper-stack">▤ ▤ ▤</div></div>',
-    chat: '<div class="cutaway-heading">A COMPLETELY UNNECESSARY GROUP CHAT</div><div class="cutaway-phone"><div class="phone-notch"></div><div class="phone-screen"><small>NEW GROUP CREATED ✓</small><strong>STEPHEN RESCUE GROUP</strong><span>(PRE-EMPTIVE)</span><div class="phone-avatars">S　D　P</div><div class="phone-message">🐻🍯<span>Paul: added a picture</span></div></div></div>'
+    printer: '<div class="cutaway-heading">OFFICE PRINTER · 40 DOCUMENTS QUEUED</div><div class="cutaway-printer"><div class="cutaway-output-sheet sheet-one">🐻 ▧<small>HONEY BEAR #01</small></div><div class="cutaway-output-sheet sheet-two">🐻 ▧<small>HONEY BEAR #02</small></div><div class="cutaway-printer-body"><span>PRINTING…</span><span class="printer-light"></span></div><div class="cutaway-paper-stack">▤ ▤ ▤</div></div>',
+    chat: '<div class="cutaway-heading">A COMPLETELY UNNECESSARY GROUP CHAT</div><div class="cutaway-phone"><div class="phone-notch"></div><div class="phone-screen"><small>NEW GROUP CREATED ✓</small><strong>STEPHEN RESCUE GROUP</strong><span>(PRE-EMPTIVE)</span><div class="phone-avatars">STEPHEN · DAVID · PAUL</div><div class="phone-message">🐻🍯<span>Paul · group administrator</span></div></div></div>',
+    song: '<div class="cutaway-heading">THE OPTIMISTIC VERSION · STEPHEN’S GOODBYE SONG</div><div class="cutaway-special cutaway-song"><div class="song-notes">♫ ♪ ♫</div><strong>STEPHEN’S GOODBYE SONG</strong><p>♪ Stephen’s off to China, he’ll probably be fine!</p><p>♪ Unless he gets kidnapped, then that’s a bad sign!</p></div>',
+    muted: '<div class="cutaway-heading">PHONE NOTIFICATION</div><div class="cutaway-special cutaway-notification"><strong>STEPHEN RESCUE GROUP</strong><p>Stephen Martin has muted the group.</p></div>',
+    folder: '<div class="cutaway-heading">DAVID’S LAPTOP · FILE EXPLORER</div><div class="cutaway-special cutaway-folder"><strong>📁 RESCUE PLAN - FINAL - FINAL 2</strong><p>📄 Backup rescue plan · 📄 Alternative rescue plan · 📄 Risk matrix · 📄 Final final final</p></div>'
   };
 
-  function cutawayFor(shotIndex, lineIndex) {
-    const shotId = shots[shotIndex].id;
-    if (shotId === "O02" && (lineIndex === 1 || lineIndex === 8)) return "risk";
-    if (shotId === "O04" && lineIndex <= 2) return "printer";
-    if (shotId === "O04" && (lineIndex === 6 || lineIndex === 7)) return "chat";
-    return null;
+  function cutawayFor(beat) {
+    return beat.visual || null;
   }
 
   // Approved, individually cropped game portraits. Reaction aliases map the
@@ -236,47 +241,39 @@
 
   function renderOffice() {
     reveal("office");
-    const shot = shots[state.shotIndex];
-    const beat = shot.lines[state.lineIndex];
-    const prop = beat.prop || shot.prop;
-    const current = completedLineCount();
-    const percent = Math.round((current / totalLines) * 100);
-
-    $("sceneNumber").textContent = "SCENE " + String(state.shotIndex + 1).padStart(2, "0") + " / " + String(shots.length).padStart(2, "0");
-    $("sceneTitle").textContent = shot.label;
-    $("sceneCaption").textContent = shot.caption;
-    $("speakerName").textContent = beat.speaker === "System" ? "NOTIFICATION" : beat.speaker.toUpperCase();
-
-    $("lineText").textContent = beat.text;
-    const cutaway = cutawayFor(state.shotIndex, state.lineIndex);
+    const beat = beats[beatIndexById.get(state.beatId)];
+    const percent = Math.round((completedLineCount() / totalLines) * 100);
+    const visualOnly = beat.type !== "dialogue";
+    const cutaway = cutawayFor(beat);
+    $("sceneNumber").textContent = "CHAPTER 1 · OPENING";
+    $("sceneTitle").textContent = "The Pre-Holiday Briefing";
+    $("sceneCaption").textContent = "One continuous office conversation";
+    $("speakerName").textContent = visualOnly ? "" : beat.speaker.toUpperCase();
+    $("lineText").textContent = visualOnly ? "" : beat.text;
+    $("dialogueBox").hidden = visualOnly;
     $("cutawayPanel").hidden = !cutaway;
+    $("cutawayPanel").setAttribute("aria-hidden", String(!cutaway));
     $("cutawayContent").innerHTML = cutaway ? cutaways[cutaway] : "";
     $("stage").dataset.cutaway = cutaway || "none";
-    // Paperwork belongs in David's real risk-assessment cutaway.
-    // Don't float giant prop graphics over Paul (or any other seated actor).
-    // Only the deliberate final-title beat uses a stage-wide effect.
-    $("sceneEffect").innerHTML = !cutaway && prop === "title" ? effects.title : "";
-    $("stage").dataset.location = shot.id === "O00" ? "exterior" : "interior";
-    $("stage").dataset.moment = shot.moment;
-    $("stage").dataset.prop = prop;
-    $("stage").dataset.expression = beat.expression || "neutral";
+    $("stage").dataset.location = beat.id === "intro.exterior" ? "exterior" : "interior";
+    $("stage").dataset.moment = beat.type === "title" ? "title" : "office";
+    $("stage").dataset.visual = beat.type;
+    $("stage").setAttribute("aria-label", visualOnly ? beat.text : beat.speaker + ": " + beat.text);
+    $("sceneEffect").innerHTML = beat.type === "title" ? effects.title : "";
     $("progressFill").style.width = percent + "%";
     $("storyProgress").setAttribute("aria-valuenow", String(percent));
-    $("backButton").disabled = state.shotIndex === 0 && state.lineIndex === 0;
-    $("nextButton").innerHTML = (state.shotIndex === shots.length - 1 && state.lineIndex === shot.lines.length - 1)
+    $("backButton").disabled = state.beatId === beats[0].id;
+    $("nextButton").innerHTML = state.beatId === finalBeatId
       ? 'See Stephen’s holiday <span aria-hidden="true">→</span>'
       : 'Next <span aria-hidden="true">→</span>';
-
     for (const [name, el] of Object.entries(cast)) {
       const active = beat.speaker === name;
       el.classList.toggle("is-speaking", active);
       el.classList.toggle("is-listening", beat.speaker in cast && !active);
-      const reactions = (window.SMP_REACTIONS && window.SMP_REACTIONS[shot.id] && window.SMP_REACTIONS[shot.id][state.lineIndex]) || {};
-      const expression = reactions[name] || (active ? (beat.expression || "neutral") : "neutral");
-      // Cue metadata is preserved for aligned seated expression work in D2.
+      const expression = beat.reactions[name];
       el.dataset.expression = expression;
-      el.dataset.staging = "seated-neutral";
-      // David and Paul remain their approved static-neutral seated sprites.
+      // Stephen remains absent for every subsequent beat, including after Back.
+      el.hidden = expression === "absent";
     }
     for (const name of Object.keys(cast)) applySeatedExpression(name);
     persist();
@@ -287,45 +284,34 @@
   function startOffice() {
     clearAdvanceTimer();
     autoPlaying = true;
-    state = { version: 2, scene: "office", shotIndex: 0, lineIndex: 0, openingSeen: false };
+    state = { version: 3, scene: "office", beatId: "intro.exterior", openingSeen: false };
     renderOffice();
   }
 
   function next() {
     if (screens.office.hidden) return;
-    const currentShot = shots[state.shotIndex];
-    if (state.lineIndex < currentShot.lines.length - 1) {
-      state.lineIndex++;
-    } else if (state.shotIndex < shots.length - 1) {
-      state.shotIndex++;
-      state.lineIndex = 0;
-    } else {
+    const position = beatIndexById.get(state.beatId);
+    if (position === beats.length - 1) {
       showHoliday();
       return;
     }
+    state.beatId = beats[position + 1].id;
     renderOffice();
   }
 
   function previous() {
     if (screens.office.hidden) return;
-    // A manual rewind should never immediately skip the line the player re-read.
     autoPlaying = false;
-    if (state.lineIndex > 0) {
-      state.lineIndex--;
-    } else if (state.shotIndex > 0) {
-      state.shotIndex--;
-      state.lineIndex = shots[state.shotIndex].lines.length - 1;
-    } else {
-      return;
-    }
+    const position = beatIndexById.get(state.beatId);
+    if (position === 0) return;
+    state.beatId = beats[position - 1].id;
     renderOffice();
   }
 
   function showHoliday() {
     state.scene = "holiday";
     state.openingSeen = true;
-    state.shotIndex = shots.length - 1;
-    state.lineIndex = shots[shots.length - 1].lines.length - 1;
+    state.beatId = finalBeatId;
     reveal("holiday");
     persist();
   }

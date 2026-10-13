@@ -1,5 +1,16 @@
 # Project status
 
+**Updated:** 13 October 2026
+
+## GAME-SP1.1-D3 — approved continuous screenplay and expression architecture (draft PR #14)
+
+- Approved 13 October 2026: Stephen opens with his holiday announcement; one office conversation after the approved exterior. 54 spoken lines remain verbatim, plus the opening narrator and 12 silent reactions, inserts and title beats, giving 67 total beats.
+- All beats have stable IDs and explicit Stephen/David/Paul emotion keys. Stephen uses all six approved seated sprites. David and Paul display their approved Neutral image until other full seated expressions are individually approved and registered.
+- Internal narration and in-story system speech are replaced with stage visuals. The six prop inserts cover risk, printer, chat, song, mute notification and rescue folder, with the title card concluding the intro.
+- Stephen is absent from departure onward; Back restores him before departure. Save V3 uses stable IDs, migrating V1/V2 positions explicitly.
+- Next: targeted CI plus Cloudflare draft preview and human visual sign-off before merging PR #14. New expression artwork for David and Paul comes later. No public release authorised.
+- Definitive script: docs/story/GAME-SP1.1-D3-OFFICE-SCRIPT.md.
+
 **Updated:** 12 October 2026  
 **Master roadmap:** Approved version 1.0, `ROADMAP.md`  
 **Primary scope:** Complete **15–25 minute** point-and-click/touch comedy game; three concise endings; approximately 2–3 substantial mini-games. Song alongside; comic optional.
