@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "source": {
     "provider": "google-drive",
-    "fileId": "1MGKa4FSs7UhSHHZQJh-YTAhY3gh96plw"
+    "fileId": "1ZFDErAxACdK6jao6EJ9GKVol7VkEXWsZ"
   },
-  "expectedSourceName": "david-office-seated-confident-approved-v02.png",
+  "expectedSourceName": "david-office-seated-confident-approved-v03.png",
   "destination": "public/assets/generated/characters/david-office-seated-confident-v01.webp",
   "transform": {
     "maxWidth": 1200,
     "maxHeight": 1600,
     "quality": 90
   },
-  "revision": 2
+  "revision": 3
 }
