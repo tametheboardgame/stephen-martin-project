@@ -555,8 +555,10 @@ button:active:not(:disabled) { transform: translateY(1px); }
   transition: none !important;
 }
 #officeScreen .cast-seated .cast-actor figcaption { display: none; }
+/* Listening actors retain the scene's colour treatment, but never fade
+   their entire bodies: that made the bright office floor visible through them. */
 #officeScreen .cast-seated .cast-actor.is-listening {
-  opacity: .94;
+  opacity: 1;
   transform: none;
   filter: saturate(.94);
 }
@@ -1229,10 +1231,3 @@ body:has(#menuScreen:not([hidden])) main {
   #officeScreen .d2-proof-button { order: 2; }
 }
 
-/* GAME-SP1.1-D2: keep Stephen opaque on every dialogue beat. The shared
-   listening rule dims David and Paul, but its opacity also lets the window
-   highlights bleed through Stephen's otherwise solid whole-body art.
-   Restrict this correction to Stephen; preserve all other actors and lighting. */
-#officeScreen .cast-seated #castStephen.is-listening {
-  opacity: 1;
-}
