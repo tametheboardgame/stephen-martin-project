@@ -22,7 +22,7 @@
   // canvas; the toggle allows owner A/B checks without restarting the story.
   const proofModes = ["auto", "neutral", "amused", "confused", "annoyed", "exasperated", "laughing"];
   let stephenProofMode = "auto";
-  const davidProofModes = ["auto", "neutral", "confident"];
+  const davidProofModes = ["auto","neutral","confident","serious","frustrated","shocked","systems-expert"];
   let davidProofMode = "auto";
 
   const stephenSeatedSources = {
@@ -35,13 +35,17 @@
   };
 
   // Approved seated art: one complete transparent sprite per person.
-  // David/Paul start with their existing neutral assets; add future approved
-  // expressions to their maps without changing renderOffice or stacking images.
+  // All six David expression keys are populated. Paul is still neutral-only
+  // until his separate full seated expression assets are human-approved.
   const seatedExpressionSources = {
     Stephen: stephenSeatedSources,
     David: {
       neutral: "./public/assets/generated/characters/david-office-seated-neutral-v01.webp",
-      confident: "./public/assets/generated/characters/david-office-seated-confident-v01.webp?v=3"
+      confident: "./public/assets/generated/characters/david-office-seated-confident-v01.webp?v=4",
+      serious: "./public/assets/generated/characters/david-office-seated-serious-v01.webp?v=1",
+      frustrated: "./public/assets/generated/characters/david-office-seated-frustrated-v01.webp?v=1",
+      shocked: "./public/assets/generated/characters/david-office-seated-shocked-v01.webp?v=1",
+      "systems-expert": "./public/assets/generated/characters/david-office-seated-systems-expert-v01.webp?v=1"
     },
     Paul: {
       neutral: "./public/assets/generated/characters/paul-office-seated-neutral-v01.webp"
@@ -56,8 +60,8 @@
       : name === "David" && davidProofMode !== "auto"
         ? davidProofMode
         : reaction;
-    // The dialogue already carries reactions for all three people. Until the
-    // corresponding whole-body art is approved, keep the original neutral body.
+    // The dialogue already carries all three actors' approved cues. Missing
+    // seated assets (currently Paul's) deliberately resolve to Neutral.
     const sprite = Object.hasOwn(sources, requested) ? requested : "neutral";
     const portrait = $("portrait" + name);
     if (portrait.dataset.sprite !== sprite) {
@@ -88,10 +92,11 @@
 
   function cycleDavidProof() {
     davidProofMode = davidProofModes[(davidProofModes.indexOf(davidProofMode) + 1) % davidProofModes.length];
-    const label = davidProofMode[0].toUpperCase() + davidProofMode.slice(1);
+    const label = davidProofMode === "systems-expert"
+      ? "Systems Expert" : davidProofMode[0].toUpperCase() + davidProofMode.slice(1);
     const button = $("davidProofButton");
     button.textContent = "David: " + label + " ↻";
-    button.setAttribute("aria-label", "David expression preview: " + label + ". Click to cycle Auto, Neutral and Confident");
+    button.setAttribute("aria-label", "David expression preview: " + label + ". Click to cycle Auto, Neutral, Confident, Serious, Frustrated, Shocked and Systems Expert");
     // Preview only David's approved complete sprite; leave story timing and other actors unchanged.
     applySeatedExpression("David");
   }

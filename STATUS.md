@@ -2,6 +2,14 @@
 
 **Updated:** 13 October 2026
 
+## GAME-SP1.1-D5 — Full locked David seated expression set (13 October 2026)
+
+- Owner locked **Confident, Serious, Frustrated, Shocked and Systems Expert** after individual image reviews. Existing Neutral is unchanged. All six David acting keys now select independently approved full seated transparent sprites; Paul's absent art still uses Neutral. Stephen's six existing seated expressions are unchanged.
+- Five source PNGs (all **1086 × 1448, RGBA**) were uploaded to the dedicated Stephen Martin Google Drive staging folder; manifests materialised and verified their WebP output on draft PR #14 via GitHub Actions OIDC. New Confident is manifest **revision 4**; four other expressions are **revision 1**.
+- The character's scripted `reactions.David` keys already cover every spoken and silent beat of the approved 67-beat intro. `src/game.js` now registers the matching five paths, and **Auto** selects them automatically at the correct beats. No scene dialogue was modified.
+- David proof selector cycles Auto, Neutral, Confident, Serious, Frustrated, Shocked and Systems Expert while paused, without disturbing Stephen, Paul, scene state, or timers. WebP URLs are versioned to avoid old asset caching. The build, smoke workflow and tests verify all assets and script cue mapping.
+- **Awaiting owner visual check in Cloudflare preview before merging PR #14 into production.** Some larger gesture poses naturally change their hand position but occupy the same full sprite canvas. Paul expression art is separate future work.
+
 ## GAME-SP1.1-D4.2 — David Confident v03 expression proof (13 October 2026)
 
 - After preview comparison, the user rejected David Confident v02 and approved a revised expression image with corrected aligned eyes, warm skin tone, auburn beard, no chair and the original charcoal/olive outfit. The owner still needs to accept the actual in-game Neutral/Confident transition.
