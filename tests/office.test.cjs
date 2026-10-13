@@ -250,11 +250,13 @@ test("static seated actors preserve speaker and listener expression metadata acr
   assert.equal(el("castDavid").dataset.staging, "seated-neutral");
   // D1 deliberately does not splice close-up facial images onto the seated bodies.
   assert.ok(!gameSource.includes("portrait.src = expressionAssetRoot"));
-  assert.equal(el("portraitDavid").src, undefined);
-  // Stephen is intentionally the ONLY seated character whose single img
-  // source switches; David and Paul stay as the approved neutral sprites.
+  assert.match(el("portraitDavid").src, /david-office-seated-neutral-v01\.webp$/);
+  assert.equal(el("castDavid").dataset.seatedSprite, "neutral");
+  // All three now swap a single registered seated image. David and Paul
+  // currently have only their approved neutral art, not facial-sheet overlays.
   assert.match(el("portraitStephen").src, /stephen-office-seated-confused-v01\.webp\?v=1$/);
-  assert.equal(el("portraitPaul").src, undefined);
+  assert.match(el("portraitPaul").src, /paul-office-seated-neutral-v01\.webp$/);
+  assert.equal(el("castPaul").dataset.seatedSprite, "neutral");
 });
 
 test("a visual cutaway leaves the dialogue text and manual controls interactive", () => {
@@ -421,31 +423,83 @@ test("D1E start and saved-game continuation work from floating action panel", ()
 });
 
 
-test("D2 opacity regression: non-speaking Stephen stays solid without changing David, Paul or office lighting", () => {
+test("D2 all three seated actors stay fully opaque while listening, retaining existing lighting", () => {
   const css = read("src/styles.css");
-  const originalListener = /#officeScreen \.cast-seated \.cast-actor\.is-listening\s*\{([^}]*)\}/;
-  const sharedMatch = css.match(originalListener);
-  assert.ok(sharedMatch, "Shared actor listening state must remain present");
-  assert.match(sharedMatch[1], /opacity:\s*\.94\s*;/, "David and Paul retain their established listening opacity");
-  assert.match(sharedMatch[1], /filter:\s*saturate\(\.94\)/, "Do not alter the scene's existing listener lighting");
-  const originalSpeaker = css.match(/#officeScreen \.cast-seated \.cast-actor\.is-speaking\s*\{([^}]*)\}/);
-  assert.ok(originalSpeaker, "Shared actor speaking state must remain present");
-  assert.match(originalSpeaker[1], /opacity:\s*1\s*;/);
-  assert.match(originalSpeaker[1], /brightness\(1\.03\)/, "Retain existing speaker illumination");
-  const stephenListener = css.match(/#officeScreen \.cast-seated #castStephen\.is-listening\s*\{([^}]*)\}/);
-  assert.ok(stephenListener, "Stephen needs his own more-specific listening override");
-  assert.match(stephenListener[1], /opacity:\s*1\s*;/, "Window highlights must not bleed through Stephen");
-  assert.ok(css.indexOf("#officeScreen .cast-seated #castStephen.is-listening") >
-    css.indexOf("#officeScreen .cast-seated .cast-actor.is-listening"),
-  "Stephen's override must follow the generic listening rule");
-  assert.ok(!stephenListener[1].includes("filter:"), "Stephen's existing dialogue lighting must remain unchanged");
-  const stephenSprite = css.match(/#officeScreen \.cast-seated #castStephen #portraitStephen\s*\{([^}]*)\}/);
-  assert.ok(stephenSprite);
-  assert.match(stephenSprite[1], /opacity:\s*1\s*;/, "Stephen's image itself must be opaque");
+  const listening = css.match(/#officeScreen \.cast-seated \.cast-actor\.is-listening\s*\{([^}]*)\}/);
+  assert.ok(listening, "Shared actor listening style must remain present");
+  assert.match(listening[1], /opacity:\s*1\s*;/, "No window reflections through any character");
+  assert.match(listening[1], /filter:\s*saturate\(\.94\)/,
+    "Keep listener colour treatment unchanged");
+  const speaking = css.match(/#officeScreen \.cast-seated \.cast-actor\.is-speaking\s*\{([^}]*)\}/);
+  assert.ok(speaking);
+  assert.match(speaking[1], /opacity:\s*1\s*;/);
+  assert.match(speaking[1], /filter:\s*saturate\(1\.07\)\s+brightness\(1\.03\)/,
+    "Retain original speaker illumination");
+  const base = css.match(/#officeScreen \.cast-seated \.cast-actor\s*\{([^}]*)\}/);
+  assert.ok(base);
+  assert.match(base[1], /opacity:\s*1\s*;/);
+  for (const name of ["Stephen", "David", "Paul"]) {
+    assert.ok(!css.includes("#cast" + name + ".is-listening"),
+      "Opacity belongs on the shared actor rule, not one-off patches");
+    const start = html.indexOf('id="cast' + name + '"');
+    const finish = html.indexOf("</figure>", start);
+    assert.ok(start >= 0 && finish > start);
+    const figure = html.slice(start, finish);
+    assert.equal((figure.match(/<img /g) || []).length, 1,
+      "Exactly one source image per seated actor " + name);
+  }
+  assert.ok(css.includes('#officeScreen .stage[data-moment="title"] .office-foreground { opacity: .19; }'),
+    "Keep cinematic title dissolve");
   assert.ok(gameSource.includes('el.classList.toggle("is-listening", beat.speaker in cast && !active);'));
   assert.ok(gameSource.includes('el.classList.toggle("is-speaking", active);'));
-  assert.ok(!css.includes("#castDavid.is-listening") && !css.includes("#castPaul.is-listening"),
-    "Do not add person-specific overrides for David and Paul");
+});
+
+test("D2 David and Paul are expression-ready without unapproved sprite changes", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  const david = "./public/assets/generated/characters/david-office-seated-neutral-v01.webp";
+  const paul = "./public/assets/generated/characters/paul-office-seated-neutral-v01.webp";
+  el("startButton").click();
+  assert.ok(gameSource.includes("function applySeatedExpression(name)"));
+  assert.ok(gameSource.includes("const seatedExpressionSources = {"));
+  assert.ok(gameSource.includes('portrait.src = sources[sprite]'));
+  assert.ok(gameSource.includes('Object.hasOwn(sources, requested) ? requested : "neutral"'));
+  assert.ok(!gameSource.includes("portrait.src = expressionAssetRoot"));
+  const reactions = p.window.SMP_REACTIONS;
+  const shots = loadShots();
+  let checked = 0;
+  for (const shot of shots) {
+    for (let i = 0; i < shot.lines.length; i++) {
+      const davidCue = reactions[shot.id]?.[i]?.David;
+      const paulCue = reactions[shot.id]?.[i]?.Paul;
+      if (davidCue && davidCue !== "neutral") {
+        assert.equal(el("castDavid").dataset.expression, davidCue, shot.id + ":" + i);
+      }
+      if (paulCue && paulCue !== "neutral") {
+        assert.equal(el("castPaul").dataset.expression, paulCue, shot.id + ":" + i);
+      }
+      assert.equal(el("castDavid").dataset.seatedSprite, "neutral");
+      assert.equal(el("castPaul").dataset.seatedSprite, "neutral");
+      assert.equal(el("portraitDavid").src, david);
+      assert.equal(el("portraitPaul").src, paul);
+      checked++;
+      if (checked === 1) {
+        // Stephen's manual proof control cannot replace either other actor.
+        el("stephenProofButton").click();
+        el("stephenProofButton").click();
+        assert.equal(el("portraitDavid").src, david);
+        assert.equal(el("portraitPaul").src, paul);
+        el("stephenProofButton").click();
+        el("stephenProofButton").click();
+        el("stephenProofButton").click();
+        el("stephenProofButton").click();
+        el("stephenProofButton").click(); // back to Auto
+      }
+      el("nextButton").click();
+    }
+  }
+  assert.equal(checked, 64);
+  assert.equal(el("holidayScreen").hidden, false);
 });
 
 test("D2 all six Stephen expressions preserve alpha and canvas registration", () => {
@@ -508,7 +562,9 @@ test("D2 all six Stephen expressions preserve alpha and canvas registration", ()
   assert.ok(css.includes('#officeScreen .cast-seated #castStephen #portraitStephen'));
   assert.ok(!css.includes("#portraitStephenAmused"));
   assert.ok(!css.includes("transition: opacity 140ms"));
-  assert.ok(gameSource.includes('portrait.src = stephenSeatedSources[sprite]'));
+  assert.ok(gameSource.includes('portrait.src = sources[sprite]'));
+  assert.ok(gameSource.includes('Stephen: stephenSeatedSources'));
+  assert.ok(gameSource.includes('function applySeatedExpression(name)'));
 });
 
 test("D2 Stephen dialogue cues select Amused, Confused and Annoyed with safe fallback", () => {
