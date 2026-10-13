@@ -8,7 +8,7 @@
 - All beats have stable IDs and explicit Stephen/David/Paul emotion keys. Stephen uses all six approved seated sprites. David and Paul display their approved Neutral image until other full seated expressions are individually approved and registered.
 - Internal narration and in-story system speech are replaced with stage visuals. The six prop inserts cover risk, printer, chat, song, mute notification and rescue folder, with the title card concluding the intro.
 - Stephen is absent from departure onward; Back restores him before departure. Save V3 uses stable IDs, migrating V1/V2 positions explicitly.
-- Next: targeted CI plus Cloudflare draft preview and human visual sign-off before merging PR #14. New expression artwork for David and Paul comes later. No public release authorised.
+- Targeted CI **passed** on both push (run 38374748329) and pull request (run 38374754131), including 16 automated tests and the output-artifact checks. Branch preview was not independently accessible through the available browser tool, so real visual inspection of the six Stephen expressions and silent inserts remains the final human gate before PR #14 merges. New expression artwork for David and Paul comes later. No public release authorised.
 - Definitive script: docs/story/GAME-SP1.1-D3-OFFICE-SCRIPT.md.
 
 **Updated:** 12 October 2026  
