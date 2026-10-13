@@ -19,9 +19,11 @@ function loadShots() {
 
 test("approved office script is complete and ordered", () => {
   const shots = loadShots();
-  assert.equal(shots.length, 7);
-  assert.deepEqual(Array.from(shots, (s) => s.id), ["O01", "O02", "O03", "O04", "O05", "O06", "O07"]);
-  assert.equal(shots.reduce((n, s) => n + s.lines.length, 0), 64);
+  assert.equal(shots.length, 8);
+  assert.deepEqual(Array.from(shots, (s) => s.id), ["O00", "O01", "O02", "O03", "O04", "O05", "O06", "O07"]);
+  assert.equal(shots.reduce((n, s) => n + s.lines.length, 0), 65);
+  assert.equal(shots[0].moment, "exterior");
+  assert.equal(shots[0].lines[0].speaker, "Narrator");
   assert.ok(shots.every((s) => s.label && s.caption && s.moment && s.prop && s.lines.length));
   assert.ok(shots.every((s) => s.lines.every((b) => b.text && ["Stephen", "David", "Paul", "Narrator", "System"].includes(b.speaker))));
   assert.ok(shots.some((s) => s.lines.some((b) => b.text.includes("highly particular set of skills"))));
@@ -126,14 +128,73 @@ function setupFakeGame() {
 
 }
 
+function startAtInterior(el) {
+  el("startButton").click();
+  assert.equal(el("stage").dataset.location, "exterior");
+  el("nextButton").click();
+  assert.equal(el("stage").dataset.location, "interior");
+}
+
+test("exterior narrator shot precedes unchanged office scene and counters are absent", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  const approvedOpening = "In an unassuming office in the heart of somewhere, three idiots discuss one idiot's holiday plans.";
+  el("startButton").click();
+  assert.equal(el("lineText").textContent, approvedOpening);
+  assert.equal(el("speakerName").textContent, "NARRATOR");
+  assert.equal(el("sceneNumber").textContent, "SCENE 01 / 08");
+  assert.equal(el("stage").dataset.location, "exterior");
+  assert.equal(el("backButton").disabled, true);
+  assert.equal(el("storyProgress").attributes["aria-valuenow"], "2");
+  assert.ok(!html.includes('id="lineCount"'));
+  assert.ok(!html.includes('class="dialogue-counter"'));
+  assert.ok(!gameSource.includes('$("lineCount")'));
+  const css = read("src/styles.css");
+  assert.ok(css.includes("office-exterior-opening-v01.webp"));
+  assert.ok(css.includes("transition: opacity 850ms ease-in-out"));
+  assert.ok(css.includes('.stage[data-location="exterior"] .office-exterior-shot { opacity: 1; }'));
+  assert.ok(html.includes('class="office-exterior-shot"'));
+  assert.ok(html.includes('data-location="exterior"'));
+  assert.ok(read("scripts/build.mjs").includes("office-exterior-opening-v01.webp"));
+  const webp = fs.readFileSync(path.join(root, "public/assets/generated/locations/office-exterior-opening-v01.webp"));
+  assert.equal(webp.toString("ascii", 0, 4), "RIFF");
+  assert.equal(webp.toString("ascii", 8, 16), "WEBPVP8X");
+  assert.equal(webp.readUIntLE(24, 3) + 1, 1672);
+  assert.equal(webp.readUIntLE(27, 3) + 1, 941);
+  el("nextButton").click();
+  assert.equal(el("lineText").textContent, "Is China far?");
+  assert.equal(el("sceneNumber").textContent, "SCENE 02 / 08");
+  assert.equal(el("stage").dataset.location, "interior");
+  el("backButton").click();
+  assert.equal(el("lineText").textContent, approvedOpening);
+  assert.equal(el("stage").dataset.location, "exterior");
+});
+
+test("legacy seven-scene saves resume on the matching office beat", () => {
+  const p = setupFakeGame();
+  const el = p.getElementById;
+  p.stored.set("stephen-martin-game-sp1-save-v1", JSON.stringify({
+    version: 1, scene: "office", shotIndex: 0, lineIndex: 1, openingSeen: false
+  }));
+  el("homeButton").click();
+  assert.equal(el("resumeButton").hidden, false);
+  el("resumeButton").click();
+  assert.equal(el("lineText").textContent, "Quite.");
+  assert.equal(el("sceneNumber").textContent, "SCENE 02 / 08");
+  assert.equal(el("stage").dataset.location, "interior");
+  const save = JSON.parse(p.stored.get("stephen-martin-game-sp1-save-v1"));
+  assert.equal(save.version, 2);
+  assert.equal(save.shotIndex, 1);
+});
+
 test("start, back, complete and replay preserve valid scene state", () => {
   const p = setupFakeGame();
   const el = p.getElementById;
   assert.equal(el("officeScreen").hidden, true);
-  el("startButton").click();
+  startAtInterior(el);
   assert.equal(el("officeScreen").hidden, false);
   assert.equal(el("lineText").textContent, "Is China far?");
-  assert.equal(el("backButton").disabled, true);
+  assert.equal(el("backButton").disabled, false);
   el("nextButton").click();
   assert.equal(el("lineText").textContent, "Quite.");
   el("backButton").click();
@@ -143,14 +204,14 @@ test("start, back, complete and replay preserve valid scene state", () => {
   assert.equal(el("officeScreen").hidden, true);
   assert.equal(JSON.parse(p.stored.values().next().value).openingSeen, true);
   el("replayButton").click();
-  assert.equal(el("sceneNumber").textContent, "SCENE 01 / 07");
-  assert.equal(el("lineText").textContent, "Is China far?");
+  assert.equal(el("sceneNumber").textContent, "SCENE 01 / 08");
+  assert.equal(el("lineText").textContent, "In an unassuming office in the heart of somewhere, three idiots discuss one idiot\u0027s holiday plans.");
 });
 
 test("skip and resume work without selecting a holiday route", () => {
   const p = setupFakeGame();
   const el = p.getElementById;
-  el("startButton").click();
+  startAtInterior(el);
   el("skipButton").click();
   assert.equal(el("holidayScreen").hidden, false);
   const save = JSON.parse(p.stored.values().next().value);
@@ -166,7 +227,7 @@ test("skip and resume work without selecting a holiday route", () => {
 test("autoplay is enabled by default and progresses without a click", () => {
   const p = setupFakeGame();
   const el = p.getElementById;
-  el("startButton").click();
+  startAtInterior(el);
   assert.equal(el("playPauseButton").attributes["aria-pressed"], "true");
   assert.equal(p.timeouts.size, 1);
   assert.equal(el("lineText").textContent, "Is China far?");
@@ -178,7 +239,7 @@ test("autoplay is enabled by default and progresses without a click", () => {
 test("manual Next resets timer, Back pauses and Play restarts", () => {
   const p = setupFakeGame();
   const el = p.getElementById;
-  el("startButton").click();
+  startAtInterior(el);
   assert.equal(p.timeouts.size, 1);
   const originalTimerId = p.timeouts.keys().next().value;
   el("nextButton").click();
@@ -197,7 +258,7 @@ test("manual Next resets timer, Back pauses and Play restarts", () => {
 test("Pause, skip, replay and hidden-tab safeguards prevent timer leaks", () => {
   const p = setupFakeGame();
   const el = p.getElementById;
-  el("startButton").click();
+  startAtInterior(el);
   el("playPauseButton").click();
   assert.equal(p.timeouts.size, 0);
   el("nextButton").click();
@@ -225,7 +286,7 @@ test("reaction cues and three cutaways are registered without unapproved portrai
   assert.equal(window.SMP_REACTIONS.O04[4].Paul, "blank");
   const p = setupFakeGame();
   const el = p.getElementById;
-  el("startButton").click();
+  startAtInterior(el);
   assert.equal(el("cutawayPanel").hidden, true);
   for (let i = 0; i < 5; i++) el("nextButton").click();
   assert.equal(el("stage").dataset.cutaway, "risk");
@@ -239,7 +300,7 @@ test("reaction cues and three cutaways are registered without unapproved portrai
 test("static seated actors preserve speaker and listener expression metadata across the whole intro", () => {
   const p = setupFakeGame();
   const el = p.getElementById;
-  el("startButton").click();
+  startAtInterior(el);
   assert.equal(el("castPaul").dataset.expression, "blank");
   assert.equal(el("castStephen").dataset.expression, "amused");
   assert.equal(el("castDavid").dataset.staging, "seated-neutral");
@@ -262,7 +323,7 @@ test("static seated actors preserve speaker and listener expression metadata acr
 test("a visual cutaway leaves the dialogue text and manual controls interactive", () => {
   const p = setupFakeGame();
   const el = p.getElementById;
-  el("startButton").click();
+  startAtInterior(el);
   for (let i = 0; i < 5; i++) el("nextButton").click();
   assert.equal(el("stage").dataset.cutaway, "risk");
   assert.equal(el("cutawayPanel").hidden, false);
@@ -322,14 +383,14 @@ test("D1C menu and office share the real approved art and fit laptop viewport", 
 test("entire existing intro remains playable with the rebuilt title screen", () => {
   const p = setupFakeGame();
   const el = p.getElementById;
-  el("startButton").click();
+  startAtInterior(el);
   assert.equal(el("officeScreen").hidden, false);
   for (let i = 0; i < 64; i++) el("nextButton").click();
   assert.equal(el("holidayScreen").hidden, false);
   el("homeButton").click();
   assert.equal(el("menuScreen").hidden, false);
   el("replayButton").click();
-  assert.equal(el("lineText").textContent, "Is China far?");
+  assert.equal(el("stage").dataset.location, "exterior");
 });
 
 test("D1D cinematic office fills laptop screen and keeps controls in-stage", () => {
@@ -346,7 +407,7 @@ test("D1D cinematic office fills laptop screen and keeps controls in-stage", () 
 test("D1D floating risk graphic never covers Paul's face between cutaways", () => {
   const p = setupFakeGame();
   const el = p.getElementById;
-  el("startButton").click();
+  startAtInterior(el);
   for (let i = 0; i < 7; i++) el("nextButton").click();
   // O02/line 3 is Stephen's response, not the dedicated risk cutaway.
   assert.equal(el("stage").dataset.cutaway, "none");
@@ -362,7 +423,7 @@ test("D1D floating risk graphic never covers Paul's face between cutaways", () =
 test("D1D stage sound button toggles sound from the overlay toolbar", () => {
   const p = setupFakeGame();
   const el = p.getElementById;
-  el("startButton").click();
+  startAtInterior(el);
   el("sceneSoundButton").click();
   assert.equal(el("sceneSoundButton").textContent, "Sound: On");
   assert.equal(el("soundButton").textContent, "Sound: On");
@@ -399,7 +460,7 @@ test("D1E floating sound control remains in sync across menu and office", () => 
     assert.equal(el(id).textContent, "Sound: On");
     assert.equal(el(id).attributes["aria-pressed"], "true");
   }
-  el("startButton").click();
+  startAtInterior(el);
   el("sceneSoundButton").click();
   for (const id of ["menuSoundButton", "sceneSoundButton", "soundButton"]) {
     assert.equal(el(id).textContent, "Sound: Off");
@@ -412,7 +473,7 @@ test("D1E start and saved-game continuation work from floating action panel", ()
   const p = setupFakeGame();
   const el = p.getElementById;
   assert.equal(el("resumeButton").hidden, true);
-  el("startButton").click();
+  startAtInterior(el);
   el("nextButton").click();
   assert.equal(el("lineText").textContent, "Quite.");
   el("homeButton").click();
@@ -459,14 +520,14 @@ test("D2 David and Paul are expression-ready without unapproved sprite changes",
   const el = p.getElementById;
   const david = "./public/assets/generated/characters/david-office-seated-neutral-v01.webp";
   const paul = "./public/assets/generated/characters/paul-office-seated-neutral-v01.webp";
-  el("startButton").click();
+  startAtInterior(el);
   assert.ok(gameSource.includes("function applySeatedExpression(name)"));
   assert.ok(gameSource.includes("const seatedExpressionSources = {"));
   assert.ok(gameSource.includes('portrait.src = sources[sprite]'));
   assert.ok(gameSource.includes('Object.hasOwn(sources, requested) ? requested : "neutral"'));
   assert.ok(!gameSource.includes("portrait.src = expressionAssetRoot"));
   const reactions = p.window.SMP_REACTIONS;
-  const shots = loadShots();
+  const shots = loadShots().slice(1);
   let checked = 0;
   for (const shot of shots) {
     for (let i = 0; i < shot.lines.length; i++) {
@@ -570,7 +631,7 @@ test("D2 all six Stephen expressions preserve alpha and canvas registration", ()
 test("D2 Stephen dialogue cues select Amused, Confused and Annoyed with safe fallback", () => {
   const p = setupFakeGame();
   const el = p.getElementById;
-  el("startButton").click();
+  startAtInterior(el);
   assert.equal(el("castStephen").dataset.expression, "amused");
   assert.equal(el("castStephen").dataset.seatedSprite, "amused");
   assert.match(el("portraitStephen").src, /amused-v01\.webp\?v=3$/);
@@ -606,8 +667,8 @@ test("D2 Exasperated cues occur at five story-appropriate beats, with fallback r
   );
   const p = setupFakeGame();
   const el = p.getElementById;
-  const shots = loadShots();
-  el("startButton").click();
+  const shots = loadShots().slice(1);
+  startAtInterior(el);
   let covered = 0;
   let checkedFallback = 0;
   for (const shot of shots) {
@@ -645,8 +706,8 @@ test("D2 Laughing plays on O03:9-10, returning to a different pose on O04:0", ()
   );
   const p = setupFakeGame();
   const el = p.getElementById;
-  const shots = loadShots();
-  el("startButton").click();
+  const shots = loadShots().slice(1);
+  startAtInterior(el);
   let covered = 0;
   for (const shot of shots) {
     for (let i = 0; i < shot.lines.length; i++) {
@@ -673,7 +734,7 @@ test("D2 Laughing plays on O03:9-10, returning to a different pose on O04:0", ()
 test("D2 proof cycles Auto Neutral Amused Confused Annoyed Exasperated Laughing without changing dialogue or autoplay", () => {
   const p = setupFakeGame();
   const el = p.getElementById;
-  el("startButton").click(); // O01:0 naturally amused
+  startAtInterior(el); // O01:0 naturally amused
   const initialText = el("lineText").textContent;
   const pendingTimers = p.timeouts.size;
   assert.equal(el("castStephen").dataset.seatedSprite, "amused");
