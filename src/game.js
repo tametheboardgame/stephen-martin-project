@@ -5,7 +5,7 @@
   "use strict";
 
   const shots = window.SMP_OFFICE_SHOTS;
-  if (!Array.isArray(shots) || shots.length !== 7) {
+  if (!Array.isArray(shots) || shots.length !== 8 || shots[0].id !== "O00") {
     document.body.textContent = "The opening scene could not load. Please refresh.";
     return;
   }
@@ -124,7 +124,7 @@
 
   let soundEnabled = false;
   let audioContext = null;
-  let state = { version: 1, scene: "menu", shotIndex: 0, lineIndex: 0, openingSeen: false };
+  let state = { version: 2, scene: "menu", shotIndex: 0, lineIndex: 0, openingSeen: false };
 
   // All snippets below are our own fictional UI props. No user-entered HTML.
   const effects = {
@@ -140,7 +140,15 @@
   function readSave() {
     try {
       const data = JSON.parse(window.localStorage.getItem(STORE_KEY) || "null");
-      if (!data || data.version !== 1 || !["office", "holiday"].includes(data.scene)) return null;
+      if (!data || !["office", "holiday"].includes(data.scene)) return null;
+      // The new exterior is scene 0. Preserve saves from the approved seven-shot
+      // office cutscene by shifting their indexes forward exactly once.
+      if (data.version === 1 && Number.isInteger(data.shotIndex) &&
+          data.shotIndex >= 0 && data.shotIndex < shots.length - 1) {
+        data.shotIndex += 1;
+        data.version = 2;
+      }
+      if (data.version !== 2) return null;
       if (!Number.isInteger(data.shotIndex) || data.shotIndex < 0 || data.shotIndex >= shots.length) return null;
       if (!Number.isInteger(data.lineIndex) || data.lineIndex < 0 || data.lineIndex >= shots[data.shotIndex].lines.length) return null;
       return data;
@@ -234,11 +242,11 @@
     const current = completedLineCount();
     const percent = Math.round((current / totalLines) * 100);
 
-    $("sceneNumber").textContent = "SCENE " + String(state.shotIndex + 1).padStart(2, "0") + " / 07";
+    $("sceneNumber").textContent = "SCENE " + String(state.shotIndex + 1).padStart(2, "0") + " / " + String(shots.length).padStart(2, "0");
     $("sceneTitle").textContent = shot.label;
     $("sceneCaption").textContent = shot.caption;
     $("speakerName").textContent = beat.speaker === "System" ? "NOTIFICATION" : beat.speaker.toUpperCase();
-    $("lineCount").textContent = String(state.lineIndex + 1).padStart(2, "0") + " / " + String(shot.lines.length).padStart(2, "0");
+
     $("lineText").textContent = beat.text;
     const cutaway = cutawayFor(state.shotIndex, state.lineIndex);
     $("cutawayPanel").hidden = !cutaway;
@@ -248,6 +256,7 @@
     // Don't float giant prop graphics over Paul (or any other seated actor).
     // Only the deliberate final-title beat uses a stage-wide effect.
     $("sceneEffect").innerHTML = !cutaway && prop === "title" ? effects.title : "";
+    $("stage").dataset.location = shot.id === "O00" ? "exterior" : "interior";
     $("stage").dataset.moment = shot.moment;
     $("stage").dataset.prop = prop;
     $("stage").dataset.expression = beat.expression || "neutral";
@@ -278,7 +287,7 @@
   function startOffice() {
     clearAdvanceTimer();
     autoPlaying = true;
-    state = { version: 1, scene: "office", shotIndex: 0, lineIndex: 0, openingSeen: false };
+    state = { version: 2, scene: "office", shotIndex: 0, lineIndex: 0, openingSeen: false };
     renderOffice();
   }
 
