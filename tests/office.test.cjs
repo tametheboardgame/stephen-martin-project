@@ -212,7 +212,7 @@ test("David Confident uses approved seated WebP and proof override never moves o
   p.at("office.006");
   assert.equal(p.el("castDavid").dataset.expression,"confident");
   assert.equal(p.el("castDavid").dataset.seatedSprite,"confident");
-  assert.match(p.el("portraitDavid").src,/david-office-seated-confident-v01\.webp\?v=1$/);
+  assert.match(p.el("portraitDavid").src,/david-office-seated-confident-v01\.webp\?v=2$/);
   assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
   const stephenSrc=p.el("portraitStephen").src;
   const timerCount=p.timeouts.size;
@@ -223,7 +223,7 @@ test("David Confident uses approved seated WebP and proof override never moves o
   assert.equal(p.timeouts.size,timerCount);
   p.el("davidProofButton").click(); // Neutral → Confident
   assert.equal(p.el("castDavid").dataset.seatedSprite,"confident");
-  assert.match(p.el("portraitDavid").src,/david-office-seated-confident-v01\.webp\?v=1$/);
+  assert.match(p.el("portraitDavid").src,/david-office-seated-confident-v01\.webp\?v=2$/);
   assert.equal(p.el("portraitStephen").src,stephenSrc);
   assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
   p.el("davidProofButton").click(); // Confident → Auto
