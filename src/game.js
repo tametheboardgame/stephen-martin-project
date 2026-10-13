@@ -41,7 +41,7 @@
     Stephen: stephenSeatedSources,
     David: {
       neutral: "./public/assets/generated/characters/david-office-seated-neutral-v01.webp",
-      confident: "./public/assets/generated/characters/david-office-seated-confident-v01.webp?v=2"
+      confident: "./public/assets/generated/characters/david-office-seated-confident-v01.webp?v=3"
     },
     Paul: {
       neutral: "./public/assets/generated/characters/paul-office-seated-neutral-v01.webp"
