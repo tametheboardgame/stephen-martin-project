@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "13CD5AgMI8apQnPE8K9bHMciYfmVe5K5J"
+  },
+  "expectedSourceName": "david-office-seated-serious-locked-v01.png",
+  "destination": "public/assets/generated/characters/david-office-seated-serious-v01.webp",
+  "transform": {
+    "maxWidth": 1200,
+    "maxHeight": 1600,
+    "quality": 90
+  },
+  "revision": 1
+}
