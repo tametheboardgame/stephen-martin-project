@@ -1231,3 +1231,22 @@ body:has(#menuScreen:not([hidden])) main {
   #officeScreen .d2-proof-button { order: 2; }
 }
 
+/* GAME-SP1.1: seamless exterior establishing shot over registered office art. */
+#officeScreen .office-exterior-shot {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+  background: url("../public/assets/generated/locations/office-exterior-opening-v01.webp") center / 100% 100% no-repeat;
+  transition: opacity 850ms ease-in-out;
+}
+#officeScreen .stage[data-location="exterior"] .office-exterior-shot { opacity: 1; }
+@media (max-width: 650px) {
+  #officeScreen .office-exterior-shot {
+    inset: 0 0 auto 0;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1672 / 941;
+  }
+}
