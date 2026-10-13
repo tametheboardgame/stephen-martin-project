@@ -48,7 +48,8 @@ for (const name of expectedNames) {
 // foreground desk layer without flattening characters or interactive controls.
 const officeImages = [
   "public/assets/generated/locations/office-clean-01-v01.webp",
-  "public/assets/generated/locations/office-foreground-01-v01.webp"
+  "public/assets/generated/locations/office-foreground-01-v01.webp",
+  "public/assets/generated/locations/office-exterior-opening-v01.webp"
 ];
 // Fail the public preview build if the independent desk accidentally becomes an
 // opaque image: a black/solid rectangle would cover all three actors.
