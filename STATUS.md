@@ -2,6 +2,14 @@
 
 **Updated:** 14 October 2026
 
+## GAME-SP2.4B — Playable visitor-information deduction puzzle (14 October 2026)
+
+- Approved empty hotel background now integrated independently into a new stacked draft investigation branch. The prior, owner-approved SP2.4A alarm/travel gameplay remains intact.
+- Eight original hotel arrival lines, three clickable hotspots (route-specific phone, three-option brochures, circled desk receipt), destination deduction without rerouting, wrong-guess jokes, Paul hint after two failures and highlighted correct choice after four. Five canonical discovery lines lead to a route-specific **mini-game handoff**; mini-games remain future SP3 packages.
+- Continue saves clue inspection, wrong attempts, hint state, completed route deduction and dialogue cursor. Targeted cross-route tests added. Approved original PNG not committed; only Drive-materialised WebP used.
+- **Unresolved art gate:** repository has seated/baseline David and Paul but no approved independently cut-out **full-body standing hotel sprites**. Attempts to generate sprites resulted in unapproved whole-scene composites, which have been excluded from game and repo. Need separate full-body alpha cutouts, approved one at a time, before final combined scene visual sign-off.
+- Scope and human checks: `docs/story/GAME-SP2.4B-HOTEL-INVESTIGATION.md`. Production main unchanged and no merge authorised.
+
 ## GAME-SP2.4B — Hotel lobby background approved and staged (14 October 2026)
 
 - The owner explicitly approved the **second, unoccupied** hotel lobby / visitor-information illustration (1672 × 941), rejecting the earlier character-containing composite as a background. Its original PNG is in the project's Google Drive staging folder with ID `1H29kITgnVArnOO427KSNbuF9Kqj-dhpd`.
