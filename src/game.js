@@ -269,6 +269,9 @@
   }
 
   let soundEnabled = false;
+  // Keep the initial menu muted. Clicking Start/Continue is an explicit gesture
+  // to play the voiced story; an intentional Sound toggle always wins.
+  let soundPreferenceSet = false;
   let audioContext = null;
   let state = { version: 3, scene: "menu", beatId: "intro.exterior", openingSeen: false };
 
@@ -329,7 +332,8 @@
     if (entering && typeof window.scrollTo === "function") window.scrollTo(0, 0);
   }
 
-  function setSound(enabled) {
+  function setSound(enabled, rememberChoice = false) {
+    if (rememberChoice) soundPreferenceSet = true;
     soundEnabled = Boolean(enabled);
     if (!soundEnabled) {
       stopVoice();
@@ -442,6 +446,7 @@
 
   function startOffice() {
     clearAdvanceTimer();
+    if (!soundPreferenceSet) setSound(true);
     autoPlaying = true;
     state = { version: 3, scene: "office", beatId: "intro.exterior", openingSeen: false };
     renderOffice();
@@ -482,6 +487,7 @@
 
   function resume() {
     clearAdvanceTimer();
+    if (!soundPreferenceSet) setSound(true);
     autoPlaying = true;
     const saved = readSave();
     if (!saved) { startOffice(); return; }
@@ -498,9 +504,9 @@
   $("restartButton").addEventListener("click", startOffice);
   $("replayButton").addEventListener("click", startOffice);
   $("homeButton").addEventListener("click", showMenu);
-  $("soundButton").addEventListener("click", () => setSound(!soundEnabled));
-  $("sceneSoundButton").addEventListener("click", () => setSound(!soundEnabled));
-  $("menuSoundButton").addEventListener("click", () => setSound(!soundEnabled));
+  $("soundButton").addEventListener("click", () => setSound(!soundEnabled, true));
+  $("sceneSoundButton").addEventListener("click", () => setSound(!soundEnabled, true));
+  $("menuSoundButton").addEventListener("click", () => setSound(!soundEnabled, true));
   $("playPauseButton").addEventListener("click", () => setAutoplay(!autoPlaying));
   $("stephenProofButton").addEventListener("click", cycleStephenProof);
   $("davidProofButton").addEventListener("click", cycleDavidProof);

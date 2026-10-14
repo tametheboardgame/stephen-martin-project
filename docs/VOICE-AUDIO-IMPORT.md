@@ -10,7 +10,7 @@ All artwork and screenplay changes through Paul’s complete approved expression
 
 ## Playback contract
 
-- Use the existing **Sound: On/Off** buttons for voice and short synthetic effects; default muted respects browser autoplay policies. Starting the story with sound enabled must occur after a user gesture.
+- The menu initially displays Sound: Off. Clicking **Start voiced story** or Continue explicitly enables voices in that user gesture, unless the user has deliberately chosen Sound Off. The existing Sound: On/Off buttons override that default, and changing tabs does not silently restart audio.
 - Audio controls the autoplay clock. On spoken dialogue, start the matching MP3 and wait for its `ended` event, then pause approximately 400ms before moving on. On script-only reaction beats, use the original explicit visual durations.
 - A missing/invalid recording, unsupported browser audio API or blocked playback must fall back gracefully to the existing text-based timer. A download error on one beat must not stop the rest of the cutscene.
 - **Pause** pauses the current recording; **Play** resumes its position. **Next/Back** immediately stop the old clip and select the new clip. **Skip/Restart/Return to menu/muting/tab hiding** stop or pause audio as appropriate. Stale completion events must not advance a later beat.

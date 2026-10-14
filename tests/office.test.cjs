@@ -414,12 +414,10 @@ test("all 55 recordings map exactly to existing spoken beat IDs and never to sil
   assert.ok(fs.existsSync(path.join(root,"public/assets/audio/dialogue/README.md")));
 });
 
-test("Sound On plays narration and follows its natural end instead of text timeout",async()=>{
+test("Start voiced story plays narration and follows its natural end instead of text timeout",async()=>{
   const p=preview({audio:true});p.start();
-  assert.equal(p.voices.length,0,"Sound is opt-in");
-  assert.equal(p.timeouts.size,1,"Muted intro uses text timer");
-  p.el("soundButton").click();
-  assert.equal(p.voices.length,1);
+  assert.equal(p.el("soundButton").textContent,"Sound: On");
+  assert.equal(p.voices.length,1,"Start user gesture enables voice by default");
   assert.ok(p.voices[0].src.endsWith("intro.exterior.mp3"));
   await Promise.resolve();
   assert.equal(p.timeouts.size,0,"Voice owns timeline");
@@ -433,7 +431,7 @@ test("Sound On plays narration and follows its natural end instead of text timeo
 });
 
 test("voice pause/resume retains clip position, and navigation stops previous audio",async()=>{
-  const p=preview({audio:true});p.start();p.el("soundButton").click();
+  const p=preview({audio:true});p.start();
   await Promise.resolve();
   const first=p.voices[0];
   p.el("playPauseButton").click();
@@ -460,7 +458,7 @@ test("voice pause/resume retains clip position, and navigation stops previous au
 });
 
 test("missing MP3 and Sound Off fall back cleanly to the original text timer",async()=>{
-  const p=preview({audio:true});p.start();p.el("soundButton").click();
+  const p=preview({audio:true});p.start();
   await Promise.resolve();
   p.voices[0].fail(); // A 404/missing asset.
   assert.equal(p.timeouts.size,1);
@@ -474,6 +472,19 @@ test("missing MP3 and Sound Off fall back cleanly to the original text timer",as
   p.el("nextButton").click();
   assert.equal(saved(p).beatId,"office.002");
   assert.equal(p.voices.length,2,"Muted navigation never creates voice objects");
+});
+
+test("a deliberate Sound Off choice before Start remains muted across restart",()=>{
+  const p=preview({audio:true});
+  p.el("menuSoundButton").click(); // Sound On
+  p.el("menuSoundButton").click(); // Sound Off, deliberate user choice
+  p.start();
+  assert.equal(p.el("soundButton").textContent,"Sound: Off");
+  assert.equal(p.voices.length,0);
+  assert.equal(p.timeouts.size,1);
+  p.el("restartButton").click();
+  assert.equal(p.el("soundButton").textContent,"Sound: Off");
+  assert.equal(p.voices.length,0);
 });
 
 test("new expressions need only a registered seated source and no story edits",()=>{

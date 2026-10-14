@@ -2,6 +2,12 @@
 
 **Updated:** 13 October 2026
 
+## GAME-SP1.1-D7A — Recording upload verified and audible Start UX (14 October 2026)
+
+- All **55/55 MP3** files uploaded directly to `public/assets/audio/dialogue/` on PR #16 at commit `8538eb9`; the targeted smoke build confirms `Approved dialogue MP3s packaged: 55/55` and Cloudflare Pages successfully deployed the new upload commit. Earlier deployment-specific URLs are immutable and cannot serve later uploaded files.
+- Revised opening UX: **Start voiced story** explicitly enables voice in the initiating click, while preserving any manual Sound Off preference; initial menu remains muted. Continue also opts into sound unless the owner deliberately disabled it. No voice generation keys, new external services or script changes.
+- Regression tests cover user-gesture activation, natural clip-end timing, manual mute persistence, navigation and fallback. Listening approval required before PR #16 merge.
+
 ## GAME-SP1.1-D7 — Pre-recorded scene voice clips (14 October 2026)
 
 - Owner provided **55 stable recording IDs** for the approved script: Stephen 16, David 18, Paul 20, Narrator 1. Audio files will be uploaded by owner directly into `public/assets/audio/dialogue/` on `agent/game-sp11d7-dialogue-voice`, with filenames matching their exact beat IDs and `.mp3` suffix. No uploads are present at the time of initial D7 code integration.

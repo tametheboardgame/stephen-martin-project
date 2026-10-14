@@ -18,7 +18,7 @@ These assets correspond to the exact lines in `src/office-data.js`; the reposito
 1. Open this folder on branch `agent/game-sp11d7-dialogue-voice` on github.com. Check the branch selector **before** uploading.
 2. Click **Add file → Upload files**, drag all 55 MP3s into the upload area and commit **directly to this development branch**, not to `main`.
 3. Watch the existing draft voice PR's checks and Cloudflare Pages branch preview. All clips may be uploaded together or in several batches; lines that have not been uploaded continue to play using the old text-based timing.
-4. In the preview, turn **Sound: On**, press **Start**, and listen through. Autoplay advances after each file **finishes**, not after the old short text timer. Pause/Next/Back/Skip, Sound Off and switching tabs work as expected.
+4. In the updated preview, click **Start voiced story** (it enables sound on that user gesture), and listen through. Use Sound: Off if you prefer silence. Autoplay advances after each file **finishes**, not after the old short text timer. Pause/Next/Back/Skip, Sound Off and switching tabs work as expected.
 
 ## Restrictions
 
