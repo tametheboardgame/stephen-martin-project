@@ -34,6 +34,12 @@ The game, song and optional comic use shared character designs and recognisable 
 
 Do not describe fictional companion/family events as real facts. The central route selector is Stephen's fictional choice of holiday activity; David and Paul interpret his clipped messages as evidence of kidnapping. Keep the target runtime 15–25 minutes. These scenes are approved canon for the first game build. Changes to route structure, endings or privacy commitments require owner review.
 
+## GAME-SP2.1 locked Chapter Two canon (14 October 2026)
+
+Stephen's playable holiday now begins with `TWO DAYS LATER… IN CHINA`, then visits three distinct stylised scenes: **Great Wall**, **Forbidden City**, and a **fictional Beijing night market**. Each scene contains a concise accept/decline evening-activity choice and immediate comedic feedback. Later accepted invitations replace earlier plans; an entirely declined itinerary requires explicit final selection. The final booking governs the existing cult/detention/reassemble route and David/Paul's mistaken rescue, with an unfinished text when Stephen's phone battery dies.
+
+**Locked script and mechanics:** `docs/story/GAME-SP2.1-STEVE-HOLIDAY-STORY-V1.md`. It replaces only the old single-city-kiosk Stephen chapter; the remaining treatment stays canonical. Real tourist landmarks are background settings, while fictional events and mishaps must not be presented as real-world claims.
+
 ## Remaining SP-WP1.2 decisions
 - Define Paul's distinct speaking voice and personality beyond his approved deadpan visual reactions.
 - Clear short mystery progression, recurring jokes and three ending beats.

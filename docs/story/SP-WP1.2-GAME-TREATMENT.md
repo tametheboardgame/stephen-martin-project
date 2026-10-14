@@ -52,6 +52,8 @@ Story beats:
 
 The title deliberately occurs *before* the playable Stephen scene.
 
+> **GAME-SP2.1 supersession (owner-approved 14 October 2026):** The full following section 4 describes the *former* single neon city/kiosk route choice and phone reply/mute flavour choice. It is retained as historical context, **not as implementation instruction**. The active playable Stephen chapter is now the locked three-location, accept/decline script in [GAME-SP2.1-STEVE-HOLIDAY-STORY-V1.md](GAME-SP2.1-STEVE-HOLIDAY-STORY-V1.md). Sections 5–12 about OFFICE-ALARM, David and Paul, the three route mini-games and their endings remain approved, subject to the new Chapter Two lead-in/choice mechanics.
+
 ## 4. STEVE-HOLIDAY-01: Heaven (play as Stephen)
 
 **Purpose:** Give Stephen his own agency, deliver the "heaven" feeling, set up consequences, and let player choices determine one branch. Avoid complex movement or travel interactions.

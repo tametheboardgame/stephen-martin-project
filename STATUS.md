@@ -1,6 +1,14 @@
 # Project status
 
-**Updated:** 13 October 2026
+**Updated:** 14 October 2026
+
+## GAME-SP2.1 — Stephen's holiday story V1 LOCKED (14 October 2026)
+
+- **Owner approved and locked the story**, not the implementation: `docs/story/GAME-SP2.1-STEVE-HOLIDAY-STORY-V1.md` is authoritative for playable Stephen's three locations and choice consequences. It supersedes the older single city/hotel kiosk scene of `SP-WP1.2-GAME-TREATMENT.md`; David/Paul's `OFFICE-ALARM`, shared rescue hub, route puzzles and three endings remain approved and unchanged.
+- Transition `TWO DAYS LATER… IN CHINA` → Great Wall (The Summit invitation, `cult`) → Forbidden City (fictional honorary banquet, `detention`) → fictional Beijing night market (Total Renewal Spa, `reassemble`) → route-specific unfinished message/flat battery → `OFFICE-ALARM`.
+- Each location has **one** accept/decline consequential choice, minimal comic dialogue and no second activity kiosk. Later acceptance replaces the active booking; decline preserves it. All-declined forces a clear final choice. `route` is locked only on exiting Stephen's chapter; no hidden score or alternate new endings.
+- **Next:** GAME-SP2.2 build transition and Great Wall vertical slice on a new agent branch after doc/story merge, with separately approved scene art and standing Stephen; then GAME-SP2.3 remaining two sites/choice state and GAME-SP2.4 David/Paul alarm-hub integration. No GAME-SP2 code or new artwork was approved or delivered by this story lock.
+- **Parallel pending work:** Game voice PR #16 remains open and draft as at story lock; the user confirmed the 55 uploaded MP3s play in its preview, but no instruction to merge the voice PR was given. Keep that separate worktree/PR's owner-gate.
 
 ## GAME-SP1.1-D6B — Paul Pleased expression proof (14 October 2026)
 

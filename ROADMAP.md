@@ -16,6 +16,16 @@
 - Apply this rule to scripts, songs, comics, promotional copy, asset filenames and metadata. Perform a privacy review before any public-facing release.
 - Because the title contains a real full name and comic character portraits may resemble their inspirations, **these measures minimise identification rather than guaranteeing anonymity**.
 
+## GAME-SP2.1 — Stephen's holiday three-scene Story V1 (owner-approved 14 October 2026)
+
+**Canonical new story file:** `docs/story/GAME-SP2.1-STEVE-HOLIDAY-STORY-V1.md`.
+
+The previously approved single-city-kiosk `STEVE-HOLIDAY-01` treatment is **superseded for Stephen's playable chapter only** by three short sequential choices at the Great Wall, Forbidden City and fictional Beijing night market. Each offers an evening activity; accepting a later invitation replaces any earlier booking, declining preserves the current plan, and all-declined requires an explicit final selection. The final plan determines the existing cult/detention/reassembly route and the truncated last message.
+
+No new full campaigns, mandatory movement, lengthy dialogue, additional endings or unrelated mini-games are authorised. The existing OFFICE-ALARM, David/Paul rescue hub, three established puzzles and endings remain in force, as do the 15–25-minute full-playthrough guardrail and human artwork approval gates. Next implementation packet: **GAME-SP2.2**, Great Wall transition and first meaningful choice, after current draft audio PR state is respected.
+
+---
+
 ## 1. Vision and scope
 
 Create a compact, deliberately ridiculous fictional comedy universe inspired by Stephen Martin's trip to China. David and Paul attempt an international rescue despite possessing almost none of the skills necessary to succeed.
