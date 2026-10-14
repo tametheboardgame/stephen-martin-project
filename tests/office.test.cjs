@@ -606,6 +606,120 @@ test("approved full-body promoter is independently staged and preserves transpar
   assert.ok(read("scripts/build.mjs").includes(name));
 });
 
+test("GAME-SP2.3 Forbidden City dialogue is canonical and distinct from the Summit promoter",()=>{
+  const pal=story().SMP_CHINA_PALACE;
+  assert.equal(pal.lines.length,4);
+  assert.deepEqual(Array.from(pal.lines,l=>l.id),[
+    "china.palace.001","china.palace.002","china.palace.003","china.palace.004"
+  ]);
+  assert.equal(pal.lines[0].speaker,"Attendant");
+  assert.equal(pal.lines[1].speaker,"Stephen");
+  assert.match(pal.lines[0].text,/International Cultural Excellence Banquet/);
+  assert.equal(pal.titleBadge,"VISITING INTERNATIONAL SPECIALIST");
+  assert.equal(pal.acceptReply.length,5);
+  assert.match(pal.acceptReply.at(-1).text,/first one on my phone/);
+  assert.ok(!pal.lines.some(l=>l.id.startsWith("office.")));
+});
+
+test("Forbidden City is inaccessible before the Wall booking choice, then opens as a second scene",()=>{
+  const p=preview();p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
+  p.el("wallGoPalaceButton").click();
+  assert.equal(saved(p).holidayPhase,"wall","Cannot bypass the Great Wall decision");
+  for(let i=0;i<5;i++)p.el("wallNextButton").click();
+  p.el("wallGoPalaceButton").click();
+  assert.equal(saved(p).holidayPhase,"wall");
+  p.el("wallDeclineButton").click();
+  p.el("wallGoPalaceButton").click();
+  assert.equal(saved(p).holidayPhase,"palace");
+  assert.equal(p.el("wallScene").hidden,true);
+  assert.equal(p.el("palaceScene").hidden,false);
+  assert.equal(p.el("chinaTransition").hidden,true);
+  assert.equal(p.el("palaceSpeakerName").textContent,"ATTENDANT");
+  assert.match(p.el("palaceLineText").textContent,/guest of honour/);
+  assert.equal(p.el("palaceBookingLabel").textContent,"Nothing booked yet");
+  assert.ok(p.el("palaceStephen").src.endsWith("stephen-holiday-standing-neutral-v01.webp"));
+  assert.equal(p.el("palaceHonourBadge").hidden,true);
+  assert.equal(Object.hasOwn(saved(p),"route"),false);
+});
+
+test("Accepting the banquet replaces Summit, shows the approved pleased Stephen and photo gag",()=>{
+  const p=preview();p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
+  for(let i=0;i<5;i++)p.el("wallNextButton").click();
+  p.el("wallAcceptButton").click();p.el("wallGoPalaceButton").click();
+  assert.equal(saved(p).pendingPlan,"cult");
+  p.el("palaceAcceptButton").click();
+  assert.equal(saved(p).palaceDecision,null,"Early acceptance is disallowed");
+  for(let i=0;i<4;i++)p.el("palaceNextButton").click();
+  assert.equal(p.el("palaceChoices").hidden,false);
+  assert.equal(p.el("palaceNextButton").hidden,true);
+  p.el("palaceAcceptButton").click();
+  assert.equal(saved(p).pendingPlan,"detention");
+  assert.equal(saved(p).palaceDecision,"accept");
+  assert.equal(p.el("palaceBookingLabel").textContent,"International Cultural Excellence Banquet");
+  assert.equal(Object.hasOwn(saved(p),"route"),false,"The Night Market still controls the final route lock");
+  assert.equal(p.el("palaceHonourBadge").hidden,false);
+  assert.ok(p.el("palaceStephen").src.endsWith("stephen-holiday-forbidden-city-pleased-v01.webp"));
+  assert.match(p.el("palaceLineText").textContent,/prepare a speech/);
+  assert.equal(p.el("palacePhotoGag").hidden,true,"The photo joke waits until the dialogue ends");
+  for(let i=0;i<5;i++)p.el("palaceNextButton").click();
+  assert.equal(p.el("palaceDialogue").hidden,true);
+  assert.equal(p.el("palaceResult").hidden,false);
+  assert.equal(p.el("palacePhotoGag").hidden,false);
+  assert.match(p.el("palaceResultText").textContent,/bear picture/);
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).holidayPhase,"palace");
+  assert.equal(p.el("palacePhotoGag").hidden,false);
+  assert.equal(saved(p).pendingPlan,"detention");
+});
+
+test("Declining the banquet preserves Summit, and replay restores the earlier plan",()=>{
+  const p=preview();p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
+  for(let i=0;i<5;i++)p.el("wallNextButton").click();
+  p.el("wallAcceptButton").click();p.el("wallGoPalaceButton").click();
+  p.el("palaceNextButton").click();
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).holidayPhase,"palace");
+  assert.equal(saved(p).palaceStep,1,"Resume preserves the attendant encounter");
+  for(let i=1;i<4;i++)p.el("palaceNextButton").click();
+  p.el("palaceDeclineButton").click();
+  assert.equal(saved(p).pendingPlan,"cult");
+  assert.equal(p.el("palaceResult").hidden,false);
+  assert.equal(p.el("palacePhotoGag").hidden,true);
+  assert.equal(p.el("palaceHonourBadge").hidden,true);
+  assert.match(p.el("palaceResultText").textContent,/get away from meetings/);
+  p.el("palaceReplayButton").click();
+  assert.equal(saved(p).palaceDecision,null);
+  assert.equal(saved(p).pendingPlan,"cult","Great Wall booking survives palace replay");
+  assert.equal(saved(p).palaceStep,0);
+  p.el("palaceBackButton").click();
+  assert.equal(saved(p).holidayPhase,"wall");
+  assert.equal(p.el("wallBookingLabel").textContent,"The Summit");
+  p.el("wallGoPalaceButton").click();
+  assert.equal(saved(p).holidayPhase,"palace");
+  assert.equal(saved(p).palaceStep,0);
+});
+
+test("Forbidden City art is in the build, with transparent independent characters and no baked interface",()=>{
+  for(const name of ["china-banquet-attendant-standing-v01.webp","stephen-holiday-forbidden-city-pleased-v01.webp"]){
+    const image=fs.readFileSync(path.join(root,"public/assets/generated/characters",name));
+    assert.equal(image.toString("ascii",0,4),"RIFF");
+    assert.equal(image.toString("ascii",12,16),"VP8X");
+    assert.ok((image[20]&0x10)!==0,"Transparent character "+name);
+    assert.equal(1+image.readUIntLE(24,3),1086);
+    assert.equal(1+image.readUIntLE(27,3),1448);
+    assert.ok(read("scripts/build.mjs").includes(name));
+  }
+  const place="china-forbidden-city-background-v01.webp";
+  const bg=fs.readFileSync(path.join(root,"public/assets/generated/locations",place));
+  assert.equal(bg.toString("ascii",0,4),"RIFF");
+  assert.equal(bg.toString("ascii",8,12),"WEBP");
+  assert.ok(read("scripts/build.mjs").includes(place));
+  for(const id of ["palaceScene","palaceAcceptButton","palaceDeclineButton","palaceReplayButton","wallGoPalaceButton"]){
+    assert.ok(html.includes('id="'+id+'"'));
+  }
+  assert.ok(css.includes("#holidayScreen #palaceScene"),"Palace matches office and Great Wall viewport contract");
+});
+
 test("Chapter Two desktop fits the same 16:9 viewport envelope as office",()=>{
   const block=css.split("GAME-SP2.2-F1 — Chapter Two desktop viewport fit")[1];
   assert.ok(block,"Viewport fix must remain scoped and documented");

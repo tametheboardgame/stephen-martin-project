@@ -513,3 +513,7 @@ Keep `STATUS.md` resumable, `DECISIONS.md` concise and `ROADMAP.md` authoritativ
 5. Continue bounded game development, with song drafting in parallel. Decide on comic only after pilot scoping.
 
 **Primary rule:** A complete, funny little game comes first. Do not build a grand project around what is supposed to be a joke.
+
+
+## GAME-SP2.3A (14 October 2026)
+The owner approved the Forbidden City asset trio. Its banquet choice overrides/preserves the provisional Great Wall booking; route remains unlocked until Night Market. Draft preview/playtest required before merge.

@@ -2,6 +2,13 @@
 
 **Updated:** 14 October 2026
 
+## GAME-SP2.3A — Forbidden City playable scene (14 October 2026)
+
+- Owner explicitly approved and locked three Forbidden City assets: the clean 1672×941 historic courtyard backdrop, separately staged fictional red-jacketed banquet attendant, and Stephen's blue-quarter-zip *Guest of Honour* pose (both original sprites 1086×1448 RGBA). Source PNGs staged in dedicated Google Drive under IDs background `1_ZSzDWBOCQHTxXoIZvoUqbBeoPNL7Uzq`, attendant `1Itsnjm2blwhzhciRP94aBUIWxlL4N1Td`, Stephen variant `1FZXgrofuUNEIvD2y340KiieDXBH9AHYe`. Three versioned manifests materialise optimised WebPs on `agent/game-sp23-forbidden-city`.
+- New draft scene **stacks on PR #18** (`agent/game-sp22-wall-playable`) and preserves all 55 original MP3 files. Wall decision now continues into Forbidden City. Four canon opening lines, explicit accept/decline banquet choice, five short accepted-branch reaction lines and an optional bear-photo overlay. No extra route, fictional event is identified as **outside** the landmark.
+- Before acceptance, Stephen retains the original travel sprite; after acceptance he displays the approved pleased/badge variant. **Accept sets `pendingPlan=detention`**, overriding The Summit; **decline preserves `pendingPlan`**. Replay of Palace restores the Wall's booking without clearing the Wall decision. `route` remains unlocked until Night Market implementation.
+- Chapter Two's viewport-fit 16:9 composition remains in place on desktop; tablet/mobile retain responsive scene controls. Targeted tests cover scene transition, choices, loading/replay, sprite alpha/build and story script. **The owner must review real in-browser arrangement before merging.** Night Market remains unimplemented in this increment.
+
 ## GAME-SP2.2-F2 — Approved Summit promoter added to Great Wall (14 October 2026)
 
 - Owner accepted the second **Summit promoter** design: young adult East Asian man in an olive casual overshirt, event lanyard and Summit brochure, white trainers and tan trousers, replacing the rejected formal blazer design.

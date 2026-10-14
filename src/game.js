@@ -19,6 +19,14 @@
   const screens = { menu: $("menuScreen"), office: $("officeScreen"), holiday: $("holidayScreen") };
   const cast = { Stephen: $("castStephen"), David: $("castDavid"), Paul: $("castPaul") };
   const greatWall = window.SMP_CHINA_WALL;
+  const palace = window.SMP_CHINA_PALACE;
+  const travelStephenNeutral = "./public/assets/generated/characters/stephen-holiday-standing-neutral-v01.webp";
+  const travelStephenHonoured = "./public/assets/generated/characters/stephen-holiday-forbidden-city-pleased-v01.webp";
+  const planLabels = {
+    cult: "The Summit",
+    detention: "International Cultural Excellence Banquet"
+  };
+  function bookingName(plan) { return planLabels[plan] || "Nothing booked yet"; }
   // D2 proof-only control: the approved neutral/amused image pair shares one
   // canvas; the toggle allows owner A/B checks without restarting the story.
   const proofModes = ["auto", "neutral", "amused", "confused", "annoyed", "exasperated", "laughing"];
@@ -478,8 +486,10 @@
   function renderHoliday() {
     reveal("holiday");
     const inWall = state.holidayPhase === "wall";
-    $("chinaTransition").hidden = inWall;
+    const inPalace = state.holidayPhase === "palace";
+    $("chinaTransition").hidden = inWall || inPalace;
     $("wallScene").hidden = !inWall;
+    $("palaceScene").hidden = !inPalace;
     if (inWall) {
       const position = Number.isInteger(state.wallStep)
         ? Math.max(0, Math.min(state.wallStep, greatWall.lines.length)) : 0;
@@ -490,8 +500,7 @@
       $("wallPromoter").hidden = position === 0;
       $("wallPhone").hidden = position !== 0;
       $("wallPhoneText").textContent = greatWall.phoneText;
-      $("wallBookingLabel").textContent = state.pendingPlan === "cult"
-        ? greatWall.eveningPlan : "Nothing booked yet";
+      $("wallBookingLabel").textContent = bookingName(state.pendingPlan);
       $("wallDialogue").hidden = position >= greatWall.lines.length;
       $("wallNextButton").hidden = position >= greatWall.lines.length;
       $("wallChoices").hidden = position !== greatWall.lines.length || choiceMade;
@@ -511,6 +520,51 @@
           ? greatWall.acceptReaction : greatWall.declineReaction;
       }
     }
+    if (inPalace) {
+      const position = Number.isInteger(state.palaceStep)
+        ? Math.max(0, Math.min(state.palaceStep, palace.lines.length)) : 0;
+      const replyIndex = Number.isInteger(state.palaceReplyStep)
+        ? Math.max(0, Math.min(state.palaceReplyStep, palace.acceptReply.length)) : 0;
+      state.palaceStep = position;
+      state.palaceReplyStep = replyIndex;
+      const decision = state.palaceDecision;
+      const accepted = decision === "accept";
+      const choiceMade = accepted || decision === "decline";
+      const showingIntro = position < palace.lines.length;
+      const showingReply = accepted && replyIndex < palace.acceptReply.length;
+      $("palaceChoices").hidden = showingIntro || choiceMade;
+      $("palaceNextButton").hidden = !showingIntro && !showingReply;
+      $("palaceDialogue").hidden = !showingIntro && !showingReply;
+      $("palaceResult").hidden = !choiceMade || showingReply;
+      $("palaceBookingLabel").textContent = bookingName(state.pendingPlan);
+      $("palaceHonourBadge").hidden = !accepted;
+      $("palaceStephen").src = accepted ? travelStephenHonoured : travelStephenNeutral;
+      $("palaceStephen").alt = accepted
+        ? "Stephen proudly holding his fictional Guest of Honour badge"
+        : "Stephen sightseeing in his familiar blue quarter-zip";
+      $("palacePhotoGag").hidden = !accepted || showingReply;
+      if (showingIntro || showingReply) {
+        const line = showingIntro ? palace.lines[position] : palace.acceptReply[replyIndex];
+        $("palaceSpeakerName").textContent = line.speaker.toUpperCase();
+        $("palaceLineText").textContent = line.text;
+      }
+      if (showingIntro) {
+        $("palaceProgressLabel").textContent = "Forbidden City conversation · "
+          + (position + 1) + " of " + palace.lines.length;
+      } else if (!choiceMade) {
+        $("palaceProgressLabel").textContent = "Choose Stephen's next evening plan";
+      } else if (showingReply) {
+        $("palaceProgressLabel").textContent = "Banquet booking · "
+          + (replyIndex + 1) + " of " + palace.acceptReply.length;
+      } else {
+        $("palaceProgressLabel").textContent = "Forbidden City decision saved";
+        $("palaceResultTitle").textContent = accepted
+          ? "Banquet booked ✓" : "Invitation declined";
+        $("palaceResultText").textContent = accepted
+          ? "The banquet replaces your earlier evening plans. Paul’s bear picture has somehow become the event photo."
+          : palace.declineReply;
+      }
+    }
     persist();
   }
 
@@ -522,6 +576,9 @@
     state.wallStep = 0;
     state.wallDecision = null;
     state.pendingPlan = null;
+    state.palaceStep = 0;
+    state.palaceReplyStep = 0;
+    state.palaceDecision = null;
     renderHoliday();
   }
 
@@ -557,6 +614,57 @@
     state.wallStep = 0;
     state.wallDecision = null;
     state.pendingPlan = null;
+    state.palaceStep = 0;
+    state.palaceReplyStep = 0;
+    state.palaceDecision = null;
+    renderHoliday();
+  }
+
+  function enterPalace() {
+    if (screens.holiday.hidden || state.holidayPhase !== "wall" ||
+        !["accept","decline"].includes(state.wallDecision)) return;
+    state.holidayPhase = "palace";
+    if (!Number.isInteger(state.palaceStep)) state.palaceStep = 0;
+    if (!Number.isInteger(state.palaceReplyStep)) state.palaceReplyStep = 0;
+    if (!["accept","decline"].includes(state.palaceDecision)) state.palaceDecision = null;
+    renderHoliday();
+  }
+
+  function nextPalaceLine() {
+    if (screens.holiday.hidden || state.holidayPhase !== "palace") return;
+    if (state.palaceStep < palace.lines.length) {
+      state.palaceStep++;
+    } else if (state.palaceDecision === "accept" &&
+               state.palaceReplyStep < palace.acceptReply.length) {
+      state.palaceReplyStep++;
+    } else return;
+    renderHoliday();
+  }
+
+  function decidePalace(decision) {
+    if (screens.holiday.hidden || state.holidayPhase !== "palace" ||
+        state.palaceStep !== palace.lines.length || state.palaceDecision ||
+        !["accept","decline"].includes(decision)) return;
+    state.palaceDecision = decision;
+    state.palaceReplyStep = 0;
+    // Accept replaces the Summit; decline preserves the existing booking.
+    if (decision === "accept") state.pendingPlan = "detention";
+    // Never lock state.route until the third location is completed.
+    renderHoliday();
+  }
+
+  function replayPalace() {
+    if (screens.holiday.hidden || state.holidayPhase !== "palace") return;
+    state.palaceStep = 0;
+    state.palaceReplyStep = 0;
+    state.palaceDecision = null;
+    state.pendingPlan = state.wallDecision === "accept" ? "cult" : null;
+    renderHoliday();
+  }
+
+  function returnToWall() {
+    if (screens.holiday.hidden || state.holidayPhase !== "palace") return;
+    state.holidayPhase = "wall";
     renderHoliday();
   }
 
@@ -589,6 +697,12 @@
   $("wallAcceptButton").addEventListener("click", () => decideWall("accept"));
   $("wallDeclineButton").addEventListener("click", () => decideWall("decline"));
   $("wallReplayButton").addEventListener("click", replayWall);
+  $("wallGoPalaceButton").addEventListener("click", enterPalace);
+  $("palaceNextButton").addEventListener("click", nextPalaceLine);
+  $("palaceAcceptButton").addEventListener("click", () => decidePalace("accept"));
+  $("palaceDeclineButton").addEventListener("click", () => decidePalace("decline"));
+  $("palaceReplayButton").addEventListener("click", replayPalace);
+  $("palaceBackButton").addEventListener("click", returnToWall);
   $("soundButton").addEventListener("click", () => setSound(!soundEnabled, true));
   $("sceneSoundButton").addEventListener("click", () => setSound(!soundEnabled, true));
   $("menuSoundButton").addEventListener("click", () => setSound(!soundEnabled, true));
