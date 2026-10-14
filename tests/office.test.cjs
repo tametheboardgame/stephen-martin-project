@@ -639,7 +639,7 @@ test("Forbidden City is inaccessible before the Wall booking choice, then opens 
   assert.equal(p.el("palaceBookingLabel").textContent,"Nothing booked yet");
   assert.ok(p.el("palaceStephen").src.endsWith("stephen-holiday-forbidden-city-pleased-v01.webp"),"The approved second Stephen sprite is used from the first Palace beat");
   assert.equal(p.el("palaceHonourBadge").hidden,true);
-  assert.equal(p.el("palaceStephen").alt,"Stephen sightseeing in his approved Forbidden City holiday pose");
+  assert.ok(html.includes('alt="Stephen in his approved blue-quarter-zip Forbidden City pose"'),"Approved sprite has descriptive HTML alt text");
   assert.equal(Object.hasOwn(saved(p),"route"),false);
 });
 
