@@ -582,6 +582,24 @@ test("the three approved Chapter Two WebPs are packaged and standing Stephen ret
   assert.ok(!read("src/office-data.js").includes("china.wall.001"));
 });
 
+test("Chapter Two desktop fits the same 16:9 viewport envelope as office",()=>{
+  const block=css.split("GAME-SP2.2-F1 — Chapter Two desktop viewport fit")[1];
+  assert.ok(block,"Viewport fix must remain scoped and documented");
+  assert.match(block,/@media \(min-width: 801px\)/);
+  assert.match(block,/body:has\(#holidayScreen:not\(\[hidden\]\)\) \.game-shell/);
+  assert.match(block,/min-height: 100dvh/);
+  assert.match(block,/body:has\(#holidayScreen:not\(\[hidden\]\)\) \.topbar/);
+  assert.match(block,/body:has\(#holidayScreen:not\(\[hidden\]\)\) \.footnote/);
+  assert.match(block,/width: min\(calc\(100vw - 22px\), calc\(177\.68dvh - 32px\), 1672px\)/);
+  assert.match(block,/aspect-ratio: 1672 \/ 941/);
+  assert.match(block,/#holidayScreen #chinaTransition/);
+  assert.match(block,/#holidayScreen #wallScene/);
+  assert.match(block,/\.wall-action-strip \{[\s\S]*?position: absolute/);
+  assert.match(block,/\.china-footer \{[\s\S]*?position: absolute/);
+  assert.match(block,/overflow-y: auto/,"Tall choices must remain usable");
+  assert.ok(!block.includes("overflow-y: hidden"),"Do not make content inaccessible");
+});
+
 test("new expressions need only a registered seated source and no story edits",()=>{
   assert.ok(engine.includes("seatedExpressionSources"));
   assert.ok(engine.includes("David: {"));
