@@ -7,6 +7,7 @@ const root = path.resolve(__dirname, "..");
 const read = name => fs.readFileSync(path.join(root, name), "utf8");
 const source = read("src/office-data.js");
 const reactions = read("src/reactions.js");
+const china = read("src/china-data.js");
 const engine = read("src/game.js");
 const html = read("index.html");
 const css = read("src/styles.css");
@@ -15,6 +16,7 @@ function story() {
   const window = {};
   vm.runInNewContext(source, { window }, { timeout: 1000 });
   vm.runInNewContext(reactions, { window }, { timeout: 1000 });
+  vm.runInNewContext(china, { window }, { timeout: 1000 });
   return window;
 }
 const beats = () => Array.from(story().SMP_OFFICE_SHOTS, shot => Array.from(shot.lines)).flat();
@@ -50,6 +52,7 @@ function preview({audio=false}={}) {
   };
   vm.runInNewContext(source,{window},{timeout:1000});
   vm.runInNewContext(reactions,{window},{timeout:1000});
+  vm.runInNewContext(china,{window},{timeout:1000});
   let timer=0;
   const context={window,document,HTMLElement:Element,
     setTimeout(callback,delay){timeouts.set(++timer,{callback,delay});return timer;},
@@ -485,6 +488,98 @@ test("a deliberate Sound Off choice before Start remains muted across restart",(
   p.el("restartButton").click();
   assert.equal(p.el("soundButton").textContent,"Sound: Off");
   assert.equal(p.voices.length,0);
+});
+
+test("GAME-SP2.2 approved Great Wall data is compact and keeps the route provisional",()=>{
+  const w=story().SMP_CHINA_WALL;
+  assert.equal(w.title,"THE GREAT WALL");
+  assert.equal(w.lines.length,5);
+  assert.deepEqual(Array.from(w.lines,x=>x.id),[
+    "china.wall.001","china.wall.002","china.wall.003","china.wall.004","china.wall.005"
+  ]);
+  assert.equal(w.lines[0].speaker,"Stephen");
+  assert.equal(w.lines[1].speaker,"Promoter");
+  assert.match(w.phoneText,/geopolitical variables/);
+  assert.match(w.acceptReaction,/actual cult/);
+  assert.ok(!w.lines.some(x=>x.id.startsWith("office.")));
+  assert.ok(read("scripts/build.mjs").includes('src/china-data.js'));
+});
+
+test("office finale and Skip enter approved Chapter Two card then playable Great Wall",()=>{
+  const p=preview();p.start();p.el("skipButton").click();
+  assert.equal(saved(p).scene,"holiday");
+  assert.equal(saved(p).holidayPhase,"transition");
+  assert.equal(p.el("chinaTransition").hidden,false);
+  assert.equal(p.el("wallScene").hidden,true);
+  assert.equal(p.timeouts.size,0,"Chapter Two transition waits for an explicit user action");
+  p.el("chinaStartButton").click();
+  assert.equal(saved(p).holidayPhase,"wall");
+  assert.equal(saved(p).wallStep,0);
+  assert.equal(p.el("wallScene").hidden,false);
+  assert.equal(p.el("chinaTransition").hidden,true);
+  assert.match(p.el("wallLineText").textContent,/wonders of the world/);
+  assert.match(p.el("wallPhoneText").textContent,/geopolitical variables/);
+  assert.equal(p.el("wallBookingLabel").textContent,"Nothing booked yet");
+  assert.equal(p.el("wallChoices").hidden,true);
+});
+
+test("Great Wall choice gates at script end; accept sets only pending plan and supports replay",()=>{
+  const p=preview();p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
+  p.el("wallAcceptButton").click(); // Guard against choosing too soon
+  assert.equal(saved(p).wallDecision,null);
+  for(let i=0;i<5;i++)p.el("wallNextButton").click();
+  assert.equal(saved(p).wallStep,5);
+  assert.equal(p.el("wallChoices").hidden,false);
+  assert.equal(p.el("wallNextButton").hidden,true);
+  p.el("wallAcceptButton").click();
+  assert.equal(saved(p).wallDecision,"accept");
+  assert.equal(saved(p).pendingPlan,"cult");
+  assert.equal(Object.hasOwn(saved(p),"route"),false,"Final route cannot lock in scene 1");
+  assert.equal(p.el("wallBookingLabel").textContent,"The Summit");
+  assert.match(p.el("wallResultText").textContent,/actual cult/);
+  assert.equal(p.el("wallChoices").hidden,true);
+  p.el("wallReplayButton").click();
+  assert.equal(saved(p).wallStep,0);
+  assert.equal(saved(p).wallDecision,null);
+  assert.equal(saved(p).pendingPlan,null);
+  assert.equal(p.el("wallDialogue").hidden,false);
+});
+
+test("declining keeps an empty plan; Continue restores saved Great Wall position",()=>{
+  const p=preview();p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
+  p.el("wallNextButton").click();
+  p.el("homeButton").click();
+  assert.equal(p.el("menuScreen").hidden,false);
+  p.el("resumeButton").click();
+  assert.equal(p.el("holidayScreen").hidden,false);
+  assert.equal(saved(p).wallStep,1);
+  assert.equal(p.el("wallLineText").textContent,"You look like someone who'd enjoy The Summit. Exclusive mountain retreat. Very friendly gentlemen. Spectacular views.");
+  for(let i=1;i<5;i++)p.el("wallNextButton").click();
+  p.el("wallDeclineButton").click();
+  assert.equal(saved(p).wallDecision,"decline");
+  assert.equal(saved(p).pendingPlan,null);
+  assert.match(p.el("wallResultText").textContent,/I'll regret this/);
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(p.el("wallResult").hidden,false);
+  assert.equal(p.el("wallBookingLabel").textContent,"Nothing booked yet");
+});
+
+test("the three approved Chapter Two WebPs are packaged and standing Stephen retains transparency",()=>{
+  const rootAssets="public/assets/generated";
+  const sprite=fs.readFileSync(path.join(root,rootAssets,"characters/stephen-holiday-standing-neutral-v01.webp"));
+  assert.equal(sprite.toString("ascii",0,4),"RIFF");
+  assert.equal(sprite.toString("ascii",12,16),"VP8X");
+  assert.ok(sprite[20]&0x10,"Holiday Stephen must be a separate transparent sprite");
+  for(const asset of ["chapter-two-days-later-title-v01.webp","china-great-wall-background-v01.webp"]){
+    const buf=fs.readFileSync(path.join(root,rootAssets,"locations",asset));
+    assert.equal(buf.toString("ascii",0,4),"RIFF");
+    assert.equal(buf.toString("ascii",8,12),"WEBP");
+    assert.ok(read("scripts/build.mjs").includes(asset));
+  }
+  assert.match(html,/id="chinaStartButton"/);
+  assert.match(html,/id="wallAcceptButton"/);
+  assert.match(css,/#holidayScreen\.china-screen/);
+  assert.ok(!read("src/office-data.js").includes("china.wall.001"));
 });
 
 test("new expressions need only a registered seated source and no story edits",()=>{

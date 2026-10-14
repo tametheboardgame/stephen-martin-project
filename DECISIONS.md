@@ -2,6 +2,10 @@
 
 Entries are concise, durable design decisions. Additional decisions are added only where they materially affect scope, design, delivery or implementation.
 
+## SP-D022, 14 October 2026: Lock and integrate first three China visuals for GAME-SP2.2
+
+Owner approved the chapter transition card, Great Wall background and revised full-standing Stephen holiday sprite matching the existing blond office design. They are immutable V1 design baselines and may only be changed after further owner feedback. Sources live in the project's Google Drive staging folder; three manifest-driven optimised WebPs on `agent/game-sp22-wall-playable` preserve provenance. The first playable Great Wall scene follows the 55-clip voiced office intro, presents approved short Chapter Two dialogue and one accept/decline Summit booking. Keep `pendingPlan` provisional; no early final route selection and no new game engine. Save/replay must work with existing V3 saves. The scene PR is stacked on the still-draft voiced-office branch (PR #16); **both** require owner preview approval before production merges. All later China scenes and more voices are deferred.
+
 ## SP-D001, 12 October 2026: One repository and shared canon
 All game, song and comic work shares `tametheboardgame/stephen-martin-project`. Shared character reference art, story canon and asset provenance are authoritative; each stream works on short-lived `agent/*` branches and PRs.
 

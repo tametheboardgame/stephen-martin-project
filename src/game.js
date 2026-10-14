@@ -18,6 +18,7 @@
   const finalBeatId = beats[beats.length - 1].id;
   const screens = { menu: $("menuScreen"), office: $("officeScreen"), holiday: $("holidayScreen") };
   const cast = { Stephen: $("castStephen"), David: $("castDavid"), Paul: $("castPaul") };
+  const greatWall = window.SMP_CHINA_WALL;
   // D2 proof-only control: the approved neutral/amused image pair shares one
   // canvas; the toggle allows owner A/B checks without restarting the story.
   const proofModes = ["auto", "neutral", "amused", "confused", "annoyed", "exasperated", "laughing"];
@@ -472,12 +473,87 @@
     renderOffice();
   }
 
+  // GAME-SP2.2: the first playable Stephen scene lives after the approved
+  // 67-beat voiced office story. Preserve V3 saves and never lock a finale here.
+  function renderHoliday() {
+    reveal("holiday");
+    const inWall = state.holidayPhase === "wall";
+    $("chinaTransition").hidden = inWall;
+    $("wallScene").hidden = !inWall;
+    if (inWall) {
+      const position = Number.isInteger(state.wallStep)
+        ? Math.max(0, Math.min(state.wallStep, greatWall.lines.length)) : 0;
+      state.wallStep = position;
+      const choiceMade = state.wallDecision === "accept" || state.wallDecision === "decline";
+      $("wallPhoneText").textContent = greatWall.phoneText;
+      $("wallBookingLabel").textContent = state.pendingPlan === "cult"
+        ? greatWall.eveningPlan : "Nothing booked yet";
+      $("wallDialogue").hidden = position >= greatWall.lines.length;
+      $("wallNextButton").hidden = position >= greatWall.lines.length;
+      $("wallChoices").hidden = position !== greatWall.lines.length || choiceMade;
+      $("wallResult").hidden = !choiceMade;
+      if (position < greatWall.lines.length) {
+        const line = greatWall.lines[position];
+        $("wallSpeakerName").textContent = line.speaker.toUpperCase();
+        $("wallLineText").textContent = line.text;
+      }
+      $("wallProgressLabel").textContent = choiceMade ? "Great Wall decision saved"
+        : position >= greatWall.lines.length ? "Choose Stephen's evening plans"
+        : "Great Wall conversation · " + (position + 1) + " of " + greatWall.lines.length;
+      if (choiceMade) {
+        $("wallResultTitle").textContent = state.wallDecision === "accept"
+          ? "The Summit booked ✓" : "Invitation declined";
+        $("wallResultText").textContent = state.wallDecision === "accept"
+          ? greatWall.acceptReaction : greatWall.declineReaction;
+      }
+    }
+    persist();
+  }
+
   function showHoliday() {
     state.scene = "holiday";
     state.openingSeen = true;
     state.beatId = finalBeatId;
-    reveal("holiday");
-    persist();
+    state.holidayPhase = "transition";
+    state.wallStep = 0;
+    state.wallDecision = null;
+    state.pendingPlan = null;
+    renderHoliday();
+  }
+
+  function startWall() {
+    if (screens.holiday.hidden || state.holidayPhase === "wall") return;
+    state.holidayPhase = "wall";
+    state.wallStep = 0;
+    state.wallDecision = null;
+    state.pendingPlan = null;
+    if (typeof window.scrollTo === "function") window.scrollTo(0, 0);
+    renderHoliday();
+  }
+
+  function nextWallLine() {
+    if (screens.holiday.hidden || state.holidayPhase !== "wall" ||
+        state.wallDecision || state.wallStep >= greatWall.lines.length) return;
+    state.wallStep++;
+    renderHoliday();
+  }
+
+  function decideWall(decision) {
+    if (screens.holiday.hidden || state.holidayPhase !== "wall" ||
+        state.wallStep !== greatWall.lines.length || state.wallDecision ||
+        !["accept", "decline"].includes(decision)) return;
+    state.wallDecision = decision;
+    state.pendingPlan = decision === "accept" ? "cult" : null;
+    // The route is deliberately NOT committed until the third scene (SP2.3).
+    renderHoliday();
+  }
+
+  function replayWall() {
+    if (screens.holiday.hidden || state.holidayPhase !== "wall") return;
+    state.wallStep = 0;
+    state.wallDecision = null;
+    state.pendingPlan = null;
+    renderHoliday();
   }
 
   function showMenu() {
@@ -492,7 +568,7 @@
     const saved = readSave();
     if (!saved) { startOffice(); return; }
     state = saved;
-    if (state.scene === "holiday") showHoliday();
+    if (state.scene === "holiday") renderHoliday();
     else renderOffice();
   }
 
@@ -504,6 +580,11 @@
   $("restartButton").addEventListener("click", startOffice);
   $("replayButton").addEventListener("click", startOffice);
   $("homeButton").addEventListener("click", showMenu);
+  $("chinaStartButton").addEventListener("click", startWall);
+  $("wallNextButton").addEventListener("click", nextWallLine);
+  $("wallAcceptButton").addEventListener("click", () => decideWall("accept"));
+  $("wallDeclineButton").addEventListener("click", () => decideWall("decline"));
+  $("wallReplayButton").addEventListener("click", replayWall);
   $("soundButton").addEventListener("click", () => setSound(!soundEnabled, true));
   $("sceneSoundButton").addEventListener("click", () => setSound(!soundEnabled, true));
   $("menuSoundButton").addEventListener("click", () => setSound(!soundEnabled, true));

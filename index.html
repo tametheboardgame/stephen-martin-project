@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="./src/styles.css">
   <script defer src="./src/office-data.js"></script>
   <script defer src="./src/reactions.js"></script>
+  <script defer src="./src/china-data.js"></script>
   <script defer src="./src/game.js"></script>
   <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/david-office-seated-confident-v01.webp?v=4">
   <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/david-office-seated-systems-expert-v01.webp?v=1">
@@ -16,6 +17,8 @@
   <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/david-office-seated-frustrated-v01.webp?v=1">
   <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/david-office-seated-serious-v01.webp?v=1">
   <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/paul-office-seated-confused-v01.webp?v=1">
+  <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/locations/china-great-wall-background-v01.webp">
+  <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/stephen-holiday-standing-neutral-v01.webp">
   <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/paul-office-seated-pleased-v01.webp?v=1">
   <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/stephen-office-seated-amused-v01.webp?v=3">
   <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/stephen-office-seated-confused-v01.webp?v=1">
@@ -133,21 +136,50 @@
             </div>
       </section>
 
-      <section id="holidayScreen" class="screen holiday-screen" hidden>
-        <div class="holiday-graphic" aria-hidden="true">
-          <div class="holiday-sun"></div>
-          <div class="holiday-city">✦　✧　✦</div>
-          <div class="holiday-stamp">TO BE CONTINUED...</div>
-        </div>
-        <div class="holiday-copy">
-          <span class="kicker">OFFICE OPENING COMPLETE</span>
-          <h2>Meanwhile, Stephen's having a <em>lovely time.</em></h2>
-          <p>Next build: play as Stephen, explore a fictional holiday location and choose which spectacularly bad misunderstanding comes next.</p>
-          <div class="menu-actions">
-            <button id="replayButton" type="button" class="btn btn-primary">Replay the office <span aria-hidden="true">↺</span></button>
-            <button id="homeButton" type="button" class="btn btn-secondary">Main menu</button>
+      <section id="holidayScreen" class="screen holiday-screen china-screen" hidden aria-label="Chapter Two: Stephen in China">
+        <div id="chinaTransition" class="china-transition">
+          <img class="china-transition-art" src="./public/assets/generated/locations/chapter-two-days-later-title-v01.webp" alt="Chapter Two. Two days later... In China. Meanwhile, Stephen is having an absolutely wonderful time." loading="eager">
+          <div class="china-transition-actions">
+            <button id="chinaStartButton" class="btn btn-primary" type="button">Explore the Great Wall <span aria-hidden="true">→</span></button>
           </div>
-          <p class="preview-label">GAME-SP1.1-D7: voiced office dialogue preview. Upload script-ID MP3s to the dedicated GitHub branch folder to enable each line.</p>
+        </div>
+
+        <div id="wallScene" class="wall-scene" hidden>
+          <div class="wall-stage" aria-label="Stephen sightseeing at a stylised Great Wall" role="group">
+            <img class="wall-background" src="./public/assets/generated/locations/china-great-wall-background-v01.webp" alt="" loading="eager">
+            <img class="wall-stephen" src="./public/assets/generated/characters/stephen-holiday-standing-neutral-v01.webp" alt="Stephen standing at the Great Wall, holding his phone" loading="eager">
+            <div class="wall-place-label"><span>CHAPTER TWO · CHINA</span><strong>THE GREAT WALL</strong></div>
+            <div class="wall-booking" aria-live="polite"><span>TONIGHT'S PLAN</span><strong id="wallBookingLabel">Nothing booked yet</strong></div>
+            <div class="wall-phone" aria-label="Phone notification from David">
+              <div class="wall-phone-heading">✉ DAVID · RESCUE GROUP</div>
+              <p id="wallPhoneText">Please confirm you're safe. I've identified several geopolitical variables.</p>
+            </div>
+            <div class="wall-dialogue" id="wallDialogue">
+              <strong id="wallSpeakerName">STEPHEN</strong>
+              <p id="wallLineText" aria-live="polite"></p>
+            </div>
+          </div>
+          <div class="wall-action-strip">
+            <div class="wall-story-progress" id="wallProgressLabel" aria-live="off"></div>
+            <button type="button" id="wallNextButton" class="btn btn-primary">Next line <span aria-hidden="true">→</span></button>
+            <div id="wallChoices" class="wall-choices" hidden>
+              <h3>Stephen's decision: The Summit invitation</h3>
+              <p>A secluded mountain retreat. Spectacular views. Very friendly gentlemen.</p>
+              <button type="button" id="wallAcceptButton" class="wall-choice">A mountain full of handsome men? Sign me up.</button>
+              <button type="button" id="wallDeclineButton" class="wall-choice">Tempting, but I've got more sightseeing to do.</button>
+            </div>
+            <div id="wallResult" class="wall-result" hidden>
+              <strong id="wallResultTitle">Booking confirmed</strong>
+              <p id="wallResultText" aria-live="polite"></p>
+              <p class="wall-next-tease">Next: The Forbidden City (GAME-SP2.3 — coming next)</p>
+              <button id="wallReplayButton" type="button" class="btn btn-secondary">Replay Great Wall choice ↺</button>
+            </div>
+          </div>
+        </div>
+        <div class="china-footer">
+          <button id="replayButton" type="button" class="mini-button">Replay office ↺</button>
+          <button id="homeButton" type="button" class="mini-button">Main menu</button>
+          <span>GAME-SP2.2 · Great Wall playable preview · Fictional comedy</span>
         </div>
       </section>
     </main>

@@ -1294,3 +1294,113 @@ body:has(#menuScreen:not([hidden])) main {
   #officeScreen .expression-proof-controls { order: 2; }
   #officeScreen .d2-proof-button { order: initial; }
 }
+
+
+/* GAME-SP2.2: three approved, independent Chapter Two layers. The authored
+   title text is part of the approved card; explanatory alt text is on <img>. */
+#holidayScreen.china-screen {
+  display: block;
+  min-height: 0;
+  background: #101d30;
+  border: 2px solid #427c9f;
+  border-radius: 14px;
+}
+#holidayScreen .china-transition { position: relative; background: #152c49; }
+#holidayScreen .china-transition-art {
+  display: block; width: 100%; aspect-ratio: 1672 / 941; object-fit: contain;
+}
+#holidayScreen .china-transition-actions {
+  position: absolute; right: 3%; bottom: 3%; z-index: 2;
+}
+#holidayScreen .china-transition-actions .btn {
+  min-height: 46px; padding: 10px 19px; box-shadow: 4px 5px 0 rgba(0,0,0,.5);
+}
+#holidayScreen .wall-scene { background: #071c35; }
+#holidayScreen .wall-stage {
+  position: relative; width: 100%; aspect-ratio: 1672 / 941;
+  overflow: hidden; isolation: isolate;
+}
+#holidayScreen .wall-background {
+  position: absolute; inset: 0; height: 100%; width: 100%;
+  object-fit: cover; z-index: 0;
+}
+#holidayScreen .wall-stephen {
+  position: absolute; z-index: 2; height: 91%; width: auto; max-width: 51%;
+  left: 13%; bottom: 0; object-fit: contain; object-position: center bottom;
+  filter: drop-shadow(5px 6px 4px rgba(12,27,34,.38));
+}
+#holidayScreen .wall-place-label {
+  position: absolute; z-index: 3; left: 2%; top: 3%;
+  color: #f7efdb; background: rgba(5,30,55,.93);
+  border: 1px solid #7bc0dc; border-radius: 8px; padding: 9px 12px;
+}
+#holidayScreen .wall-place-label span { display:block; color:#86d7ff; font-size:10px; font-weight:900; letter-spacing:.13em; }
+#holidayScreen .wall-place-label strong { display:block; font-size:clamp(15px,1.8vw,24px); }
+#holidayScreen .wall-booking {
+  position: absolute; z-index: 3; left: 2%; top: 17%;
+  max-width: 34%; background: rgba(255,244,214,.94); color: #173349;
+  padding: 7px 11px; border-left: 5px solid #dd9d31; border-radius: 5px;
+}
+#holidayScreen .wall-booking span {display:block; font-size:10px; font-weight:900; letter-spacing:.12em}
+#holidayScreen .wall-booking strong {display:block; font-size:clamp(12px,1.4vw,18px)}
+#holidayScreen .wall-phone {
+  position:absolute; z-index:4; right:3%; top:4%; width:min(36%,380px);
+  border: 2px solid #6cc2da; background:rgba(7,25,45,.94); color:white;
+  border-radius: 13px; padding: 12px 14px; box-shadow: 6px 7px 0 rgba(0,0,0,.28);
+}
+#holidayScreen .wall-phone-heading { font-size:clamp(10px,1.05vw,13px);font-weight:900;color:#ffdb6c; }
+#holidayScreen .wall-phone p { margin:5px 0 0; font-size:clamp(12px,1.27vw,16px);line-height:1.3; }
+#holidayScreen .wall-dialogue {
+  position:absolute; z-index:5; bottom:3%; left:3%; width:min(94%,860px);
+  border: 4px solid #063058; border-radius: 12px; background:#fff5df;
+  color:#183348; padding: 12px 17px; box-shadow:6px 7px 0 rgba(5,30,50,.4);
+}
+#holidayScreen .wall-dialogue strong {
+  display:inline-block; background:#0e5389; color:#fff;
+  font-size:13px; font-weight:900; letter-spacing:.1em; padding:4px 10px;
+}
+#holidayScreen .wall-dialogue p {
+  font-size:clamp(14px,1.65vw,21px); font-weight:800; margin:7px 0 1px;
+  line-height:1.33;
+}
+#holidayScreen .wall-action-strip {display:flex;gap:14px;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:16px 3%;background:#0a2949;}
+#holidayScreen .wall-story-progress {font-weight:900;color:#dbecef;font-size:12px;letter-spacing:.04em}
+#holidayScreen .wall-action-strip .btn {min-height:45px}
+#holidayScreen .wall-choices,#holidayScreen .wall-result {width:100%;padding:4px 0 9px}
+#holidayScreen .wall-choices h3 {font-size:clamp(18px,2.2vw,26px);color:#ffe08c;margin:0 0 6px}
+#holidayScreen .wall-choices p,#holidayScreen .wall-result p {font-size:clamp(13px,1.35vw,16px);margin:4px 0 13px;color:#deebed}
+#holidayScreen .wall-choice {
+  display:block;width:100%; min-height:50px; margin-top:9px;padding:11px 14px;
+  text-align:left;font-size:clamp(13px,1.5vw,18px);font-weight:900;
+  border:2px solid #8dcbe5;border-radius:9px;background:#fff4d5;color:#0a2845;
+}
+#holidayScreen .wall-choice:hover,#holidayScreen .wall-choice:focus-visible {background:#ffdf87;border-color:#fff}
+#holidayScreen .wall-result strong {display:block;color:#ffda76;font-size:23px}
+#holidayScreen .wall-next-tease {font-weight:800;color:#a7cedd !important}
+#holidayScreen .china-footer {
+  background:#061b31;padding:11px 3%;display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+}
+#holidayScreen .china-footer span {margin-left:auto;color:#a0c2cb;font-size:11px;}
+@media (max-width:800px) {
+  #holidayScreen .wall-stage {aspect-ratio:4 / 3;}
+  #holidayScreen .wall-stephen {left:6%;max-width:55%;height:76%;}
+  #holidayScreen .wall-phone {top:3%;right:2%;width:53%;padding:8px;}
+  #holidayScreen .wall-place-label {left:2%;top:2%;padding:5px 8px;}
+  #holidayScreen .wall-place-label span {font-size:9px;}
+  #holidayScreen .wall-booking {left:2%;top:18%;padding:5px 7px;max-width:40%;}
+  #holidayScreen .wall-dialogue {left:2%;bottom:2%;width:96%;padding:8px 10px;border-width:3px;}
+  #holidayScreen .wall-dialogue p {font-size:clamp(12px,2.7vw,18px)}
+}
+@media (max-width:450px) {
+  #holidayScreen .wall-stage {aspect-ratio:3 / 4;}
+  #holidayScreen .wall-stephen {height:66%;left:-1%;bottom:14%;max-width:74%;}
+  #holidayScreen .wall-booking {top:17%;}
+  #holidayScreen .wall-place-label strong {font-size:13px;}
+  #holidayScreen .wall-dialogue p {font-size:13px;}
+  #holidayScreen .china-transition-actions {position:relative;padding:12px;right:auto;bottom:auto;}
+  #holidayScreen .china-transition-actions .btn {width:100%}
+  #holidayScreen .china-footer span {width:100%;margin:0;}
+}
+@media (prefers-reduced-motion:reduce) {
+  #holidayScreen .wall-stephen,#holidayScreen .wall-dialogue {transition:none !important;animation:none !important;}
+}
