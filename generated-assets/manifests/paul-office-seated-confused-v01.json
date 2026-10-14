@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1s00fXjB-6BfZdwYJSgfKDmbFdm1xUA1I"
+  },
+  "expectedSourceName": "paul-office-seated-confused-locked-v01.png",
+  "destination": "public/assets/generated/characters/paul-office-seated-confused-v01.webp",
+  "transform": {
+    "maxWidth": 1200,
+    "maxHeight": 1600,
+    "quality": 90
+  },
+  "revision": 1
+}
