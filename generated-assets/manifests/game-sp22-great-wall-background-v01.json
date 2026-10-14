@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1xfcvAEhntjKzYRrYez3iOztCSicllv6H"
+  },
+  "expectedSourceName": "china-great-wall-background-locked-v01.png",
+  "destination": "public/assets/generated/locations/china-great-wall-background-v01.webp",
+  "transform": {
+    "maxWidth": 1672,
+    "maxHeight": 941,
+    "quality": 84
+  },
+  "revision": 1
+}
