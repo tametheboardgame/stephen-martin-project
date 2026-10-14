@@ -1,4 +1,6 @@
-# SP-WP1.2: Opening office cutscene, complete first-pass script
+# SP-WP1.2: Opening office cutscene, historical first-pass script
+
+> Superseded (13 October 2026): The owner-approved screenplay is GAME-SP1.1-D3-OFFICE-SCRIPT.md. This file remains as the first-pass dialogue and historical save-position record.
 
 **Status:** **Approved by project owner 12 October 2026** as GAME-SP1 opening baseline. Dialogue may be tightened during human playtesting without silently changing the approved story structure.  
 **Screen ID:** OFFICE-INTRO  

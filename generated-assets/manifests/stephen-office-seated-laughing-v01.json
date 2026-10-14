@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1ADZg5-Qz1N6_E2HWdttLUz8RAfCmxEtn"
+  },
+  "expectedSourceName": "stephen-office-seated-laughing-d2-v01.png",
+  "destination": "public/assets/generated/characters/stephen-office-seated-laughing-v01.webp",
+  "transform": {
+    "maxWidth": 1200,
+    "maxHeight": 1600,
+    "quality": 90
+  },
+  "revision": 1
+}

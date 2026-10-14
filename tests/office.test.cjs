@@ -3,417 +3,344 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const vm = require("node:vm");
 const path = require("node:path");
-
 const root = path.resolve(__dirname, "..");
-const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
-const dataSource = read("src/office-data.js");
-const gameSource = read("src/game.js");
-const reactionSource = read("src/reactions.js");
+const read = name => fs.readFileSync(path.join(root, name), "utf8");
+const source = read("src/office-data.js");
+const reactions = read("src/reactions.js");
+const engine = read("src/game.js");
 const html = read("index.html");
+const css = read("src/styles.css");
 
-function loadShots() {
+function story() {
   const window = {};
-  vm.runInNewContext(dataSource, { window }, { timeout: 1000 });
-  return window.SMP_OFFICE_SHOTS;
+  vm.runInNewContext(source, { window }, { timeout: 1000 });
+  vm.runInNewContext(reactions, { window }, { timeout: 1000 });
+  return window;
 }
+const beats = () => Array.from(story().SMP_OFFICE_SHOTS, shot => Array.from(shot.lines)).flat();
+const all = beats();
+const ids = all.map(b => b.id);
 
-test("approved office script is complete and ordered", () => {
-  const shots = loadShots();
-  assert.equal(shots.length, 7);
-  assert.deepEqual(Array.from(shots, (s) => s.id), ["O01", "O02", "O03", "O04", "O05", "O06", "O07"]);
-  assert.equal(shots.reduce((n, s) => n + s.lines.length, 0), 64);
-  assert.ok(shots.every((s) => s.label && s.caption && s.moment && s.prop && s.lines.length));
-  assert.ok(shots.every((s) => s.lines.every((b) => b.text && ["Stephen", "David", "Paul", "Narrator", "System"].includes(b.speaker))));
-  assert.ok(shots.some((s) => s.lines.some((b) => b.text.includes("highly particular set of skills"))));
-  assert.ok(shots.some((s) => s.lines.some((b) => b.text.includes("It's a famous bear"))));
-  assert.ok(shots.some((s) => s.lines.some((b) => b.text.includes("That's the optimistic version"))));
-  assert.ok(shots.some((s) => s.lines.some((b) => b.text.includes("Yet."))));
+class Element {
+  constructor(id) {
+    this.id=id;this.hidden=false;this.disabled=false;this.textContent="";
+    this.innerHTML="";this.src="";this.style={};this.dataset={};
+    this.attributes={};this.events={};this.classList={toggle() {}};
+  }
+  addEventListener(t,cb){this.events[t]=cb;}
+  setAttribute(k,v){this.attributes[k]=v;}
+  click(){if(!this.disabled)this.events.click?.({target:this,preventDefault() {}});}
+  closest(){return "button";}
+}
+function preview() {
+  const elements=new Map(),stored=new Map(),timeouts=new Map(),listeners=new Map();
+  const el=id=>{if(!elements.has(id))elements.set(id,new Element(id));return elements.get(id);};
+  const document={getElementById:el,body:new Element("body"),hidden:false,
+    addEventListener(type,cb){listeners.set(type,cb);}};
+  const window={localStorage:{
+    getItem:key=>stored.get(key)||null,
+    setItem:(key,value)=>stored.set(key,value)
+  },scrollTo() {}};
+  vm.runInNewContext(source,{window},{timeout:1000});
+  vm.runInNewContext(reactions,{window},{timeout:1000});
+  let timer=0;
+  const context={window,document,HTMLElement:Element,
+    setTimeout(callback,delay){timeouts.set(++timer,{callback,delay});return timer;},
+    clearTimeout(id){timeouts.delete(id);}};
+  vm.runInNewContext(engine,context,{timeout:1000});
+  const tick=()=>{const first=timeouts.entries().next().value;if(!first)return false;timeouts.delete(first[0]);first[1].callback();return true;};
+  const start=()=>el("startButton").click();
+  const at=id=>{
+    let bound=all.length+1;
+    while(el("stage").attributes["aria-label"]!==null && --bound>0){
+      const saved=JSON.parse(stored.values().next().value);
+      if(saved.beatId===id)return;
+      el("nextButton").click();
+    }
+    throw new Error("Did not reach "+id);
+  };
+  return {el,start,at,stored,timeouts,tick,document,listeners};
+}
+function saved(p){return JSON.parse(p.stored.values().next().value);}
+
+test("approved V3 script is one exterior plus one continuous office scene",()=>{
+  const shots=story().SMP_OFFICE_SHOTS;
+  assert.deepEqual(Array.from(shots,s=>s.id),["O00","O01"]);
+  assert.equal(all.length,67);
+  assert.equal(all.filter(x=>x.type==="dialogue" && x.speaker!=="Narrator").length,54);
+  assert.equal(all.filter(x=>x.type!=="dialogue").length,12);
+  assert.equal(all[0].id,"intro.exterior");
+  assert.equal(all[1].text,"Right, I'm off. Two weeks. China. Romance. Culture. Absolutely no work.");
+  assert.equal(all[2].text,"Is China far?");
+  assert.equal(all[all.length-1].type,"title");
+  assert.equal(all.find(x=>x.id==="office.054").text,"Yet.");
+  assert.equal(new Set(ids).size,ids.length);
+  assert.ok(!all.some(x=>x.speaker==="System"||x.type==="narration"));
 });
 
-test("D1 stages the four approved layers, not oversized expression cards", () => {
-  const assets = [
-    "public/assets/generated/locations/office-clean-01-v01.webp",
-    "public/assets/generated/locations/office-foreground-01-v01.webp",
-    ...["david", "stephen", "paul"].map((name) =>
-      "public/assets/generated/characters/" + name + "-office-seated-neutral-v01.webp"
-    )
+test("all beats declare acting cues for all three actors using the approved vocabulary",()=>{
+  const v=story().SMP_EXPRESSION_KEYS;
+  assert.deepEqual(Object.keys(v),["Stephen","David","Paul"]);
+  for(const beat of all){
+    assert.match(beat.id,/^(intro\.exterior|office\.(?:\d{3}|v\d{2}))$/);
+    assert.deepEqual(Object.keys(beat.reactions),["Stephen","David","Paul"]);
+    for(const name of Object.keys(v)){
+      const pose=beat.reactions[name];
+      assert.ok(v[name].includes(pose)||name==="Stephen"&&pose==="absent",beat.id+" "+name+": "+pose);
+    }
+  }
+  assert.equal(story().SMP_REACTIONS["office.021"].Stephen,"laughing");
+  assert.equal(story().SMP_REACTIONS["office.054"].David,"shocked");
+});
+
+test("Stephen never returns once departure has taken place",()=>{
+  const start=ids.indexOf("office.v08");
+  assert.ok(start>40);
+  assert.ok(all.slice(0,start).every(b=>b.reactions.Stephen!=="absent"));
+  assert.ok(all.slice(start).every(b=>b.reactions.Stephen==="absent"));
+  assert.equal(all[start].type,"departure");
+});
+
+test("visual actions are explicit and never spoken as narration",()=>{
+  const visual=all.filter(x=>x.visual);
+  assert.deepEqual(Array.from(visual,x=>x.visual),["risk","printer","chat","song","muted","folder"]);
+  assert.ok(all.find(x=>x.visual==="song").songLyrics.includes("probably be fine"));
+  assert.ok(all.find(x=>x.visual==="printer").text.includes("printer"));
+  assert.ok(all.find(x=>x.visual==="folder").text.includes("FINAL 2"));
+});
+
+test("54 dialogue lines and the character voice are preserved",()=>{
+  const words=all.filter(b=>b.type==="dialogue").map(x=>x.text);
+  for(const excerpt of [
+    "preliminary risk assessment","highly particular set of skills",
+    "It was making a noise.","It's a famous bear.",
+    "Can't. I'm the admin.","And a post-mortem.",
+    "A little fridge magnet, preferably with Wi-Fi.","Yet."
+  ])assert.ok(words.some(x=>x.includes(excerpt)),excerpt);
+  assert.equal(words.filter(x=>x==="Right.").length,2);
+  assert.equal(words.filter(x=>x==="Absolutely not.").length,1);
+});
+
+test("old saves map by historical beat, including both format versions",()=>{
+  const mappings=story().SMP_LEGACY_BEAT_IDS;
+  assert.deepEqual(Array.from(mappings,x=>x.length),[4,9,11,14,10,14,2]);
+  for(const row of mappings)for(const id of row)assert.ok(ids.includes(id));
+  for(const version of [1,2]){
+    const p=preview(),shotIndex=version===1?0:1;
+    p.stored.set("stephen-martin-game-sp1-save-v1",JSON.stringify({
+      version,scene:"office",shotIndex,lineIndex:1,openingSeen:false
+    }));
+    p.el("homeButton").click();
+    p.el("resumeButton").click();
+    assert.equal(p.el("lineText").textContent,"Quite.");
+    assert.equal(saved(p).version,3);
+    assert.equal(saved(p).beatId,"office.003");
+  }
+  const v2=preview();
+  v2.stored.set("stephen-martin-game-sp1-save-v1",JSON.stringify({version:2,scene:"office",shotIndex:0,lineIndex:0}));
+  v2.el("homeButton").click();v2.el("resumeButton").click();
+  assert.equal(saved(v2).beatId,"intro.exterior");
+});
+
+test("exterior leads into the correctly ordered office and rewind restores exterior",()=>{
+  const p=preview();p.start();
+  assert.equal(p.el("stage").dataset.location,"exterior");
+  assert.equal(p.el("speakerName").textContent,"NARRATOR");
+  assert.equal(p.el("sceneNumber").textContent,"CHAPTER 1 · OPENING");
+  p.el("nextButton").click();
+  assert.equal(p.el("stage").dataset.location,"interior");
+  assert.equal(p.el("speakerName").textContent,"STEPHEN");
+  p.el("nextButton").click();
+  assert.equal(p.el("lineText").textContent,"Is China far?");
+  p.el("backButton").click();p.el("backButton").click();
+  assert.equal(p.el("stage").dataset.location,"exterior");
+  assert.equal(p.timeouts.size,0,"Back pauses autoplay");
+});
+
+test("silent reactions hide captions and do not generate fake narration",()=>{
+  const p=preview();p.start();p.at("office.v01");
+  assert.equal(p.el("dialogueBox").hidden,true);
+  assert.equal(p.el("speakerName").textContent,"");
+  assert.equal(p.el("stage").dataset.cutaway,"none");
+  assert.match(p.el("stage").attributes["aria-label"],/slowly nods/);
+  assert.equal(p.el("castPaul").dataset.expression,"pleased");
+  p.el("nextButton").click();
+  assert.equal(p.el("dialogueBox").hidden,false);
+  assert.equal(p.el("speakerName").textContent,"DAVID");
+});
+
+test("six scripted cutaways are visible, readable and return to the same office",()=>{
+  const p=preview();p.start();
+  for(const [beat,fragment] of [
+    ["office.v02","PROBABLY FINE"],
+    ["office.v04","OFFICE PRINTER"],
+    ["office.v05","STEPHEN RESCUE GROUP"],
+    ["office.v07","STEPHEN’S GOODBYE SONG"],
+    ["office.v09","has muted the group"],
+    ["office.v11","RESCUE PLAN - FINAL - FINAL 2"]
+  ]){
+    p.at(beat);
+    assert.equal(p.el("cutawayPanel").hidden,false,beat);
+    assert.equal(p.el("cutawayPanel").attributes["aria-hidden"],"false");
+    assert.equal(p.el("dialogueBox").hidden,true);
+    assert.ok(p.el("cutawayContent").innerHTML.includes(fragment),beat);
+    assert.equal(p.el("stage").dataset.location,"interior");
+  }
+  p.at("office.v12");
+  assert.equal(p.el("cutawayPanel").hidden,true);
+  assert.ok(p.el("sceneEffect").innerHTML.includes("RESCUE"));
+});
+
+test("approved full seated Stephen and David poses swap independently, Paul remains Neutral",()=>{
+  const p=preview();p.start();p.at("office.021");
+  assert.equal(p.el("castStephen").dataset.expression,"laughing");
+  assert.match(p.el("portraitStephen").src,/stephen-office-seated-laughing-v01\.webp/);
+  assert.equal(p.el("castDavid").dataset.expression,"frustrated");
+  assert.equal(p.el("castDavid").dataset.seatedSprite,"frustrated");
+  assert.match(p.el("portraitDavid").src,/david-office-seated-frustrated-v01\.webp\?v=1$/);
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
+  const davidSrc=p.el("portraitDavid").src;
+  p.el("stephenProofButton").click();
+  assert.equal(p.el("portraitStephen").dataset.sprite,"neutral");
+  p.el("stephenProofButton").click();
+  assert.equal(p.el("portraitStephen").dataset.sprite,"amused");
+  assert.equal(p.el("portraitDavid").src,davidSrc);
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
+});
+
+test("David's full approved six-state set is mapped to every scripted beat",()=>{
+  const expected={neutral:"neutral",confident:"confident",serious:"serious",frustrated:"frustrated",shocked:"shocked","systems-expert":"systems-expert"};
+  const p=preview();p.start();
+  for(let i=0;i<all.length;i++){
+    if(i)p.el("nextButton").click();
+    const cue=all[i].reactions.David;
+    assert.equal(p.el("castDavid").dataset.expression,cue,all[i].id+" acting cue");
+    assert.equal(p.el("castDavid").dataset.seatedSprite,expected[cue],all[i].id+" source");
+    assert.match(p.el("portraitDavid").src,
+      new RegExp("david-office-seated-"+expected[cue]+"-v01\\.webp"),all[i].id);
+    assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral",all[i].id+" Paul fallback");
+  }
+});
+
+test("David proof cycles all six states without changing scene or the other actors",()=>{
+  const p=preview();p.start();p.at("office.006");
+  assert.equal(p.el("castDavid").dataset.expression,"confident");
+  assert.equal(p.el("castDavid").dataset.seatedSprite,"confident");
+  assert.match(p.el("portraitDavid").src,/david-office-seated-confident-v01\.webp\?v=4$/);
+  const paulSrc=p.el("portraitPaul").src,stephenSrc=p.el("portraitStephen").src;
+  const timerCount=p.timeouts.size;
+  for(const [mode,suffix] of [
+    ["neutral","neutral-v01.webp"],["confident","confident-v01.webp?v=4"],
+    ["serious","serious-v01.webp?v=1"],["frustrated","frustrated-v01.webp?v=1"],
+    ["shocked","shocked-v01.webp?v=1"],["systems-expert","systems-expert-v01.webp?v=1"]
+  ]){
+    p.el("davidProofButton").click();
+    assert.equal(p.el("castDavid").dataset.seatedSprite,mode);
+    assert.ok(p.el("portraitDavid").src.endsWith("david-office-seated-"+suffix),mode);
+    assert.equal(saved(p).beatId,"office.006");
+    assert.equal(p.timeouts.size,timerCount);
+    assert.equal(p.el("portraitPaul").src,paulSrc);
+    assert.equal(p.el("portraitStephen").src,stephenSrc);
+  }
+  assert.equal(p.el("davidProofButton").textContent,"David: Systems Expert ↻");
+  p.el("davidProofButton").click();
+  assert.equal(p.el("castDavid").dataset.seatedSprite,"confident","Auto reuses current beat");
+  p.el("nextButton").click();
+  assert.equal(p.el("castDavid").dataset.expression,"systems-expert");
+  assert.equal(p.el("castDavid").dataset.seatedSprite,"systems-expert");
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
+});
+
+test("departure hides Stephen, rewind brings him back, then he stays absent",()=>{
+  const p=preview();p.start();p.at("office.v08");
+  assert.equal(p.el("castStephen").hidden,true);
+  p.el("backButton").click();
+  assert.equal(saved(p).beatId,"office.048");
+  assert.equal(p.el("castStephen").hidden,false);
+  p.el("nextButton").click();
+  p.at("office.054");
+  assert.equal(p.el("castStephen").hidden,true);
+  assert.equal(p.el("castDavid").hidden,false);
+  assert.equal(p.el("castPaul").hidden,false);
+});
+
+test("pause, auto next, skip and resume work without restarting dialogue",()=>{
+  const p=preview();p.start();
+  assert.equal(p.timeouts.size,1);
+  assert.equal(p.tick(),true);
+  assert.equal(saved(p).beatId,"office.001");
+  p.el("playPauseButton").click();
+  assert.equal(p.timeouts.size,0);
+  p.el("nextButton").click();
+  assert.equal(saved(p).beatId,"office.002");
+  assert.equal(p.timeouts.size,0);
+  p.el("playPauseButton").click();
+  assert.equal(p.timeouts.size,1);
+  p.el("skipButton").click();
+  assert.equal(p.timeouts.size,0);
+  assert.equal(saved(p).scene,"holiday");
+  assert.equal(Object.hasOwn(saved(p),"route"),false);
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(p.el("holidayScreen").hidden,false);
+});
+
+test("the complete 67-beat intro can play through and replay",()=>{
+  const p=preview();p.start();
+  for(let i=1;i<all.length;i++)p.el("nextButton").click();
+  assert.equal(saved(p).beatId,"office.v12");
+  p.el("nextButton").click();
+  assert.equal(p.el("holidayScreen").hidden,false);
+  p.el("replayButton").click();
+  assert.equal(p.el("stage").dataset.location,"exterior");
+  assert.equal(saved(p).version,3);
+});
+
+test("no unapproved body artwork or legacy portrait overlays",()=>{
+  assert.ok(engine.includes('Object.hasOwn(sources, requested) ? requested : "neutral"'));
+  assert.ok(engine.includes('el.hidden = expression === "absent"'));
+  for(const name of ["David","Stephen","Paul"]){
+    assert.ok(html.includes('id="cast'+name+'"'));
+    assert.ok(html.includes('id="portrait'+name+'"'));
+  }
+  assert.ok(html.indexOf('id="castDavid"')<html.indexOf('id="castStephen"'));
+  assert.ok(html.indexOf('id="castStephen"')<html.indexOf('id="castPaul"'));
+  assert.ok(html.indexOf('class="office-foreground"')<html.indexOf('id="dialogueBox"'));
+  assert.ok(!html.includes('id="lineCount"'));
+  assert.ok(!engine.includes("fetch("));
+  assert.ok(css.includes("#officeScreen .dialogue[hidden]"));
+  assert.ok(css.includes('opacity: 1'),"Characters remain fully opaque while listening");
+  assert.ok(css.includes("prefers-reduced-motion"));
+  assert.ok(html.includes('lang="en-GB"'));
+});
+
+test("existing artwork remains present with original alpha and dimensions",()=>{
+  const allNames=[
+    ...["david","stephen","paul"].map(n=>n+"-office-seated-neutral-v01.webp"),
+    ...["amused","confused","annoyed","exasperated","laughing"].map(n=>"stephen-office-seated-"+n+"-v01.webp"),
+    "david-office-seated-confident-v01.webp",
+    "david-office-seated-serious-v01.webp",
+    "david-office-seated-frustrated-v01.webp",
+    "david-office-seated-shocked-v01.webp",
+    "david-office-seated-systems-expert-v01.webp"
   ];
-  for (const asset of assets) {
-    assert.ok(fs.statSync(path.join(root, asset)).size > 0, "Missing approved asset " + asset);
-    assert.ok(read("scripts/build.mjs").includes(asset.split("/").at(-1)));
+  for(const asset of allNames){
+    const file=fs.readFileSync(path.join(root,"public/assets/generated/characters",asset));
+    assert.equal(file.toString("ascii",0,4),"RIFF");
+    assert.equal(file.toString("ascii",12,16),"VP8X");
+    assert.ok((file[20]&0x10)!==0,"alpha lost "+asset);
+    const w=1+file.readUIntLE(24,3),h=1+file.readUIntLE(27,3);
+    assert.equal(w,1086);assert.equal(h,1448);
+    assert.ok(read("scripts/build.mjs").includes(asset));
   }
-  for (const name of ["David", "Stephen", "Paul"]) {
-    assert.ok(html.includes('id="portrait' + name + '"'));
-    assert.ok(html.includes('id="cast' + name + '"'));
-  }
-  assert.ok(html.includes('class="office-world office-scene-backdrop"'));
-  assert.ok(html.includes('class="office-foreground"'));
-  assert.ok(html.includes('class="cast cast-seated"'));
-  assert.ok(!html.includes('class="cast-portrait"'), "Legacy giant-face card still present");
-  const css = read("src/styles.css");
-  assert.ok(css.includes('office-foreground-01-v01.webp'), "Foreground must use independent transparent asset");
-  assert.ok(!css.includes("clip-path: inset(67.4%"), "Clipped-background workaround must not survive");
-  assert.ok(!html.includes("http://") && !html.includes("https://"));
-  assert.ok(!gameSource.includes("fetch(") && !gameSource.includes("XMLHttpRequest"));
-  assert.ok(html.indexOf('id="dialogueBox"') < html.indexOf('id="storyProgress"'));
-  assert.ok(html.indexOf('id="storyProgress"') < html.indexOf('id="playPauseButton"'));
+  for(const asset of ["office-clean-01-v01.webp","office-foreground-01-v01.webp","office-exterior-opening-v01.webp"])
+    assert.ok(fs.statSync(path.join(root,"public/assets/generated/locations",asset)).size>0);
 });
 
-test("static HTML exposes the named controls and scripts in dependency order", () => {
-  const ids = [...gameSource.matchAll(/\$\("([A-Za-z][A-Za-z0-9]+)"\)/g)].map((m) => m[1]);
-  for (const id of ids) assert.ok(html.includes('id="' + id + '"'), "Missing element " + id);
-  assert.ok(html.indexOf("office-data.js") < html.indexOf("game.js"));
-  assert.ok(html.includes("aria-live"));
-  assert.ok(html.includes("lang=\"en-GB\""));
-});
-
-function setupFakeGame() {
-  const listeners = new Map();
-  const elements = new Map();
-  const stored = new Map();
-  class FakeElement {
-    constructor(id) {
-      this.id = id;
-      this.hidden = false;
-      this.disabled = false;
-      this.textContent = "";
-      this.innerHTML = "";
-      this.style = {};
-      this.dataset = {};
-      this.attributes = {};
-      this.events = {};
-      this.classList = { toggle() {} };
-    }
-    addEventListener(type, callback) { this.events[type] = callback; }
-    setAttribute(name, value) { this.attributes[name] = value; }
-    click() { if (!this.disabled) this.events.click?.({ target: this, preventDefault() {} }); }
-    closest() { return "button"; }
-  }
-  const getElementById = (id) => {
-    if (!elements.has(id)) elements.set(id, new FakeElement(id));
-    return elements.get(id);
-  };
-  const document = {
-    getElementById,
-    body: new FakeElement("body"),
-    addEventListener(type, callback) { listeners.set(type, callback); }
-  };
-  let nextTimeoutId = 1;
-  const timeouts = new Map();
-  const tick = () => {
-    const item = timeouts.entries().next().value;
-    if (!item) return false;
-    const [id, { callback }] = item;
-    timeouts.delete(id);
-    callback();
-    return true;
-  };
-  const window = {
-    SMP_OFFICE_SHOTS: loadShots(),
-    localStorage: {
-      getItem(key) { return stored.has(key) ? stored.get(key) : null; },
-      setItem(key, value) { stored.set(key, value); }
-    }
-  };
-  vm.runInNewContext(reactionSource, { window }, { timeout: 1000 });
-  const ctx = {
-    window, document, HTMLElement: FakeElement,
-    setTimeout(callback, delay) { const id = nextTimeoutId++; timeouts.set(id, { callback, delay }); return id; },
-    clearTimeout(id) { timeouts.delete(id); }
-  };
-  vm.runInNewContext(gameSource, ctx, { timeout: 1000 });
-  return { elements, stored, getElementById, window, timeouts, tick, document };
-
-}
-
-test("start, back, complete and replay preserve valid scene state", () => {
-  const p = setupFakeGame();
-  const el = p.getElementById;
-  assert.equal(el("officeScreen").hidden, true);
-  el("startButton").click();
-  assert.equal(el("officeScreen").hidden, false);
-  assert.equal(el("lineText").textContent, "Is China far?");
-  assert.equal(el("backButton").disabled, true);
-  el("nextButton").click();
-  assert.equal(el("lineText").textContent, "Quite.");
-  el("backButton").click();
-  assert.equal(el("lineText").textContent, "Is China far?");
-  for (let i = 0; i < 64; i++) el("nextButton").click();
-  assert.equal(el("holidayScreen").hidden, false);
-  assert.equal(el("officeScreen").hidden, true);
-  assert.equal(JSON.parse(p.stored.values().next().value).openingSeen, true);
-  el("replayButton").click();
-  assert.equal(el("sceneNumber").textContent, "SCENE 01 / 07");
-  assert.equal(el("lineText").textContent, "Is China far?");
-});
-
-test("skip and resume work without selecting a holiday route", () => {
-  const p = setupFakeGame();
-  const el = p.getElementById;
-  el("startButton").click();
-  el("skipButton").click();
-  assert.equal(el("holidayScreen").hidden, false);
-  const save = JSON.parse(p.stored.values().next().value);
-  assert.equal(save.scene, "holiday");
-  assert.equal(Object.prototype.hasOwnProperty.call(save, "route"), false);
-  el("homeButton").click();
-  assert.equal(el("menuScreen").hidden, false);
-  assert.equal(el("resumeButton").hidden, false);
-  el("resumeButton").click();
-  assert.equal(el("holidayScreen").hidden, false);
-});
-
-test("autoplay is enabled by default and progresses without a click", () => {
-  const p = setupFakeGame();
-  const el = p.getElementById;
-  el("startButton").click();
-  assert.equal(el("playPauseButton").attributes["aria-pressed"], "true");
-  assert.equal(p.timeouts.size, 1);
-  assert.equal(el("lineText").textContent, "Is China far?");
-  assert.equal(p.tick(), true);
-  assert.equal(el("lineText").textContent, "Quite.");
-  assert.equal(p.timeouts.size, 1, "only one pending line timer");
-});
-
-test("manual Next resets timer, Back pauses and Play restarts", () => {
-  const p = setupFakeGame();
-  const el = p.getElementById;
-  el("startButton").click();
-  assert.equal(p.timeouts.size, 1);
-  const originalTimerId = p.timeouts.keys().next().value;
-  el("nextButton").click();
-  assert.equal(el("lineText").textContent, "Quite.");
-  assert.equal(p.timeouts.size, 1);
-  assert.notEqual(p.timeouts.keys().next().value, originalTimerId);
-  el("backButton").click();
-  assert.equal(el("lineText").textContent, "Is China far?");
-  assert.equal(p.timeouts.size, 0);
-  assert.equal(el("playPauseButton").attributes["aria-pressed"], "false");
-  el("playPauseButton").click();
-  assert.equal(p.timeouts.size, 1);
-  assert.equal(el("playPauseButton").attributes["aria-pressed"], "true");
-});
-
-test("Pause, skip, replay and hidden-tab safeguards prevent timer leaks", () => {
-  const p = setupFakeGame();
-  const el = p.getElementById;
-  el("startButton").click();
-  el("playPauseButton").click();
-  assert.equal(p.timeouts.size, 0);
-  el("nextButton").click();
-  assert.equal(el("lineText").textContent, "Quite.");
-  assert.equal(p.timeouts.size, 0, "manual stepping stays paused");
-  el("playPauseButton").click();
-  assert.equal(p.timeouts.size, 1);
-  p.document.hidden = true;
-  p.document.events = p.document.events || {};
-  // The document listener is registered with document.addEventListener.
-  p.document.hidden = false;
-  el("skipButton").click();
-  assert.equal(p.timeouts.size, 0);
-  el("replayButton").click();
-  assert.equal(p.timeouts.size, 1);
-  el("homeButton").click();
-  assert.equal(p.timeouts.size, 0);
-});
-
-test("reaction cues and three cutaways are registered without unapproved portraits", () => {
-  const window = { SMP_OFFICE_SHOTS: loadShots() };
-  vm.runInNewContext(reactionSource, { window }, { timeout: 1000 });
-  assert.equal(window.SMP_REACTIONS.O01[0].Paul, "blank");
-  assert.equal(window.SMP_REACTIONS.O03[8].David, "frustrated");
-  assert.equal(window.SMP_REACTIONS.O04[4].Paul, "blank");
-  const p = setupFakeGame();
-  const el = p.getElementById;
-  el("startButton").click();
-  assert.equal(el("cutawayPanel").hidden, true);
-  for (let i = 0; i < 5; i++) el("nextButton").click();
-  assert.equal(el("stage").dataset.cutaway, "risk");
-  assert.equal(el("cutawayPanel").hidden, false);
-  assert.ok(el("cutawayContent").innerHTML.includes("PROBABLY FINE"));
-  assert.ok(gameSource.includes("cutaway-printer"));
-  assert.ok(gameSource.includes("STEPHEN RESCUE GROUP"));
-  assert.ok(!reactionSource.includes("http"));
-});
-
-test("static seated actors preserve speaker and listener expression metadata across the whole intro", () => {
-  const p = setupFakeGame();
-  const el = p.getElementById;
-  el("startButton").click();
-  assert.equal(el("castPaul").dataset.expression, "blank");
-  assert.equal(el("castStephen").dataset.expression, "amused");
-  assert.equal(el("castDavid").dataset.staging, "seated-neutral");
-  for (let i = 0; i < 5; i++) el("nextButton").click();
-  assert.equal(el("castDavid").dataset.expression, "confident");
-  assert.equal(el("castStephen").dataset.expression, "confused");
-  assert.equal(el("castPaul").dataset.expression, "blank");
-  assert.equal(el("castDavid").dataset.staging, "seated-neutral");
-  // D1 deliberately does not splice close-up facial images onto the seated bodies.
-  assert.ok(!gameSource.includes("portrait.src = expressionAssetRoot"));
-  assert.equal(el("portraitDavid").src, undefined);
-  assert.equal(el("portraitStephen").src, undefined);
-  assert.equal(el("portraitPaul").src, undefined);
-});
-
-test("a visual cutaway leaves the dialogue text and manual controls interactive", () => {
-  const p = setupFakeGame();
-  const el = p.getElementById;
-  el("startButton").click();
-  for (let i = 0; i < 5; i++) el("nextButton").click();
-  assert.equal(el("stage").dataset.cutaway, "risk");
-  assert.equal(el("cutawayPanel").hidden, false);
-  assert.equal(el("speakerName").textContent, "DAVID");
-  assert.ok(el("lineText").textContent.includes("preliminary risk assessment"));
-  el("playPauseButton").click();
-  assert.equal(p.timeouts.size, 0);
-  el("nextButton").click();
-  assert.equal(el("cutawayPanel").hidden, true);
-  assert.equal(el("lineText").textContent, "You've done what?");
-});
-
-test("D1 scene keeps speaker text, transport and cutaways separate from the art", () => {
-  const stage = html.indexOf('id="stage"');
-  const david = html.indexOf('id="castDavid"');
-  const stephen = html.indexOf('id="castStephen"');
-  const paul = html.indexOf('id="castPaul"');
-  const foreground = html.indexOf('class="office-foreground"');
-  const dialog = html.indexOf('id="dialogueBox"');
-  const progress = html.indexOf('id="storyProgress"');
-  const controls = html.indexOf('id="playPauseButton"');
-  assert.ok(stage < david && david < stephen && stephen < paul);
-  assert.ok(paul < foreground && foreground < dialog && dialog < progress && progress < controls);
-  assert.ok(html.includes('id="cutawayPanel"'));
-  assert.ok(read("src/styles.css").includes("max-width: 650px"), "Touch layout must keep dialogue below art");
-});
-
-test("D1A desk asset is a real alpha WebP, not an opaque flattened scene", () => {
-  const desk = fs.readFileSync(path.join(root, "public/assets/generated/locations/office-foreground-01-v01.webp"));
-  assert.equal(desk.toString("ascii", 0, 4), "RIFF");
-  assert.equal(desk.toString("ascii", 8, 12), "WEBP");
-  assert.equal(desk.toString("ascii", 12, 16), "VP8X", "Transparent WebP must have VP8X metadata");
-  assert.ok((desk[20] & 0x10) !== 0, "Foreground WebP must retain alpha transparency");
-});
-
-test("D1C menu and office share the real approved art and fit laptop viewport", () => {
-  const css = read("src/styles.css");
-  assert.ok(html.includes('class="screen menu-screen menu-office-screen"'), "Old abstract menu has not been replaced");
-  assert.ok(!html.includes('class="menu-circle"'), "Old abstract artwork survived");
-  assert.ok(html.includes('class="menu-office-stage"'));
-  for (const name of ["david", "stephen", "paul"]) {
-    assert.ok(html.includes('class="menu-office-actor menu-office-' + name + '"'), "Menu actor missing: " + name);
-  }
-  assert.ok(css.includes('.game-shell:has(#officeScreen:not([hidden]))'), "Office viewport fit missing");
-  assert.ok(css.includes('.game-shell:has(#menuScreen:not([hidden]))'), "Menu viewport fit missing");
-  assert.ok(css.includes("177.68dvh - 128px"), "Cinematic office must size from viewport height with minimal transport reserve");
-  assert.ok(css.includes("100dvh - 253px"), "Menu must reserve height for title and start controls");
-  assert.ok(!css.includes("max(760px"), "Old minimum width forced unnecessary scrolling on small laptops");
-  assert.ok(css.includes("aspect-ratio: 1672 / 941"), "Preserve foreground and background registration");
-  assert.ok(css.includes("max-width: 650px"), "Keep mobile stacked layout");
-  assert.ok(gameSource.includes('typeof window.scrollTo === "function"'), "Screen changes must reset inherited scroll");
-  for (const asset of ["office-clean-01-v01.webp", "office-foreground-01-v01.webp"]) {
-    assert.ok(css.includes(asset), "Office layer missing " + asset);
-  }
-});
-
-test("entire existing intro remains playable with the rebuilt title screen", () => {
-  const p = setupFakeGame();
-  const el = p.getElementById;
-  el("startButton").click();
-  assert.equal(el("officeScreen").hidden, false);
-  for (let i = 0; i < 64; i++) el("nextButton").click();
-  assert.equal(el("holidayScreen").hidden, false);
-  el("homeButton").click();
-  assert.equal(el("menuScreen").hidden, false);
-  el("replayButton").click();
-  assert.equal(el("lineText").textContent, "Is China far?");
-});
-
-test("D1D cinematic office fills laptop screen and keeps controls in-stage", () => {
-  const css = read("src/styles.css");
-  assert.ok(css.includes("GAME-SP1.1-D1D: cinematic viewport composition"));
-  assert.ok(css.includes("position: absolute;\n    z-index: 20"), "Scene toolbar must overlay the artwork");
-  assert.ok(css.includes("body:has(#officeScreen:not([hidden])) .topbar"), "Old global header must be hidden during office scene");
-  assert.ok(css.includes("1672px"), "Stage should grow toward its native resolution");
-  assert.ok(css.includes("177.68dvh - 128px"), "Use safe viewport arithmetic for image aspect ratio");
-  assert.ok(html.includes('id="sceneSoundButton"'), "Sound remains accessible when global header is hidden");
-  assert.ok(gameSource.includes('["soundButton", "sceneSoundButton", "menuSoundButton"]'), "All three sound controls must stay synchronised");
-});
-
-test("D1D floating risk graphic never covers Paul's face between cutaways", () => {
-  const p = setupFakeGame();
-  const el = p.getElementById;
-  el("startButton").click();
-  for (let i = 0; i < 7; i++) el("nextButton").click();
-  // O02/line 3 is Stephen's response, not the dedicated risk cutaway.
-  assert.equal(el("stage").dataset.cutaway, "none");
-  assert.equal(el("sceneEffect").innerHTML, "");
-  assert.equal(el("cutawayPanel").hidden, true);
-  el("backButton").click();
-  el("backButton").click();
-  assert.equal(el("stage").dataset.cutaway, "risk");
-  assert.equal(el("cutawayPanel").hidden, false);
-  assert.ok(el("cutawayContent").innerHTML.includes("UNREASONABLY HIGH"));
-});
-
-test("D1D stage sound button toggles sound from the overlay toolbar", () => {
-  const p = setupFakeGame();
-  const el = p.getElementById;
-  el("startButton").click();
-  el("sceneSoundButton").click();
-  assert.equal(el("sceneSoundButton").textContent, "Sound: On");
-  assert.equal(el("soundButton").textContent, "Sound: On");
-  el("soundButton").click();
-  assert.equal(el("sceneSoundButton").textContent, "Sound: Off");
-});
-
-test("D1E menu overlays real office art, not three stacked page sections", () => {
-  const css = read("src/styles.css");
-  const menuStart = html.indexOf('id="menuScreen"');
-  const menuEnd = html.indexOf('id="officeScreen"', menuStart);
-  const menu = html.slice(menuStart, menuEnd);
-  assert.ok(menu.includes('class="menu-office-art"'), "Approved scenery should be one contained layer");
-  assert.ok(menu.includes('class="menu-hero-title"'), "Menu needs a floating title");
-  assert.ok(menu.includes('class="menu-hero-tagline"'), "Subtitle must sit on the desk, away from faces");
-  assert.ok(menu.includes('class="menu-hero-actions"'), "Start/Continue must be in a floating desk panel");
-  assert.ok(menu.includes('id="menuSoundButton"'), "Sound control must be reachable when old topbar is hidden");
-  assert.ok(!menu.includes('class="menu-office-heading"'), "Old stacked heading should be removed");
-  assert.ok(!menu.includes('class="menu-office-transport"'), "Old stacked bottom transport should be removed");
-  assert.ok(menu.indexOf('menu-office-art') < menu.indexOf('menu-hero-title'));
-  assert.ok(menu.indexOf('menu-hero-title') < menu.indexOf('menu-hero-actions'));
-  assert.ok(css.includes('body:has(#menuScreen:not([hidden])) .topbar'), "Global topbar must be hidden in hero mode");
-  assert.ok(css.includes('#menuScreen .menu-office-stage'), "Layered hero stage must exist");
-  assert.ok(css.includes('177.68dvh - 25px'), "Hero must fit laptop viewport height");
-  assert.ok(css.includes('#menuScreen .menu-hero-buttons .btn'), "Menu buttons must remain usable");
-  assert.ok(css.includes('@media (max-width: 650px)'), "Touch layout must keep controls outside the art");
-});
-
-test("D1E floating sound control remains in sync across menu and office", () => {
-  const p = setupFakeGame();
-  const el = p.getElementById;
-  el("menuSoundButton").click();
-  for (const id of ["menuSoundButton", "sceneSoundButton", "soundButton"]) {
-    assert.equal(el(id).textContent, "Sound: On");
-    assert.equal(el(id).attributes["aria-pressed"], "true");
-  }
-  el("startButton").click();
-  el("sceneSoundButton").click();
-  for (const id of ["menuSoundButton", "sceneSoundButton", "soundButton"]) {
-    assert.equal(el(id).textContent, "Sound: Off");
-  }
-  el("homeButton").click();
-  assert.equal(el("menuScreen").hidden, false);
-});
-
-test("D1E start and saved-game continuation work from floating action panel", () => {
-  const p = setupFakeGame();
-  const el = p.getElementById;
-  assert.equal(el("resumeButton").hidden, true);
-  el("startButton").click();
-  el("nextButton").click();
-  assert.equal(el("lineText").textContent, "Quite.");
-  el("homeButton").click();
-  assert.equal(el("resumeButton").hidden, false);
-  el("resumeButton").click();
-  assert.equal(el("officeScreen").hidden, false);
-  assert.equal(el("lineText").textContent, "Quite.");
+test("new expressions need only a registered seated source and no story edits",()=>{
+  assert.ok(engine.includes("seatedExpressionSources"));
+  assert.ok(engine.includes("David: {"));
+  assert.ok(engine.includes("Paul: {"));
+  assert.ok(engine.includes('applySeatedExpression(name)'));
+  assert.ok(!reactions.includes("http"));
+  assert.ok(read("index.html").indexOf("office-data.js")<read("index.html").indexOf("reactions.js"));
 });

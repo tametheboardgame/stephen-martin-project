@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1iSm39DtRGXImsTQ4VzJyPrwvNACa9Q07"
+  },
+  "expectedSourceName": "david-office-seated-shocked-locked-v01.png",
+  "destination": "public/assets/generated/characters/david-office-seated-shocked-v01.webp",
+  "transform": {
+    "maxWidth": 1200,
+    "maxHeight": 1600,
+    "quality": 90
+  },
+  "revision": 1
+}

@@ -1,8 +1,102 @@
 # Project status
 
+**Updated:** 13 October 2026
+
+## GAME-SP1.1-D5 — Full locked David seated expression set (13 October 2026)
+
+- Owner locked **Confident, Serious, Frustrated, Shocked and Systems Expert** after individual image reviews. Existing Neutral is unchanged. All six David acting keys now select independently approved full seated transparent sprites; Paul's absent art still uses Neutral. Stephen's six existing seated expressions are unchanged.
+- Five source PNGs (all **1086 × 1448, RGBA**) were uploaded to the dedicated Stephen Martin Google Drive staging folder; manifests materialised and verified their WebP output on draft PR #14 via GitHub Actions OIDC. New Confident is manifest **revision 4**; four other expressions are **revision 1**.
+- The character's scripted `reactions.David` keys already cover every spoken and silent beat of the approved 67-beat intro. `src/game.js` now registers the matching five paths, and **Auto** selects them automatically at the correct beats. No scene dialogue was modified.
+- David proof selector cycles Auto, Neutral, Confident, Serious, Frustrated, Shocked and Systems Expert while paused, without disturbing Stephen, Paul, scene state, or timers. WebP URLs are versioned to avoid old asset caching. The build, smoke workflow and tests verify all assets and script cue mapping.
+- **Awaiting owner visual check in Cloudflare preview before merging PR #14 into production.** Some larger gesture poses naturally change their hand position but occupy the same full sprite canvas. Paul expression art is separate future work.
+
+## GAME-SP1.1-D4.2 — David Confident v03 expression proof (13 October 2026)
+
+- After preview comparison, the user rejected David Confident v02 and approved a revised expression image with corrected aligned eyes, warm skin tone, auburn beard, no chair and the original charcoal/olive outfit. The owner still needs to accept the actual in-game Neutral/Confident transition.
+- Approved source PNG: `david-office-seated-confident-approved-v03.png` in the established Drive staging folder; Drive file ID `1ZFDErAxACdK6jao6EJ9GKVol7VkEXWsZ`. The Drive-generated manifest revision 3 replaces `public/assets/generated/characters/david-office-seated-confident-v01.webp` on the existing draft branch.
+- David's Confident runtime and preload URL now use `?v=3` to invalidate the previous preview cache. Other David expressions and all Paul's use their existing Neutral fallback. All Stephen artwork remains unchanged; production main unaffected.
+- Next gate: compare David Neutral and Confident in the Cloudflare preview using the existing proof selector, then lock the sprite if accepted.
+
+## GAME-SP1.1-D4.1 — Confident v02 visual rework (13 October 2026)
+
+- Owner's in-game side-by-side review rejected David Confident v01: compared with approved Neutral, its colour balance and apparent sprite scale were visibly wrong.
+- Regenerated warmer high-contrast art to match the approved Neutral skin and beard colouring, charcoal hoodie and olive shirt, while preserving right-facing confident pose, no chair and 1086 × 1448 transparent canvas.
+- Replacement source: `david-office-seated-confident-approved-v02.png` in project Drive staging (ID `1MGKa4FSs7UhSHHZQJh-YTAhY3gh96plw`). Manifest revision 2 retains the original WebP filename; in-game URL uses `?v=2` to avoid stale CDN/browser caching.
+- Automated checks and owner A/B in-game confirmation required; no merge, and no remaining David/Paul sprite creation until confident alignment is verified.
+
+## GAME-SP1.1-D4 — David Confident seated artwork (draft PR #14, 13 October 2026)
+
+- Owner approved David Confident v01 direction: bald, auburn beard, charcoal hoodie, olive T-shirt, hands clasped, rectangular smartwatch, no chair, transparent 1086 × 1448 canvas, looking right in the picture toward the other two characters. Staged in the project Drive asset folder as `david-office-seated-confident-d2-v01.png`, Drive file ID `1loYRJjx1YDa3K_9rDhaiVchvdGmPKEg7`, then materialised through the existing manifest `generated-assets/manifests/david-office-seated-confident-v01.json` to `public/assets/generated/characters/david-office-seated-confident-v01.webp`.
+- David's Confident dialogue cue now selects the approved seated WebP. All other David expressions and all Paul's cues continue to fall back to Neutral. Stephen's six expressions are unchanged.
+- A temporary David Auto → Neutral → Confident proof button allows instant in-scene comparison without changing story position or playback. CI checks registration, 1086 × 1448 alpha, fallback, asset inclusion and the comparison control.
+- Next owner gate: inspect the Cloudflare PR preview for body/hand alignment across David's Neutral ↔ Confident swap before generating David's remaining expressions. No production merge or public release approved.
+
+## GAME-SP1.1-D3 — approved continuous screenplay and expression architecture (draft PR #14)
+
+- Approved 13 October 2026: Stephen opens with his holiday announcement; one office conversation after the approved exterior. 54 spoken lines remain verbatim, plus the opening narrator and 12 silent reactions, inserts and title beats, giving 67 total beats.
+- All beats have stable IDs and explicit Stephen/David/Paul emotion keys. Stephen uses all six approved seated sprites. David and Paul display their approved Neutral image until other full seated expressions are individually approved and registered.
+- Internal narration and in-story system speech are replaced with stage visuals. The six prop inserts cover risk, printer, chat, song, mute notification and rescue folder, with the title card concluding the intro.
+- Stephen is absent from departure onward; Back restores him before departure. Save V3 uses stable IDs, migrating V1/V2 positions explicitly.
+- Targeted CI **passed** on both push (run 38374748329) and pull request (run 38374754131), including 16 automated tests and the output-artifact checks. Branch preview was not independently accessible through the available browser tool, so real visual inspection of the six Stephen expressions and silent inserts remains the final human gate before PR #14 merges. New expression artwork for David and Paul comes later. No public release authorised.
+- Definitive script: docs/story/GAME-SP1.1-D3-OFFICE-SCRIPT.md.
+
 **Updated:** 12 October 2026  
 **Master roadmap:** Approved version 1.0, `ROADMAP.md`  
 **Primary scope:** Complete **15–25 minute** point-and-click/touch comedy game; three concise endings; approximately 2–3 substantial mini-games. Song alongside; comic optional.
+
+## GAME-SP1.1 — New exterior establishing shot and dialogue counter removal (preview pending)
+
+- **Approved exterior:** `sunny_modern_office_entrance.png` at exactly 1672 × 941, staged in project Drive as `office-exterior-opening-v01.png` (ID `17cvEpaC41G5MpUg55NKWe3DYoiNVm13O`). Manifest `generated-assets/manifests/office-exterior-opening-v01.json` materialises `public/assets/generated/locations/office-exterior-opening-v01.webp`. No labels, characters or UI were burned into the image.
+- **Opening:** Add a one-line narrated exterior shot `O00` before unchanged `O01`–`O07`: "In an unassuming office in the heart of somewhere, three idiots discuss one idiot's holiday plans." The full exterior overlays the existing office layers only during this shot; its 850 ms CSS opacity fade reveals the seated scene when advancing by Next/autoplay. Back restores the exterior. Respect reduced motion.
+- **Dialogue UX:** Remove the **per-shot dialogue counter** beside the speaker entirely (e.g. `04 / 04`). Keep scene heading `SCENE 01 / 08`, the overall progress bar and existing interactive controls.
+- **Preservation:** Opening now totals eight shots / 65 beats; the approved original seven shots and their 64 lines, expression cue keys, office lighting, three seated sprites, desk, cutaways and playback behaviour remain unchanged. Migrate old version-1 saves to version 2 by offsetting historical shot indexes +1, including finished holiday records. No script edits elsewhere yet; broader review of show-versus-tell and expression assignment is a distinct owner-led next pass.
+- **QA:** Verify rendered opaque exterior WebP dimensions, narration and O00→O01→O00 navigation, Save/Resume migration, counter absence, all original 64 beats, smoke and Pages deployment. Keep draft PR #14 pending visual review.
+
+## GAME-SP1.1-D2 — All three actors opaque; David and Paul expression-ready (owner preview)
+
+- **Bug fix:** The office scene's shared seated `.cast-actor.is-listening` CSS previously used `opacity: .94`, letting floor/window light show through David and Paul (and formerly Stephen). It now uses **`opacity: 1` for all three actors**, whether speaking or listening. The existing `saturate(.94)` listener filter, `saturate(1.07) brightness(1.03)` speaker filter, scene backdrop, foreground desk, framing and cinematic title dissolve remain unchanged. The Stephen-only override is unnecessary and was removed.
+- **Shared D2 staging architecture:** `applySeatedExpression(name)` now uses a per-character `seatedExpressionSources` map. Stephen retains all six approved seated expressions and his proof selector. David and Paul each have **only their approved Neutral** sprite registered, while their existing per-beat reaction metadata is still recorded. An unavailable expression maps safely to Neutral. All actors render one entire transparent seated image at a time: no overlapping or clipped legacy expression portraits, no new unapproved assets and no extra CSS overlays.
+- **Next art workflow:** For each approved new David/Paul pose, stage a full aligned transparent **1086 × 1448** sprite through the existing Drive → manifest → WebP pipeline; register its key and exact path in `seatedExpressionSources`, add it to the static build/CI file lists and appropriate tests, then inspect the in-scene preview before approving the next pose. Existing reaction cues may require alias review during each new art pass. Do not bulk-enable old expression-sheet crops as seated assets.
+- **Regression gate:** Tests cover solid opacity for all three figures, preserved listener/speaker filters and title scene, three single-image figures, unchanged Stephen controls, complete 64-beat playback and David/Paul's neutral fallback across all cue states. Keep draft PR #14 open for owner's visual approval. Production `main` remains unchanged.
+
+## GAME-SP1.1-D2 — Stephen listening opacity regression (review preview)
+
+- Owner compared consecutive O01 dialogue screenshots with the **same Amused sprite**: on Paul's line, office window reflections/floor light visibly bled through Stephen; on Stephen's own line, the figure was solid. The problem was **not** the asset alpha. Shared CSS `#officeScreen .cast-seated .cast-actor.is-listening { opacity: .94; }` faded the **entire actor element**; speaking used `opacity: 1`.
+- **Scoped remedy:** a higher-specificity `#officeScreen .cast-seated #castStephen.is-listening { opacity: 1; }` override. Stephen now remains fully opaque whether speaking or listening; the approved transparent outside-figure silhouette remains intact. No artwork revisions and no modifications to David/Paul, general office/backdrop, desk, or shared illumination/colour filters.
+- **Guardrail:** automated CSS regression checks verify Stephen's new override, unchanged David/Paul shared opacity, original speaker/listener lighting and unchanged JS dialogue-state handling. Await owner visual approval in PR #14 branch preview before merge.
+
+## GAME-SP1.1-D2 — Stephen's six seated expressions complete (preview review)
+
+- **Laughing asset:** Approved `cheerful_laughing_man_in_blue_pullover.png` (1086 × 1448 RGBA, transparent). Staged in project Google Drive as `stephen-office-seated-laughing-d2-v01.png` (ID `1ADZg5-Qz1N6_E2HWdttLUz8RAfCmxEtn`); manifest `generated-assets/manifests/stephen-office-seated-laughing-v01.json` produces `public/assets/generated/characters/stephen-office-seated-laughing-v01.webp` through the existing materialisation workflow.
+- **Acting cues:** In O03, Stephen begins laughing on beat 9 (Paul's explanation that he turned the fridge off because it made a noise) and continues on beat 10 (narration of Stephen trying not to laugh). The original 64-beat dialogue is unchanged. In Auto, both beats now use the approved seated Laughing sprite.
+- **Complete Stephen set:** Neutral, Amused, Confused, Annoyed, Exasperated (approved left-tilt v03), Laughing. All six use one image source on the approved Stephen seated canvas, never layered transparent whole-body sprites. Manual proof selector cycles Auto → Neutral → Amused → Confused → Annoyed → Exasperated → Laughing; preloads and cache-versioned paths retained.
+- **QA gate:** All six WebPs checked for 1086 × 1448 and alpha, asset manifests and build inclusion; test coverage for both laughing cues, the Exasperated cues, manual overrides and complete 64-beat playback. Keep draft PR #14 unmerged until the owner reviews Laughing's hand clearance and seating in the Cloudflare preview. Production remains unchanged.
+
+## GAME-SP1.1-D2 — Stephen Exasperated preview (visually approved)
+
+- Approved left-tilt portrait: `exasperated_eye_rolling_anchor.png`, 1086 × 1448 RGBA; earlier Exasperated drafts were not used.
+- Asset pipeline: project Drive `stephen-office-seated-exasperated-d2-v03.png`, manifest `generated-assets/manifests/stephen-office-seated-exasperated-v01.json`, converted asset `public/assets/generated/characters/stephen-office-seated-exasperated-v01.webp`.
+- Reactions: Exasperated at O02:8, O04:7, O05:3, O05:8 and O06:5. The existing 64-line script is unchanged.
+- Proof selector: Auto, Neutral, Amused, Confused, Annoyed, Exasperated; existing single-image swap prevents layered bodies. Tests verify asset transparency, size, cue mapping, fallback, manual control and complete playback.
+- Keep PR #14 open for owner review in Cloudflare. No production merge.
+
+## GAME-SP1.1-D2 — Stephen Annoyed seated sprite (visually approved)
+
+- **Owner-approved artwork:** `annoyed_stephen_with_clasped_hands.png` (transparent 1086 × 1448) staged via project Drive as `stephen-office-seated-annoyed-d2-v01.png`, source Drive ID `1DVCowiLgSjl9NQ69ATxClXC8cMhFqjb1`. Provenance manifest `generated-assets/manifests/stephen-office-seated-annoyed-v01.json` materialises `public/assets/generated/characters/stephen-office-seated-annoyed-v01.webp` via the established GitHub workflow.
+- **In-game mapping:** Stephen's `annoyed` reaction metadata selects the new full seated sprite automatically, alongside Neutral/Amused/Confused. The proof button cycles Auto → Neutral → Amused → Confused → Annoyed, preserving the single-image-only replacement that prevents ghosted arms or faces. New image preloaded/cache-versioned for smooth comparison.
+- **QA and release gate:** Build and smoke checks confirm the new 1086 × 1448 alpha WebP, preservation of all existing lines, per-beat reaction mapping and the manual selector. The owner must visually review the real Cloudflare branch preview before merging PR #14. No production deployment and no changes to David, Paul, desk or cutaways.
+
+## GAME-SP1.1-D2 — Stephen Confused sprite added (visually approved)
+
+- **Reconnection and asset:** GitHub PR #14 was still open. Owner-approved `puzzled_man_with_clasped_hands.png` (transparent 1086 × 1448) staged in project Drive as `stephen-office-seated-confused-d2-v01.png` (ID `1AgdYklMgvLFkPNo153UEqfIV4KwApzqU`), manifest `generated-assets/manifests/stephen-office-seated-confused-v01.json`; the established GitHub pipeline materialised `public/assets/generated/characters/stephen-office-seated-confused-v01.webp`.
+- **In-engine:** Preserve the **single-image-only** swap mechanism. Existing Stephen `confused` reaction cues now select Confused automatically; `amused` selects Amused; uncreated emotions fall back to Neutral. Temporary proof button cycles **Auto → Neutral → Amused → Confused** without stopping or resetting the script. Confused WebP is preloaded and cache-versioned.
+- **Boundaries:** No changes to the approved office background, David/Paul artwork, 64 beats, pacing, desk layering or production `main`. Cloudflare branch preview and targeted 1086 × 1448 alpha/behaviour checks must pass. Owner reviewed the real Confused pose in the preview and approved its visual alignment and readability. PR #14 remains open for the rest of Stephen's D2 set.
+
+## GAME-SP1.1-D2 proof — Stephen seated Neutral ↔ Amused (owner visual review pending)
+
+- **Asset v03 (12 October 2026):** Owner selected the visibly leaning/upper-body amused pose to replace the first proof. Exact original `amused_leaning_comic_portrait.png` (1086 × 1448 RGBA) is staged as `stephen-office-seated-amused-d2-v03.png` in project Google Drive (ID `1gfRmnWft10XbzPvWc0dJ0tS-B2Vi8-8_`). Manifest revision 2 materialises it onto the existing `stephen-office-seated-amused-v01.webp` path, preserving the Neutral/Amused test and adding a `?v=3` asset query to avoid stale browser caches. Older test artwork stays out of the Cloudflare published dist. Provenance manifest `generated-assets/manifests/stephen-office-seated-amused-v01.json` creates `public/assets/generated/characters/stephen-office-seated-amused-v01.webp`. Both neutral and amused sprites have transparent **1086 × 1448** canvases. This preserves the original approved image; pixel-perfect shoulder/hand alignment still needs owner inspection.
+- **Proof behaviour:** The D2 proof now uses a single Stephen `<img>` element, replacing its `src` when reaction metadata requests Amused (other expressions fall back to Neutral). The initial 140 ms overlap/crossfade was rejected after the owner's screenshot revealed two complete upper-body sprites appearing simultaneously through their transparent regions; no stacked body images remain. The amused v03 WebP is preloaded to minimise swap latency. A clearly marked temporary `Stephen: Auto → Neutral → Amused` button allows direct A/B switching while paused or autoplaying, without advancing/restarting dialogue. David and Paul stay on their approved seated neutral sprites.
+- **Scope/QA:** No changes to the 64-beat office script, title menu, cutaways or production `main`; only the tiny expression proof on a development-branch Cloudflare preview. Smoke checks require the new WebP, alpha transparency, correct canvas and manual/automatic behaviour. Owner must judge the visible head/shoulder/hand registration before expanding to the rest of Stephen's emotions.
 
 ## Current checkpoint — GAME-SP1.1-D1 through D1E owner approved
 

@@ -6,7 +6,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const output = path.join(root, "dist");
 const files = ["index.html", "src/office-data.js", "src/reactions.js", "src/game.js", "src/styles.css"];
 const imageSource = "public/assets/generated/characters";
-const images = ["stephen-martin-baseline.webp", "david-baseline.webp", "paul-baseline.webp", "stephen-office-seated-neutral-v01.webp", "david-office-seated-neutral-v01.webp", "paul-office-seated-neutral-v01.webp"];
+const images = ["stephen-martin-baseline.webp", "david-baseline.webp", "paul-baseline.webp", "stephen-office-seated-neutral-v01.webp", "stephen-office-seated-amused-v01.webp", "stephen-office-seated-confused-v01.webp", "stephen-office-seated-annoyed-v01.webp", "stephen-office-seated-exasperated-v01.webp", "stephen-office-seated-laughing-v01.webp", "david-office-seated-neutral-v01.webp", "david-office-seated-confident-v01.webp", "david-office-seated-systems-expert-v01.webp", "david-office-seated-shocked-v01.webp", "david-office-seated-frustrated-v01.webp", "david-office-seated-serious-v01.webp", "paul-office-seated-neutral-v01.webp"];
 
 await rm(output, { recursive: true, force: true });
 await mkdir(path.join(output, "src"), { recursive: true });
@@ -48,7 +48,8 @@ for (const name of expectedNames) {
 // foreground desk layer without flattening characters or interactive controls.
 const officeImages = [
   "public/assets/generated/locations/office-clean-01-v01.webp",
-  "public/assets/generated/locations/office-foreground-01-v01.webp"
+  "public/assets/generated/locations/office-foreground-01-v01.webp",
+  "public/assets/generated/locations/office-exterior-opening-v01.webp"
 ];
 // Fail the public preview build if the independent desk accidentally becomes an
 // opaque image: a black/solid rectangle would cover all three actors.
@@ -67,4 +68,4 @@ for (const relative of officeImages) {
 }
 
 console.log("Cloudflare Pages static output: dist/");
-console.log("Only game HTML, scripts, styles, approved background and separate foreground desk, 3 seated sprites, approved base portraits and 18 expression WebPs were included.");
+console.log("Only game HTML, scripts, styles, approved background and separate foreground desk, 3 neutral seated sprites plus six Stephen and six David seated expressions, approved base portraits and 18 reference expression WebPs were included.");

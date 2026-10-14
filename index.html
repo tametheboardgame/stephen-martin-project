@@ -10,6 +10,16 @@
   <script defer src="./src/office-data.js"></script>
   <script defer src="./src/reactions.js"></script>
   <script defer src="./src/game.js"></script>
+  <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/david-office-seated-confident-v01.webp?v=4">
+  <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/david-office-seated-systems-expert-v01.webp?v=1">
+  <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/david-office-seated-shocked-v01.webp?v=1">
+  <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/david-office-seated-frustrated-v01.webp?v=1">
+  <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/david-office-seated-serious-v01.webp?v=1">
+  <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/stephen-office-seated-amused-v01.webp?v=3">
+  <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/stephen-office-seated-confused-v01.webp?v=1">
+  <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/stephen-office-seated-annoyed-v01.webp?v=1">
+  <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/stephen-office-seated-exasperated-v01.webp?v=3">
+  <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/stephen-office-seated-laughing-v01.webp?v=1">
 </head>
 <body>
   <div class="game-shell" id="game">
@@ -63,9 +73,9 @@
       <section id="officeScreen" class="screen office-screen" hidden aria-label="Office opening scene">
         <div class="scene-toolbar">
           <div class="scene-heading">
-            <span id="sceneNumber" class="small-caps">CHAPTER 1 · SCENE 01 / 07</span>
-            <h2 id="sceneTitle">Somewhere in an office</h2>
-            <p id="sceneCaption">Last day before the holiday</p>
+            <span id="sceneNumber" class="small-caps">CHAPTER 1 · OPENING</span>
+            <h2 id="sceneTitle">The Pre-Holiday Briefing</h2>
+            <p id="sceneCaption">One continuous office conversation</p>
           </div>
           <div class="scene-toolbar-actions">
             <button id="sceneSoundButton" type="button" class="mini-button" aria-pressed="false" title="Toggle short sound effects">Sound: Off</button>
@@ -74,7 +84,7 @@
           </div>
         </div>
 
-        <div class="stage" id="stage" data-moment="establishing">
+        <div class="stage" id="stage" role="group" aria-label="Opening exterior" data-location="exterior" data-moment="exterior">
           <div class="office-world office-scene-backdrop" aria-hidden="true"></div>
           <div class="cast cast-seated" aria-label="David, Stephen and Paul seated together in a fictional office">
             <figure class="cast-card cast-actor" id="castDavid" data-character="david">
@@ -91,6 +101,7 @@
             </figure>
           </div>
           <div class="office-foreground" aria-hidden="true"></div>
+          <div class="office-exterior-shot" aria-hidden="true"></div>
           <div id="sceneEffect" class="scene-effect" aria-hidden="true"></div>
           <div id="cutawayPanel" class="cutaway-panel" hidden aria-hidden="true">
             <div class="cutaway-inner" id="cutawayContent"></div>
@@ -100,7 +111,6 @@
           <div class="dialogue-main">
             <div class="dialogue-header">
               <span id="speakerName" class="speaker">PAUL</span>
-              <span id="lineCount" class="dialogue-counter">01 / 04</span>
             </div>
             <p id="lineText" class="dialogue-text" aria-live="polite" aria-atomic="true"></p>
             <div id="stageNote" class="stage-note" hidden></div>
@@ -112,6 +122,7 @@
         <div class="progress-track" role="progressbar" aria-label="Opening scene progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="storyProgress"><div class="progress-fill" id="progressFill"></div></div>
             <div class="dialogue-actions">
               <span id="playbackStatus" class="dialogue-hint" role="status" aria-live="off">AUTO · NEXT LINE IN A MOMENT</span>
+              <div class="expression-proof-controls" role="group" aria-label="Character expression previews"><button id="stephenProofButton" class="d2-proof-button" type="button" aria-label="Stephen expression preview: Auto. Click to cycle Auto, Neutral, Amused, Confused, Annoyed, Exasperated and Laughing">Stephen: Auto ↻</button><button id="davidProofButton" class="d2-proof-button" type="button" aria-label="David expression preview: Auto. Click to cycle Auto, Neutral, Confident, Serious, Frustrated, Shocked and Systems Expert">David: Auto ↻</button></div>
               <div class="dialogue-buttons">
                 <button id="playPauseButton" type="button" class="btn btn-small btn-secondary" aria-pressed="true">Ⅱ Pause</button>
                 <button id="backButton" type="button" class="btn btn-small btn-secondary">← Back</button>
@@ -134,7 +145,7 @@
             <button id="replayButton" type="button" class="btn btn-primary">Replay the office <span aria-hidden="true">↺</span></button>
             <button id="homeButton" type="button" class="btn btn-secondary">Main menu</button>
           </div>
-          <p class="preview-label">GAME-SP1.1-D1: a static seated-character composition preview; expressive seated animation is a later pass.</p>
+          <p class="preview-label">GAME-SP1.1-D5: approved Stephen and David expressions are active; Paul remains Neutral until his separately approved seated variants arrive.</p>
         </div>
       </section>
     </main>

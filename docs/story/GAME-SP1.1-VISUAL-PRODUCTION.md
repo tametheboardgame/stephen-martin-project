@@ -1,5 +1,7 @@
 # GAME-SP1.1: Cinematic opening production hand-off
 
+> Current approved screenplay: GAME-SP1.1-D3-OFFICE-SCRIPT.md (13 October 2026). Older shot/beat counts in this file describe the preceding playtest.
+
 **Status:** GAME-SP1.1-D owner-approved rebuild, 12 October 2026. PR #8 was merged for testing and its portrait-card presentation was rejected. The layered in-office scene is the current production goal; this document and `ROADMAP.md` hold the next approved tasks.
 
 ## Owner playtest decision — supersedes portrait-card layout
