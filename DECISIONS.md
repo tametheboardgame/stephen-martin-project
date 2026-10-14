@@ -1,3 +1,7 @@
+## SP-D027, 14 October 2026: Invitations are exclusive, with elapsed travel days
+
+Owner approved **GAME-SP2.3C** as the revised Chapter Two route structure. Accepting Great Wall's fictional Summit invitation ends sightseeing and sends Stephen directly to the `cult` incident handoff, skipping Forbidden City and market. Declining unlocks a **A FEW DAYS LATER… / THE FORBIDDEN CITY** card. Accepting the honorary banquet after its approved follow-up takes the `detention` handoff, skipping market; declining unlocks **THE NEXT EVENING… / THE NIGHT MARKET**. In market, Stephen **automatically** accepts Total Renewal Spa, yielding `reassemble`; remove market accept/decline and the all-declined rebooking panel. Commit the chosen route at its incident handoff and keep the original interrupted phone transition. The actual route mini-games are still future work; label them explicitly unavailable. Another Ending returns to the **Great Wall choice**. V3 old saves migrate to the first accepted path. Preserve approved art and 16:9/2-column layouts. Canonical progression supersession: `docs/story/GAME-SP2.3C-BRANCHING-STORY-V2.md`. Do not merge before in-game approval.
+
 # Accepted project decisions
 
 Entries are concise, durable design decisions. Additional decisions are added only where they materially affect scope, design, delivery or implementation.

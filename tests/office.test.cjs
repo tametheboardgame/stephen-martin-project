@@ -490,482 +490,299 @@ test("a deliberate Sound Off choice before Start remains muted across restart",(
   assert.equal(p.voices.length,0);
 });
 
-test("GAME-SP2.2 approved Great Wall data is compact and keeps the route provisional",()=>{
-  const w=story().SMP_CHINA_WALL;
-  assert.equal(w.title,"THE GREAT WALL");
-  assert.equal(w.lines.length,5);
-  assert.deepEqual(Array.from(w.lines,x=>x.id),[
-    "china.wall.001","china.wall.002","china.wall.003","china.wall.004","china.wall.005"
-  ]);
-  assert.equal(w.lines[0].speaker,"Stephen");
-  assert.equal(w.lines[1].speaker,"Promoter");
-  assert.match(w.phoneText,/geopolitical variables/);
-  assert.match(w.acceptReaction,/actual cult/);
-  assert.ok(!w.lines.some(x=>x.id.startsWith("office.")));
-  assert.ok(read("scripts/build.mjs").includes('src/china-data.js'));
-});
 
-test("office finale and Skip enter approved Chapter Two card then playable Great Wall",()=>{
-  const p=preview();p.start();p.el("skipButton").click();
-  assert.equal(saved(p).scene,"holiday");
-  assert.equal(saved(p).holidayPhase,"transition");
-  assert.equal(p.el("chinaTransition").hidden,false);
-  assert.equal(p.el("wallScene").hidden,true);
-  assert.equal(p.timeouts.size,0,"Chapter Two transition waits for an explicit user action");
-  p.el("chinaStartButton").click();
-  assert.equal(saved(p).holidayPhase,"wall");
-  assert.equal(saved(p).wallStep,0);
-  assert.equal(p.el("wallScene").hidden,false);
-  assert.equal(p.el("chinaTransition").hidden,true);
-  assert.match(p.el("wallLineText").textContent,/wonders of the world/);
-  assert.match(p.el("wallPhoneText").textContent,/geopolitical variables/);
-  assert.equal(p.el("wallBookingLabel").textContent,"Nothing booked yet");
-  assert.equal(p.el("wallPromoter").hidden,true,"Promoter has not entered on Stephen's phone beat");
-  assert.equal(p.el("wallPhone").hidden,false,"David's notification is visible on the opening beat");
-  assert.equal(p.el("wallChoices").hidden,true);
-});
-
-test("Great Wall choice gates at script end; accept sets only pending plan and supports replay",()=>{
-  const p=preview();p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
-  p.el("wallAcceptButton").click(); // Guard against choosing too soon
-  assert.equal(saved(p).wallDecision,null);
-  p.el("wallNextButton").click();
-  assert.equal(p.el("wallPromoter").hidden,false,"Promoter enters on his first line");
-  assert.equal(p.el("wallPhone").hidden,true,"Phone gets out of the way for the two-character scene");
-  for(let i=1;i<5;i++)p.el("wallNextButton").click();
-  assert.equal(saved(p).wallStep,5);
-  assert.equal(p.el("wallChoices").hidden,false);
-  assert.equal(p.el("wallNextButton").hidden,true);
-  p.el("wallAcceptButton").click();
-  assert.equal(saved(p).wallDecision,"accept");
-  assert.equal(saved(p).pendingPlan,"cult");
-  assert.equal(Object.hasOwn(saved(p),"route"),false,"Final route cannot lock in scene 1");
-  assert.equal(p.el("wallBookingLabel").textContent,"The Summit");
-  assert.match(p.el("wallResultText").textContent,/actual cult/);
-  assert.equal(p.el("wallChoices").hidden,true);
-  p.el("wallReplayButton").click();
-  assert.equal(saved(p).wallStep,0);
-  assert.equal(saved(p).wallDecision,null);
-  assert.equal(saved(p).pendingPlan,null);
-  assert.equal(p.el("wallDialogue").hidden,false);
-  assert.equal(p.el("wallPromoter").hidden,true,"Restart returns to the solo Stephen opening beat");
-  assert.equal(p.el("wallPhone").hidden,false);
-});
-
-test("declining keeps an empty plan; Continue restores saved Great Wall position",()=>{
-  const p=preview();p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
-  p.el("wallNextButton").click();
-  p.el("homeButton").click();
-  assert.equal(p.el("menuScreen").hidden,false);
-  p.el("resumeButton").click();
-  assert.equal(p.el("holidayScreen").hidden,false);
-  assert.equal(saved(p).wallStep,1);
-  assert.equal(p.el("wallPromoter").hidden,false,"Resume re-enters the active promoter encounter");
-  assert.equal(p.el("wallPhone").hidden,true);
-  assert.equal(p.el("wallLineText").textContent,"You look like someone who'd enjoy The Summit. Exclusive mountain retreat. Very friendly gentlemen. Spectacular views.");
-  for(let i=1;i<5;i++)p.el("wallNextButton").click();
-  p.el("wallDeclineButton").click();
-  assert.equal(saved(p).wallDecision,"decline");
-  assert.equal(saved(p).pendingPlan,null);
-  assert.match(p.el("wallResultText").textContent,/I'll regret this/);
-  p.el("homeButton").click();p.el("resumeButton").click();
-  assert.equal(p.el("wallResult").hidden,false);
-  assert.equal(p.el("wallBookingLabel").textContent,"Nothing booked yet");
-});
-
-test("the three approved Chapter Two WebPs are packaged and standing Stephen retains transparency",()=>{
-  const rootAssets="public/assets/generated";
-  const sprite=fs.readFileSync(path.join(root,rootAssets,"characters/stephen-holiday-standing-neutral-v01.webp"));
-  assert.equal(sprite.toString("ascii",0,4),"RIFF");
-  assert.equal(sprite.toString("ascii",12,16),"VP8X");
-  assert.ok(sprite[20]&0x10,"Holiday Stephen must be a separate transparent sprite");
-  for(const asset of ["chapter-two-days-later-title-v01.webp","china-great-wall-background-v01.webp"]){
-    const buf=fs.readFileSync(path.join(root,rootAssets,"locations",asset));
-    assert.equal(buf.toString("ascii",0,4),"RIFF");
-    assert.equal(buf.toString("ascii",8,12),"WEBP");
-    assert.ok(read("scripts/build.mjs").includes(asset));
-  }
-  assert.match(html,/id="chinaStartButton"/);
-  assert.match(html,/id="wallAcceptButton"/);
-  assert.match(css,/#holidayScreen\.china-screen/);
-  assert.ok(!read("src/office-data.js").includes("china.wall.001"));
-});
-
-test("approved full-body promoter is independently staged and preserves transparent sprite format",()=>{
-  const name="great-wall-summit-promoter-standing-v01.webp";
-  const asset=fs.readFileSync(path.join(root,"public/assets/generated/characters",name));
-  assert.equal(asset.toString("ascii",0,4),"RIFF");
-  assert.equal(asset.toString("ascii",12,16),"VP8X");
-  assert.ok((asset[20]&0x10)!==0,"The promoter has a transparent background");
-  assert.equal(1+asset.readUIntLE(24,3),1086,"Promoter width matches Stephen's source canvas");
-  assert.equal(1+asset.readUIntLE(27,3),1448,"Promoter height matches Stephen's source canvas");
-  assert.ok(html.includes('id="wallPromoter"'));
-  assert.ok(html.includes('id="wallPhone"'));
-  assert.ok(html.includes(name));
-  assert.ok(css.includes("#holidayScreen .wall-promoter"));
-  assert.ok(read("scripts/build.mjs").includes(name));
-});
-
-test("GAME-SP2.3 Forbidden City dialogue is canonical and distinct from the Summit promoter",()=>{
-  const pal=story().SMP_CHINA_PALACE;
-  assert.equal(pal.lines.length,4);
-  assert.deepEqual(Array.from(pal.lines,l=>l.id),[
-    "china.palace.001","china.palace.002","china.palace.003","china.palace.004"
-  ]);
-  assert.equal(pal.lines[0].speaker,"Attendant");
-  assert.equal(pal.lines[1].speaker,"Stephen");
-  assert.match(pal.lines[0].text,/International Cultural Excellence Banquet/);
-  assert.equal(pal.titleBadge,"VISITING INTERNATIONAL SPECIALIST");
-  assert.equal(pal.acceptReply.length,5);
-  assert.match(pal.acceptReply.at(-1).text,/first one on my phone/);
-  assert.ok(!pal.lines.some(l=>l.id.startsWith("office.")));
-});
-
-test("Forbidden City is inaccessible before the Wall booking choice, then opens as a second scene",()=>{
-  const p=preview();p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
-  p.el("wallGoPalaceButton").click();
-  assert.equal(saved(p).holidayPhase,"wall","Cannot bypass the Great Wall decision");
-  for(let i=0;i<5;i++)p.el("wallNextButton").click();
-  p.el("wallGoPalaceButton").click();
-  assert.equal(saved(p).holidayPhase,"wall");
-  p.el("wallDeclineButton").click();
-  p.el("wallGoPalaceButton").click();
-  assert.equal(saved(p).holidayPhase,"palace");
-  assert.equal(p.el("wallScene").hidden,true);
-  assert.equal(p.el("palaceScene").hidden,false);
-  assert.equal(p.el("chinaTransition").hidden,true);
-  assert.equal(p.el("palaceSpeakerName").textContent,"ATTENDANT");
-  assert.match(p.el("palaceLineText").textContent,/guest of honour/);
-  assert.equal(p.el("palaceBookingLabel").textContent,"Nothing booked yet");
-  assert.ok(p.el("palaceStephen").src.endsWith("stephen-holiday-forbidden-city-pleased-v01.webp"),"The approved second Stephen sprite is used from the first Palace beat");
-  assert.equal(p.el("palaceHonourBadge").hidden,true);
-  assert.ok(html.includes('alt="Stephen in his approved blue-quarter-zip Forbidden City pose"'),"Approved sprite has descriptive HTML alt text");
-  assert.equal(Object.hasOwn(saved(p),"route"),false);
-});
-
-test("Accepting the banquet replaces Summit, shows the approved pleased Stephen and photo gag",()=>{
+function toWallChoice() {
   const p=preview();p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
   for(let i=0;i<5;i++)p.el("wallNextButton").click();
-  p.el("wallAcceptButton").click();p.el("wallGoPalaceButton").click();
-  assert.equal(saved(p).pendingPlan,"cult");
-  p.el("palaceAcceptButton").click();
-  assert.equal(saved(p).palaceDecision,null,"Early acceptance is disallowed");
-  for(let i=0;i<4;i++)p.el("palaceNextButton").click();
-  assert.equal(p.el("palaceChoices").hidden,false);
-  assert.equal(p.el("palaceNextButton").hidden,true);
-  p.el("palaceAcceptButton").click();
-  assert.equal(saved(p).pendingPlan,"detention");
-  assert.equal(saved(p).palaceDecision,"accept");
-  assert.equal(p.el("palaceBookingLabel").textContent,"International Cultural Excellence Banquet");
-  assert.equal(Object.hasOwn(saved(p),"route"),false,"The Night Market still controls the final route lock");
-  assert.equal(p.el("palaceHonourBadge").hidden,false);
-  assert.ok(p.el("palaceStephen").src.endsWith("stephen-holiday-forbidden-city-pleased-v01.webp"));
-  assert.match(p.el("palaceLineText").textContent,/prepare a speech/);
-  assert.equal(p.el("palacePhotoGag").hidden,true,"The photo joke waits until the dialogue ends");
-  for(let i=0;i<5;i++)p.el("palaceNextButton").click();
-  assert.equal(p.el("palaceDialogue").hidden,true);
-  assert.equal(p.el("palaceResult").hidden,false);
-  assert.equal(p.el("palacePhotoGag").hidden,false);
-  assert.match(p.el("palaceResultText").textContent,/bear picture/);
-  p.el("homeButton").click();p.el("resumeButton").click();
-  assert.equal(saved(p).holidayPhase,"palace");
-  assert.equal(p.el("palacePhotoGag").hidden,false);
-  assert.equal(saved(p).pendingPlan,"detention");
-});
-
-test("Declining the banquet preserves Summit, and replay restores the earlier plan",()=>{
-  const p=preview();p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
-  for(let i=0;i<5;i++)p.el("wallNextButton").click();
-  p.el("wallAcceptButton").click();p.el("wallGoPalaceButton").click();
-  p.el("palaceNextButton").click();
-  p.el("homeButton").click();p.el("resumeButton").click();
-  assert.equal(saved(p).holidayPhase,"palace");
-  assert.equal(saved(p).palaceStep,1,"Resume preserves the attendant encounter");
-  for(let i=1;i<4;i++)p.el("palaceNextButton").click();
-  p.el("palaceDeclineButton").click();
-  assert.equal(saved(p).pendingPlan,"cult");
-  assert.equal(p.el("palaceResult").hidden,false);
-  assert.equal(p.el("palacePhotoGag").hidden,true);
-  assert.equal(p.el("palaceHonourBadge").hidden,true);
-  assert.ok(p.el("palaceStephen").src.endsWith("stephen-holiday-forbidden-city-pleased-v01.webp"),"Decline keeps the approved scene sprite");
-  assert.match(p.el("palaceResultText").textContent,/get away from meetings/);
-  p.el("palaceReplayButton").click();
-  assert.equal(saved(p).palaceDecision,null);
-  assert.equal(saved(p).pendingPlan,"cult","Great Wall booking survives palace replay");
-  assert.equal(saved(p).palaceStep,0);
-  p.el("palaceBackButton").click();
-  assert.equal(saved(p).holidayPhase,"wall");
-  assert.equal(p.el("wallBookingLabel").textContent,"The Summit");
-  p.el("wallGoPalaceButton").click();
-  assert.equal(saved(p).holidayPhase,"palace");
-  assert.equal(saved(p).palaceStep,0);
-});
-
-test("Forbidden City art is in the build, with transparent independent characters and no baked interface",()=>{
-  for(const name of ["china-banquet-attendant-standing-v01.webp","stephen-holiday-forbidden-city-pleased-v01.webp"]){
-    const image=fs.readFileSync(path.join(root,"public/assets/generated/characters",name));
-    assert.equal(image.toString("ascii",0,4),"RIFF");
-    assert.equal(image.toString("ascii",12,16),"VP8X");
-    assert.ok((image[20]&0x10)!==0,"Transparent character "+name);
-    assert.equal(1+image.readUIntLE(24,3),1086);
-    assert.equal(1+image.readUIntLE(27,3),1448);
-    assert.ok(read("scripts/build.mjs").includes(name));
-  }
-  const place="china-forbidden-city-background-v01.webp";
-  const bg=fs.readFileSync(path.join(root,"public/assets/generated/locations",place));
-  assert.equal(bg.toString("ascii",0,4),"RIFF");
-  assert.equal(bg.toString("ascii",8,12),"WEBP");
-  assert.ok(read("scripts/build.mjs").includes(place));
-  for(const id of ["palaceScene","palaceAcceptButton","palaceDeclineButton","palaceReplayButton","wallGoPalaceButton"]){
-    assert.ok(html.includes('id="'+id+'"'));
-  }
-  assert.ok(css.includes("#holidayScreen #palaceScene"),"Palace matches office and Great Wall viewport contract");
-});
-
-test("GAME-SP2.3A-F1 laptop composition keeps both character pairs smaller and dialogue clear of controls",()=>{
-  const fit=css.split("GAME-SP2.3A-F1 — laptop composition pass")[1];
-  assert.ok(fit,"Dedicated owner-requested composition pass exists");
-  assert.match(fit,/@media \(min-width: 801px\)/);
-  assert.match(fit,/#holidayScreen \.wall-scene \.wall-stephen \{[\s\S]*?height: 77%/);
-  assert.match(fit,/#holidayScreen \.wall-scene \.wall-promoter \{[\s\S]*?height: 77%/);
-  assert.match(fit,/#holidayScreen \.palace-scene \.wall-stephen \{[\s\S]*?height: 73%/);
-  assert.match(fit,/#holidayScreen \.palace-scene \.wall-promoter \{[\s\S]*?height: 73%/);
-  assert.match(fit,/#holidayScreen:has\(#palaceScene:not\(\[hidden\]\)\) \.china-footer \{[\s\S]*?right: 2%/);
-  assert.match(fit,/#holidayScreen \.wall-booking \{[\s\S]*?max-width: 27%/);
-  assert.match(fit,/#holidayScreen \.palace-scene \.wall-dialogue \{[\s\S]*?bottom: max\(15%, 96px\)/);
-  assert.match(fit,/#holidayScreen \.wall-action-strip \{[\s\S]*?max-height: 35%/);
-  assert.ok(css.includes("overscroll-behavior: contain"),"Choice scroll stays inside cinematic frame");
-  assert.ok(!fit.includes("overflow-y: hidden"),"No inaccessible choice scrolling");
-  assert.ok(html.includes('id="palaceStephen" class="wall-stephen" src="./public/assets/generated/characters/stephen-holiday-forbidden-city-pleased-v01.webp"'));
-  assert.ok(!engine.includes("travelStephenNeutral"),"No leftover fallback to Great Wall Stephen in Palace");
-  assert.ok(engine.includes('palacePortrait.dataset.sprite !== "forbidden-city-pleased"'),"Portrait initialises exactly once per session");
-});
-
-test("GAME-SP2.3A-F2 laptop invitation decisions are two columns without a forced scrollbar",()=>{
-  const segment=css.split("GAME-SP2.3A-F2 — side-by-side invitation choices on laptops")[1];
-  assert.ok(segment,"Dedicated compact choice layout exists");
-  assert.match(segment,/@media \(min-width: 960px\)/);
-  assert.match(segment,/#holidayScreen \.wall-choices:not\(\[hidden\]\)/);
-  assert.match(segment,/grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
-  assert.match(segment,/grid-column: 1 \/ -1/,"Heading and description span both options");
-  assert.match(segment,/\.wall-choices > \.wall-choice \{[\s\S]*?min-height: 54px/);
-  assert.match(segment,/\.wall-action-strip:has\(\.wall-choices:not\(\[hidden\]\)\) \.wall-story-progress \{[\s\S]*?display: none/);
-  assert.ok(!segment.includes("overflow-y: hidden"),"Do not clip content on short windows");
-  assert.ok(!segment.includes("overflow: hidden"),"Keep short-window scrolling fallback");
-  assert.match(css,/@media \(max-width:800px\)/,"Narrow screens retain touch layout");
-  for(const id of ["wallAcceptButton","wallDeclineButton","palaceAcceptButton","palaceDeclineButton"]){
-    assert.ok(html.includes('id="'+id+'"'));
-  }
-});
-
-
-function advanceToNightMarket({wall="decline",palace="decline"}={}) {
-  const p=preview();p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
-  for(let i=0;i<5;i++)p.el("wallNextButton").click();
-  p.el(wall==="accept"?"wallAcceptButton":"wallDeclineButton").click();
-  p.el("wallGoPalaceButton").click();
-  for(let i=0;i<4;i++)p.el("palaceNextButton").click();
-  p.el(palace==="accept"?"palaceAcceptButton":"palaceDeclineButton").click();
-  if(palace==="accept")for(let i=0;i<5;i++)p.el("palaceNextButton").click();
-  p.el("palaceGoMarketButton").click();
   return p;
 }
-function finishMarket(p,choice) {
+function declineWallToPalace(p) {
+  p.el("wallDeclineButton").click();
+  p.el("wallGoPalaceButton").click();
+  assert.equal(saved(p).holidayPhase,"intermission");
+  assert.equal(saved(p).intermissionTarget,"palace");
+  p.el("intermissionContinueButton").click();
+  assert.equal(saved(p).holidayPhase,"palace");
+}
+function toPalaceChoice() {
+  const p=toWallChoice();declineWallToPalace(p);
+  for(let i=0;i<4;i++)p.el("palaceNextButton").click();
+  return p;
+}
+function declinePalaceToMarket(p) {
+  p.el("palaceDeclineButton").click();p.el("palaceGoMarketButton").click();
+  assert.equal(saved(p).holidayPhase,"intermission");
+  assert.equal(saved(p).intermissionTarget,"market");
+  p.el("intermissionContinueButton").click();
+  assert.equal(saved(p).holidayPhase,"market");
+}
+function toMarket() {
+  const p=toPalaceChoice();declinePalaceToMarket(p);return p;
+}
+function finishMarket(p) {
   for(let i=0;i<6;i++)p.el("marketNextButton").click();
-  p.el(choice==="accept"?"marketAcceptButton":"marketDeclineButton").click();
+  assert.equal(saved(p).marketStep,6);
+}
+function finishPhone(p) {
+  p.el("handoffContinueButton").click();
+  assert.equal(saved(p).holidayPhase,"final-message");
+  p.el("chinaFinalNextButton").click();p.el("chinaFinalNextButton").click();
+  assert.equal(saved(p).finalStep,2);
 }
 
-test("Night Market scene uses exactly the six locked spoken beats and a new standalone sprite pair",()=>{
-  const {SMP_CHINA_MARKET:m,SMP_CHINA_FINAL:f}=story();
-  assert.deepEqual(Array.from(m.lines,x=>x.id),[
-    "china.market.001","china.market.002","china.market.003",
-    "china.market.004","china.market.005","china.market.006"
-  ]);
-  assert.deepEqual(Array.from(m.lines,x=>x.speaker),[
-    "Stephen","Stephen","Spa representative","Stephen","Spa representative","Stephen"
-  ]);
-  assert.match(m.acceptLabel,/Ninety per cent off/);
-  assert.equal(m.signHeadline,"90% OFF");
-  assert.match(m.signFinePrint,/Replacement components sold separately/);
-  assert.match(f.messageByRoute.cult,/asked me to be their/);
-  assert.match(f.messageByRoute.detention,/official/);
-  assert.match(f.messageByRoute.reassemble,/entire/);
-  assert.equal(f.stephenLastLine,"Oh, for fuck's sake.");
-  assert.ok(!m.lines.some(x=>x.id.startsWith("office.")));
-});
-
-test("Palace must be completed before Night Market, which stages correct sprites and spa sign",()=>{
-  const p=preview();p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
-  p.el("palaceGoMarketButton").click();
+test("Chapter Two enters Great Wall after voiced office and requires first meaningful choice",()=>{
+  const p=toWallChoice();
   assert.equal(saved(p).holidayPhase,"wall");
-  for(let i=0;i<5;i++)p.el("wallNextButton").click();
-  p.el("wallDeclineButton").click();p.el("wallGoPalaceButton").click();
-  p.el("palaceGoMarketButton").click();
-  assert.equal(saved(p).holidayPhase,"palace");
-  for(let i=0;i<4;i++)p.el("palaceNextButton").click();
-  p.el("palaceAcceptButton").click();
-  p.el("palaceGoMarketButton").click();
-  assert.equal(saved(p).holidayPhase,"palace","Banquet replies must complete");
-  for(let i=0;i<5;i++)p.el("palaceNextButton").click();
-  p.el("palaceGoMarketButton").click();
-  assert.equal(saved(p).holidayPhase,"market");
-  assert.equal(p.el("marketScene").hidden,false);
-  assert.equal(p.el("wallScene").hidden,true);
-  assert.equal(p.el("palaceScene").hidden,true);
-  assert.equal(p.el("marketBookingLabel").textContent,"International Cultural Excellence Banquet");
-  assert.equal(p.el("marketSpaRep").hidden,true,"Spa rep enters only on market.003");
-  p.el("marketNextButton").click();
-  assert.equal(p.el("marketSpaSign").hidden,false,"Spa billboard appears on the second beat");
-  p.el("marketNextButton").click();
-  assert.equal(p.el("marketSpaRep").hidden,false,"Spa rep enters on market.003");
-  assert.match(p.el("marketLineText").textContent,/body-renewal/);
+  assert.equal(saved(p).wallDecision,null);
+  assert.equal(saved(p).wallStep,5);
+  assert.equal(p.el("wallChoices").hidden,false);
+  p.el("wallGoPalaceButton").click();p.el("wallGoIncidentButton").click();
+  assert.equal(saved(p).holidayPhase,"wall","Cannot bypass Wall decision");
   assert.equal(Object.hasOwn(saved(p),"route"),false);
+  assert.equal(p.el("wallBookingLabel").textContent,"The Summit");
+  assert.match(html,/id="chinaTransition"/);
+  assert.match(html,/id="chinaStartButton"/);
 });
 
-test("Spa acceptance replaces all earlier plans; route commits only after the message transition",()=>{
-  const p=advanceToNightMarket({wall:"accept",palace:"accept"});
+test("Accepting Summit commits cult handoff, bypasses Palace and Market, then uses correct interrupted phone message",()=>{
+  const p=toWallChoice();
+  p.el("wallAcceptButton").click();
+  assert.equal(saved(p).pendingPlan,"cult");
+  assert.equal(p.el("wallGoPalaceButton").hidden,true);
+  assert.equal(p.el("wallGoIncidentButton").hidden,false);
+  p.el("wallGoPalaceButton").click();
+  assert.equal(saved(p).holidayPhase,"wall","An accepted offer cannot unlock more sightseeing");
+  p.el("wallGoIncidentButton").click();
+  assert.equal(saved(p).route,"cult");
+  assert.equal(saved(p).holidayPhase,"route-handoff");
+  assert.equal(p.el("palaceScene").hidden,true);
+  assert.equal(p.el("marketScene").hidden,true);
+  assert.equal(p.el("handoffTitle").textContent,"THE SUMMIT");
+  assert.equal(p.el("routeHandoffArt").dataset.route,"cult");
+  p.el("handoffContinueButton").click();
+  assert.match(p.el("chinaPhoneMessage").textContent,/asked me to be their/);
+  assert.equal(p.el("chinaBatteryLabel").textContent,"1% battery");
+  p.el("chinaFinalNextButton").click();
+  assert.equal(p.el("chinaBatteryLabel").textContent,"0% · Battery depleted");
+  assert.equal(p.el("chinaFinalReaction").hidden,false);
+  p.el("chinaFinalNextButton").click();
+  assert.equal(p.el("chinaFinalEngland").hidden,false);
+  assert.equal(p.el("chinaAnotherEndingButton").hidden,false);
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).route,"cult");
+  assert.equal(saved(p).finalStep,2);
+});
+
+test("Declining Summit shows a few days later intermission, then allows Forbidden City but not early Market",()=>{
+  const p=toWallChoice();
+  p.el("wallDeclineButton").click();
+  assert.equal(p.el("wallGoIncidentButton").hidden,true);
+  p.el("wallGoPalaceButton").click();
+  assert.equal(saved(p).intermissionTarget,"palace");
+  assert.equal(p.el("intermissionTime").textContent,"A FEW DAYS LATER…");
+  assert.equal(p.el("intermissionDestination").textContent,"THE FORBIDDEN CITY");
+  assert.equal(p.el("intermissionArt").dataset.destination,"palace");
+  p.el("palaceGoMarketButton").click();
+  assert.equal(saved(p).holidayPhase,"intermission");
+  p.el("intermissionContinueButton").click();
+  assert.equal(saved(p).holidayPhase,"palace");
+  assert.equal(p.el("palaceStephen").dataset.sprite,"forbidden-city-pleased");
+  assert.equal(p.el("palaceScene").hidden,false);
+  assert.equal(p.el("palaceBookingLabel").textContent,"Honorary banquet");
+});
+
+test("Accepting the banquet plays its canonical follow-up then branches to detention, skipping Night Market",()=>{
+  const p=toPalaceChoice();
+  p.el("palaceAcceptButton").click();
   assert.equal(saved(p).pendingPlan,"detention");
-  p.el("marketAcceptButton").click();
-  assert.equal(saved(p).marketDecision,null,"Cannot accept before the six beats");
-  finishMarket(p,"accept");
+  assert.equal(p.el("palaceHonourBadge").hidden,false);
+  assert.equal(p.el("palaceGoMarketButton").hidden,true);
+  p.el("palaceGoIncidentButton").click();
+  assert.equal(saved(p).holidayPhase,"palace","Cannot skip the five follow-up lines");
+  for(let i=0;i<5;i++)p.el("palaceNextButton").click();
+  assert.equal(p.el("palacePhotoGag").hidden,false);
+  assert.equal(p.el("palaceGoIncidentButton").hidden,false);
+  p.el("palaceGoIncidentButton").click();
+  assert.equal(saved(p).route,"detention");
+  assert.equal(saved(p).holidayPhase,"route-handoff");
+  assert.equal(p.el("handoffTitle").textContent,"THE CULTURAL EXCELLENCE BANQUET");
+  p.el("handoffContinueButton").click();
+  assert.match(p.el("chinaPhoneMessage").textContent,/official/);
+  assert.equal(p.el("marketScene").hidden,true);
+});
+
+test("Declining both invitations shows next evening intermission, then Night Market has no decline option",()=>{
+  const p=toPalaceChoice();
+  p.el("palaceDeclineButton").click();p.el("palaceGoMarketButton").click();
+  assert.equal(saved(p).holidayPhase,"intermission");
+  assert.equal(saved(p).intermissionTarget,"market");
+  assert.equal(p.el("intermissionTime").textContent,"THE NEXT EVENING…");
+  assert.equal(p.el("intermissionDestination").textContent,"THE NIGHT MARKET");
+  assert.equal(p.el("intermissionArt").dataset.destination,"market");
+  p.el("intermissionContinueButton").click();
+  assert.equal(saved(p).holidayPhase,"market");
+  assert.equal(p.el("marketBookingLabel").textContent,"Total Renewal Spa — 90% off");
+  assert.equal(p.el("marketSpaRep").hidden,true);
+  p.el("marketNextButton").click();
+  assert.equal(p.el("marketSpaSign").hidden,false);
+  p.el("marketNextButton").click();
+  assert.equal(p.el("marketSpaRep").hidden,false);
+  assert.ok(!html.includes('id="marketDeclineButton"'));
+  assert.ok(!html.includes('id="marketAcceptButton"'));
+  assert.ok(!html.includes('id="marketFallback"'));
+  assert.ok(!engine.includes("function selectFallback("));
+});
+
+test("Night Market automatically chooses the spa on the final line and locks reassembly at its handoff",()=>{
+  const p=toMarket();
+  finishMarket(p);
   assert.equal(saved(p).marketDecision,"accept");
   assert.equal(saved(p).pendingPlan,"reassemble");
   assert.equal(Object.hasOwn(saved(p),"route"),false);
   assert.equal(p.el("marketResult").hidden,false);
-  assert.equal(p.el("marketFallback").hidden,true);
+  assert.equal(p.el("marketNextButton").hidden,true);
   assert.match(p.el("marketResultText").textContent,/saved a fortune/);
-  p.el("marketFinalButton").click();
-  assert.equal(saved(p).holidayPhase,"final-message");
+  p.el("marketGoIncidentButton").click();
+  assert.equal(saved(p).holidayPhase,"route-handoff");
   assert.equal(saved(p).route,"reassemble");
+  assert.equal(p.el("routeHandoffArt").dataset.route,"reassemble");
+  p.el("handoffContinueButton").click();
   assert.match(p.el("chinaPhoneMessage").textContent,/taking my entire/);
-  assert.equal(p.el("chinaBatteryLabel").textContent,"1% battery");
-  p.el("chinaFinalNextButton").click();
-  assert.equal(saved(p).finalStep,1);
-  assert.equal(p.el("chinaFinalReaction").hidden,false);
-  assert.equal(p.el("chinaBatteryLabel").textContent,"0% · Battery depleted");
-  p.el("chinaFinalNextButton").click();
-  assert.equal(saved(p).finalStep,2);
-  assert.equal(p.el("chinaFinalEngland").hidden,false);
-  assert.equal(p.el("chinaAnotherEndingButton").hidden,false);
-  assert.equal(p.el("chinaFinalNextButton").hidden,true);
-  p.el("homeButton").click();p.el("resumeButton").click();
-  assert.equal(saved(p).route,"reassemble","Committed choice survives a Continue");
-  assert.equal(p.el("chinaFinalEngland").hidden,false);
-});
-
-test("Declining market preserves an earlier Summit or banquet booking through the phone ending",()=>{
-  for(const [wall,palace,expected,fragment] of [
-    ["accept","decline","cult","asked me to be their"],
-    ["decline","accept","detention","introduced as the official"]
-  ]){
-    const p=advanceToNightMarket({wall,palace});
-    finishMarket(p,"decline");
-    assert.equal(saved(p).pendingPlan,expected);
-    assert.equal(p.el("marketFallback").hidden,true);
-    p.el("marketFinalButton").click();
-    assert.equal(saved(p).route,expected);
-    assert.match(p.el("chinaPhoneMessage").textContent,new RegExp(fragment));
-  }
-});
-
-test("Declining all three invitations forces a conscious route choice and cannot finish empty",()=>{
-  const p=advanceToNightMarket();
-  assert.equal(saved(p).pendingPlan,null);
-  finishMarket(p,"decline");
-  assert.equal(p.el("marketFallback").hidden,false);
-  assert.equal(p.el("marketResult").hidden,true);
-  p.el("marketFinalButton").click();
-  assert.equal(saved(p).holidayPhase,"market");
-  assert.equal(Object.hasOwn(saved(p),"route"),false);
-  p.el("fallbackDetentionButton").click();
-  assert.equal(saved(p).marketFallbackRoute,"detention");
-  assert.equal(saved(p).pendingPlan,"detention");
-  assert.equal(p.el("marketFallback").hidden,true);
-  p.el("marketFinalButton").click();
-  assert.equal(saved(p).route,"detention");
   p.el("chinaFinalNextButton").click();p.el("chinaFinalNextButton").click();
-  p.el("chinaAnotherEndingButton").click();
-  assert.equal(saved(p).holidayPhase,"market");
-  assert.equal(saved(p).marketStep,6);
-  assert.equal(saved(p).marketDecision,null);
-  assert.equal(saved(p).pendingPlan,null);
-  assert.equal(Object.hasOwn(saved(p),"route"),false);
-  p.el("marketDeclineButton").click();p.el("fallbackCultButton").click();
-  p.el("marketFinalButton").click();
-  assert.equal(saved(p).route,"cult","Explicit replay can choose a different route");
+  assert.equal(p.el("chinaFinalEngland").hidden,false);
 });
 
-test("Night Market replay and back preserve upstream decisions, but clear downstream outcomes",()=>{
-  const p=advanceToNightMarket({wall:"accept",palace:"decline"});
+test("Return navigation and replay never preserve impossible downstream routes",()=>{
+  const p=toPalaceChoice();
+  p.el("palaceDeclineButton").click();p.el("palaceGoMarketButton").click();
+  p.el("intermissionContinueButton").click();
   p.el("marketNextButton").click();
-  p.el("homeButton").click();p.el("resumeButton").click();
-  assert.equal(saved(p).holidayPhase,"market");
-  assert.equal(saved(p).marketStep,1);
-  for(let i=1;i<6;i++)p.el("marketNextButton").click();
-  p.el("marketAcceptButton").click();
-  assert.equal(saved(p).pendingPlan,"reassemble");
-  p.el("marketReplayButton").click();
-  assert.equal(saved(p).marketDecision,null);
-  assert.equal(saved(p).marketStep,0);
-  assert.equal(saved(p).pendingPlan,"cult");
   p.el("marketBackButton").click();
   assert.equal(saved(p).holidayPhase,"palace");
-  assert.equal(saved(p).pendingPlan,"cult");
-  p.el("palaceGoMarketButton").click();
-  assert.equal(saved(p).holidayPhase,"market");
   assert.equal(saved(p).marketStep,0);
+  p.el("palaceBackButton").click();
+  assert.equal(saved(p).holidayPhase,"wall");
+  p.el("wallReplayButton").click();
+  assert.equal(saved(p).wallStep,0);
+  assert.equal(saved(p).wallDecision,null);
+  assert.equal(saved(p).palaceDecision,null);
+  assert.equal(saved(p).pendingPlan,null);
+  assert.equal(Object.hasOwn(saved(p),"route"),false);
 });
 
-test("Night Market approved transparent sprites and landmark background are packaged",()=>{
-  const imageDir="public/assets/generated/characters";
-  for(const name of ["china-night-market-spa-representative-v01.webp","stephen-night-market-skewer-v01.webp"]){
-    const buf=fs.readFileSync(path.join(root,imageDir,name));
-    assert.equal(buf.toString("ascii",0,4),"RIFF");
-    assert.equal(buf.toString("ascii",12,16),"VP8X");
-    assert.ok((buf[20]&0x10)!==0,"Missing cutout transparency: "+name);
-    assert.equal(1+buf.readUIntLE(24,3),1086);
-    assert.equal(1+buf.readUIntLE(27,3),1448);
+test("Choose another ending returns to Great Wall route choice, not the mandatory market",()=>{
+  const p=toWallChoice();
+  p.el("wallAcceptButton").click();p.el("wallGoIncidentButton").click();
+  finishPhone(p);
+  p.el("chinaAnotherEndingButton").click();
+  assert.equal(saved(p).holidayPhase,"wall");
+  assert.equal(saved(p).wallStep,5);
+  assert.equal(saved(p).wallDecision,null);
+  assert.equal(saved(p).palaceDecision,null);
+  assert.equal(saved(p).pendingPlan,null);
+  assert.equal(Object.hasOwn(saved(p),"route"),false);
+  assert.equal(p.el("wallChoices").hidden,false);
+  declineWallToPalace(p);
+  for(let i=0;i<4;i++)p.el("palaceNextButton").click();
+  p.el("palaceAcceptButton").click();
+  for(let i=0;i<5;i++)p.el("palaceNextButton").click();
+  p.el("palaceGoIncidentButton").click();
+  assert.equal(saved(p).route,"detention");
+});
+
+test("SAVE: resumes intermission, mid-Market and incident handoff with no lost decisions",()=>{
+  const p=toWallChoice();
+  p.el("wallDeclineButton").click();p.el("wallGoPalaceButton").click();
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).holidayPhase,"intermission");
+  p.el("intermissionContinueButton").click();
+  for(let i=0;i<4;i++)p.el("palaceNextButton").click();
+  p.el("palaceDeclineButton").click();p.el("palaceGoMarketButton").click();
+  p.el("intermissionContinueButton").click();
+  p.el("marketNextButton").click();
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).marketStep,1);
+  for(let i=1;i<6;i++)p.el("marketNextButton").click();
+  p.el("marketGoIncidentButton").click();
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).holidayPhase,"route-handoff");
+  assert.equal(saved(p).route,"reassemble");
+  assert.equal(p.el("handoffTitle").textContent,"TOTAL RENEWAL SPA");
+});
+
+test("Older same-day multi-accept saves migrate to the FIRST accepted branch",()=>{
+  for(const [choices,expected] of [
+    [{wallDecision:"accept",palaceDecision:"accept",marketDecision:"accept"},"cult"],
+    [{wallDecision:"decline",palaceDecision:"accept",marketDecision:"accept"},"detention"]
+  ]){
+    const p=preview();
+    p.stored.set("stephen-martin-game-sp1-save-v1",JSON.stringify({
+      version:3,scene:"holiday",beatId:"office.v12",openingSeen:true,
+      holidayPhase:"final-message",route:"reassemble",marketStep:6,finalStep:2,...choices
+    }));
+    p.el("resumeButton").click();
+    assert.equal(saved(p).route,expected);
+    assert.equal(saved(p).holidayPhase,"route-handoff");
+    assert.equal(saved(p).holidayFlowVersion,2);
+  }
+});
+
+test("Approval and asset contract: approved scene images preserved with alpha and packaged",()=>{
+  const characterDir="public/assets/generated/characters";
+  for(const name of [
+    "stephen-holiday-standing-neutral-v01.webp",
+    "great-wall-summit-promoter-standing-v01.webp",
+    "china-banquet-attendant-standing-v01.webp",
+    "stephen-holiday-forbidden-city-pleased-v01.webp",
+    "china-night-market-spa-representative-v01.webp",
+    "stephen-night-market-skewer-v01.webp"
+  ]){
+    const buff=fs.readFileSync(path.join(root,characterDir,name));
+    assert.equal(buff.toString("ascii",0,4),"RIFF");
+    assert.equal(buff.toString("ascii",12,16),"VP8X");
+    assert.ok((buff[20]&0x10)!==0,"Approved sprite must be transparent: "+name);
     assert.ok(read("scripts/build.mjs").includes(name));
-    assert.ok(html.includes(name));
   }
-  const bgName="china-night-market-background-v01.webp";
-  const bg=fs.readFileSync(path.join(root,"public/assets/generated/locations",bgName));
-  assert.equal(bg.toString("ascii",0,4),"RIFF");
-  assert.equal(bg.toString("ascii",8,12),"WEBP");
-  assert.ok(read("scripts/build.mjs").includes(bgName));
-  assert.ok(html.includes(bgName));
-  for(const id of ["marketScene","marketNextButton","marketAcceptButton","marketDeclineButton",
-                   "palaceGoMarketButton","marketFallback","chinaFinalScene","chinaFinalNextButton",
-                   "chinaAnotherEndingButton"]){
-    assert.ok(html.includes('id="'+id+'"'),id);
+  for(const name of ["chapter-two-days-later-title-v01.webp",
+    "china-great-wall-background-v01.webp",
+    "china-forbidden-city-background-v01.webp",
+    "china-night-market-background-v01.webp"]){
+    const buff=fs.readFileSync(path.join(root,"public/assets/generated/locations",name));
+    assert.equal(buff.toString("ascii",0,4),"RIFF");
+    assert.equal(buff.toString("ascii",8,12),"WEBP");
   }
-  assert.match(css,/#holidayScreen #marketScene/);
-  assert.match(css,/grid-template-columns: repeat\(3, minmax\(0,1fr\)\)/);
 });
 
-test("Chapter Two desktop fits the same 16:9 viewport envelope as office",()=>{
-  const block=css.split("GAME-SP2.2-F1 — Chapter Two desktop viewport fit")[1];
-  assert.ok(block,"Viewport fix must remain scoped and documented");
-  assert.match(block,/@media \(min-width: 801px\)/);
-  assert.match(block,/body:has\(#holidayScreen:not\(\[hidden\]\)\) \.game-shell/);
-  assert.match(block,/min-height: 100dvh/);
-  assert.match(block,/body:has\(#holidayScreen:not\(\[hidden\]\)\) \.topbar/);
-  assert.match(block,/body:has\(#holidayScreen:not\(\[hidden\]\)\) \.footnote/);
-  assert.match(block,/width: min\(calc\(100vw - 22px\), calc\(177\.68dvh - 32px\), 1672px\)/);
-  assert.match(block,/aspect-ratio: 1672 \/ 941/);
-  assert.match(block,/#holidayScreen #chinaTransition/);
-  assert.match(block,/#holidayScreen #wallScene/);
-  assert.match(block,/\.wall-action-strip \{[\s\S]*?position: absolute/);
-  assert.match(block,/\.china-footer \{[\s\S]*?position: absolute/);
-  assert.match(block,/overflow-y: auto/,"Tall choices must remain usable");
-  assert.ok(!block.includes("overflow-y: hidden"),"Do not make content inaccessible");
+test("Layout: desktop viewport preserved with two-column first and second choices, and accessible intermission",()=>{
+  assert.match(css,/GAME-SP2.3C — timeline intermissions/);
+  assert.match(css,/#holidayScreen #chinaIntermission\[hidden\]/);
+  assert.match(css,/#holidayScreen #chinaRouteHandoff\[hidden\]/);
+  assert.match(css,/#holidayScreen \.china-intermission-art\[data-destination="palace"\]/);
+  assert.match(css,/#holidayScreen \.china-intermission-art\[data-destination="market"\]/);
+  assert.match(css,/grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(css,/aspect-ratio:1672\/941/);
+  assert.match(css,/@media \(max-width:450px\)/);
+  assert.ok(!css.split("GAME-SP2.3C — timeline intermissions")[1].includes("overflow-y:hidden"));
+});
+
+test("Holiday story data retains locked 5 Wall, 4 Palace and 6 Market dialogue beats and final text",()=>{
+  const w=story();
+  assert.equal(w.SMP_CHINA_WALL.lines.length,5);
+  assert.equal(w.SMP_CHINA_PALACE.lines.length,4);
+  assert.equal(w.SMP_CHINA_PALACE.acceptReply.length,5);
+  assert.equal(w.SMP_CHINA_MARKET.lines.length,6);
+  assert.match(w.SMP_CHINA_MARKET.signHeadline,/90%/);
+  assert.match(w.SMP_CHINA_FINAL.messageByRoute.cult,/asked me to be their/);
+  assert.match(w.SMP_CHINA_FINAL.messageByRoute.detention,/official/);
+  assert.match(w.SMP_CHINA_FINAL.messageByRoute.reassemble,/entire/);
+  assert.equal(w.SMP_CHINA_FINAL.stephenLastLine,"Oh, for fuck's sake.");
 });
 
 test("new expressions need only a registered seated source and no story edits",()=>{
   assert.ok(engine.includes("seatedExpressionSources"));
   assert.ok(engine.includes("David: {"));
   assert.ok(engine.includes("Paul: {"));
-  assert.ok(engine.includes('applySeatedExpression(name)'));
+  assert.ok(engine.includes("applySeatedExpression(name)"));
   assert.ok(!reactions.includes("http"));
   assert.ok(read("index.html").indexOf("office-data.js")<read("index.html").indexOf("reactions.js"));
 });

@@ -2,6 +2,15 @@
 
 **Updated:** 14 October 2026
 
+## GAME-SP2.3C — Branching invitations and time intermissions (14 October 2026)
+
+- **Owner-approved structural change** replaces the prior three-consecutive-invitations design. Stephen now takes exactly **one** mutually exclusive route: accept The Summit at Great Wall → `cult` handoff; otherwise intermission **A few days later… Forbidden City** → accept the fictional banquet → `detention` handoff; otherwise intermission **The next evening… Night Market** → **mandatory** Total Renewal Spa → `reassemble` handoff. Both later sightseeing locations are skipped if an earlier invitation is accepted.
+- All approved location backgrounds, four distinct holiday actors and exact individual dialogue beats remain intact. Existing laptop-friendly 16:9 scene fit and two-column Great Wall/Palace decisions retained; the Night Market has **no choice buttons, no all-declined fallback and no replacement of a previously accepted booking**.
+- The route-specific incident handoff is an honest preview of future cult/detention/reassembly mini-games; no unavailable mini-game is falsely launched. Existing route-specific 1%-to-0% interrupted phone message and **Back in England** are retained. **Choose another ending** returns to the Great Wall decision checkpoint.
+- Both intermission screens reuse already approved backgrounds via CSS rather than inventing new artwork. Local V3 saves get `holidayFlowVersion=2` and legacy same-day multi-accept states are reconciled to the first accepted route.
+- Canonical story revision lives at `docs/story/GAME-SP2.3C-BRANCHING-STORY-V2.md`, explicitly superseding the progression in V1 while retaining unchanged dialogue.
+- Draft PR #21 is stacked on still-draft Night Market PR #20. Main and preceding PRs stay untouched; live desktop/laptop and phone/tablet owner review and test qualification required before any merge.
+
 ## GAME-SP2.3B — Approved Night Market and final Stephen phone message (14 October 2026)
 
 - Owner-approved originals staged in project Google Drive: lantern-lit background (`1zahJ5gOvYddoZLn4A6uYQHmegsnKtqGt`), teal spa representative (`101rfrMgdkjnxvAMQN8s0AMuiUpV0zI7M`), and standing skewer-holding Stephen (`1SztUKG4dvx9uhCkuDP85jGh0Vab_SjnZ`). Three `generated-assets/manifests/game-sp23b-*.json` files materialise the independent approved WebPs; rejected whole-scene composite concept images are excluded.

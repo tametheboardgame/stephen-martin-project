@@ -157,7 +157,7 @@
             <img class="wall-stephen" src="./public/assets/generated/characters/stephen-holiday-standing-neutral-v01.webp" alt="Stephen standing at the Great Wall, holding his phone" loading="eager">
             <img id="wallPromoter" class="wall-promoter" src="./public/assets/generated/characters/great-wall-summit-promoter-standing-v01.webp" alt="Friendly Summit event promoter showing a brochure" loading="eager" hidden>
             <div class="wall-place-label"><span>CHAPTER TWO · CHINA</span><strong>THE GREAT WALL</strong></div>
-            <div class="wall-booking" aria-live="polite"><span>TONIGHT'S PLAN</span><strong id="wallBookingLabel">Nothing booked yet</strong></div>
+            <div class="wall-booking" aria-live="polite"><span>THE INVITATION</span><strong id="wallBookingLabel">The Summit</strong></div>
             <div id="wallPhone" class="wall-phone" aria-label="Phone notification from David">
               <div class="wall-phone-heading">✉ DAVID · RESCUE GROUP</div>
               <p id="wallPhoneText">Please confirm you're safe. I've identified several geopolitical variables.</p>
@@ -179,7 +179,8 @@
             <div id="wallResult" class="wall-result" hidden>
               <strong id="wallResultTitle">Booking confirmed</strong>
               <p id="wallResultText" aria-live="polite"></p>
-              <button id="wallGoPalaceButton" type="button" class="btn btn-primary">Continue to Forbidden City →</button>
+              <button id="wallGoPalaceButton" type="button" class="btn btn-primary">A few days later… →</button>
+              <button id="wallGoIncidentButton" type="button" class="btn btn-primary" hidden>Head to The Summit →</button>
               <button id="wallReplayButton" type="button" class="btn btn-secondary">Replay Great Wall choice ↺</button>
             </div>
           </div>
@@ -190,7 +191,7 @@
             <img id="palaceStephen" class="wall-stephen" src="./public/assets/generated/characters/stephen-holiday-forbidden-city-pleased-v01.webp" alt="Stephen in his approved blue-quarter-zip Forbidden City pose" loading="eager">
             <img class="wall-promoter palace-attendant" src="./public/assets/generated/characters/china-banquet-attendant-standing-v01.webp" alt="A smiling banquet attendant with a red blazer and event folder" loading="eager">
             <div class="wall-place-label"><span>CHAPTER TWO · CHINA</span><strong>THE FORBIDDEN CITY</strong></div>
-            <div class="wall-booking" aria-live="polite"><span>TONIGHT'S PLAN</span><strong id="palaceBookingLabel">Nothing booked yet</strong></div>
+            <div class="wall-booking" aria-live="polite"><span>THE INVITATION</span><strong id="palaceBookingLabel">Honorary banquet</strong></div>
             <div class="palace-honour-badge" id="palaceHonourBadge" hidden>VISITING INTERNATIONAL SPECIALIST</div>
             <div class="wall-dialogue" id="palaceDialogue">
               <strong id="palaceSpeakerName">ATTENDANT</strong>
@@ -213,7 +214,8 @@
               <div id="palacePhotoGag" class="palace-photo-gag" hidden role="img" aria-label="Stephen's first phone photograph is Paul's ridiculous cartoon bear image">
                 <span aria-hidden="true">🐻</span><div><strong>FIRST PHOTO: UPLOADED</strong><small>Paul's rather unfortunate bear picture. Stephen hasn't noticed.</small></div>
               </div>
-              <button id="palaceGoMarketButton" type="button" class="btn btn-primary">Continue to Night Market →</button>
+              <button id="palaceGoMarketButton" type="button" class="btn btn-primary">The next evening… →</button>
+              <button id="palaceGoIncidentButton" type="button" class="btn btn-primary" hidden>Attend the banquet →</button>
               <button id="palaceReplayButton" type="button" class="btn btn-secondary">Replay Forbidden City choice ↺</button>
             </div>
           </div>
@@ -225,7 +227,7 @@
             <img class="wall-stephen" src="./public/assets/generated/characters/stephen-night-market-skewer-v01.webp" alt="Stephen enjoying a market snack in his blue quarter-zip" loading="eager">
             <img id="marketSpaRep" class="wall-promoter market-spa-rep" src="./public/assets/generated/characters/china-night-market-spa-representative-v01.webp" alt="A spa representative in a teal jacket holding a brochure" loading="eager" hidden>
             <div class="wall-place-label"><span>CHAPTER TWO · CHINA</span><strong>THE NIGHT MARKET</strong></div>
-            <div class="wall-booking" aria-live="polite"><span>TONIGHT'S PLAN</span><strong id="marketBookingLabel">Nothing booked yet</strong></div>
+            <div class="wall-booking" aria-live="polite"><span>THE OFFER</span><strong id="marketBookingLabel">Total Renewal Spa</strong></div>
             <div id="marketSpaSign" class="market-spa-sign" hidden><span>TOTAL RENEWAL SPA</span><strong>90% OFF</strong><span>THE COMPLETE STEPHEN EXPERIENCE</span><small>Replacement components sold separately.</small></div>
             <div class="wall-dialogue" id="marketDialogue"><strong id="marketSpeakerName">STEPHEN</strong><p id="marketLineText" aria-live="polite"></p></div>
           </div>
@@ -233,27 +235,38 @@
             <div class="wall-story-progress" id="marketProgressLabel"></div>
             <button id="marketBackButton" type="button" class="btn btn-small btn-secondary">← Forbidden City</button>
             <button id="marketNextButton" type="button" class="btn btn-primary">Next line →</button>
-            <div id="marketChoices" class="wall-choices" hidden>
-              <h3>The Total Renewal Spa offer</h3>
-              <p>A ninety-per-cent discount on a suspiciously complete spa experience.</p>
-              <button id="marketAcceptButton" type="button" class="wall-choice">Ninety per cent off? I'd be an idiot not to.</button>
-              <button id="marketDeclineButton" type="button" class="wall-choice">I think I'll stick with my existing plans.</button>
-            </div>
-            <div id="marketFallback" class="wall-result" hidden>
-              <strong>No evening plan booked</strong>
-              <p>Stephen has declined every invitation. Choose one of the three places he already encountered.</p>
-              <div class="market-fallback-options">
-                <button id="fallbackCultButton" type="button" class="wall-choice">The Summit</button>
-                <button id="fallbackDetentionButton" type="button" class="wall-choice">Honorary banquet</button>
-                <button id="fallbackReassembleButton" type="button" class="wall-choice">Total Renewal Spa</button>
-              </div>
-            </div>
             <div id="marketResult" class="wall-result" hidden>
-              <strong id="marketResultTitle">Evening plan confirmed</strong>
-              <p id="marketResultText" aria-live="polite"></p>
-              <button id="marketFinalButton" type="button" class="btn btn-primary">Send Stephen's final message →</button>
-              <button id="marketReplayButton" type="button" class="btn btn-secondary">Replay Night Market choice ↺</button>
+              <strong id="marketResultTitle">Total Renewal Spa — booked ✓</strong>
+              <p id="marketResultText" aria-live="polite">Ninety per cent off? I'd be an idiot not to.</p>
+              <button id="marketGoIncidentButton" type="button" class="btn btn-primary">Head to Total Renewal Spa →</button>
             </div>
+          </div>
+        </div>
+
+        <div id="chinaIntermission" class="china-intermission" hidden>
+          <div id="intermissionArt" class="china-intermission-art">
+            <div class="intermission-frame">
+              <span>MEANWHILE, STEPHEN IS STILL ON HOLIDAY…</span>
+              <h2 id="intermissionTime">A FEW DAYS LATER…</h2>
+              <h3 id="intermissionDestination">THE FORBIDDEN CITY</h3>
+              <p id="intermissionComment">Somehow, he's still having an absolutely wonderful time.</p>
+            </div>
+          </div>
+          <div class="china-intermission-actions">
+            <button id="intermissionContinueButton" type="button" class="btn btn-primary">Continue sightseeing →</button>
+          </div>
+        </div>
+        <div id="chinaRouteHandoff" class="china-route-handoff" hidden>
+          <div id="routeHandoffArt" class="china-route-handoff-art">
+            <div class="route-handoff-card">
+              <span>STEPHEN'S HOLIDAY HAS TAKEN A TURN…</span>
+              <h2 id="handoffTitle">THE SUMMIT</h2>
+              <p id="handoffDescription">Stephen arrives at his chosen destination.</p>
+              <small>Coming next: the corresponding incident and rescue mini-game.</small>
+            </div>
+          </div>
+          <div class="china-intermission-actions">
+            <button id="handoffContinueButton" type="button" class="btn btn-primary">Continue to Stephen's last message →</button>
           </div>
         </div>
         <div id="chinaFinalScene" class="china-final-scene" hidden>
@@ -275,7 +288,7 @@
         <div class="china-footer">
           <button id="replayButton" type="button" class="mini-button">Replay office ↺</button>
           <button id="homeButton" type="button" class="mini-button">Main menu</button>
-          <span>GAME-SP2.3B · Three-scene Stephen holiday preview · Fictional comedy</span>
+          <span>GAME-SP2.3C · Branching Stephen holiday preview · Fictional comedy</span>
         </div>
       </section>
     </main>

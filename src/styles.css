@@ -1945,3 +1945,116 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen .market-spa-sign {top:24%;left:43%;width:37%;}
   #holidayScreen .china-final-reaction {left:5%;right:5%;bottom:18%;}
 }
+
+
+/*
+ * GAME-SP2.3C — timeline intermissions & mutually exclusive route handoffs.
+ * Reuse the approved location backgrounds. Art, cutouts and laptop framing
+ * are untouched; no new rendered images or giant full-page scroll regions.
+ */
+#holidayScreen #chinaIntermission[hidden],
+#holidayScreen #chinaRouteHandoff[hidden],
+#holidayScreen #wallGoPalaceButton[hidden],
+#holidayScreen #wallGoIncidentButton[hidden],
+#holidayScreen #palaceGoMarketButton[hidden],
+#holidayScreen #palaceGoIncidentButton[hidden] { display:none !important; }
+#holidayScreen .china-intermission,
+#holidayScreen .china-route-handoff {position:relative;background:#0a1d30;}
+#holidayScreen .china-intermission-art,
+#holidayScreen .china-route-handoff-art {
+  position:relative;width:100%;aspect-ratio:1672/941;
+  display:grid;place-items:center;padding:5%;
+  background-color:#102841;
+  background-size:cover;background-position:center;
+  isolation:isolate;
+}
+#holidayScreen .china-intermission-art::before,
+#holidayScreen .china-route-handoff-art::before {
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(125deg,rgba(5,19,35,.85),rgba(6,23,42,.35) 55%,rgba(6,22,35,.70));
+}
+#holidayScreen .china-intermission-art[data-destination="palace"] {
+  background-image:url("../public/assets/generated/locations/china-forbidden-city-background-v01.webp");
+}
+#holidayScreen .china-intermission-art[data-destination="market"] {
+  background-image:url("../public/assets/generated/locations/china-night-market-background-v01.webp");
+}
+#holidayScreen .china-route-handoff-art[data-route="cult"] {
+  background-image:url("../public/assets/generated/locations/china-great-wall-background-v01.webp");
+}
+#holidayScreen .china-route-handoff-art[data-route="detention"] {
+  background-image:url("../public/assets/generated/locations/china-forbidden-city-background-v01.webp");
+}
+#holidayScreen .china-route-handoff-art[data-route="reassemble"] {
+  background-image:url("../public/assets/generated/locations/china-night-market-background-v01.webp");
+}
+#holidayScreen .intermission-frame,
+#holidayScreen .route-handoff-card {
+  position:relative;z-index:1;
+  width:min(86%,920px);
+  padding:clamp(24px,4vw,58px) clamp(18px,4vw,65px);
+  color:#fff4dc;text-align:center;
+  border:3px solid #e4b766;border-radius:18px;
+  background:rgba(9,31,54,.89);
+  box-shadow:6px 8px 0 rgba(0,0,0,.36);
+}
+#holidayScreen .intermission-frame > span,
+#holidayScreen .route-handoff-card > span {
+  display:block;color:#96dcff;font-size:clamp(10px,1.2vw,15px);
+  font-weight:900;letter-spacing:.14em;
+}
+#holidayScreen .intermission-frame h2,
+#holidayScreen .route-handoff-card h2 {
+  margin:12px 0 6px;font-size:clamp(25px,4.1vw,62px);
+  color:#ffdb83;line-height:1.1;
+}
+#holidayScreen .intermission-frame h3 {
+  margin:6px 0;font-size:clamp(17px,2.4vw,35px);line-height:1.2;
+}
+#holidayScreen .intermission-frame p,
+#holidayScreen .route-handoff-card p {
+  margin:13px 0 0;font-size:clamp(13px,1.45vw,20px);
+  font-weight:650;line-height:1.4;
+}
+#holidayScreen .route-handoff-card small {
+  display:block;margin:15px 0 0;font-size:clamp(10px,1vw,13px);
+  color:#b8cfe1;font-weight:700;
+}
+#holidayScreen .china-intermission-actions {
+  display:flex;justify-content:center;align-items:center;
+  gap:10px;padding:12px;background:#071e36;
+}
+#holidayScreen .china-intermission-actions .btn {min-height:46px;}
+/* Choice result still uses the established compact action strip; only one
+   of the branch navigation buttons is visible at a time. */
+#holidayScreen .wall-result .btn[hidden] {display:none !important;}
+@media (min-width:801px) {
+  #holidayScreen #chinaIntermission,
+  #holidayScreen #chinaRouteHandoff {
+    position:absolute;inset:0;height:100%;width:100%;
+  }
+  #holidayScreen .china-intermission-art,
+  #holidayScreen .china-route-handoff-art {
+    position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;
+  }
+  #holidayScreen .china-intermission-actions {
+    position:absolute;left:0;right:0;bottom:0;z-index:5;
+    background:rgba(5,23,43,.9);
+  }
+  #holidayScreen:has(#chinaIntermission:not([hidden])) .china-footer,
+  #holidayScreen:has(#chinaRouteHandoff:not([hidden])) .china-footer {
+    top:2%;right:2%;left:auto;bottom:auto;
+  }
+}
+@media (max-width:800px) {
+  #holidayScreen .china-intermission-art,
+  #holidayScreen .china-route-handoff-art {aspect-ratio:4/3;}
+  #holidayScreen .intermission-frame,
+  #holidayScreen .route-handoff-card {width:94%;padding:17px 13px;}
+}
+@media (max-width:450px) {
+  #holidayScreen .china-intermission-art,
+  #holidayScreen .china-route-handoff-art {aspect-ratio:3/4;}
+  #holidayScreen .intermission-frame h2,
+  #holidayScreen .route-handoff-card h2 {font-size:25px;}
+}

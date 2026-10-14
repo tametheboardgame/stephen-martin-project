@@ -522,3 +522,8 @@ The owner approved the Forbidden City asset trio. Its banquet choice overrides/p
 ## GAME-SP2.3B — Night Market, route lock and final message (14 October 2026)
 
 Owner-approved Night Market scene art, Spa representative and skewer Stephen. Implement the final short invitation choice (accept spa replaces earlier plans, decline preserves). Three-declined fallback offers only previously seen options; finalise one route at departure, then show a route-specific unfinished message, dead battery, Stephen's reaction and Back in England. Preserve the fixed laptop layout and the original office clips. This does **not** implement the David/Paul rescue chapter: proceed to GAME-SP2.4 after owner visual approval of the stacked draft branch.
+
+
+## GAME-SP2.3C — Branching, timeline intermissions and incident handoffs (14 October 2026)
+
+Owner-approved revision: The Summit accept bypasses Forbidden City and Night Market; declining it leads to A Few Days Later / Forbidden City. Banquet acceptance bypasses Night Market; decline leads to The Next Evening / Night Market. Spa is then unavoidable, with no third offer buttons or all-declined fallback. Each selection moves to its honest, not-yet-playable incident handoff and route-specific interrupted phone message. Choose Another Ending restarts the Great Wall decision. Preserve the approved 16:9 art and standalone characters; V3 legacy saves are migrated. Implement mini-games/rescue only after this bounded owner-approved preview. Story contract: `docs/story/GAME-SP2.3C-BRANCHING-STORY-V2.md`.
