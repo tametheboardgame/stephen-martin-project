@@ -2,6 +2,13 @@
 
 **Updated:** 14 October 2026
 
+## GAME-SP2.4A — Office Alarm and travel montage draft (14 October 2026)
+
+- Created a separate stacked draft from approved-structure Chapter Two: the route-specific final phone and Back in England card continue into the **10 original OFFICE-ALARM lines**, played with approved David/Paul seated actors and reused office background. A four-card native-UI ridiculous travel montage follows, ending at a deliberately **non-playable Visitor Information handoff** for forthcoming SP2.4B.
+- Route and both progression cursors persist; Continue and Choose Another Ending work without destroying route-specific state or replaying the entire office. Previous 55 recorded opening lines remain unchanged and no new voice recordings are claimed.
+- Two hotel-lobby concepts generated for owner review: initial composite with characters **rejected**, second environment-only render **pending owner approval**. **Neither imported or committed as a game asset.** New art enters only through the Drive manifest pipeline after approval.
+- Scope, exclusion and review gate documented in `docs/story/GAME-SP2.4A-OFFICE-ALARM-IMPLEMENTATION.md`. Draft PR is dependent on PR #21 and production main remains untouched. Next approved work package is **SP2.4B, the shared hotel evidence puzzle**, after concept approval.
+
 ## GAME-SP2.4–SP3.4 — Rescue and ending implementation plan approved (14 October 2026)
 
 - **Planning decision only; no new rescue gameplay or artwork has been made.** Detailed authoritative roadmap at `docs/story/GAME-SP2.4-SP3-RESCUE-IMPLEMENTATION-PLAN-V1.md`, using the existing approved `SP-WP1.2-GAME-TREATMENT.md` mini-games/endings and the newer `GAME-SP2.3C-BRANCHING-STORY-V2.md` invitation structure.

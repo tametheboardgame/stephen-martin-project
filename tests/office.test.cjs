@@ -778,6 +778,124 @@ test("Holiday story data retains locked 5 Wall, 4 Palace and 6 Market dialogue b
   assert.equal(w.SMP_CHINA_FINAL.stephenLastLine,"Oh, for fuck's sake.");
 });
 
+
+function toRescueAlarm(route="cult") {
+  let p;
+  if(route==="cult") {
+    p=toWallChoice();
+    p.el("wallAcceptButton").click();p.el("wallGoIncidentButton").click();
+  } else if(route==="detention") {
+    p=toPalaceChoice();
+    p.el("palaceAcceptButton").click();
+    for(let i=0;i<5;i++)p.el("palaceNextButton").click();
+    p.el("palaceGoIncidentButton").click();
+  } else {
+    p=toMarket();
+    finishMarket(p);
+    p.el("marketGoIncidentButton").click();
+  }
+  finishPhone(p);
+  p.el("chinaFinalNextButton").click();
+  return p;
+}
+test("GAME-SP2.4A alarm uses all ten approved lines and the route-specific last transmission",()=>{
+  const alarm=story().SMP_RESCUE_ALARM;
+  assert.equal(alarm.lines.length,10);
+  assert.deepEqual(Array.from(alarm.lines,x=>x.id),Array.from({length:10},(_,i)=>"rescue.alarm."+String(i+1).padStart(3,"0")));
+  assert.equal(alarm.lines[0].text,"Stephen has stopped responding.");
+  assert.equal(alarm.lines[6].text,"Could just be his battery.");
+  assert.equal(alarm.lines[9].text,"Pack everything.");
+  assert.equal(alarm.montage.length,4);
+  assert.match(alarm.montage[3].title,/UNNECESSARY SPENDING/);
+  for(const [route,fragment] of [
+    ["cult","asked me to be their"],
+    ["detention","introduced as the official"],
+    ["reassemble","taking my entire"]
+  ]){
+    const p=toRescueAlarm(route);
+    assert.equal(saved(p).route,route,"Route cannot change when rescue starts");
+    assert.equal(saved(p).holidayPhase,"rescue-alarm");
+    assert.equal(saved(p).rescueAlarmStep,0);
+    assert.equal(p.el("rescueAlarmScene").hidden,false);
+    assert.equal(p.el("rescueAlarmTravelButton").hidden,true);
+    assert.equal(p.el("rescueAlarmSpeaker").textContent,"DAVID");
+    assert.equal(p.el("rescueAlarmPhone").hidden,true);
+    p.el("rescueAlarmTravelButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-alarm","Cannot skip dialogue");
+    for(let i=0;i<5;i++)p.el("rescueAlarmNextButton").click();
+    assert.equal(p.el("rescueAlarmPhone").hidden,false,"Final transmission visual on sixth line");
+    assert.match(p.el("rescueAlarmPhoneText").textContent,new RegExp(fragment));
+    assert.equal(p.el("rescueAlarmDavid").dataset.sprite,"systems-expert");
+    p.el("rescueAlarmNextButton").click();
+    assert.equal(p.el("rescueAlarmPaul").dataset.sprite,"confused");
+  }
+});
+
+test("GAME-SP2.4A travel montage is a bounded four-beat cutaway after the last alarm line",()=>{
+  const p=toRescueAlarm();
+  for(let i=0;i<10;i++)p.el("rescueAlarmNextButton").click();
+  assert.equal(saved(p).rescueAlarmStep,10);
+  assert.equal(p.el("rescueAlarmNextButton").hidden,true);
+  assert.equal(p.el("rescueAlarmTravelButton").hidden,false);
+  p.el("rescueAlarmNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-alarm");
+  p.el("rescueAlarmTravelButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-travel");
+  assert.equal(p.el("rescueTravelTitle").textContent,"TWO TICKETS. ZERO PLANNING.");
+  for(let i=0;i<3;i++)p.el("rescueTravelNextButton").click();
+  assert.equal(saved(p).rescueTravelStep,3);
+  assert.match(p.el("rescueTravelTitle").textContent,/UNNECESSARY SPENDING/);
+  p.el("rescueTravelNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-hub-arrival");
+  assert.equal(saved(p).route,"cult");
+  assert.equal(p.el("rescueHubArrival").hidden,false);
+  assert.match(html,/GAME-SP2\.4B/,"Hotel investigation is explicitly future work");
+  assert.ok(!html.includes("hotel-visitor-information-background-v01.webp"),"Unapproved generated art must not be packaged");
+});
+
+test("GAME-SP2.4A Continue checkpoints alarm, travel and hub arrival; replay resets to first choice",()=>{
+  const p=toRescueAlarm("detention");
+  p.el("rescueAlarmNextButton").click();p.el("rescueAlarmNextButton").click();
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-alarm");
+  assert.equal(saved(p).rescueAlarmStep,2);
+  assert.equal(p.el("rescueAlarmLine").textContent,"Exactly. Pre-arranged silence. A signal.");
+  for(let i=2;i<10;i++)p.el("rescueAlarmNextButton").click();
+  p.el("rescueAlarmTravelButton").click();
+  p.el("rescueTravelNextButton").click();
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-travel");
+  assert.equal(saved(p).rescueTravelStep,1);
+  p.el("rescueTravelNextButton").click();
+  p.el("rescueTravelNextButton").click();
+  p.el("rescueTravelNextButton").click();
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-hub-arrival");
+  p.el("rescueHubReplayButton").click();
+  assert.equal(saved(p).holidayPhase,"wall");
+  assert.equal(saved(p).wallDecision,null);
+  assert.equal(saved(p).rescueAlarmStep,0);
+  assert.equal(saved(p).rescueTravelStep,0);
+  assert.equal(Object.hasOwn(saved(p),"route"),false);
+});
+
+test("GAME-SP2.4A uses existing approved characters and 16:9 scene; no new art imported",()=>{
+  assert.match(css,/GAME-SP2\.4A — OFFICE-ALARM/);
+  assert.match(css,/#holidayScreen #rescueAlarmScene\[hidden\]/);
+  assert.match(css,/\.rescue-alarm-stage,\s*#holidayScreen \.rescue-travel-stage/);
+  assert.match(css,/aspect-ratio:1672\/941/);
+  for(const name of ["david-office-seated-serious-v01.webp","david-office-seated-confident-v01.webp",
+    "david-office-seated-frustrated-v01.webp","david-office-seated-systems-expert-v01.webp",
+    "paul-office-seated-neutral-v01.webp","paul-office-seated-confused-v01.webp",
+    "paul-office-seated-pleased-v01.webp","office-clean-01-v01.webp","office-foreground-01-v01.webp"])
+    assert.ok(html.includes(name)||engine.includes(name),name);
+  for(const id of ["rescueAlarmScene","rescueAlarmLine","rescueAlarmNextButton",
+    "rescueAlarmTravelButton","rescueTravelScene","rescueTravelNextButton",
+    "rescueHubArrival","rescueHubReplayButton"])
+    assert.ok(html.includes('id="'+id+'"'),id);
+  assert.equal(story().SMP_RESCUE_ALARM.lines.length,10);
+});
+
 test("new expressions need only a registered seated source and no story edits",()=>{
   assert.ok(engine.includes("seatedExpressionSources"));
   assert.ok(engine.includes("David: {"));

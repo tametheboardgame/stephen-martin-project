@@ -83,3 +83,33 @@
     subtitle: "Two idiots are about to make this considerably worse."
   });
 })();
+
+
+// GAME-SP2.4A — owner-approved OFFICE-ALARM dialogue and tiny shared
+// travel montage from SP-WP1.2-GAME-TREATMENT; all characters are fictional.
+(function () {
+  "use strict";
+  window.SMP_RESCUE_ALARM = Object.freeze({
+    lines: [
+      { id: "rescue.alarm.001", speaker: "David", text: "Stephen has stopped responding.", david: "serious", paul: "neutral" },
+      { id: "rescue.alarm.002", speaker: "Paul", text: "He said he was muting us.", david: "serious", paul: "confused" },
+      { id: "rescue.alarm.003", speaker: "David", text: "Exactly. Pre-arranged silence. A signal.", david: "confident", paul: "neutral" },
+      { id: "rescue.alarm.004", speaker: "Paul", text: "That would be a very stupid signal.", david: "frustrated", paul: "neutral" },
+      { id: "rescue.alarm.005", speaker: "David", text: "We have established that he makes questionable decisions.", david: "serious", paul: "neutral" },
+      { id: "rescue.alarm.006", speaker: "David", text: "There it is. The final transmission.", david: "systems-expert", paul: "confused", showPhone: true },
+      { id: "rescue.alarm.007", speaker: "Paul", text: "Could just be his battery.", david: "serious", paul: "confused", showPhone: true },
+      { id: "rescue.alarm.008", speaker: "David", text: "Paul. Please respect the gravity of this international incident.", david: "frustrated", paul: "neutral" },
+      { id: "rescue.alarm.009", speaker: "Paul", text: "Right. Shall I pack the bears?", david: "serious", paul: "pleased" },
+      { id: "rescue.alarm.010", speaker: "David", text: "Pack everything.", david: "confident", paul: "neutral" }
+    ],
+    montage: [
+      { id: "rescue.travel.001", eyebrow: "OPERATION: PROBABLY FINE", title: "TWO TICKETS. ZERO PLANNING.", subtext: "Non-refundable, obviously.", symbol: "✈" },
+      { id: "rescue.travel.002", eyebrow: "LUGGAGE CAROUSEL", title: "THE PRINTER MADE IT.", subtext: "Paul has packed an entirely unreasonable quantity of bear printouts.", symbol: "🧳" },
+      { id: "rescue.travel.003", eyebrow: "DAVID'S STRATEGIC BRIEFING", title: "THE MAP IS UPSIDE DOWN.", subtext: "David insists this is a tactical perspective.", symbol: "🗺" },
+      { id: "rescue.travel.004", eyebrow: "SEVERAL HOURS LATER…", title: "A SPECTACULAR AMOUNT OF UNNECESSARY SPENDING", subtext: "And neither of them has checked whether Stephen is actually missing.", symbol: "💳" }
+    ],
+    arriveHeading: "CHAPTER THREE — THE RESCUE",
+    arriveLocation: "VISITOR INFORMATION",
+    arriveNote: "Next: David and Paul's hotel evidence investigation (GAME-SP2.4B)."
+  });
+})();

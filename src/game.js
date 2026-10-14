@@ -22,6 +22,20 @@
   const palace = window.SMP_CHINA_PALACE;
   const market = window.SMP_CHINA_MARKET;
   const chinaFinal = window.SMP_CHINA_FINAL;
+  const rescueAlarm = window.SMP_RESCUE_ALARM;
+  const rescuePortraits = {
+    David: {
+      serious: "./public/assets/generated/characters/david-office-seated-serious-v01.webp",
+      confident: "./public/assets/generated/characters/david-office-seated-confident-v01.webp",
+      frustrated: "./public/assets/generated/characters/david-office-seated-frustrated-v01.webp",
+      "systems-expert": "./public/assets/generated/characters/david-office-seated-systems-expert-v01.webp"
+    },
+    Paul: {
+      neutral: "./public/assets/generated/characters/paul-office-seated-neutral-v01.webp",
+      confused: "./public/assets/generated/characters/paul-office-seated-confused-v01.webp",
+      pleased: "./public/assets/generated/characters/paul-office-seated-pleased-v01.webp"
+    }
+  };
   const validHolidayRoutes = ["cult", "detention", "reassemble"];
   const travelStephenHonoured = "./public/assets/generated/characters/stephen-holiday-forbidden-city-pleased-v01.webp";
   const planLabels = {
@@ -547,6 +561,8 @@
     state.pendingPlan = null;
     state.finalStep = 0;
     delete state.route;
+    state.rescueAlarmStep = 0;
+    state.rescueTravelStep = 0;
   }
   function renderHoliday() {
     reveal("holiday");
@@ -557,6 +573,9 @@
     const inIntermission = phase === "intermission";
     const inHandoff = phase === "route-handoff";
     const inFinal = phase === "final-message";
+    const inAlarm = phase === "rescue-alarm";
+    const inTravel = phase === "rescue-travel";
+    const inArrival = phase === "rescue-hub-arrival";
     $("chinaTransition").hidden = phase !== "transition";
     $("wallScene").hidden = !inWall;
     $("palaceScene").hidden = !inPalace;
@@ -564,6 +583,9 @@
     $("chinaIntermission").hidden = !inIntermission;
     $("chinaRouteHandoff").hidden = !inHandoff;
     $("chinaFinalScene").hidden = !inFinal;
+    $("rescueAlarmScene").hidden = !inAlarm;
+    $("rescueTravelScene").hidden = !inTravel;
+    $("rescueHubArrival").hidden = !inArrival;
     if (inWall) {
       const position = Number.isInteger(state.wallStep)
         ? Math.max(0, Math.min(state.wallStep, greatWall.lines.length)) : 0;
@@ -683,13 +705,59 @@
       $("chinaFinalPhone").hidden = step === 2;
       $("chinaFinalReaction").hidden = step !== 1;
       $("chinaFinalEngland").hidden = step !== 2;
-      $("chinaFinalNextButton").hidden = step === 2;
+      $("chinaFinalNextButton").hidden = false;
+      $("chinaFinalNextButton").textContent = step === 2
+        ? "Back to David and Paul →" : "Continue →";
       $("chinaAnotherEndingButton").hidden = step !== 2;
       $("chinaBatteryLabel").textContent = step ? "0% · Battery depleted" : "1% battery";
       $("chinaPhoneStatus").textContent = step ? "Message interrupted — not delivered" : "Sending…";
       $("chinaPhoneMessage").textContent = route ? chinaFinal.messageByRoute[route] : "";
       $("chinaFinalProgress").textContent = step === 2 ? "Stephen's holiday chapter complete"
         : step === 1 ? "No signal from Stephen" : "Stephen's last message";
+    }
+    if (inAlarm) {
+      const position = Number.isInteger(state.rescueAlarmStep)
+        ? Math.max(0, Math.min(state.rescueAlarmStep, rescueAlarm.lines.length)) : 0;
+      state.rescueAlarmStep = position;
+      const complete = position >= rescueAlarm.lines.length;
+      $("rescueAlarmNextButton").hidden = complete;
+      $("rescueAlarmTravelButton").hidden = !complete;
+      $("rescueAlarmPhoneText").textContent = chinaFinal.messageByRoute[state.route] || "";
+      $("rescueAlarmPhone").hidden = complete ||
+        !(rescueAlarm.lines[position] && rescueAlarm.lines[position].showPhone);
+      $("rescueAlarmProgress").textContent = complete
+        ? "Operation: Probably Fine — approved by David"
+        : "Office Alarm · " + (position + 1) + " of " + rescueAlarm.lines.length;
+      if (!complete) {
+        const line = rescueAlarm.lines[position];
+        $("rescueAlarmSpeaker").textContent = line.speaker.toUpperCase();
+        $("rescueAlarmLine").textContent = line.text;
+        for (const actor of ["David","Paul"]) {
+          const pose = line[actor.toLowerCase()];
+          const img = $("rescueAlarm" + actor);
+          if (img.dataset.sprite !== pose) {
+            img.src = rescuePortraits[actor][pose];
+            img.dataset.sprite = pose;
+          }
+        }
+      } else {
+        $("rescueAlarmSpeaker").textContent = "DAVID";
+        $("rescueAlarmLine").textContent = "Pack everything.";
+      }
+    }
+    if (inTravel) {
+      const position = Number.isInteger(state.rescueTravelStep)
+        ? Math.max(0, Math.min(state.rescueTravelStep, rescueAlarm.montage.length - 1)) : 0;
+      state.rescueTravelStep = position;
+      const line = rescueAlarm.montage[position];
+      $("rescueTravelEyebrow").textContent = line.eyebrow;
+      $("rescueTravelSymbol").textContent = line.symbol;
+      $("rescueTravelTitle").textContent = line.title;
+      $("rescueTravelDetail").textContent = line.subtext;
+      $("rescueTravelProgress").textContent = "Unnecessary travel · "
+        + (position + 1) + " of " + rescueAlarm.montage.length;
+      $("rescueTravelNextButton").textContent = position === rescueAlarm.montage.length - 1
+        ? "Arrive at visitor information →" : "Continue →";
     }
     state.holidayFlowVersion = 2;
     persist();
@@ -853,15 +921,52 @@
   }
 
   function advanceFinalMessage() {
-    if (screens.holiday.hidden || state.holidayPhase !== "final-message" ||
-        state.finalStep >= 2) return;
-    state.finalStep++;
+    if (screens.holiday.hidden || state.holidayPhase !== "final-message") return;
+    if (state.finalStep >= 2) {
+      // The phone and Back in England card now lead into the genuine
+      // shared rescue story rather than a placeholder ending.
+      if (!validHolidayRoutes.includes(state.route)) return;
+      state.holidayPhase = "rescue-alarm";
+      state.rescueAlarmStep = 0;
+    } else {
+      state.finalStep++;
+    }
+    renderHoliday();
+  }
+
+  function nextRescueAlarmLine() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-alarm" ||
+        state.rescueAlarmStep >= rescueAlarm.lines.length) return;
+    state.rescueAlarmStep++;
+    renderHoliday();
+  }
+
+  function startRescueTravel() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-alarm" ||
+        state.rescueAlarmStep !== rescueAlarm.lines.length ||
+        !validHolidayRoutes.includes(state.route)) return;
+    state.rescueTravelStep = 0;
+    state.holidayPhase = "rescue-travel";
+    renderHoliday();
+  }
+
+  function nextRescueTravel() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-travel" ||
+        !validHolidayRoutes.includes(state.route)) return;
+    if (state.rescueTravelStep < rescueAlarm.montage.length - 1) {
+      state.rescueTravelStep++;
+    } else {
+      // The forthcoming interactive hub must be approved before importing
+      // new generated art. This is a clear, non-playable handoff only.
+      state.holidayPhase = "rescue-hub-arrival";
+    }
     renderHoliday();
   }
 
   function chooseAnotherEnding() {
-    if (screens.holiday.hidden || state.holidayPhase !== "final-message" ||
-        state.finalStep !== 2) return;
+    if (screens.holiday.hidden ||
+        !(state.holidayPhase === "final-message" && state.finalStep === 2 ||
+          state.holidayPhase === "rescue-hub-arrival")) return;
     // Rewind explicitly to the first route choice, preserving the voiced
     // office story and Great Wall dialogue but clearing all branch decisions.
     state.wallStep = greatWall.lines.length;
@@ -917,6 +1022,10 @@
   $("handoffContinueButton").addEventListener("click", continueRouteHandoff);
   $("chinaFinalNextButton").addEventListener("click", advanceFinalMessage);
   $("chinaAnotherEndingButton").addEventListener("click", chooseAnotherEnding);
+  $("rescueAlarmNextButton").addEventListener("click", nextRescueAlarmLine);
+  $("rescueAlarmTravelButton").addEventListener("click", startRescueTravel);
+  $("rescueTravelNextButton").addEventListener("click", nextRescueTravel);
+  $("rescueHubReplayButton").addEventListener("click", chooseAnotherEnding);
   $("soundButton").addEventListener("click", () => setSound(!soundEnabled, true));
   $("sceneSoundButton").addEventListener("click", () => setSound(!soundEnabled, true));
   $("menuSoundButton").addEventListener("click", () => setSound(!soundEnabled, true));

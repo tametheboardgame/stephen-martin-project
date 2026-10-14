@@ -277,7 +277,7 @@
               <strong id="chinaPhoneStatus">Sending…</strong>
             </div>
             <div id="chinaFinalReaction" class="china-final-reaction" hidden><strong>STEPHEN</strong><p>Oh, for fuck's sake.</p></div>
-            <div id="chinaFinalEngland" class="china-final-england" hidden><h2>BACK IN ENGLAND…</h2><p>Two idiots are about to make this considerably worse.</p><small>Rescue chapter — coming in the next game work package</small></div>
+            <div id="chinaFinalEngland" class="china-final-england" hidden><h2>BACK IN ENGLAND…</h2><p>Two idiots are about to make this considerably worse.</p><small>The next bit of the disaster is happening right now.</small></div>
           </div>
           <div class="wall-action-strip china-final-controls">
             <div class="wall-story-progress" id="chinaFinalProgress">Stephen's final message</div>
@@ -285,10 +285,55 @@
             <button id="chinaAnotherEndingButton" class="btn btn-secondary" type="button" hidden>Choose another ending ↺</button>
           </div>
         </div>
+
+        <div id="rescueAlarmScene" class="rescue-alarm-scene" hidden>
+          <div class="rescue-alarm-stage">
+            <img class="rescue-alarm-background" src="./public/assets/generated/locations/office-clean-01-v01.webp" alt="" loading="eager">
+            <img id="rescueAlarmDavid" class="rescue-alarm-actor rescue-alarm-david" src="./public/assets/generated/characters/david-office-seated-serious-v01.webp" alt="David, resolutely misinterpreting the situation" loading="eager">
+            <img id="rescueAlarmPaul" class="rescue-alarm-actor rescue-alarm-paul" src="./public/assets/generated/characters/paul-office-seated-neutral-v01.webp" alt="Paul seated in the office" loading="eager">
+            <img class="rescue-alarm-foreground" src="./public/assets/generated/locations/office-foreground-01-v01.webp" alt="" loading="eager">
+            <div class="wall-place-label"><span>CHAPTER THREE · BACK IN ENGLAND</span><strong>THE RESCUE ALARM</strong></div>
+            <div id="rescueAlarmPhone" class="rescue-alarm-phone" hidden><strong>STEPHEN RESCUE GROUP</strong><p id="rescueAlarmPhoneText"></p><span>Last message · Battery unknown</span></div>
+            <div class="wall-dialogue rescue-alarm-dialogue"><strong id="rescueAlarmSpeaker">DAVID</strong><p id="rescueAlarmLine" aria-live="polite"></p></div>
+          </div>
+          <div class="wall-action-strip">
+            <div id="rescueAlarmProgress" class="wall-story-progress">Rescue briefing</div>
+            <button id="rescueAlarmNextButton" class="btn btn-primary" type="button">Next line →</button>
+            <button id="rescueAlarmTravelButton" class="btn btn-primary" type="button" hidden>Launch Operation: Probably Fine →</button>
+          </div>
+        </div>
+        <div id="rescueTravelScene" class="rescue-travel-scene" hidden>
+          <div class="rescue-travel-stage">
+            <div class="rescue-travel-panel">
+              <span id="rescueTravelEyebrow">OPERATION: PROBABLY FINE</span>
+              <span id="rescueTravelSymbol" class="rescue-travel-symbol" aria-hidden="true">✈</span>
+              <h2 id="rescueTravelTitle">TWO TICKETS. ZERO PLANNING.</h2>
+              <p id="rescueTravelDetail"></p>
+            </div>
+          </div>
+          <div class="wall-action-strip">
+            <div id="rescueTravelProgress" class="wall-story-progress">Unnecessary international travel</div>
+            <button id="rescueTravelNextButton" class="btn btn-primary" type="button">Continue →</button>
+          </div>
+        </div>
+        <div id="rescueHubArrival" class="rescue-hub-arrival" hidden>
+          <div class="rescue-hub-arrival-stage">
+            <div class="rescue-travel-panel">
+              <span>CHAPTER THREE · THE WORLD'S WORST RESCUERS</span>
+              <h2>VISITOR INFORMATION</h2>
+              <p>They've arrived. Neither has considered calling Stephen's hotel.</p>
+              <small>Next: the interactive hotel evidence puzzle (GAME-SP2.4B) — awaiting approved lobby background.</small>
+            </div>
+          </div>
+          <div class="wall-action-strip">
+            <div class="wall-story-progress">Office Alarm and travel montage completed</div>
+            <button id="rescueHubReplayButton" class="btn btn-secondary" type="button">Play another ending ↺</button>
+          </div>
+        </div>
         <div class="china-footer">
           <button id="replayButton" type="button" class="mini-button">Replay office ↺</button>
           <button id="homeButton" type="button" class="mini-button">Main menu</button>
-          <span>GAME-SP2.3C · Branching Stephen holiday preview · Fictional comedy</span>
+          <span>GAME-SP2.4A · Office Alarm and rescue travel preview · Fictional comedy</span>
         </div>
       </section>
     </main>
