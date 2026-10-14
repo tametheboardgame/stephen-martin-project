@@ -121,6 +121,100 @@
   let advanceTimer = null;
   const MIN_LINE_MS = 1800;
   const MAX_LINE_MS = 4700;
+  const VOICE_PATH = "./public/assets/audio/dialogue/";
+  const VOICE_GAP_MS = 400;
+  const VOICE_START_TIMEOUT_MS = 8000;
+  let voice = null;
+  let voiceBeatId = null;
+  let voicePhase = "off";
+  let voiceToken = 0;
+  let voiceStartTimeout = null;
+  const missingVoiceIds = new Set();
+
+  function clearVoiceStartTimeout() {
+    if (voiceStartTimeout !== null) {
+      clearTimeout(voiceStartTimeout);
+      voiceStartTimeout = null;
+    }
+  }
+
+  function stopVoice() {
+    voiceToken++;
+    clearVoiceStartTimeout();
+    const old = voice;
+    voice = null;
+    voiceBeatId = null;
+    voicePhase = "off";
+    if (old) {
+      old.onended = null;
+      old.onerror = null;
+      try { old.pause(); } catch (_) { /* No audio support. */ }
+    }
+  }
+
+  function unavailableVoice(clip, token, missingFile = false) {
+    if (token !== voiceToken || voice !== clip) return;
+    if (missingFile) missingVoiceIds.add(voiceBeatId);
+    stopVoice();
+    voicePhase = "missing";
+    scheduleAdvance(); // Voice unavailable: retain the original text timer.
+  }
+
+  function playVoice(clip, token) {
+    if (voice !== clip || token !== voiceToken) return;
+    voicePhase = "loading";
+    clearVoiceStartTimeout();
+    voiceStartTimeout = setTimeout(() => {
+      if (voice === clip && token === voiceToken && voicePhase === "loading") {
+        unavailableVoice(clip, token);
+      }
+    }, VOICE_START_TIMEOUT_MS);
+    try {
+      const playback = clip.play();
+      if (playback && typeof playback.then === "function") {
+        playback.then(() => {
+          if (voice !== clip || token !== voiceToken || voicePhase === "finished") return;
+          clearVoiceStartTimeout();
+          if (voicePhase === "paused") return;
+          voicePhase = "playing";
+          syncPlaybackControls();
+        }).catch(() => {
+          if (voice !== clip || token !== voiceToken) return;
+          if (voicePhase === "paused") return;
+          unavailableVoice(clip, token);
+        });
+      } else {
+        clearVoiceStartTimeout();
+        voicePhase = "playing";
+      }
+    } catch (_) {
+      unavailableVoice(clip, token);
+    }
+  }
+
+  function startVoice(beat) {
+    stopVoice();
+    if (!soundEnabled || beat.type !== "dialogue" ||
+        missingVoiceIds.has(beat.id) || typeof window.Audio !== "function") return;
+    try {
+      const clip = new window.Audio();
+      const token = voiceToken;
+      clip.preload = "auto";
+      clip.src = VOICE_PATH + beat.id + ".mp3";
+      clip.onended = () => {
+        if (voice !== clip || token !== voiceToken) return;
+        clearVoiceStartTimeout();
+        voicePhase = "finished";
+        scheduleAdvance(); // Never cut off a clip with the text timer.
+      };
+      clip.onerror = () => unavailableVoice(clip, token, true);
+      voice = clip;
+      voiceBeatId = beat.id;
+      playVoice(clip, token);
+    } catch (_) {
+      stopVoice();
+    }
+  }
 
   function clearAdvanceTimer() {
     if (advanceTimer !== null) {
@@ -139,7 +233,11 @@
     const button = $("playPauseButton");
     button.textContent = autoPlaying ? "Ⅱ Pause" : "▶ Play";
     button.setAttribute("aria-pressed", String(autoPlaying));
-    $("playbackStatus").textContent = autoPlaying ? "AUTO PLAYING · TAP PAUSE TO READ" : "PAUSED · USE NEXT / BACK";
+    const voicing = voicePhase === "playing" || voicePhase === "loading";
+    $("playbackStatus").textContent = autoPlaying
+      ? voicing ? "AUTO PLAYING · VOICED DIALOGUE" : "AUTO PLAYING · TAP PAUSE TO READ"
+      : "PAUSED · USE NEXT / BACK";
+    $("officeScreen").dataset.voice = voicePhase;
     $("officeScreen").dataset.playback = autoPlaying ? "auto" : "paused";
   }
 
@@ -148,14 +246,25 @@
     syncPlaybackControls();
     if (!autoPlaying || screens.office.hidden || document.hidden) return;
     const beat = beats[beatIndexById.get(state.beatId)];
+    // A recording owns the timeline until it ends; silent visual beats and
+    // missing recordings retain the established script durations.
+    if (voice && (voicePhase === "loading" || voicePhase === "playing" || voicePhase === "paused")) return;
+    const wait = voicePhase === "finished" ? VOICE_GAP_MS : lineDuration(beat);
     advanceTimer = setTimeout(() => {
       advanceTimer = null;
       if (autoPlaying && !screens.office.hidden && !document.hidden) next();
-    }, lineDuration(beat));
+    }, wait);
   }
 
   function setAutoplay(enabled) {
     autoPlaying = Boolean(enabled);
+    if (!autoPlaying && voice && (voicePhase === "playing" || voicePhase === "loading")) {
+      clearVoiceStartTimeout();
+      voicePhase = "paused";
+      try { voice.pause(); } catch (_) { /* Fall back to text timing. */ }
+    } else if (autoPlaying && voice && voicePhase === "paused") {
+      playVoice(voice, voiceToken);
+    }
     scheduleAdvance();
   }
 
@@ -208,7 +317,10 @@
   }
 
   function reveal(screenName) {
-    if (screenName !== "office") clearAdvanceTimer();
+    if (screenName !== "office") {
+      clearAdvanceTimer();
+      stopVoice();
+    }
     const entering = screens[screenName].hidden;
     for (const [name, screen] of Object.entries(screens)) screen.hidden = name !== screenName;
     // Starting on a scrolled menu used to leave the office scene's toolbar
@@ -218,7 +330,14 @@
   }
 
   function setSound(enabled) {
-    soundEnabled = enabled;
+    soundEnabled = Boolean(enabled);
+    if (!soundEnabled) {
+      stopVoice();
+      if (!screens.office.hidden) scheduleAdvance();
+    } else if (!screens.office.hidden && !document.hidden) {
+      startVoice(beats[beatIndexById.get(state.beatId)]);
+      scheduleAdvance();
+    }
     for (const id of ["soundButton", "sceneSoundButton", "menuSoundButton"]) {
       const button = $(id);
       button.textContent = enabled ? "Sound: On" : "Sound: Off";
@@ -278,6 +397,7 @@
   // Static sprite file paths live in index.html for immediate/offline rendering.
 
   function renderOffice() {
+    stopVoice(); // Next/Back/Restart interrupt the previous line immediately.
     reveal("office");
     const beat = beats[beatIndexById.get(state.beatId)];
     const percent = Math.round((completedLineCount() / totalLines) * 100);
@@ -316,6 +436,7 @@
     for (const name of Object.keys(cast)) applySeatedExpression(name);
     persist();
     if (beat.sound) beep(beat.sound);
+    startVoice(beat);
     scheduleAdvance();
   }
 
@@ -389,6 +510,11 @@
       // Pausing on hidden tabs prevents timed dialogue from being skipped while away.
       clearAdvanceTimer();
       autoPlaying = false;
+      if (voice) {
+        clearVoiceStartTimeout();
+        voicePhase = "paused";
+        try { voice.pause(); } catch (_) { /* Tab remains paused. */ }
+      }
       syncPlaybackControls();
     }
   });

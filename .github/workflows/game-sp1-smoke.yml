@@ -9,6 +9,8 @@ on:
     paths:
       - 'index.html'
       - 'src/**'
+      - 'public/assets/audio/dialogue/**'
+      - 'public/assets/audio/dialogue/**'
       - 'tests/**'
       - 'scripts/preview-server.mjs'
       - 'scripts/build.mjs'

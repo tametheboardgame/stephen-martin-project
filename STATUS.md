@@ -2,6 +2,13 @@
 
 **Updated:** 13 October 2026
 
+## GAME-SP1.1-D7 — Pre-recorded scene voice clips (14 October 2026)
+
+- Owner provided **55 stable recording IDs** for the approved script: Stephen 16, David 18, Paul 20, Narrator 1. Audio files will be uploaded by owner directly into `public/assets/audio/dialogue/` on `agent/game-sp11d7-dialogue-voice`, with filenames matching their exact beat IDs and `.mp3` suffix. No uploads are present at the time of initial D7 code integration.
+- Audio is controlled by the existing Sound On/Off buttons, starts only after explicit user interaction, plays each dialogue recording until completion, and only then auto-advances after a short natural gap. Unrecorded and unplayable dialogue falls back to the original text timer; non-dialogue beats retain their existing timings.
+- Pause/resume holds voice position; Next, Back, restart, skip, navigating home and muting stop old audio. Rapid jumps do not allow stale audio events to advance the scene. Voice filenames are whitelisted against actual dialogue IDs during production build, with no extra tracking, networking or TTS services.
+- Audio clips live in the public repo/preview; only approved synthetic voices should be committed. The audio-enabled PR must remain draft for owner listening/visual review before main merge.
+
 ## GAME-SP1.1-D6B — Paul Pleased expression proof (14 October 2026)
 
 - Owner approved Paul's Pleased artwork after Confused: subtle happy smile with head/eyes towards his right (picture left), preserving the approved bald head, glasses, white polo, skin tone and body proportions. His complete opening-scene expression set is Neutral/Blank, Confused and Pleased.
