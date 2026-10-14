@@ -1773,3 +1773,61 @@ body:has(#menuScreen:not([hidden])) main {
     font-size: clamp(9px, .95vw, 13px);
   }
 }
+
+
+/*
+ * GAME-SP2.3A-F2 — side-by-side invitation choices on laptops.
+ * Both accepted/rejected options fit in a single row inside the cinematic
+ * frame. The descriptive copy stays above them, and the duplicated progress
+ * caption is removed only while a choice is visible. Keep touch/mobile
+ * choices stacked; never disable overflow as an accessibility shortcut.
+ */
+@media (min-width: 960px) {
+  #holidayScreen .wall-choices:not([hidden]) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 12px;
+    row-gap: 5px;
+    align-items: stretch;
+    width: 100%;
+    padding: 0 0 3px;
+  }
+  #holidayScreen .wall-choices > h3,
+  #holidayScreen .wall-choices > p {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+  #holidayScreen .wall-choices > h3 {
+    font-size: clamp(15px, 1.45vw, 20px);
+    line-height: 1.17;
+  }
+  #holidayScreen .wall-choices > p {
+    font-size: clamp(12px, 1.05vw, 14px);
+    line-height: 1.25;
+    max-width: none;
+  }
+  #holidayScreen .wall-choices > .wall-choice {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    min-width: 0;
+    min-height: 54px;
+    padding: 8px 12px;
+    font-size: clamp(12px, 1.13vw, 15px);
+    line-height: 1.25;
+    text-wrap: pretty;
+  }
+  #holidayScreen .wall-action-strip:has(.wall-choices:not([hidden])) .wall-story-progress {
+    display: none;
+  }
+  #holidayScreen .wall-action-strip:has(.wall-choices:not([hidden])) {
+    gap: 5px;
+    padding-block: 9px;
+  }
+  /* Keep the Palace Back button accessible, without requiring another
+     stacked button row once the two choices are displayed. */
+  #holidayScreen .palace-scene .wall-action-strip:has(.wall-choices:not([hidden])) #palaceBackButton {
+    min-height: 30px;
+    padding: 5px 9px;
+  }
+}

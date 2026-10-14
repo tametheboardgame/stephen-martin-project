@@ -2,6 +2,13 @@
 
 **Updated:** 14 October 2026
 
+## GAME-SP2.3A-F2 — Side-by-side invitation choices on laptops (14 October 2026)
+
+- Owner approved the smaller character composition and correct Forbidden City Stephen art, but the two invitation buttons still created an **internal scrollbar** on their laptop in both scenes.
+- At laptop widths **960px and above**, Great Wall and Forbidden City choices now use an editable two-column grid, with the existing heading and short explanation spanning both columns. Compact typography/padding and hiding the duplicated choice-progress caption keep the buttons within the cinematic lower strip.
+- At narrower widths, preserve stacked full-width touch choices; on unusually short screens the existing internal scroll fallback remains available rather than clipping actions. The Great Wall/Forbidden City backgrounds, independent character scale, menu placement, story text, sound and booking/save logic are unchanged.
+- Draft PR #19 remains for owner laptop visual review; no production merge before approval.
+
 ## GAME-SP2.3A-F1 — laptop composition & correct Stephen pose (14 October 2026)
 
 - Owner reviewed both locations in a laptop browser and requested smaller characters, cleaner on-screen composition and the actual **Forbidden City-specific Stephen sprite** from the start, rather than the Great Wall sprite used for the opening lines.

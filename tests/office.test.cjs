@@ -741,6 +741,23 @@ test("GAME-SP2.3A-F1 laptop composition keeps both character pairs smaller and d
   assert.ok(engine.includes('palacePortrait.dataset.sprite !== "forbidden-city-pleased"'),"Portrait initialises exactly once per session");
 });
 
+test("GAME-SP2.3A-F2 laptop invitation decisions are two columns without a forced scrollbar",()=>{
+  const segment=css.split("GAME-SP2.3A-F2 — side-by-side invitation choices on laptops")[1];
+  assert.ok(segment,"Dedicated compact choice layout exists");
+  assert.match(segment,/@media \(min-width: 960px\)/);
+  assert.match(segment,/#holidayScreen \.wall-choices:not\(\[hidden\]\)/);
+  assert.match(segment,/grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(segment,/grid-column: 1 \/ -1/,"Heading and description span both options");
+  assert.match(segment,/\.wall-choices > \.wall-choice \{[\s\S]*?min-height: 54px/);
+  assert.match(segment,/\.wall-action-strip:has\(\.wall-choices:not\(\[hidden\]\)\) \.wall-story-progress \{[\s\S]*?display: none/);
+  assert.ok(!segment.includes("overflow-y: hidden"),"Do not clip content on short windows");
+  assert.ok(!segment.includes("overflow: hidden"),"Keep short-window scrolling fallback");
+  assert.match(css,/@media \(max-width:800px\)/,"Narrow screens retain touch layout");
+  for(const id of ["wallAcceptButton","wallDeclineButton","palaceAcceptButton","palaceDeclineButton"]){
+    assert.ok(html.includes('id="'+id+'"'));
+  }
+});
+
 test("Chapter Two desktop fits the same 16:9 viewport envelope as office",()=>{
   const block=css.split("GAME-SP2.2-F1 — Chapter Two desktop viewport fit")[1];
   assert.ok(block,"Viewport fix must remain scoped and documented");
