@@ -738,6 +738,7 @@ test("GAME-SP2.3A-F1 laptop composition keeps both character pairs smaller and d
   assert.ok(!fit.includes("overflow-y: hidden"),"No inaccessible choice scrolling");
   assert.ok(html.includes('id="palaceStephen" class="wall-stephen" src="./public/assets/generated/characters/stephen-holiday-forbidden-city-pleased-v01.webp"'));
   assert.ok(!engine.includes("travelStephenNeutral"),"No leftover fallback to Great Wall Stephen in Palace");
+  assert.ok(!engine.includes('$("palaceStephen").src ='),"Do not reload the stable Palace sprite each line");
 });
 
 test("Chapter Two desktop fits the same 16:9 viewport envelope as office",()=>{
