@@ -218,7 +218,8 @@ test("David's full approved six-state set is mapped to every scripted beat",()=>
     assert.equal(p.el("castDavid").dataset.seatedSprite,expected[cue],all[i].id+" source");
     assert.match(p.el("portraitDavid").src,
       new RegExp("david-office-seated-"+expected[cue]+"-v01\\.webp"),all[i].id);
-    const paulSprite = all[i].reactions.Paul === "confused" ? "confused" : "neutral";
+    const paulCue = all[i].reactions.Paul;
+    const paulSprite = paulCue === "confused" || paulCue === "pleased" ? paulCue : "neutral";
     assert.equal(p.el("castPaul").dataset.seatedSprite,paulSprite,all[i].id+" Paul approved/fallback");
   }
 });
