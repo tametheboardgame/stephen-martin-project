@@ -24,6 +24,8 @@
   let stephenProofMode = "auto";
   const davidProofModes = ["auto","neutral","confident","serious","frustrated","shocked","systems-expert"];
   let davidProofMode = "auto";
+  const paulProofModes = ["auto", "neutral", "confused", "pleased"];
+  let paulProofMode = "auto";
 
   const stephenSeatedSources = {
     neutral: "./public/assets/generated/characters/stephen-office-seated-neutral-v01.webp",
@@ -35,8 +37,8 @@
   };
 
   // Approved seated art: one complete transparent sprite per person.
-  // All six David expression keys are populated. Paul is still neutral-only
-  // until his separate full seated expression assets are human-approved.
+  // David's six expressions and Paul's approved Neutral, Confused and Pleased
+  // seated assets are registered. Paul's "blank" cue resolves to Neutral.
   const seatedExpressionSources = {
     Stephen: stephenSeatedSources,
     David: {
@@ -48,7 +50,9 @@
       "systems-expert": "./public/assets/generated/characters/david-office-seated-systems-expert-v01.webp?v=1"
     },
     Paul: {
-      neutral: "./public/assets/generated/characters/paul-office-seated-neutral-v01.webp"
+      neutral: "./public/assets/generated/characters/paul-office-seated-neutral-v01.webp",
+      confused: "./public/assets/generated/characters/paul-office-seated-confused-v01.webp?v=1",
+      pleased: "./public/assets/generated/characters/paul-office-seated-pleased-v01.webp?v=1"
     }
   };
 
@@ -59,9 +63,11 @@
       ? stephenProofMode
       : name === "David" && davidProofMode !== "auto"
         ? davidProofMode
-        : reaction;
-    // The dialogue already carries all three actors' approved cues. Missing
-    // seated assets (currently Paul's) deliberately resolve to Neutral.
+        : name === "Paul" && paulProofMode !== "auto"
+          ? paulProofMode
+          : reaction;
+    // Approved acting cues select their whole seated sprites. Unmapped acting
+    // cues, including Paul's "blank", deliberately resolve to Neutral.
     const sprite = Object.hasOwn(sources, requested) ? requested : "neutral";
     const portrait = $("portrait" + name);
     if (portrait.dataset.sprite !== sprite) {
@@ -99,6 +105,16 @@
     button.setAttribute("aria-label", "David expression preview: " + label + ". Click to cycle Auto, Neutral, Confident, Serious, Frustrated, Shocked and Systems Expert");
     // Preview only David's approved complete sprite; leave story timing and other actors unchanged.
     applySeatedExpression("David");
+  }
+
+  function cyclePaulProof() {
+    paulProofMode = paulProofModes[(paulProofModes.indexOf(paulProofMode) + 1) % paulProofModes.length];
+    const label = paulProofMode[0].toUpperCase() + paulProofMode.slice(1);
+    const button = $("paulProofButton");
+    button.textContent = "Paul: " + label + " ↻";
+    button.setAttribute("aria-label", "Paul expression preview: " + label + ". Click to cycle Auto, Neutral, Confused and Pleased");
+    // Proof must not advance dialogue, reset audio or alter either other actor.
+    applySeatedExpression("Paul");
   }
 
   let autoPlaying = true;
@@ -367,6 +383,7 @@
   $("playPauseButton").addEventListener("click", () => setAutoplay(!autoPlaying));
   $("stephenProofButton").addEventListener("click", cycleStephenProof);
   $("davidProofButton").addEventListener("click", cycleDavidProof);
+  $("paulProofButton").addEventListener("click", cyclePaulProof);
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       // Pausing on hidden tabs prevents timed dialogue from being skipped while away.
