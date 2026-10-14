@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1bCM8ZmigOlb3Ff_7XOYFkOfNroIGmVeJ"
+  },
+  "expectedSourceName": "great-wall-summit-promoter-standing-approved-v01.png",
+  "destination": "public/assets/generated/characters/great-wall-summit-promoter-standing-v01.webp",
+  "transform": {
+    "maxWidth": 1200,
+    "maxHeight": 1600,
+    "quality": 88
+  },
+  "revision": 1
+}
