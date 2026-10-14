@@ -218,7 +218,8 @@ test("David's full approved six-state set is mapped to every scripted beat",()=>
     assert.equal(p.el("castDavid").dataset.seatedSprite,expected[cue],all[i].id+" source");
     assert.match(p.el("portraitDavid").src,
       new RegExp("david-office-seated-"+expected[cue]+"-v01\\.webp"),all[i].id);
-    assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral",all[i].id+" Paul fallback");
+    const paulSprite = all[i].reactions.Paul === "confused" ? "confused" : "neutral";
+    assert.equal(p.el("castPaul").dataset.seatedSprite,paulSprite,all[i].id+" Paul approved/fallback");
   }
 });
 
@@ -249,6 +250,40 @@ test("David proof cycles all six states without changing scene or the other acto
   assert.equal(p.el("castDavid").dataset.expression,"systems-expert");
   assert.equal(p.el("castDavid").dataset.seatedSprite,"systems-expert");
   assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
+});
+
+test("Paul Confused swaps on its scripted beat; Blank and Pleased still use Neutral",()=>{
+  const p=preview();p.start();
+  p.at("office.002");
+  assert.equal(p.el("castPaul").dataset.expression,"confused");
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"confused");
+  assert.ok(p.el("portraitPaul").src.endsWith("paul-office-seated-confused-v01.webp?v=1"));
+  p.at("office.001");
+  assert.equal(p.el("castPaul").dataset.expression,"blank");
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
+  p.at("office.004");
+  assert.equal(p.el("castPaul").dataset.expression,"pleased");
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
+});
+
+test("Paul proof compares Auto, Neutral and Confused without interrupting playback or other actors",()=>{
+  const p=preview();p.start();p.at("office.002");
+  const stephenSrc=p.el("portraitStephen").src;
+  const davidSrc=p.el("portraitDavid").src;
+  const timerCount=p.timeouts.size;
+  p.el("paulProofButton").click();
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
+  assert.ok(p.el("portraitPaul").src.endsWith("paul-office-seated-neutral-v01.webp"));
+  p.el("paulProofButton").click();
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"confused");
+  assert.ok(p.el("portraitPaul").src.endsWith("paul-office-seated-confused-v01.webp?v=1"));
+  p.el("paulProofButton").click();
+  assert.equal(p.el("paulProofButton").textContent,"Paul: Auto ↻");
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"confused");
+  assert.equal(saved(p).beatId,"office.002");
+  assert.equal(p.timeouts.size,timerCount);
+  assert.equal(p.el("portraitStephen").src,stephenSrc);
+  assert.equal(p.el("portraitDavid").src,davidSrc);
 });
 
 test("departure hides Stephen, rewind brings him back, then he stays absent",()=>{
@@ -321,7 +356,8 @@ test("existing artwork remains present with original alpha and dimensions",()=>{
     "david-office-seated-serious-v01.webp",
     "david-office-seated-frustrated-v01.webp",
     "david-office-seated-shocked-v01.webp",
-    "david-office-seated-systems-expert-v01.webp"
+    "david-office-seated-systems-expert-v01.webp",
+    "paul-office-seated-confused-v01.webp"
   ];
   for(const asset of allNames){
     const file=fs.readFileSync(path.join(root,"public/assets/generated/characters",asset));

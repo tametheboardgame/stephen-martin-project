@@ -2,6 +2,13 @@
 
 **Updated:** 13 October 2026
 
+## GAME-SP1.1-D6 — Paul Confused in-scene proof (14 October 2026)
+
+- Owner approved Paul Confused with his head turned to his right (picture left), towards Stephen and David, maintaining his glasses, white polo and comic character likeness.
+- Full 1086 × 1448 transparent PNG staged via the dedicated Stephen Martin Project Google Drive folder (file ID `1s00fXjB-6BfZdwYJSgfKDmbFdm1xUA1I`); manifest `generated-assets/manifests/paul-office-seated-confused-v01.json` materialises `public/assets/generated/characters/paul-office-seated-confused-v01.webp` through GitHub OIDC.
+- Registered Paul `confused` cue as a complete seated sprite. Blank and Pleased remain the existing Neutral artwork until Pleased is approved. No dialogue, Stephen, David or save structure changes.
+- Independent Paul Auto → Neutral → Confused proof button for in-scene visual comparison. Targeted smoke and live Cloudflare branch preview required before owner signs off and before merge. Production main remains approved D5 while this preview is in draft.
+
 ## GAME-SP1.1-D5 — Full locked David seated expression set (13 October 2026)
 
 - Owner locked **Confident, Serious, Frustrated, Shocked and Systems Expert** after individual image reviews. Existing Neutral is unchanged. All six David acting keys now select independently approved full seated transparent sprites; Paul's absent art still uses Neutral. Stephen's six existing seated expressions are unchanged.
