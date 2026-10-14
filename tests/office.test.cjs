@@ -520,6 +520,8 @@ test("office finale and Skip enter approved Chapter Two card then playable Great
   assert.match(p.el("wallLineText").textContent,/wonders of the world/);
   assert.match(p.el("wallPhoneText").textContent,/geopolitical variables/);
   assert.equal(p.el("wallBookingLabel").textContent,"Nothing booked yet");
+  assert.equal(p.el("wallPromoter").hidden,true,"Promoter has not entered on Stephen's phone beat");
+  assert.equal(p.el("wallPhone").hidden,false,"David's notification is visible on the opening beat");
   assert.equal(p.el("wallChoices").hidden,true);
 });
 
@@ -527,7 +529,10 @@ test("Great Wall choice gates at script end; accept sets only pending plan and s
   const p=preview();p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
   p.el("wallAcceptButton").click(); // Guard against choosing too soon
   assert.equal(saved(p).wallDecision,null);
-  for(let i=0;i<5;i++)p.el("wallNextButton").click();
+  p.el("wallNextButton").click();
+  assert.equal(p.el("wallPromoter").hidden,false,"Promoter enters on his first line");
+  assert.equal(p.el("wallPhone").hidden,true,"Phone gets out of the way for the two-character scene");
+  for(let i=1;i<5;i++)p.el("wallNextButton").click();
   assert.equal(saved(p).wallStep,5);
   assert.equal(p.el("wallChoices").hidden,false);
   assert.equal(p.el("wallNextButton").hidden,true);
@@ -543,6 +548,8 @@ test("Great Wall choice gates at script end; accept sets only pending plan and s
   assert.equal(saved(p).wallDecision,null);
   assert.equal(saved(p).pendingPlan,null);
   assert.equal(p.el("wallDialogue").hidden,false);
+  assert.equal(p.el("wallPromoter").hidden,true,"Restart returns to the solo Stephen opening beat");
+  assert.equal(p.el("wallPhone").hidden,false);
 });
 
 test("declining keeps an empty plan; Continue restores saved Great Wall position",()=>{
@@ -553,6 +560,8 @@ test("declining keeps an empty plan; Continue restores saved Great Wall position
   p.el("resumeButton").click();
   assert.equal(p.el("holidayScreen").hidden,false);
   assert.equal(saved(p).wallStep,1);
+  assert.equal(p.el("wallPromoter").hidden,false,"Resume re-enters the active promoter encounter");
+  assert.equal(p.el("wallPhone").hidden,true);
   assert.equal(p.el("wallLineText").textContent,"You look like someone who'd enjoy The Summit. Exclusive mountain retreat. Very friendly gentlemen. Spectacular views.");
   for(let i=1;i<5;i++)p.el("wallNextButton").click();
   p.el("wallDeclineButton").click();
@@ -580,6 +589,21 @@ test("the three approved Chapter Two WebPs are packaged and standing Stephen ret
   assert.match(html,/id="wallAcceptButton"/);
   assert.match(css,/#holidayScreen\.china-screen/);
   assert.ok(!read("src/office-data.js").includes("china.wall.001"));
+});
+
+test("approved full-body promoter is independently staged and preserves transparent sprite format",()=>{
+  const name="great-wall-summit-promoter-standing-v01.webp";
+  const asset=fs.readFileSync(path.join(root,"public/assets/generated/characters",name));
+  assert.equal(asset.toString("ascii",0,4),"RIFF");
+  assert.equal(asset.toString("ascii",12,16),"VP8X");
+  assert.ok((asset[20]&0x10)!==0,"The promoter has a transparent background");
+  assert.equal(1+asset.readUIntLE(24,3),1086,"Promoter width matches Stephen's source canvas");
+  assert.equal(1+asset.readUIntLE(27,3),1448,"Promoter height matches Stephen's source canvas");
+  assert.ok(html.includes('id="wallPromoter"'));
+  assert.ok(html.includes('id="wallPhone"'));
+  assert.ok(html.includes(name));
+  assert.ok(css.includes("#holidayScreen .wall-promoter"));
+  assert.ok(read("scripts/build.mjs").includes(name));
 });
 
 test("Chapter Two desktop fits the same 16:9 viewport envelope as office",()=>{

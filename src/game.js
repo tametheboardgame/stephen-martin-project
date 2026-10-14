@@ -485,6 +485,10 @@
         ? Math.max(0, Math.min(state.wallStep, greatWall.lines.length)) : 0;
       state.wallStep = position;
       const choiceMade = state.wallDecision === "accept" || state.wallDecision === "decline";
+      // The opening beat shows David's phone notification; the approved Summit
+      // promoter then enters beside Stephen so the right-hand portrait is clear.
+      $("wallPromoter").hidden = position === 0;
+      $("wallPhone").hidden = position !== 0;
       $("wallPhoneText").textContent = greatWall.phoneText;
       $("wallBookingLabel").textContent = state.pendingPlan === "cult"
         ? greatWall.eveningPlan : "Nothing booked yet";

@@ -46,6 +46,7 @@ jobs:
           test -f dist/public/assets/generated/locations/chapter-two-days-later-title-v01.webp
           test -f dist/public/assets/generated/locations/china-great-wall-background-v01.webp
           test -f dist/public/assets/generated/characters/stephen-holiday-standing-neutral-v01.webp
+          test -f dist/public/assets/generated/characters/great-wall-summit-promoter-standing-v01.webp
           test -f dist/src/styles.css
           test -f dist/public/assets/generated/locations/office-clean-01-v01.webp
           test -f dist/public/assets/generated/locations/office-foreground-01-v01.webp

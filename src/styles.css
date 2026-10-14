@@ -1531,3 +1531,39 @@ body:has(#menuScreen:not([hidden])) main {
     bottom: 13%;
   }
 }
+
+
+/*
+ * GAME-SP2.2-F2 — Summit promoter, independently registered actor.
+ * Matches approved full-height Stephen scale (91%) at desktop; the promoter
+ * enters only on his first spoken line. David's temporary phone UI disappears
+ * at that beat so it cannot obscure the right actor.
+ * Keep the full-body figures out of the title and choice controls.
+ */
+#holidayScreen .wall-promoter {
+  position: absolute;
+  z-index: 2;
+  right: 7%;
+  bottom: 0;
+  height: 91%;
+  width: auto;
+  max-width: 51%;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(5px 6px 4px rgba(12,27,34,.38));
+}
+@media (max-width: 800px) {
+  #holidayScreen .wall-promoter {
+    right: 0;
+    height: 76%;
+    max-width: 55%;
+  }
+}
+@media (max-width: 450px) {
+  #holidayScreen .wall-promoter {
+    right: -4%;
+    bottom: 14%;
+    height: 66%;
+    max-width: 72%;
+  }
+}

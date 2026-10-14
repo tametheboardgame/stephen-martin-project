@@ -2,6 +2,10 @@
 
 Entries are concise, durable design decisions. Additional decisions are added only where they materially affect scope, design, delivery or implementation.
 
+## SP-D023, 14 October 2026: Add approved Summit promoter to Great Wall encounter
+
+Owner approved the revised Summit event promoter sprite (olive overshirt, branded lanyard and brochure, comfortable trainers), rejecting the prior too-suave suit design. Lock and stage the approved full-body transparent source in Google Drive, materialise via a versioned asset manifest, and display opposite Stephen at **the same standing-actor scale** on the promoter's first spoken line. For composition, the earlier David phone notification closes when the promoter arrives. Preserve the locked script, provisional booking rules, responsive viewport fit and voice/audio handling. Preview artwork alignment is an owner gate on draft PR #18; do not merge without approval.
+
 ## SP-D022, 14 October 2026: Lock and integrate first three China visuals for GAME-SP2.2
 
 Owner approved the chapter transition card, Great Wall background and revised full-standing Stephen holiday sprite matching the existing blond office design. They are immutable V1 design baselines and may only be changed after further owner feedback. Sources live in the project's Google Drive staging folder; three manifest-driven optimised WebPs on `agent/game-sp22-wall-playable` preserve provenance. The first playable Great Wall scene follows the 55-clip voiced office intro, presents approved short Chapter Two dialogue and one accept/decline Summit booking. Keep `pendingPlan` provisional; no early final route selection and no new game engine. Save/replay must work with existing V3 saves. The scene PR is stacked on the still-draft voiced-office branch (PR #16); **both** require owner preview approval before production merges. All later China scenes and more voices are deferred.

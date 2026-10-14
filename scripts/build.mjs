@@ -7,7 +7,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const output = path.join(root, "dist");
 const files = ["index.html", "src/office-data.js", "src/reactions.js", "src/china-data.js", "src/game.js", "src/styles.css"];
 const imageSource = "public/assets/generated/characters";
-const images = ["stephen-martin-baseline.webp", "david-baseline.webp", "paul-baseline.webp", "stephen-office-seated-neutral-v01.webp", "stephen-office-seated-amused-v01.webp", "stephen-office-seated-confused-v01.webp", "stephen-office-seated-annoyed-v01.webp", "stephen-office-seated-exasperated-v01.webp", "stephen-office-seated-laughing-v01.webp", "david-office-seated-neutral-v01.webp", "david-office-seated-confident-v01.webp", "david-office-seated-systems-expert-v01.webp", "david-office-seated-shocked-v01.webp", "david-office-seated-frustrated-v01.webp", "david-office-seated-serious-v01.webp", "paul-office-seated-neutral-v01.webp", "paul-office-seated-confused-v01.webp", "paul-office-seated-pleased-v01.webp", "stephen-holiday-standing-neutral-v01.webp"];
+const images = ["stephen-martin-baseline.webp", "david-baseline.webp", "paul-baseline.webp", "stephen-office-seated-neutral-v01.webp", "stephen-office-seated-amused-v01.webp", "stephen-office-seated-confused-v01.webp", "stephen-office-seated-annoyed-v01.webp", "stephen-office-seated-exasperated-v01.webp", "stephen-office-seated-laughing-v01.webp", "david-office-seated-neutral-v01.webp", "david-office-seated-confident-v01.webp", "david-office-seated-systems-expert-v01.webp", "david-office-seated-shocked-v01.webp", "david-office-seated-frustrated-v01.webp", "david-office-seated-serious-v01.webp", "paul-office-seated-neutral-v01.webp", "paul-office-seated-confused-v01.webp", "paul-office-seated-pleased-v01.webp", "stephen-holiday-standing-neutral-v01.webp", "great-wall-summit-promoter-standing-v01.webp"];
 
 await rm(output, { recursive: true, force: true });
 await mkdir(path.join(output, "src"), { recursive: true });
@@ -77,6 +77,12 @@ if (holidaySprite.toString("ascii", 0, 4) !== "RIFF" ||
     holidaySprite.toString("ascii", 12, 16) !== "VP8X" ||
     (holidaySprite[20] & 0x10) === 0) {
   throw new Error("Approved Stephen travel sprite must preserve alpha transparency.");
+}
+const promoterSprite = await readFile(path.join(root, imageSource, "great-wall-summit-promoter-standing-v01.webp"));
+if (promoterSprite.toString("ascii", 0, 4) !== "RIFF" ||
+    promoterSprite.toString("ascii", 12, 16) !== "VP8X" ||
+    (promoterSprite[20] & 0x10) === 0) {
+  throw new Error("Approved Summit promoter sprite must preserve alpha transparency.");
 }
 for (const file of ["chapter-two-days-later-title-v01.webp", "china-great-wall-background-v01.webp"]) {
   const data = await readFile(path.join(root, "public/assets/generated/locations", file));
