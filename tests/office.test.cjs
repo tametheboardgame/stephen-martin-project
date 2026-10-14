@@ -452,6 +452,7 @@ test("voice pause/resume retains clip position, and navigation stops previous au
   p.el("backButton").click();
   assert.equal(p.voices.at(-2).paused,true);
   assert.equal(saved(p).beatId,"intro.exterior");
+  await Promise.resolve(); // Wait for manually selected line's audio-loading promise.
   assert.equal(p.timeouts.size,0,"Back leaves autoplay disabled");
   p.el("skipButton").click();
   assert.equal(p.voices.at(-1).paused,true);
