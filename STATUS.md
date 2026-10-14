@@ -2,6 +2,13 @@
 
 **Updated:** 14 October 2026
 
+## GAME-SP2.3A-F1 — laptop composition & correct Stephen pose (14 October 2026)
+
+- Owner reviewed both locations in a laptop browser and requested smaller characters, cleaner on-screen composition and the actual **Forbidden City-specific Stephen sprite** from the start, rather than the Great Wall sprite used for the opening lines.
+- The approved `stephen-holiday-forbidden-city-pleased-v01.webp` is now referenced directly in the initial scene HTML and consistently in runtime, irrespective of whether the banquet is accepted or declined. The honour-badge callout remains conditional on acceptance; all previously approved images are unchanged.
+- Desktop 16:9 framing remains unchanged; both Great Wall figures are reduced to **77%** height, both Forbidden City figures to **73%**. Relocate the Replay Office/Main Menu mini-toolbar to the top-right, narrow the booking card, relocate David's phone notification below that toolbar, and lift/tighten both dialogue panels to clear the bottom action strip. The bottom choice/result strip is more compact but retains internal scrolling as required.
+- All changes are responsive desktop CSS and the single Forbidden City source selection; no change to the original office, 55 MP3s, stage backgrounds, dialogue, choices, save state or final route logic. Add regression tests for the initial and declined Palace sprite and viewport layout. Await owner's updated **laptop** visual review before merging draft PR #19.
+
 ## GAME-SP2.3A — Forbidden City playable scene (14 October 2026)
 
 - Owner explicitly approved and locked three Forbidden City assets: the clean 1672×941 historic courtyard backdrop, separately staged fictional red-jacketed banquet attendant, and Stephen's blue-quarter-zip *Guest of Honour* pose (both original sprites 1086×1448 RGBA). Source PNGs staged in dedicated Google Drive under IDs background `1_ZSzDWBOCQHTxXoIZvoUqbBeoPNL7Uzq`, attendant `1Itsnjm2blwhzhciRP94aBUIWxlL4N1Td`, Stephen variant `1FZXgrofuUNEIvD2y340KiieDXBH9AHYe`. Three versioned manifests materialise optimised WebPs on `agent/game-sp23-forbidden-city`.

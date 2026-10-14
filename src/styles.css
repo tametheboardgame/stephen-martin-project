@@ -1624,3 +1624,152 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen .palace-honour-badge { font-size: 10px; max-width: 50%; top: 16%; }
   #holidayScreen .palace-photo-gag > span { font-size: 30px; }
 }
+
+
+/*
+ * GAME-SP2.3A-F1 — laptop composition pass, approved 14 October 2026.
+ * The cinematic frame itself stays 16:9 and viewport-fitted. Scale both
+ * encounters' character cutouts down, keep nav clear of their heads and
+ * reserve breathing room for the dialogue ABOVE the action strip.
+ * All selectors are desktop-scoped; mobile remains naturally scrollable.
+ */
+@media (min-width: 801px) {
+  /* Great Wall: maintain parity between the two full-standing cutouts. */
+  #holidayScreen .wall-scene .wall-stephen {
+    left: 14%;
+    height: 77%;
+    max-width: 44%;
+  }
+  #holidayScreen .wall-scene .wall-promoter {
+    right: 10%;
+    height: 77%;
+    max-width: 44%;
+  }
+
+  /* Palace: a slightly wider, more scenic shot, with the approved SECOND
+     Stephen holiday sprite and independently staged banquet attendant. */
+  #holidayScreen .palace-scene .wall-stephen {
+    left: 15%;
+    height: 73%;
+    max-width: 42%;
+  }
+  #holidayScreen .palace-scene .wall-promoter {
+    right: 11%;
+    height: 73%;
+    max-width: 42%;
+  }
+
+  /* Remove the top-centre menu obstruction shown on laptop screenshots. */
+  #holidayScreen:has(#wallScene:not([hidden])) .china-footer,
+  #holidayScreen:has(#palaceScene:not([hidden])) .china-footer {
+    top: 2%;
+    right: 2%;
+    left: auto;
+    bottom: auto;
+    padding: 4px 5px;
+    gap: 5px;
+    border-radius: 7px;
+  }
+  #holidayScreen .china-footer .mini-button {
+    min-height: 32px;
+    padding: 6px 9px;
+    font-size: 11px;
+  }
+
+  /* Tighter chapter/booking cards: neither can sprawl across Stephen. */
+  #holidayScreen .wall-place-label {
+    left: 2%;
+    top: 2%;
+    max-width: 31%;
+    padding: 7px 10px;
+  }
+  #holidayScreen .wall-place-label strong {
+    font-size: clamp(14px, 1.5vw, 22px);
+  }
+  #holidayScreen .wall-booking {
+    left: 2%;
+    top: 17%;
+    width: 27%;
+    max-width: 27%;
+    padding: 6px 9px;
+  }
+  #holidayScreen .wall-booking strong {
+    font-size: clamp(12px, 1.05vw, 16px);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+  /* On the Great Wall opening beat, David's notification sits BELOW nav;
+     it disappears automatically when the promoter starts speaking. */
+  #holidayScreen .wall-phone {
+    right: 2%;
+    top: 14%;
+    width: min(30%, 340px);
+  }
+
+  /* The earlier dialogue bottom:10.5% slipped BEHIND the action strip,
+     clipping the last line. Keep the entire speech card above it. */
+  #holidayScreen .wall-scene .wall-dialogue,
+  #holidayScreen .palace-scene .wall-dialogue {
+    left: 3%;
+    bottom: max(15%, 96px);
+    width: min(74%, 820px);
+    padding: 9px 13px;
+    border-width: 3px;
+    box-sizing: border-box;
+  }
+  #holidayScreen .wall-dialogue strong {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+  #holidayScreen .wall-dialogue p {
+    margin: 5px 0 1px;
+    font-size: clamp(13px, 1.32vw, 19px);
+    line-height: 1.28;
+  }
+
+  /* Compact decisions and results, leaving more of the location visible;
+     a short-height laptop can still scroll the choice strip internally. */
+  #holidayScreen .wall-action-strip {
+    max-height: 35%;
+    min-height: 50px;
+    gap: 8px;
+    padding: 8px 2.5%;
+  }
+  #holidayScreen .wall-story-progress { font-size: 11px; }
+  #holidayScreen .wall-action-strip .btn {
+    min-height: 38px;
+    padding: 9px 13px;
+    font-size: 13px;
+  }
+  #holidayScreen .wall-result { padding: 0 0 5px; }
+  #holidayScreen .wall-result strong {
+    font-size: clamp(16px, 1.6vw, 22px);
+  }
+  #holidayScreen .wall-result p {
+    font-size: clamp(12px, 1.12vw, 15px);
+    margin: 3px 0 8px;
+  }
+  #holidayScreen .wall-result .btn { margin: 2px 8px 0 0; }
+  #holidayScreen .wall-choices { padding: 0 0 7px; }
+  #holidayScreen .wall-choices h3 {
+    font-size: clamp(16px, 1.5vw, 21px);
+    margin: 0 0 3px;
+  }
+  #holidayScreen .wall-choices p {
+    font-size: clamp(12px, 1.1vw, 14px);
+    margin: 0 0 5px;
+  }
+  #holidayScreen .wall-choice {
+    min-height: 44px;
+    margin-top: 6px;
+    padding: 8px 11px;
+    font-size: clamp(12px, 1.15vw, 15px);
+  }
+  #holidayScreen .palace-honour-badge {
+    top: 17%;
+    right: 2%;
+    max-width: 26%;
+    padding: 6px 8px;
+    font-size: clamp(9px, .95vw, 13px);
+  }
+}

@@ -637,8 +637,9 @@ test("Forbidden City is inaccessible before the Wall booking choice, then opens 
   assert.equal(p.el("palaceSpeakerName").textContent,"ATTENDANT");
   assert.match(p.el("palaceLineText").textContent,/guest of honour/);
   assert.equal(p.el("palaceBookingLabel").textContent,"Nothing booked yet");
-  assert.ok(p.el("palaceStephen").src.endsWith("stephen-holiday-standing-neutral-v01.webp"));
+  assert.ok(p.el("palaceStephen").src.endsWith("stephen-holiday-forbidden-city-pleased-v01.webp"),"The approved second Stephen sprite is used from the first Palace beat");
   assert.equal(p.el("palaceHonourBadge").hidden,true);
+  assert.equal(p.el("palaceStephen").alt,"Stephen sightseeing in his approved Forbidden City holiday pose");
   assert.equal(Object.hasOwn(saved(p),"route"),false);
 });
 
@@ -686,6 +687,7 @@ test("Declining the banquet preserves Summit, and replay restores the earlier pl
   assert.equal(p.el("palaceResult").hidden,false);
   assert.equal(p.el("palacePhotoGag").hidden,true);
   assert.equal(p.el("palaceHonourBadge").hidden,true);
+  assert.ok(p.el("palaceStephen").src.endsWith("stephen-holiday-forbidden-city-pleased-v01.webp"),"Decline keeps the approved scene sprite");
   assert.match(p.el("palaceResultText").textContent,/get away from meetings/);
   p.el("palaceReplayButton").click();
   assert.equal(saved(p).palaceDecision,null);
@@ -718,6 +720,24 @@ test("Forbidden City art is in the build, with transparent independent character
     assert.ok(html.includes('id="'+id+'"'));
   }
   assert.ok(css.includes("#holidayScreen #palaceScene"),"Palace matches office and Great Wall viewport contract");
+});
+
+test("GAME-SP2.3A-F1 laptop composition keeps both character pairs smaller and dialogue clear of controls",()=>{
+  const fit=css.split("GAME-SP2.3A-F1 — laptop composition pass")[1];
+  assert.ok(fit,"Dedicated owner-requested composition pass exists");
+  assert.match(fit,/@media \(min-width: 801px\)/);
+  assert.match(fit,/#holidayScreen \.wall-scene \.wall-stephen \{[\s\S]*?height: 77%/);
+  assert.match(fit,/#holidayScreen \.wall-scene \.wall-promoter \{[\s\S]*?height: 77%/);
+  assert.match(fit,/#holidayScreen \.palace-scene \.wall-stephen \{[\s\S]*?height: 73%/);
+  assert.match(fit,/#holidayScreen \.palace-scene \.wall-promoter \{[\s\S]*?height: 73%/);
+  assert.match(fit,/#holidayScreen:has\(#palaceScene:not\(\[hidden\]\)\) \.china-footer \{[\s\S]*?right: 2%/);
+  assert.match(fit,/#holidayScreen \.wall-booking \{[\s\S]*?max-width: 27%/);
+  assert.match(fit,/#holidayScreen \.palace-scene \.wall-dialogue \{[\s\S]*?bottom: max\(15%, 96px\)/);
+  assert.match(fit,/#holidayScreen \.wall-action-strip \{[\s\S]*?max-height: 35%/);
+  assert.ok(css.includes("overscroll-behavior: contain"),"Choice scroll stays inside cinematic frame");
+  assert.ok(!fit.includes("overflow-y: hidden"),"No inaccessible choice scrolling");
+  assert.ok(html.includes('id="palaceStephen" class="wall-stephen" src="./public/assets/generated/characters/stephen-holiday-forbidden-city-pleased-v01.webp"'));
+  assert.ok(!engine.includes("travelStephenNeutral"),"No leftover fallback to Great Wall Stephen in Palace");
 });
 
 test("Chapter Two desktop fits the same 16:9 viewport envelope as office",()=>{

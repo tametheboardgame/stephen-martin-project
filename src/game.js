@@ -20,7 +20,6 @@
   const cast = { Stephen: $("castStephen"), David: $("castDavid"), Paul: $("castPaul") };
   const greatWall = window.SMP_CHINA_WALL;
   const palace = window.SMP_CHINA_PALACE;
-  const travelStephenNeutral = "./public/assets/generated/characters/stephen-holiday-standing-neutral-v01.webp";
   const travelStephenHonoured = "./public/assets/generated/characters/stephen-holiday-forbidden-city-pleased-v01.webp";
   const planLabels = {
     cult: "The Summit",
@@ -538,10 +537,13 @@
       $("palaceResult").hidden = !choiceMade || showingReply;
       $("palaceBookingLabel").textContent = bookingName(state.pendingPlan);
       $("palaceHonourBadge").hidden = !accepted;
-      $("palaceStephen").src = accepted ? travelStephenHonoured : travelStephenNeutral;
-      $("palaceStephen").alt = accepted
-        ? "Stephen proudly holding his fictional Guest of Honour badge"
-        : "Stephen sightseeing in his familiar blue quarter-zip";
+      // The owner's second, approved Stephen travel pose is the canonical
+      // Forbidden City sprite throughout this scene, not a post-choice swap.
+      // Accept/decline still controls the booking and the ceremonial UI.
+      if ($("palaceStephen").src !== travelStephenHonoured) {
+        $("palaceStephen").src = travelStephenHonoured;
+      }
+      $("palaceStephen").alt = "Stephen sightseeing in his approved Forbidden City holiday pose";
       $("palacePhotoGag").hidden = !accepted || showingReply;
       if (showingIntro || showingReply) {
         const line = showingIntro ? palace.lines[position] : palace.acceptReply[replyIndex];
