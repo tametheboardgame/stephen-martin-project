@@ -2,6 +2,10 @@
 
 Entries are concise, durable design decisions. Additional decisions are added only where they materially affect scope, design, delivery or implementation.
 
+## SP-D021, 14 October 2026: Lock GAME-SP2.1 Stephen holiday Story V1
+
+Owner approves exactly three consecutive short playable Stephen locations — Great Wall, Forbidden City, and a fictional Beijing night market — introduced by **“TWO DAYS LATER… IN CHINA”**. At each location the player chooses whether to accept one tempting fictional evening invitation: The Summit (`cult`), International Cultural Excellence Banquet (`detention`) or Total Renewal Spa (`reassemble`). Accepting a later invitation **replaces** the earlier plan, declining **preserves** it, and declining all three prompts one explicit final selection; no hidden scoring or random endings. Stephen's chosen route determines his battery-interrupted message and the existing David/Paul rescue misunderstanding. Stephen's section should have minimal dialogue and run roughly 3–5 minutes, within the full 15–25-minute target. This expressly supersedes only the old one-city-kiosk playable Stephen scene; the shared rescue hub, all three puzzle routes, and ending payoffs remain canonical. The approved authoritative script is `docs/story/GAME-SP2.1-STEVE-HOLIDAY-STORY-V1.md`. Character art, voices and public release remain separate approval gates. **SP-D020 is reserved for the concurrently open voice-playback PR #16**, which has not yet merged.
+
 ## SP-D001, 12 October 2026: One repository and shared canon
 All game, song and comic work shares `tametheboardgame/stephen-martin-project`. Shared character reference art, story canon and asset provenance are authoritative; each stream works on short-lived `agent/*` branches and PRs.
 

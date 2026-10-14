@@ -2,6 +2,8 @@
 
 **Status:** **Approved for phased implementation 12 October 2026.** Begin with bounded GAME-SP1 office scene before building the other routes.
 
+> **GAME-SP2.1 active update (14 October 2026):** `STEVE-HOLIDAY-01` is now an internally three-scene sequence, not one city/kiosk: **Great Wall → Forbidden City → fictional Beijing night market**, with one accept/decline activity invitation per scene. See [GAME-SP2.1-STEVE-HOLIDAY-STORY-V1.md](GAME-SP2.1-STEVE-HOLIDAY-STORY-V1.md) for the locked script, `pendingPlan` override rule, all-declined fallback, final route lock and route-specific unfinished message. The `chatBehaviour` Reply/Mute choice, single city art plan and one-kiosk requirements below are **historical and superseded for this scene**. The overall eight-state graph, OFFICE-ALARM, rescue hub, mini-games and all three endings are preserved. Add the minimal subscene/provisional-booking save keys when implementing, without discarding V3 office saves.
+
 ## 1. MVP player flow
 
 Use these **eight** scene/state identifiers as the initial canonical graph:
