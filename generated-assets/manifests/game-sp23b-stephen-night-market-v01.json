@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1SztUKG4dvx9uhCkuDP85jGh0Vab_SjnZ"
+  },
+  "expectedSourceName": "stephen-night-market-skewer-locked-v01.png",
+  "destination": "public/assets/generated/characters/stephen-night-market-skewer-v01.webp",
+  "transform": {
+    "maxWidth": 1200,
+    "maxHeight": 1600,
+    "quality": 88
+  },
+  "revision": 1
+}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "101rfrMgdkjnxvAMQN8s0AMuiUpV0zI7M"
+  },
+  "expectedSourceName": "china-night-market-spa-representative-locked-v01.png",
+  "destination": "public/assets/generated/characters/china-night-market-spa-representative-v01.webp",
+  "transform": {
+    "maxWidth": 1200,
+    "maxHeight": 1600,
+    "quality": 88
+  },
+  "revision": 1
+}
