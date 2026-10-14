@@ -20,10 +20,14 @@
   const cast = { Stephen: $("castStephen"), David: $("castDavid"), Paul: $("castPaul") };
   const greatWall = window.SMP_CHINA_WALL;
   const palace = window.SMP_CHINA_PALACE;
+  const market = window.SMP_CHINA_MARKET;
+  const chinaFinal = window.SMP_CHINA_FINAL;
+  const validHolidayRoutes = ["cult", "detention", "reassemble"];
   const travelStephenHonoured = "./public/assets/generated/characters/stephen-holiday-forbidden-city-pleased-v01.webp";
   const planLabels = {
     cult: "The Summit",
-    detention: "International Cultural Excellence Banquet"
+    detention: "International Cultural Excellence Banquet",
+    reassemble: "Total Renewal Spa"
   };
   function bookingName(plan) { return planLabels[plan] || "Nothing booked yet"; }
   // D2 proof-only control: the approved neutral/amused image pair shares one
@@ -486,9 +490,13 @@
     reveal("holiday");
     const inWall = state.holidayPhase === "wall";
     const inPalace = state.holidayPhase === "palace";
-    $("chinaTransition").hidden = inWall || inPalace;
+    const inMarket = state.holidayPhase === "market";
+    const inFinal = state.holidayPhase === "final-message";
+    $("chinaTransition").hidden = inWall || inPalace || inMarket || inFinal;
     $("wallScene").hidden = !inWall;
     $("palaceScene").hidden = !inPalace;
+    $("marketScene").hidden = !inMarket;
+    $("chinaFinalScene").hidden = !inFinal;
     if (inWall) {
       const position = Number.isInteger(state.wallStep)
         ? Math.max(0, Math.min(state.wallStep, greatWall.lines.length)) : 0;
@@ -569,6 +577,60 @@
           : palace.declineReply;
       }
     }
+
+    if (inMarket) {
+      const position = Number.isInteger(state.marketStep)
+        ? Math.max(0, Math.min(state.marketStep, market.lines.length)) : 0;
+      state.marketStep = position;
+      const decision = state.marketDecision;
+      const choiceMade = decision === "accept" || decision === "decline";
+      const awaitingFallback = choiceMade && !validHolidayRoutes.includes(state.pendingPlan);
+      const showDialogue = position < market.lines.length;
+      $("marketSpaRep").hidden = position < 2;
+      $("marketSpaSign").hidden = position < 1;
+      $("marketBookingLabel").textContent = bookingName(state.pendingPlan);
+      $("marketDialogue").hidden = !showDialogue;
+      $("marketNextButton").hidden = !showDialogue;
+      $("marketChoices").hidden = showDialogue || choiceMade;
+      $("marketFallback").hidden = !awaitingFallback;
+      $("marketResult").hidden = !choiceMade || awaitingFallback;
+      $("marketProgressLabel").textContent = showDialogue
+        ? "Night Market conversation · " + (position + 1) + " of " + market.lines.length
+        : awaitingFallback ? "Choose an evening plan to continue"
+          : choiceMade ? "Night Market decision saved" : "Make Stephen's final booking choice";
+      if (showDialogue) {
+        const line = market.lines[position];
+        $("marketSpeakerName").textContent = line.speaker.toUpperCase();
+        $("marketLineText").textContent = line.text;
+      }
+      if (choiceMade && !awaitingFallback) {
+        const accepted = decision === "accept";
+        $("marketResultTitle").textContent = accepted
+          ? "Total Renewal Spa booked ✓"
+          : state.marketFallbackRoute ? "Evening plan selected ✓" : "Existing booking kept ✓";
+        $("marketResultText").textContent = accepted ? market.acceptReaction
+          : state.marketFallbackRoute
+            ? "Stephen finally chooses " + bookingName(state.pendingPlan) + "."
+            : market.declineReaction + " Current plan: " + bookingName(state.pendingPlan) + ".";
+      }
+    }
+    if (inFinal) {
+      // The final route is committed only after all three invitation choices
+      // have been resolved. Never infer a route from incomplete dialogue.
+      const route = validHolidayRoutes.includes(state.route) ? state.route : null;
+      const step = Number.isInteger(state.finalStep) ? Math.max(0, Math.min(2,state.finalStep)) : 0;
+      state.finalStep = step;
+      $("chinaFinalPhone").hidden = step === 2;
+      $("chinaFinalReaction").hidden = step !== 1;
+      $("chinaFinalEngland").hidden = step !== 2;
+      $("chinaFinalNextButton").hidden = step === 2;
+      $("chinaAnotherEndingButton").hidden = step !== 2;
+      $("chinaBatteryLabel").textContent = step ? "0% · Battery depleted" : "1% battery";
+      $("chinaPhoneStatus").textContent = step ? "Message interrupted — not delivered" : "Sending…";
+      $("chinaPhoneMessage").textContent = route ? chinaFinal.messageByRoute[route] : "";
+      $("chinaFinalProgress").textContent = step === 2 ? "Stephen's holiday chapter complete"
+        : step === 1 ? "No signal from Stephen" : "Stephen's last message";
+    }
     persist();
   }
 
@@ -583,6 +645,11 @@
     state.palaceStep = 0;
     state.palaceReplyStep = 0;
     state.palaceDecision = null;
+    state.marketStep = 0;
+    state.marketDecision = null;
+    state.marketFallbackRoute = null;
+    state.finalStep = 0;
+    delete state.route;
     renderHoliday();
   }
 
@@ -621,6 +688,11 @@
     state.palaceStep = 0;
     state.palaceReplyStep = 0;
     state.palaceDecision = null;
+    state.marketStep = 0;
+    state.marketDecision = null;
+    state.marketFallbackRoute = null;
+    state.finalStep = 0;
+    delete state.route;
     renderHoliday();
   }
 
@@ -651,6 +723,10 @@
         !["accept","decline"].includes(decision)) return;
     state.palaceDecision = decision;
     state.palaceReplyStep = 0;
+    state.marketStep = 0;
+    state.marketDecision = null;
+    state.marketFallbackRoute = null;
+    delete state.route;
     // Accept replaces the Summit; decline preserves the existing booking.
     if (decision === "accept") state.pendingPlan = "detention";
     // Never lock state.route until the third location is completed.
@@ -663,12 +739,114 @@
     state.palaceReplyStep = 0;
     state.palaceDecision = null;
     state.pendingPlan = state.wallDecision === "accept" ? "cult" : null;
+    state.marketStep = 0;
+    state.marketDecision = null;
+    state.marketFallbackRoute = null;
+    delete state.route;
     renderHoliday();
   }
 
   function returnToWall() {
     if (screens.holiday.hidden || state.holidayPhase !== "palace") return;
     state.holidayPhase = "wall";
+    renderHoliday();
+  }
+
+
+  function enterMarket() {
+    if (screens.holiday.hidden || state.holidayPhase !== "palace" ||
+        !["accept", "decline"].includes(state.palaceDecision) ||
+        (state.palaceDecision === "accept" &&
+         state.palaceReplyStep < palace.acceptReply.length)) return;
+    state.holidayPhase = "market";
+    if (!Number.isInteger(state.marketStep)) state.marketStep = 0;
+    renderHoliday();
+  }
+
+  function nextMarketLine() {
+    if (screens.holiday.hidden || state.holidayPhase !== "market" ||
+        state.marketDecision || state.marketStep >= market.lines.length) return;
+    state.marketStep++;
+    renderHoliday();
+  }
+
+  function decideMarket(decision) {
+    if (screens.holiday.hidden || state.holidayPhase !== "market" ||
+        state.marketStep !== market.lines.length || state.marketDecision ||
+        !["accept", "decline"].includes(decision)) return;
+    state.marketDecision = decision;
+    state.marketFallbackRoute = null;
+    if (decision === "accept") state.pendingPlan = "reassemble";
+    // Declining preserves the Wall/Palace booking, including no booking.
+    renderHoliday();
+  }
+
+  function selectFallback(route) {
+    if (screens.holiday.hidden || state.holidayPhase !== "market" ||
+        state.marketStep !== market.lines.length ||
+        state.marketDecision !== "decline" ||
+        validHolidayRoutes.includes(state.pendingPlan) ||
+        !validHolidayRoutes.includes(route)) return;
+    state.marketFallbackRoute = route;
+    state.pendingPlan = route;
+    renderHoliday();
+  }
+
+  function replayMarket() {
+    if (screens.holiday.hidden || state.holidayPhase !== "market") return;
+    state.marketStep = 0;
+    state.marketDecision = null;
+    state.marketFallbackRoute = null;
+    state.pendingPlan = state.palaceDecision === "accept"
+      ? "detention" : state.wallDecision === "accept" ? "cult" : null;
+    delete state.route;
+    state.finalStep = 0;
+    renderHoliday();
+  }
+
+  function returnToPalace() {
+    if (screens.holiday.hidden || state.holidayPhase !== "market") return;
+    // Returning to an earlier decision invalidates the downstream booking.
+    state.marketStep = 0;
+    state.marketDecision = null;
+    state.marketFallbackRoute = null;
+    state.pendingPlan = state.palaceDecision === "accept"
+      ? "detention" : state.wallDecision === "accept" ? "cult" : null;
+    delete state.route;
+    state.holidayPhase = "palace";
+    renderHoliday();
+  }
+
+  function enterFinalMessage() {
+    if (screens.holiday.hidden || state.holidayPhase !== "market" ||
+        !["accept","decline"].includes(state.marketDecision) ||
+        !validHolidayRoutes.includes(state.pendingPlan)) return;
+    state.route = state.pendingPlan;
+    state.finalStep = 0;
+    state.holidayPhase = "final-message";
+    renderHoliday();
+  }
+
+  function advanceFinalMessage() {
+    if (screens.holiday.hidden || state.holidayPhase !== "final-message" ||
+        state.finalStep >= 2) return;
+    state.finalStep++;
+    renderHoliday();
+  }
+
+  function chooseAnotherEnding() {
+    if (screens.holiday.hidden || state.holidayPhase !== "final-message" ||
+        state.finalStep !== 2) return;
+    // Explicit rewind to the route-choice checkpoint; reset the committed
+    // route and retain Wall + Palace decisions. No unexpected rerouting.
+    delete state.route;
+    state.finalStep = 0;
+    state.marketStep = market.lines.length;
+    state.marketDecision = null;
+    state.marketFallbackRoute = null;
+    state.pendingPlan = state.palaceDecision === "accept"
+      ? "detention" : state.wallDecision === "accept" ? "cult" : null;
+    state.holidayPhase = "market";
     renderHoliday();
   }
 
@@ -707,6 +885,18 @@
   $("palaceDeclineButton").addEventListener("click", () => decidePalace("decline"));
   $("palaceReplayButton").addEventListener("click", replayPalace);
   $("palaceBackButton").addEventListener("click", returnToWall);
+  $("palaceGoMarketButton").addEventListener("click", enterMarket);
+  $("marketNextButton").addEventListener("click", nextMarketLine);
+  $("marketBackButton").addEventListener("click", returnToPalace);
+  $("marketAcceptButton").addEventListener("click", () => decideMarket("accept"));
+  $("marketDeclineButton").addEventListener("click", () => decideMarket("decline"));
+  $("fallbackCultButton").addEventListener("click", () => selectFallback("cult"));
+  $("fallbackDetentionButton").addEventListener("click", () => selectFallback("detention"));
+  $("fallbackReassembleButton").addEventListener("click", () => selectFallback("reassemble"));
+  $("marketReplayButton").addEventListener("click", replayMarket);
+  $("marketFinalButton").addEventListener("click", enterFinalMessage);
+  $("chinaFinalNextButton").addEventListener("click", advanceFinalMessage);
+  $("chinaAnotherEndingButton").addEventListener("click", chooseAnotherEnding);
   $("soundButton").addEventListener("click", () => setSound(!soundEnabled, true));
   $("sceneSoundButton").addEventListener("click", () => setSound(!soundEnabled, true));
   $("menuSoundButton").addEventListener("click", () => setSound(!soundEnabled, true));

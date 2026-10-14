@@ -517,3 +517,8 @@ Keep `STATUS.md` resumable, `DECISIONS.md` concise and `ROADMAP.md` authoritativ
 
 ## GAME-SP2.3A (14 October 2026)
 The owner approved the Forbidden City asset trio. Its banquet choice overrides/preserves the provisional Great Wall booking; route remains unlocked until Night Market. Draft preview/playtest required before merge.
+
+
+## GAME-SP2.3B — Night Market, route lock and final message (14 October 2026)
+
+Owner-approved Night Market scene art, Spa representative and skewer Stephen. Implement the final short invitation choice (accept spa replaces earlier plans, decline preserves). Three-declined fallback offers only previously seen options; finalise one route at departure, then show a route-specific unfinished message, dead battery, Stephen's reaction and Back in England. Preserve the fixed laptop layout and the original office clips. This does **not** implement the David/Paul rescue chapter: proceed to GAME-SP2.4 after owner visual approval of the stacked draft branch.

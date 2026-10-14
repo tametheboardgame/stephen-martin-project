@@ -47,3 +47,39 @@
     declineReply: "I've come thousands of miles to get away from meetings. Absolutely not."
   });
 })();
+
+
+// GAME-SP2.3B — locked Night Market and final interrupted-message canon.
+// The market and the Total Renewal Spa are entirely fictional.
+(function () {
+  "use strict";
+  window.SMP_CHINA_MARKET = Object.freeze({
+    title: "THE NIGHT MARKET",
+    spaName: "Total Renewal Spa",
+    signHeadline: "90% OFF",
+    signOffer: "THE COMPLETE STEPHEN EXPERIENCE",
+    signFinePrint: "Replacement components sold separately.",
+    lines: [
+      { id: "china.market.001", speaker: "Stephen", text: "Paul asked for one with Wi-Fi. How the fuck would that even work?" },
+      { id: "china.market.002", speaker: "Stephen", text: "Ninety per cent off? Fucking hell." },
+      { id: "china.market.003", speaker: "Spa representative", text: "Sir, would you be interested in our complete body-renewal package?" },
+      { id: "china.market.004", speaker: "Stephen", text: "What does complete mean?" },
+      { id: "china.market.005", speaker: "Spa representative", text: "Everything." },
+      { id: "china.market.006", speaker: "Stephen", text: "That sounds brilliant." }
+    ],
+    acceptLabel: "Ninety per cent off? I'd be an idiot not to.",
+    declineLabel: "I think I'll stick with my existing plans.",
+    acceptReaction: "If this goes wrong, at least I've saved a fortune.",
+    declineReaction: "Actually, no. I've already got somewhere to be."
+  });
+  window.SMP_CHINA_FINAL = Object.freeze({
+    messageByRoute: {
+      cult: "This place is unreal. They've asked me to be their...",
+      detention: "I've just been introduced as the official...",
+      reassemble: "This spa is incredible. They're taking my entire..."
+    },
+    stephenLastLine: "Oh, for fuck's sake.",
+    title: "BACK IN ENGLAND…",
+    subtitle: "Two idiots are about to make this considerably worse."
+  });
+})();

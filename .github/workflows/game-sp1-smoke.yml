@@ -50,6 +50,9 @@ jobs:
           test -f dist/public/assets/generated/locations/china-forbidden-city-background-v01.webp
           test -f dist/public/assets/generated/characters/china-banquet-attendant-standing-v01.webp
           test -f dist/public/assets/generated/characters/stephen-holiday-forbidden-city-pleased-v01.webp
+          test -f dist/public/assets/generated/locations/china-night-market-background-v01.webp
+          test -f dist/public/assets/generated/characters/china-night-market-spa-representative-v01.webp
+          test -f dist/public/assets/generated/characters/stephen-night-market-skewer-v01.webp
           test -f dist/src/styles.css
           test -f dist/public/assets/generated/locations/office-clean-01-v01.webp
           test -f dist/public/assets/generated/locations/office-foreground-01-v01.webp

@@ -23,6 +23,9 @@
   <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/locations/china-forbidden-city-background-v01.webp">
   <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/china-banquet-attendant-standing-v01.webp">
   <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/stephen-holiday-forbidden-city-pleased-v01.webp">
+  <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/locations/china-night-market-background-v01.webp">
+  <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/china-night-market-spa-representative-v01.webp">
+  <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/stephen-night-market-skewer-v01.webp">
   <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/paul-office-seated-pleased-v01.webp?v=1">
   <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/stephen-office-seated-amused-v01.webp?v=3">
   <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/stephen-office-seated-confused-v01.webp?v=1">
@@ -210,15 +213,69 @@
               <div id="palacePhotoGag" class="palace-photo-gag" hidden role="img" aria-label="Stephen's first phone photograph is Paul's ridiculous cartoon bear image">
                 <span aria-hidden="true">🐻</span><div><strong>FIRST PHOTO: UPLOADED</strong><small>Paul's rather unfortunate bear picture. Stephen hasn't noticed.</small></div>
               </div>
-              <p class="wall-next-tease">Next: Beijing Night Market (GAME-SP2.3 next slice)</p>
+              <button id="palaceGoMarketButton" type="button" class="btn btn-primary">Continue to Night Market →</button>
               <button id="palaceReplayButton" type="button" class="btn btn-secondary">Replay Forbidden City choice ↺</button>
             </div>
+          </div>
+        </div>
+
+        <div id="marketScene" class="market-scene" hidden>
+          <div class="wall-stage market-stage" aria-label="Stephen meets a fictional spa representative in a lantern-lit night market" role="group">
+            <img class="wall-background" src="./public/assets/generated/locations/china-night-market-background-v01.webp" alt="" loading="eager">
+            <img class="wall-stephen" src="./public/assets/generated/characters/stephen-night-market-skewer-v01.webp" alt="Stephen enjoying a market snack in his blue quarter-zip" loading="eager">
+            <img id="marketSpaRep" class="wall-promoter market-spa-rep" src="./public/assets/generated/characters/china-night-market-spa-representative-v01.webp" alt="A spa representative in a teal jacket holding a brochure" loading="eager" hidden>
+            <div class="wall-place-label"><span>CHAPTER TWO · CHINA</span><strong>THE NIGHT MARKET</strong></div>
+            <div class="wall-booking" aria-live="polite"><span>TONIGHT'S PLAN</span><strong id="marketBookingLabel">Nothing booked yet</strong></div>
+            <div id="marketSpaSign" class="market-spa-sign" hidden><span>TOTAL RENEWAL SPA</span><strong>90% OFF</strong><span>THE COMPLETE STEPHEN EXPERIENCE</span><small>Replacement components sold separately.</small></div>
+            <div class="wall-dialogue" id="marketDialogue"><strong id="marketSpeakerName">STEPHEN</strong><p id="marketLineText" aria-live="polite"></p></div>
+          </div>
+          <div class="wall-action-strip">
+            <div class="wall-story-progress" id="marketProgressLabel"></div>
+            <button id="marketBackButton" type="button" class="btn btn-small btn-secondary">← Forbidden City</button>
+            <button id="marketNextButton" type="button" class="btn btn-primary">Next line →</button>
+            <div id="marketChoices" class="wall-choices" hidden>
+              <h3>The Total Renewal Spa offer</h3>
+              <p>A ninety-per-cent discount on a suspiciously complete spa experience.</p>
+              <button id="marketAcceptButton" type="button" class="wall-choice">Ninety per cent off? I'd be an idiot not to.</button>
+              <button id="marketDeclineButton" type="button" class="wall-choice">I think I'll stick with my existing plans.</button>
+            </div>
+            <div id="marketFallback" class="wall-result" hidden>
+              <strong>No evening plan booked</strong>
+              <p>Stephen has declined every invitation. Choose one of the three places he already encountered.</p>
+              <div class="market-fallback-options">
+                <button id="fallbackCultButton" type="button" class="wall-choice">The Summit</button>
+                <button id="fallbackDetentionButton" type="button" class="wall-choice">Honourary banquet</button>
+                <button id="fallbackReassembleButton" type="button" class="wall-choice">Total Renewal Spa</button>
+              </div>
+            </div>
+            <div id="marketResult" class="wall-result" hidden>
+              <strong id="marketResultTitle">Evening plan confirmed</strong>
+              <p id="marketResultText" aria-live="polite"></p>
+              <button id="marketFinalButton" type="button" class="btn btn-primary">Send Stephen's final message →</button>
+              <button id="marketReplayButton" type="button" class="btn btn-secondary">Replay Night Market choice ↺</button>
+            </div>
+          </div>
+        </div>
+        <div id="chinaFinalScene" class="china-final-scene" hidden>
+          <div class="china-final-stage" aria-label="Stephen's phone runs out of charge before his last message is complete">
+            <div id="chinaFinalPhone" class="china-final-phone">
+              <div class="china-final-phone-top"><strong>STEPHEN RESCUE GROUP</strong><span id="chinaBatteryLabel">1% battery</span></div>
+              <p id="chinaPhoneMessage" aria-live="polite"></p>
+              <strong id="chinaPhoneStatus">Sending…</strong>
+            </div>
+            <div id="chinaFinalReaction" class="china-final-reaction" hidden><strong>STEPHEN</strong><p>Oh, for fuck's sake.</p></div>
+            <div id="chinaFinalEngland" class="china-final-england" hidden><h2>BACK IN ENGLAND…</h2><p>Two idiots are about to make this considerably worse.</p><small>Rescue chapter — coming in the next game work package</small></div>
+          </div>
+          <div class="wall-action-strip china-final-controls">
+            <div class="wall-story-progress" id="chinaFinalProgress">Stephen's final message</div>
+            <button id="chinaFinalNextButton" class="btn btn-primary" type="button">Continue →</button>
+            <button id="chinaAnotherEndingButton" class="btn btn-secondary" type="button" hidden>Choose another ending ↺</button>
           </div>
         </div>
         <div class="china-footer">
           <button id="replayButton" type="button" class="mini-button">Replay office ↺</button>
           <button id="homeButton" type="button" class="mini-button">Main menu</button>
-          <span>GAME-SP2.2 · Great Wall playable preview · Fictional comedy</span>
+          <span>GAME-SP2.3B · Three-scene Stephen holiday preview · Fictional comedy</span>
         </div>
       </section>
     </main>

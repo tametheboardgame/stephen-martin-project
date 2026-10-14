@@ -1831,3 +1831,117 @@ body:has(#menuScreen:not([hidden])) main {
     padding: 5px 9px;
   }
 }
+
+
+/* GAME-SP2.3B — Night Market, third provisional offer and final phone beat.
+ * Reuse the approved laptop-composition scale and two-column choice treatment.
+ * Art remains independently layered; the fictional spa advert is editable UI.
+ */
+#holidayScreen #marketScene[hidden],
+#holidayScreen #chinaFinalScene[hidden],
+#holidayScreen #marketSpaSign[hidden],
+#holidayScreen #marketSpaRep[hidden],
+#holidayScreen #marketFallback[hidden],
+#holidayScreen #marketResult[hidden],
+#holidayScreen #chinaFinalReaction[hidden],
+#holidayScreen #chinaFinalEngland[hidden] { display: none !important; }
+#holidayScreen .market-scene { background: #10233b; }
+#holidayScreen .market-stage .wall-background { object-position: center; }
+#holidayScreen .market-spa-sign {
+  position: absolute;
+  top: 16%;
+  left: 43%;
+  width: 24%;
+  z-index: 3;
+  border: 2px solid #deb571;
+  background: rgba(9, 39, 44, .92);
+  color: #fff2bf;
+  padding: 9px 11px;
+  border-radius: 8px;
+  box-shadow: 4px 5px 0 rgba(0,0,0,.35);
+  text-align: center;
+  font-weight: 900;
+  pointer-events: none;
+}
+#holidayScreen .market-spa-sign span { display: block; font-size: clamp(9px, .95vw, 14px); }
+#holidayScreen .market-spa-sign strong {
+  display: block; color: #ffdb6d; font-size: clamp(22px, 2.1vw, 32px);
+}
+#holidayScreen .market-spa-sign small { display:block; font-size: 9px; margin-top: 3px; font-weight: 700; }
+#holidayScreen .market-fallback-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 9px;
+}
+#holidayScreen .market-fallback-options .wall-choice {
+  min-width: 0;
+  min-height: 45px;
+  margin: 0;
+  padding: 7px 10px;
+  font-size: clamp(12px,1.05vw,15px);
+  text-align: center;
+}
+#holidayScreen .market-scene .wall-result strong {font-size:clamp(16px,1.5vw,21px);}
+#holidayScreen .china-final-scene {
+  background: #0a1d2e;
+}
+#holidayScreen .china-final-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1672/941;
+  background: linear-gradient(rgba(5,15,29,.75),rgba(3,13,24,.9)),
+    url("../public/assets/generated/locations/china-night-market-background-v01.webp") center/cover;
+  color: #f5f0e3;
+  display: grid;
+  place-items: center;
+  padding: 5% 8%;
+}
+#holidayScreen .china-final-phone {
+  width: min(82%,640px);
+  border: 3px solid #6098b9;
+  border-radius: 17px;
+  background: #102b42;
+  box-shadow: 8px 10px 0 rgba(0,0,0,.35);
+  padding: clamp(15px,2.4vw,30px);
+}
+#holidayScreen .china-final-phone-top {display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#ffd56e;font-size:clamp(10px,1.2vw,14px);}
+#holidayScreen .china-final-phone p {font-size:clamp(19px,2.6vw,35px);font-weight:900;line-height:1.3;margin:18px 0 22px;color:white;}
+#holidayScreen .china-final-phone > strong {color:#e9b1a7;font-size:clamp(12px,1.2vw,16px);}
+#holidayScreen .china-final-reaction {
+  position:absolute;bottom:19%;left:20%;right:20%;
+  padding:12px 20px;border:3px solid #347ea0;border-radius:10px;
+  background:#fff3d6;color:#17354b;text-align:center;
+}
+#holidayScreen .china-final-reaction p {font-size:clamp(20px,2.1vw,31px);font-weight:900;margin:5px 0;}
+#holidayScreen .china-final-england {position:absolute;inset:0;display:grid;align-content:center;justify-items:center;text-align:center;background:#090e18;padding:20px;}
+#holidayScreen .china-final-england h2 {font-size:clamp(28px,4.5vw,67px);margin:0;color:#fff0c7;}
+#holidayScreen .china-final-england p {font-size:clamp(15px,2vw,29px);font-style:italic;margin:14px 0;color:#d8c1a1;}
+#holidayScreen .china-final-england small {color:#9aa6ba;font-size:11px;margin-top:20px;}
+@media (min-width:801px) {
+  #holidayScreen #marketScene,#holidayScreen #chinaFinalScene {position:absolute;inset:0;width:100%;height:100%;}
+  #holidayScreen .market-scene .wall-stage {position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;}
+  #holidayScreen .market-scene .wall-stephen {left:15%;height:73%;max-width:42%;}
+  #holidayScreen .market-scene .wall-promoter {right:11%;height:73%;max-width:42%;}
+  #holidayScreen .market-scene .wall-dialogue {left:3%;bottom:max(15%,96px);width:min(74%,820px);padding:9px 13px;border-width:3px;}
+  #holidayScreen:has(#marketScene:not([hidden])) .china-footer,
+  #holidayScreen:has(#chinaFinalScene:not([hidden])) .china-footer {
+    top:2%;right:2%;left:auto;bottom:auto;padding:4px 5px;gap:5px;border-radius:7px;
+  }
+  #holidayScreen .china-final-stage {position:absolute;inset:0;aspect-ratio:auto;height:100%;}
+  #holidayScreen .china-final-controls {position:absolute;z-index:8;bottom:0;left:0;right:0;min-height:50px;max-height:35%;padding:9px 2.5%;background:rgba(5,24,45,.96);}
+  #holidayScreen .market-scene .wall-action-strip:has(.wall-choices:not([hidden])) #marketBackButton {
+    min-height:30px;padding:5px 9px;
+  }
+}
+@media (max-width:800px) {
+  #holidayScreen .market-scene .wall-stage {aspect-ratio:4/3;}
+  #holidayScreen .market-spa-sign {top:20%;left:41%;width:27%;padding:6px;}
+  #holidayScreen .china-final-phone {width:100%;}
+  #holidayScreen .market-fallback-options {grid-template-columns:1fr;}
+}
+@media (max-width:450px) {
+  #holidayScreen .market-scene .wall-stage {aspect-ratio:3/4;}
+  #holidayScreen .china-final-stage {aspect-ratio:3/4;}
+  #holidayScreen .market-spa-sign {top:24%;left:43%;width:37%;}
+  #holidayScreen .china-final-reaction {left:5%;right:5%;bottom:18%;}
+}

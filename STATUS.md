@@ -2,6 +2,14 @@
 
 **Updated:** 14 October 2026
 
+## GAME-SP2.3B — Approved Night Market and final Stephen phone message (14 October 2026)
+
+- Owner-approved originals staged in project Google Drive: lantern-lit background (`1zahJ5gOvYddoZLn4A6uYQHmegsnKtqGt`), teal spa representative (`101rfrMgdkjnxvAMQN8s0AMuiUpV0zI7M`), and standing skewer-holding Stephen (`1SztUKG4dvx9uhCkuDP85jGh0Vab_SjnZ`). Three `generated-assets/manifests/game-sp23b-*.json` files materialise the independent approved WebPs; rejected whole-scene composite concept images are excluded.
+- Adds Night Market as the third 16:9 scene, with the locked six short dialogue beats and a text/UI-only fictional **TOTAL RENEWAL SPA — 90% OFF** advert. New full-body cutouts preserve their transparency and appear at the established 73% laptop height.
+- Spa acceptance sets provisional `pendingPlan = reassemble` over any earlier booking; declining preserves the active plan. All three declined prompts explicit choice among the three known invitations. The final route is committed **only when leaving the market**; a route-specific incomplete phone message then leads to a dead battery, Stephen's final reaction and **BACK IN ENGLAND…**. Save/Continue and an explicit **Choose another ending** checkpoint retain upstream decisions.
+- The David/Paul rescue hub is **not** implemented by this increment. Chapter Two ends with a clear 'rescue chapter coming next' marker to avoid misrepresenting work as complete.
+- Work remains on a new stacked draft branch `agent/game-sp23b-night-market` from PR #19; upstream PRs #16, #18 and #19 remain separate. All 55 office MP3s and the earlier chapters remain untouched. Owner in-browser visual review required before merge.
+
 ## GAME-SP2.3A-F2 — Side-by-side invitation choices on laptops (14 October 2026)
 
 - Owner approved the smaller character composition and correct Forbidden City Stephen art, but the two invitation buttons still created an **internal scrollbar** on their laptop in both scenes.

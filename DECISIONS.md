@@ -2,6 +2,10 @@
 
 Entries are concise, durable design decisions. Additional decisions are added only where they materially affect scope, design, delivery or implementation.
 
+## SP-D026, 14 October 2026: Night Market trio and final holiday route
+
+Owner approved the standalone fictional market background, teal spa representative and new full-standing skewer Stephen. Transfer their original PNGs only via the dedicated Google Drive → versioned manifest → WebP pipeline. Keep the established 16:9 laptop composition, side-by-side choices, and mobile/touch adaptations. Spa accept replaces the earlier plan with `reassemble`; decline retains the plan. The all-declined case must choose one of the three previously encountered bookings before departure. At that point commit `route`, show its truncated 1%-battery text, Stephen's reaction and the Back in England title. 'Choose another ending' explicitly resets the route to the Night Market checkpoint. Do not invent a completed David/Paul rescue hub; that is subsequent GAME-SP2.4. The owner's asset approval does not waive the in-game visual gate or authorise a production merge.
+
 ## SP-D025, 14 October 2026: Smaller China characters and canonical Forbidden City Stephen throughout
 
 Owner reviewed Great Wall and Forbidden City on a laptop and approved their existing assets and underlying gameplay but requested smaller character cutouts, less UI occlusion, and consistent use of the distinct approved Forbidden City Stephen from the **first beat**. Keep Great Wall Stephen in Great Wall only and use `stephen-holiday-forbidden-city-pleased-v01.webp` throughout Forbidden City (not as an acceptance-only substitution). Acceptance still controls the fictional honorary title UI and banquet booking; declining does not switch character art. Adjust laptop composition within the already approved 16:9 cinematic shell: smaller paired actors, chapter/booking overlays away from their heads, mini-navigation top-right, full speech card above the action strip and compact but usable choices. Preserve touch-friendly scrolling and the existing story and audio. Require preview visual review before PR #19 merge.

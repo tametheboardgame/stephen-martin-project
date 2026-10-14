@@ -7,7 +7,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const output = path.join(root, "dist");
 const files = ["index.html", "src/office-data.js", "src/reactions.js", "src/china-data.js", "src/game.js", "src/styles.css"];
 const imageSource = "public/assets/generated/characters";
-const images = ["stephen-martin-baseline.webp", "david-baseline.webp", "paul-baseline.webp", "stephen-office-seated-neutral-v01.webp", "stephen-office-seated-amused-v01.webp", "stephen-office-seated-confused-v01.webp", "stephen-office-seated-annoyed-v01.webp", "stephen-office-seated-exasperated-v01.webp", "stephen-office-seated-laughing-v01.webp", "david-office-seated-neutral-v01.webp", "david-office-seated-confident-v01.webp", "david-office-seated-systems-expert-v01.webp", "david-office-seated-shocked-v01.webp", "david-office-seated-frustrated-v01.webp", "david-office-seated-serious-v01.webp", "paul-office-seated-neutral-v01.webp", "paul-office-seated-confused-v01.webp", "paul-office-seated-pleased-v01.webp", "stephen-holiday-standing-neutral-v01.webp", "great-wall-summit-promoter-standing-v01.webp", "china-banquet-attendant-standing-v01.webp", "stephen-holiday-forbidden-city-pleased-v01.webp"];
+const images = ["stephen-martin-baseline.webp", "david-baseline.webp", "paul-baseline.webp", "stephen-office-seated-neutral-v01.webp", "stephen-office-seated-amused-v01.webp", "stephen-office-seated-confused-v01.webp", "stephen-office-seated-annoyed-v01.webp", "stephen-office-seated-exasperated-v01.webp", "stephen-office-seated-laughing-v01.webp", "david-office-seated-neutral-v01.webp", "david-office-seated-confident-v01.webp", "david-office-seated-systems-expert-v01.webp", "david-office-seated-shocked-v01.webp", "david-office-seated-frustrated-v01.webp", "david-office-seated-serious-v01.webp", "paul-office-seated-neutral-v01.webp", "paul-office-seated-confused-v01.webp", "paul-office-seated-pleased-v01.webp", "stephen-holiday-standing-neutral-v01.webp", "great-wall-summit-promoter-standing-v01.webp", "china-banquet-attendant-standing-v01.webp", "stephen-holiday-forbidden-city-pleased-v01.webp", "china-night-market-spa-representative-v01.webp", "stephen-night-market-skewer-v01.webp"];
 
 await rm(output, { recursive: true, force: true });
 await mkdir(path.join(output, "src"), { recursive: true });
@@ -53,7 +53,8 @@ const officeImages = [
   "public/assets/generated/locations/office-exterior-opening-v01.webp",
   "public/assets/generated/locations/chapter-two-days-later-title-v01.webp",
   "public/assets/generated/locations/china-great-wall-background-v01.webp",
-  "public/assets/generated/locations/china-forbidden-city-background-v01.webp"
+  "public/assets/generated/locations/china-forbidden-city-background-v01.webp",
+  "public/assets/generated/locations/china-night-market-background-v01.webp"
 ];
 // Fail the public preview build if the independent desk accidentally becomes an
 // opaque image: a black/solid rectangle would cover all three actors.
@@ -85,7 +86,7 @@ if (promoterSprite.toString("ascii", 0, 4) !== "RIFF" ||
     (promoterSprite[20] & 0x10) === 0) {
   throw new Error("Approved Summit promoter sprite must preserve alpha transparency.");
 }
-for (const name of ["china-banquet-attendant-standing-v01.webp", "stephen-holiday-forbidden-city-pleased-v01.webp"]) {
+for (const name of ["china-banquet-attendant-standing-v01.webp", "stephen-holiday-forbidden-city-pleased-v01.webp", "china-night-market-spa-representative-v01.webp", "stephen-night-market-skewer-v01.webp"]) {
   const cutout = await readFile(path.join(root, imageSource, name));
   if (cutout.toString("ascii", 0, 4) !== "RIFF" ||
       cutout.toString("ascii", 12, 16) !== "VP8X" ||
@@ -93,7 +94,7 @@ for (const name of ["china-banquet-attendant-standing-v01.webp", "stephen-holida
     throw new Error("Approved Forbidden City sprite lost WebP transparency: " + name);
   }
 }
-for (const file of ["chapter-two-days-later-title-v01.webp", "china-great-wall-background-v01.webp", "china-forbidden-city-background-v01.webp"]) {
+for (const file of ["chapter-two-days-later-title-v01.webp", "china-great-wall-background-v01.webp", "china-forbidden-city-background-v01.webp", "china-night-market-background-v01.webp"]) {
   const data = await readFile(path.join(root, "public/assets/generated/locations", file));
   if (data.toString("ascii", 0, 4) !== "RIFF" || data.toString("ascii", 8, 12) !== "WEBP") {
     throw new Error("Invalid approved Chapter Two background: " + file);

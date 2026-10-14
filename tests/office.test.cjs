@@ -758,6 +758,191 @@ test("GAME-SP2.3A-F2 laptop invitation decisions are two columns without a force
   }
 });
 
+
+function advanceToNightMarket({wall="decline",palace="decline"}={}) {
+  const p=preview();p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
+  for(let i=0;i<5;i++)p.el("wallNextButton").click();
+  p.el(wall==="accept"?"wallAcceptButton":"wallDeclineButton").click();
+  p.el("wallGoPalaceButton").click();
+  for(let i=0;i<4;i++)p.el("palaceNextButton").click();
+  p.el(palace==="accept"?"palaceAcceptButton":"palaceDeclineButton").click();
+  if(palace==="accept")for(let i=0;i<5;i++)p.el("palaceNextButton").click();
+  p.el("palaceGoMarketButton").click();
+  return p;
+}
+function finishMarket(p,choice) {
+  for(let i=0;i<6;i++)p.el("marketNextButton").click();
+  p.el(choice==="accept"?"marketAcceptButton":"marketDeclineButton").click();
+}
+
+test("Night Market scene uses exactly the six locked spoken beats and a new standalone sprite pair",()=>{
+  const {SMP_CHINA_MARKET:m,SMP_CHINA_FINAL:f}=story();
+  assert.deepEqual(Array.from(m.lines,x=>x.id),[
+    "china.market.001","china.market.002","china.market.003",
+    "china.market.004","china.market.005","china.market.006"
+  ]);
+  assert.deepEqual(Array.from(m.lines,x=>x.speaker),[
+    "Stephen","Stephen","Spa representative","Stephen","Spa representative","Stephen"
+  ]);
+  assert.match(m.acceptLabel,/Ninety per cent off/);
+  assert.equal(m.signHeadline,"90% OFF");
+  assert.match(m.signFinePrint,/Replacement components sold separately/);
+  assert.match(f.messageByRoute.cult,/asked me to be their/);
+  assert.match(f.messageByRoute.detention,/official/);
+  assert.match(f.messageByRoute.reassemble,/entire/);
+  assert.equal(f.stephenLastLine,"Oh, for fuck's sake.");
+  assert.ok(!m.lines.some(x=>x.id.startsWith("office.")));
+});
+
+test("Palace must be completed before Night Market, which stages correct sprites and spa sign",()=>{
+  const p=preview();p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
+  p.el("palaceGoMarketButton").click();
+  assert.equal(saved(p).holidayPhase,"wall");
+  for(let i=0;i<5;i++)p.el("wallNextButton").click();
+  p.el("wallDeclineButton").click();p.el("wallGoPalaceButton").click();
+  p.el("palaceGoMarketButton").click();
+  assert.equal(saved(p).holidayPhase,"palace");
+  for(let i=0;i<4;i++)p.el("palaceNextButton").click();
+  p.el("palaceAcceptButton").click();
+  p.el("palaceGoMarketButton").click();
+  assert.equal(saved(p).holidayPhase,"palace","Banquet replies must complete");
+  for(let i=0;i<5;i++)p.el("palaceNextButton").click();
+  p.el("palaceGoMarketButton").click();
+  assert.equal(saved(p).holidayPhase,"market");
+  assert.equal(p.el("marketScene").hidden,false);
+  assert.equal(p.el("wallScene").hidden,true);
+  assert.equal(p.el("palaceScene").hidden,true);
+  assert.equal(p.el("marketBookingLabel").textContent,"International Cultural Excellence Banquet");
+  assert.equal(p.el("marketSpaRep").hidden,true,"Spa rep enters only on market.003");
+  p.el("marketNextButton").click();
+  assert.equal(p.el("marketSpaSign").hidden,false,"Spa billboard appears on the second beat");
+  p.el("marketNextButton").click();
+  assert.equal(p.el("marketSpaRep").hidden,false,"Spa rep enters on market.003");
+  assert.match(p.el("marketLineText").textContent,/body-renewal/);
+  assert.equal(Object.hasOwn(saved(p),"route"),false);
+});
+
+test("Spa acceptance replaces all earlier plans; route commits only after the message transition",()=>{
+  const p=advanceToNightMarket({wall:"accept",palace:"accept"});
+  assert.equal(saved(p).pendingPlan,"detention");
+  p.el("marketAcceptButton").click();
+  assert.equal(saved(p).marketDecision,null,"Cannot accept before the six beats");
+  finishMarket(p,"accept");
+  assert.equal(saved(p).marketDecision,"accept");
+  assert.equal(saved(p).pendingPlan,"reassemble");
+  assert.equal(Object.hasOwn(saved(p),"route"),false);
+  assert.equal(p.el("marketResult").hidden,false);
+  assert.equal(p.el("marketFallback").hidden,true);
+  assert.match(p.el("marketResultText").textContent,/saved a fortune/);
+  p.el("marketFinalButton").click();
+  assert.equal(saved(p).holidayPhase,"final-message");
+  assert.equal(saved(p).route,"reassemble");
+  assert.match(p.el("chinaPhoneMessage").textContent,/taking my entire/);
+  assert.equal(p.el("chinaBatteryLabel").textContent,"1% battery");
+  p.el("chinaFinalNextButton").click();
+  assert.equal(saved(p).finalStep,1);
+  assert.equal(p.el("chinaFinalReaction").hidden,false);
+  assert.equal(p.el("chinaBatteryLabel").textContent,"0% · Battery depleted");
+  p.el("chinaFinalNextButton").click();
+  assert.equal(saved(p).finalStep,2);
+  assert.equal(p.el("chinaFinalEngland").hidden,false);
+  assert.equal(p.el("chinaAnotherEndingButton").hidden,false);
+  assert.equal(p.el("chinaFinalNextButton").hidden,true);
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).route,"reassemble","Committed choice survives a Continue");
+  assert.equal(p.el("chinaFinalEngland").hidden,false);
+});
+
+test("Declining market preserves an earlier Summit or banquet booking through the phone ending",()=>{
+  for(const [wall,palace,expected,fragment] of [
+    ["accept","decline","cult","asked me to be their"],
+    ["decline","accept","detention","introduced as the official"]
+  ]){
+    const p=advanceToNightMarket({wall,palace});
+    finishMarket(p,"decline");
+    assert.equal(saved(p).pendingPlan,expected);
+    assert.equal(p.el("marketFallback").hidden,true);
+    p.el("marketFinalButton").click();
+    assert.equal(saved(p).route,expected);
+    assert.match(p.el("chinaPhoneMessage").textContent,new RegExp(fragment));
+  }
+});
+
+test("Declining all three invitations forces a conscious route choice and cannot finish empty",()=>{
+  const p=advanceToNightMarket();
+  assert.equal(saved(p).pendingPlan,null);
+  finishMarket(p,"decline");
+  assert.equal(p.el("marketFallback").hidden,false);
+  assert.equal(p.el("marketResult").hidden,true);
+  p.el("marketFinalButton").click();
+  assert.equal(saved(p).holidayPhase,"market");
+  assert.equal(Object.hasOwn(saved(p),"route"),false);
+  p.el("fallbackDetentionButton").click();
+  assert.equal(saved(p).marketFallbackRoute,"detention");
+  assert.equal(saved(p).pendingPlan,"detention");
+  assert.equal(p.el("marketFallback").hidden,true);
+  p.el("marketFinalButton").click();
+  assert.equal(saved(p).route,"detention");
+  p.el("chinaFinalNextButton").click();p.el("chinaFinalNextButton").click();
+  p.el("chinaAnotherEndingButton").click();
+  assert.equal(saved(p).holidayPhase,"market");
+  assert.equal(saved(p).marketStep,6);
+  assert.equal(saved(p).marketDecision,null);
+  assert.equal(saved(p).pendingPlan,null);
+  assert.equal(Object.hasOwn(saved(p),"route"),false);
+  p.el("marketDeclineButton").click();p.el("fallbackCultButton").click();
+  p.el("marketFinalButton").click();
+  assert.equal(saved(p).route,"cult","Explicit replay can choose a different route");
+});
+
+test("Night Market replay and back preserve upstream decisions, but clear downstream outcomes",()=>{
+  const p=advanceToNightMarket({wall:"accept",palace:"decline"});
+  p.el("marketNextButton").click();
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).holidayPhase,"market");
+  assert.equal(saved(p).marketStep,1);
+  for(let i=1;i<6;i++)p.el("marketNextButton").click();
+  p.el("marketAcceptButton").click();
+  assert.equal(saved(p).pendingPlan,"reassemble");
+  p.el("marketReplayButton").click();
+  assert.equal(saved(p).marketDecision,null);
+  assert.equal(saved(p).marketStep,0);
+  assert.equal(saved(p).pendingPlan,"cult");
+  p.el("marketBackButton").click();
+  assert.equal(saved(p).holidayPhase,"palace");
+  assert.equal(saved(p).pendingPlan,"cult");
+  p.el("palaceGoMarketButton").click();
+  assert.equal(saved(p).holidayPhase,"market");
+  assert.equal(saved(p).marketStep,0);
+});
+
+test("Night Market approved transparent sprites and landmark background are packaged",()=>{
+  const imageDir="public/assets/generated/characters";
+  for(const name of ["china-night-market-spa-representative-v01.webp","stephen-night-market-skewer-v01.webp"]){
+    const buf=fs.readFileSync(path.join(root,imageDir,name));
+    assert.equal(buf.toString("ascii",0,4),"RIFF");
+    assert.equal(buf.toString("ascii",12,16),"VP8X");
+    assert.ok((buf[20]&0x10)!==0,"Missing cutout transparency: "+name);
+    assert.equal(1+buf.readUIntLE(24,3),1086);
+    assert.equal(1+buf.readUIntLE(27,3),1448);
+    assert.ok(read("scripts/build.mjs").includes(name));
+    assert.ok(html.includes(name));
+  }
+  const bgName="china-night-market-background-v01.webp";
+  const bg=fs.readFileSync(path.join(root,"public/assets/generated/locations",bgName));
+  assert.equal(bg.toString("ascii",0,4),"RIFF");
+  assert.equal(bg.toString("ascii",8,12),"WEBP");
+  assert.ok(read("scripts/build.mjs").includes(bgName));
+  assert.ok(html.includes(bgName));
+  for(const id of ["marketScene","marketNextButton","marketAcceptButton","marketDeclineButton",
+                   "palaceGoMarketButton","marketFallback","chinaFinalScene","chinaFinalNextButton",
+                   "chinaAnotherEndingButton"]){
+    assert.ok(html.includes('id="'+id+'"'),id);
+  }
+  assert.match(css,/#holidayScreen #marketScene/);
+  assert.match(css,/grid-template-columns: repeat\(3, minmax\(0,1fr\)\)/);
+});
+
 test("Chapter Two desktop fits the same 16:9 viewport envelope as office",()=>{
   const block=css.split("GAME-SP2.2-F1 — Chapter Two desktop viewport fit")[1];
   assert.ok(block,"Viewport fix must remain scoped and documented");
