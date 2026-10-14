@@ -77,3 +77,7 @@ Owner individually accepted David's final seated Confident (head turned to his l
 ## SP-D018, 14 October 2026: Start Paul Confused seated expression proof
 
 After PR #14 merged the full Stephen and David expression families, the owner approved Paul’s Confused visual variant for a separate proof. Paul is seated to Stephen’s right and therefore turns his head toward **his right (picture left)** to face the other characters. Retain his existing approved Neutral artwork; use the separate transparent 1086 × 1448 sprite for `confused` reaction cues only, with `blank` and `pleased` continuing to show Neutral. Source assets must use the approved Drive manifest pipeline. Keep this on an agent/* draft PR until owner checks colour and registration in the real layered office.
+
+## SP-D019, 14 October 2026: Finish Paul's three-state seated expression family
+
+Owner approved the transparent Pleased sprite after approving and testing Confused. Paul remains on the right side of the office scene, looking toward Stephen and David to **his right (picture left)**. Register Pleased as a separately approved complete seated sprite on the existing Paul proof draft PR. `blank` maps to approved Neutral; `confused` and `pleased` map to their dedicated transparent WebPs. Keep the scene script and previous actor assets unchanged. Owner in-scene review of colour, positioning and transitions remains mandatory before merging the Paul proof.

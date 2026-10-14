@@ -2,6 +2,13 @@
 
 **Updated:** 13 October 2026
 
+## GAME-SP1.1-D6B — Paul Pleased expression proof (14 October 2026)
+
+- Owner approved Paul's Pleased artwork after Confused: subtle happy smile with head/eyes towards his right (picture left), preserving the approved bald head, glasses, white polo, skin tone and body proportions. His complete opening-scene expression set is Neutral/Blank, Confused and Pleased.
+- Approved transparent PNG (1086 × 1448) staged in the dedicated project Google Drive folder as `paul-office-seated-pleased-locked-v01.png`, file ID `1rzLKSR1qyORp1JCYMGraShA5xcxV9f3L`; manifest `generated-assets/manifests/paul-office-seated-pleased-v01.json` materialises `public/assets/generated/characters/paul-office-seated-pleased-v01.webp` on draft PR #15.
+- Paul's existing `pleased` acting cues now automatically load that full sprite, `confused` retains the previously approved pose, and `blank` continues to use Neutral. The independent Paul proof selector now cycles Auto → Neutral → Confused → Pleased without moving Stephen/David, changing the dialogue or altering saved progress.
+- The build, smoke checks and tests now include the third Paul sprite and validate all 67 reaction beats. **Human approval of the in-game composition and timing is required before PR #15 merges.** Production `main` remains unchanged.
+
 ## GAME-SP1.1-D6 — Paul Confused in-scene proof (14 October 2026)
 
 - Owner approved Paul Confused with his head turned to his right (picture left), towards Stephen and David, maintaining his glasses, white polo and comic character likeness.

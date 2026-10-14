@@ -24,7 +24,7 @@
   let stephenProofMode = "auto";
   const davidProofModes = ["auto","neutral","confident","serious","frustrated","shocked","systems-expert"];
   let davidProofMode = "auto";
-  const paulProofModes = ["auto", "neutral", "confused"];
+  const paulProofModes = ["auto", "neutral", "confused", "pleased"];
   let paulProofMode = "auto";
 
   const stephenSeatedSources = {
@@ -37,8 +37,8 @@
   };
 
   // Approved seated art: one complete transparent sprite per person.
-  // David's six expression keys are populated. Paul's approved Confused sprite
-  // joins Neutral; Blank and Pleased intentionally fall back to Neutral.
+  // David's six expressions and Paul's approved Neutral, Confused and Pleased
+  // seated assets are registered. Paul's "blank" cue resolves to Neutral.
   const seatedExpressionSources = {
     Stephen: stephenSeatedSources,
     David: {
@@ -51,7 +51,8 @@
     },
     Paul: {
       neutral: "./public/assets/generated/characters/paul-office-seated-neutral-v01.webp",
-      confused: "./public/assets/generated/characters/paul-office-seated-confused-v01.webp?v=1"
+      confused: "./public/assets/generated/characters/paul-office-seated-confused-v01.webp?v=1",
+      pleased: "./public/assets/generated/characters/paul-office-seated-pleased-v01.webp?v=1"
     }
   };
 
@@ -65,8 +66,8 @@
         : name === "Paul" && paulProofMode !== "auto"
           ? paulProofMode
           : reaction;
-    // Approved acting cues select their whole seated sprites. Missing images
-    // (Paul's Blank and Pleased) deliberately resolve to Neutral.
+    // Approved acting cues select their whole seated sprites. Unmapped acting
+    // cues, including Paul's "blank", deliberately resolve to Neutral.
     const sprite = Object.hasOwn(sources, requested) ? requested : "neutral";
     const portrait = $("portrait" + name);
     if (portrait.dataset.sprite !== sprite) {
@@ -111,7 +112,7 @@
     const label = paulProofMode[0].toUpperCase() + paulProofMode.slice(1);
     const button = $("paulProofButton");
     button.textContent = "Paul: " + label + " ↻";
-    button.setAttribute("aria-label", "Paul expression preview: " + label + ". Click to cycle Auto, Neutral and Confused");
+    button.setAttribute("aria-label", "Paul expression preview: " + label + ". Click to cycle Auto, Neutral, Confused and Pleased");
     // Proof must not advance dialogue, reset audio or alter either other actor.
     applySeatedExpression("Paul");
   }
