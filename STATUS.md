@@ -2,6 +2,13 @@
 
 **Updated:** 14 October 2026
 
+## GAME-SP2.4–SP3.4 — Rescue and ending implementation plan approved (14 October 2026)
+
+- **Planning decision only; no new rescue gameplay or artwork has been made.** Detailed authoritative roadmap at `docs/story/GAME-SP2.4-SP3-RESCUE-IMPLEMENTATION-PLAN-V1.md`, using the existing approved `SP-WP1.2-GAME-TREATMENT.md` mini-games/endings and the newer `GAME-SP2.3C-BRANCHING-STORY-V2.md` invitation structure.
+- **Implementation order:** SP2.4A/B shared Back in England alarm, unnecessary-travel montage, and clickable fictional hotel/visitor-information evidence puzzle; SP3.0 small reusable mini-game and ending framework; SP3.1 Summit Admissions Test + Ending A (first full end-to-end route); SP3.2 Stamp Catastrophe + Ending B; SP3.3 six-piece cardboard Reassemble Stephen + Ending C; SP3.4 integration, touch/keyboard access, pacing and human tests.
+- **Immediate next delivery gate:** approve fictional hotel-lobby background and Office Alarm/shared hub scripting in a **new bounded draft work package**, after confirming the SP2.3C branch is ready. Existing stacked draft PR #21 remains unchanged in gameplay and still needs normal integration/owner approval before merge.
+- **Core invariants:** 15–25 minute first playthrough of one selected route, three distinct endings, original approved punchlines, no fail state, mid-puzzle Continue, three correct route handoffs, no rerouting in the evidence puzzle, and explicit owner permission before a production merge.
+
 ## GAME-SP2.3C — Branching invitations and time intermissions (14 October 2026)
 
 - **Owner-approved structural change** replaces the prior three-consecutive-invitations design. Stephen now takes exactly **one** mutually exclusive route: accept The Summit at Great Wall → `cult` handoff; otherwise intermission **A few days later… Forbidden City** → accept the fictional banquet → `detention` handoff; otherwise intermission **The next evening… Night Market** → **mandatory** Total Renewal Spa → `reassemble` handoff. Both later sightseeing locations are skipped if an earlier invitation is accepted.
