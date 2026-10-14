@@ -20,6 +20,7 @@
   const cast = { Stephen: $("castStephen"), David: $("castDavid"), Paul: $("castPaul") };
   const greatWall = window.SMP_CHINA_WALL;
   const palace = window.SMP_CHINA_PALACE;
+  const travelStephenHonoured = "./public/assets/generated/characters/stephen-holiday-forbidden-city-pleased-v01.webp";
   const planLabels = {
     cult: "The Summit",
     detention: "International Cultural Excellence Banquet"
@@ -536,9 +537,15 @@
       $("palaceResult").hidden = !choiceMade || showingReply;
       $("palaceBookingLabel").textContent = bookingName(state.pendingPlan);
       $("palaceHonourBadge").hidden = !accepted;
-      // The approved second Stephen sprite is in the scene HTML from its
-      // first beat. Do not reload the unchanged image each dialogue click.
-      // Accept/decline controls only booking and ceremonial UI.
+      // Set the approved Palace sprite once, regardless of banquet choice.
+      // An explicit marker avoids repeated image assignments on each beat,
+      // and supports the dependency-free test environment's image stubs.
+      const palacePortrait = $("palaceStephen");
+      if (palacePortrait.dataset.sprite !== "forbidden-city-pleased") {
+        palacePortrait.src = travelStephenHonoured;
+        palacePortrait.dataset.sprite = "forbidden-city-pleased";
+      }
+      // Acceptance controls only the booking and ceremonial UI.
       $("palacePhotoGag").hidden = !accepted || showingReply;
       if (showingIntro || showingReply) {
         const line = showingIntro ? palace.lines[position] : palace.acceptReply[replyIndex];
