@@ -258,7 +258,8 @@ test("Paul Confused swaps on its scripted beat; Blank and Pleased still use Neut
   assert.equal(p.el("castPaul").dataset.expression,"confused");
   assert.equal(p.el("castPaul").dataset.seatedSprite,"confused");
   assert.ok(p.el("portraitPaul").src.endsWith("paul-office-seated-confused-v01.webp?v=1"));
-  p.at("office.001");
+  p.el("backButton").click();
+  assert.equal(saved(p).beatId,"office.001");
   assert.equal(p.el("castPaul").dataset.expression,"blank");
   assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
   p.at("office.004");
