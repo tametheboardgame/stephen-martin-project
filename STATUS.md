@@ -2,6 +2,12 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP2.4B — David-only hotel perspective correction v3 (15 October 2026)
+
+- Owner review approved Paul's placement, but requested that David appear farther back in the hotel scene. David alone moves higher and becomes slightly smaller: desktop height 56%, left 22%, bottom 28%; tablet height 50%, left 16%, bottom 28%; phone height 42%, left 10%, bottom 30%.
+- Paul's existing geometry at all three breakpoints is unchanged. No revised character artwork, dialogue or puzzle behaviour. The targeted CSS regression expectations are updated.
+- Await refreshed Cloudflare preview and owner sign-off for the combined layout. PR #25 stays draft and nothing is merged into main.
+
 ## GAME-SP2.4B — Hotel standing cast depth/layout revision v2 (15 October 2026)
 
 - Owner review of the previous hotel preview found David's foot still visually crossing the foreground coffee table. Reposition the two approved, independently layered actors further back, slightly larger and towards the reception desk: desktop shared floor at 24% from the base, David 60% height / left 23%, Paul 50% / left 42%; tablet shared floor 24%, heights 54%/45%; phone shared floor 26%, heights 46%/38%.
