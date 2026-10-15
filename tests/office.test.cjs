@@ -10,6 +10,7 @@ const reactions = read("src/reactions.js");
 const china = read("src/china-data.js");
 const rescueFrameworkSource = read("src/rescue-framework.js");
 const summitSource = read("src/summit-data.js");
+const detentionSource = read("src/detention-data.js");
 const engine = read("src/game.js");
 const html = read("index.html");
 const css = read("src/styles.css");
@@ -21,6 +22,7 @@ function story() {
   vm.runInNewContext(china, { window }, { timeout: 1000 });
   vm.runInNewContext(rescueFrameworkSource, { window }, { timeout: 1000 });
   vm.runInNewContext(summitSource, { window }, { timeout: 1000 });
+  vm.runInNewContext(detentionSource, { window }, { timeout: 1000 });
   return window;
 }
 const beats = () => Array.from(story().SMP_OFFICE_SHOTS, shot => Array.from(shot.lines)).flat();
@@ -59,6 +61,7 @@ function preview({audio=false}={}) {
   vm.runInNewContext(china,{window},{timeout:1000});
   vm.runInNewContext(rescueFrameworkSource,{window},{timeout:1000});
   vm.runInNewContext(summitSource,{window},{timeout:1000});
+  vm.runInNewContext(detentionSource,{window},{timeout:1000});
   let timer=0;
   const context={window,document,HTMLElement:Element,
     setTimeout(callback,delay){timeouts.set(++timer,{callback,delay});return timer;},
@@ -1146,7 +1149,7 @@ test("SP3.0 save normaliser rejects mismatched routes and bounds progress",()=>{
   assert.equal(assembly.miniGameStage,1);
   assert.equal(assembly.finished,false,"Incomplete assembly never resumes as completed");
 });
-test("SP3.0 route briefings preserve progress, with Summit playable and other routes gated",()=>{
+test("SP3.0 route briefings preserve progress and do not skip either available puzzle",()=>{
   const f=story().SMP_RESCUE_FRAMEWORK;
   for(const route of ["cult","detention","reassemble"]){
     const p=toHotelInvestigation(route);
@@ -1168,7 +1171,8 @@ test("SP3.0 route briefings preserve progress, with Summit playable and other ro
     assert.equal(saved(p).holidayPhase,"rescue-minigame");
     assert.equal(p.el("rescueMiniGameTitle").textContent,f.routes[route].gameTitle);
     assert.equal(p.el("summitAdmissions").hidden,route!=="cult");
-    if(route!=="cult")assert.match(p.el("rescueMiniGameStatus").textContent,/cannot be skipped|can be skipped/);
+    assert.equal(p.el("detentionPaperwork").hidden,route!=="detention");
+    if(route==="reassemble")assert.match(p.el("rescueMiniGameStatus").textContent,/cannot be skipped|can be skipped/);
     assert.equal(p.el("rescueEndingSummary").hidden,true,"Do not present an unbuilt ending");
     p.el("homeButton").click();p.el("resumeButton").click();
     assert.equal(saved(p).holidayPhase,"rescue-minigame");
@@ -1313,7 +1317,7 @@ test("SP3.1 complete OFFICE-to-Summit path plays every approved ending line and 
   assert.equal(Object.hasOwn(saved(p),"summitResponse"),false);
   assert.equal(Object.hasOwn(saved(p),"rescueProgress"),false);
 });
-test("SP3.1 non-Summit routes remain unplayable, replay does not leak Summit progress",()=>{
+test("SP3.1 Summit interactions stay isolated from the other routes after replay",()=>{
   const p=toSummitAdmissions();
   p.el("summitChoice2").click();
   assert.equal(saved(p).rescueProgress.miniGameStage,1);
@@ -1335,5 +1339,178 @@ test("SP3.1 non-Summit routes remain unplayable, replay does not leak Summit pro
     assert.equal(saved(q).rescueProgress.miniGameStage,0);
     assert.equal(q.el("rescueEndingSummary").hidden,true);
     assert.equal(saved(q).route,route);
+  }
+});
+
+function toDetentionPaperwork(){
+  const p=toHotelInvestigation("detention");
+  completeHotelIntro(p);
+  p.el("hotelDetentionButton").click();
+  for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+  const intro=story().SMP_RESCUE_FRAMEWORK.routes.detention.intro;
+  for(let i=0;i<=intro.length;i++)p.el("routeIntroNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  assert.equal(saved(p).route,"detention");
+  assert.equal(p.el("detentionPaperwork").hidden,false);
+  return p;
+}
+function finishDetentionForms(p){
+  p.el("detentionChoice1").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,1);
+  p.el("detentionNextButton").click();
+  p.el("detentionChoice2").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,2);
+  p.el("detentionNextButton").click();
+}
+test("SP3.2 approved three fictional form steps, permit wording, ending lines and asset gate",()=>{
+  const data=story().SMP_DETENTION;
+  assert.equal(data.rounds.length,3);
+  assert.deepEqual(Array.from(data.rounds,x=>x.options.find(o=>o.correct).id),
+    ["retrieve","stationery","drink"]);
+  for(const round of data.rounds){
+    assert.equal(round.options.length,3);
+    assert.equal(new Set(round.options.map(x=>x.id)).size,3);
+    assert.match(round.hint,/Paul:/);
+  }
+  assert.equal(data.ending.length,14);
+  assert.match(data.ending[0].text,/Why are you both/);
+  assert.match(data.ending.at(-1).text,/frames his/);
+  assert.equal(data.endCard,"ENDING B: DETAINED BY ADMINISTRATION");
+  assert.equal(data.permitText,"APPROVED: ALL OF YOU PLEASE LEAVE");
+  assert.ok(html.indexOf('src="./src/detention-data.js"')<html.indexOf('src="./src/game.js"'));
+  assert.ok(read("scripts/build.mjs").includes('"src/detention-data.js"'));
+  assert.ok(html.includes('id="detentionEndingScene"'));
+  for(const id of ["detentionPaperwork","detentionChoice0","detentionChoice1","detentionChoice2",
+    "detentionStampButton","detentionPermitButton","detentionFeedback","detentionNextButton",
+    "detentionHint","detentionEndingLine","detentionEndingNextButton"])
+    assert.ok(html.includes('id="'+id+'"'),id);
+  assert.match(html,/draggable="true"/,"Mouse drag and drop remains optional");
+  assert.match(css,/\.detention-cards \{display:grid;grid-template-columns:repeat\(3/);
+  assert.match(css,/@media \(max-width:800px\) \{[\s\S]*?\.detention-cards \{grid-template-columns:1fr/);
+  assert.match(css,/\.detention-card,#holidayScreen \.detention-stamp,[\s\S]*?min-height:65px/);
+});
+test("SP3.2 wrong choices are no-fail, Paul hints after two mistakes, progress survives Continue",()=>{
+  const p=toDetentionPaperwork();
+  p.el("detentionChoice0").click();
+  assert.equal(saved(p).rescueProgress.wrongAnswers,1);
+  assert.equal(saved(p).rescueProgress.miniGameStage,0);
+  assert.equal(p.el("detentionHint").hidden,true);
+  assert.match(p.el("detentionFeedback").textContent,/Form 99Z/);
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.match(p.el("detentionFeedback").textContent,/Form 99Z/);
+  p.el("detentionChoice2").click();
+  assert.equal(saved(p).rescueProgress.wrongAnswers,2);
+  assert.equal(p.el("detentionHint").hidden,false);
+  assert.match(p.el("detentionHint").textContent,/collect the bloke/);
+  p.el("detentionChoice0").click();p.el("detentionChoice2").click();p.el("detentionChoice0").click();
+  assert.equal(saved(p).rescueProgress.wrongAnswers,4,"Capped wrong answers");
+  p.el("detentionNextButton").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,0,"Wrong answers never move stage");
+  p.el("detentionChoice1").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,1);
+  assert.equal(saved(p).rescueProgress.wrongAnswers,0);
+  assert.equal(p.el("detentionChoiceCards").hidden,true);
+  assert.match(p.el("detentionFeedback").textContent,/Reason accepted/);
+  p.el("detentionChoice1").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,1,"No double completion");
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.match(p.el("detentionFeedback").textContent,/Reason accepted/);
+  p.el("detentionNextButton").click();
+  assert.match(p.el("detentionRoundTitle").textContent,/bear picture/);
+  assert.equal(p.el("detentionHint").hidden,true,"Hints reset per stage");
+});
+test("SP3.2 final stamp is hidden until drink inspected and supports tap/select with save",()=>{
+  const p=toDetentionPaperwork();
+  finishDetentionForms(p);
+  assert.equal(saved(p).rescueProgress.miniGameStage,2);
+  assert.equal(p.el("detentionStampPanel").hidden,true);
+  p.el("detentionPermitButton").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,2,"Cannot stamp before finding it");
+  p.el("detentionChoice0").click();p.el("detentionChoice1").click();
+  assert.equal(p.el("detentionHint").hidden,false);
+  assert.match(p.el("detentionHint").textContent,/takeaway cup/);
+  p.el("detentionChoice2").click();
+  assert.equal(saved(p).detentionStampFound,true);
+  assert.equal(p.el("detentionStampPanel").hidden,false);
+  assert.equal(p.el("detentionChoiceCards").hidden,true);
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(p.el("detentionStampPanel").hidden,false,"Stamp discovery persists");
+  p.el("detentionPermitButton").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,2,"Cannot use unselected stamp");
+  p.el("detentionStampButton").click();
+  assert.equal(saved(p).detentionStampSelected,true);
+  assert.equal(p.el("detentionStampButton").dataset.selected,"true");
+  p.el("homeButton").click();p.el("resumeButton").click();
+  p.el("detentionPermitButton").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,3);
+  assert.equal(saved(p).rescueProgress.finished,true);
+  assert.match(p.el("detentionFeedback").textContent,/APPROVED: ALL OF YOU PLEASE LEAVE/);
+  p.el("detentionPermitButton").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,3,"Repeated stamp is idempotent");
+});
+test("SP3.2 final stamp supports drag-to-permit with keyboard/touch tap fallback",()=>{
+  const p=toDetentionPaperwork();
+  finishDetentionForms(p);
+  p.el("detentionChoice2").click();
+  const transfer={value:"",setData(_type,value){this.value=value;},getData(){return this.value;}};
+  p.el("detentionStampButton").events.dragstart({dataTransfer:transfer});
+  assert.equal(transfer.value,"approved-stamp");
+  let cancelled=0;
+  p.el("detentionPermitButton").events.dragover({preventDefault(){cancelled++;}});
+  p.el("detentionPermitButton").events.drop({preventDefault(){cancelled++;},dataTransfer:transfer});
+  assert.equal(cancelled,2);
+  assert.equal(saved(p).rescueProgress.finished,true);
+  p.el("detentionNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+});
+test("SP3.2 complete paperwork opens approved Ending B, persists mid-dialogue and replays",()=>{
+  const p=toDetentionPaperwork();
+  finishDetentionForms(p);
+  p.el("detentionChoice2").click();
+  p.el("detentionStampButton").click();
+  p.el("detentionPermitButton").click();
+  assert.equal(saved(p).rescueProgress.finished,true);
+  p.el("detentionNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+  assert.equal(p.el("detentionEndingScene").hidden,false);
+  assert.equal(p.el("summitEndingScene").hidden,true);
+  assert.match(p.el("detentionEndingLine").textContent,/Why are you both/);
+  for(let i=0;i<6;i++)p.el("detentionEndingNextButton").click();
+  assert.equal(saved(p).rescueProgress.endingStep,6);
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).rescueProgress.endingStep,6);
+  assert.match(p.el("detentionEndingLine").textContent,/You started the operation/);
+  const total=story().SMP_DETENTION.ending.length;
+  for(let i=6;i<total;i++)p.el("detentionEndingNextButton").click();
+  assert.equal(saved(p).rescueProgress.endingStep,total);
+  assert.match(p.el("detentionEndingLine").textContent,/DETAINED BY ADMINISTRATION/);
+  p.el("detentionEndingNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-ending-summary");
+  assert.equal(p.el("rescueSummaryHeading").textContent,"DETAINED BY ADMINISTRATION");
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-ending-summary");
+  p.el("rescueSummaryReplayButton").click();
+  assert.equal(saved(p).holidayPhase,"wall");
+  assert.equal(saved(p).wallDecision,null);
+  assert.equal(Object.hasOwn(saved(p),"route"),false);
+  assert.equal(Object.hasOwn(saved(p),"rescueProgress"),false);
+  assert.equal(Object.hasOwn(saved(p),"detentionStampFound"),false);
+});
+test("SP3.2 cannot activate paperwork or false ending on other committed routes",()=>{
+  for(const route of ["cult","reassemble"]){
+    const p=toHotelInvestigation(route);
+    completeHotelIntro(p);
+    p.el("hotel"+route[0].toUpperCase()+route.slice(1)+"Button").click();
+    for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
+    const intro=story().SMP_RESCUE_FRAMEWORK.routes[route].intro;
+    for(let i=0;i<=intro.length;i++)p.el("routeIntroNextButton").click();
+    assert.equal(p.el("detentionPaperwork").hidden,true);
+    p.el("detentionChoice1").click();
+    p.el("detentionStampButton").click();
+    p.el("detentionPermitButton").click();
+    assert.equal(saved(p).route,route);
+    assert.equal(saved(p).rescueProgress.miniGameStage,0);
+    assert.equal(p.el("detentionEndingScene").hidden,true);
   }
 });
