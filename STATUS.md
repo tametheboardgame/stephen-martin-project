@@ -2,6 +2,12 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP4.0C — Four approved attendants integrated into Ending A (15 October 2026)
+
+- Owner approved four separate throne-room attendant sprites (fan, tray, ewer, towel) and explicitly directed integration. The transparent PNG originals are in the dedicated Google Drive staging folder. Each was materialised sequentially via a versioned manifest and the existing OIDC pipeline as an alpha-preserving WebP on draft PR #34.
+- The throne-room scene now includes four separately positioned, silent, decorative attendants: two flanking the raised platform and two in the side areas. Responsive layouts protect the throne, bottom dialogue and interactive controls. Stephen's approved size and seating, David/Paul's scaled positions at the base of the stairs, speaker glow and the three-route flow remain unchanged.
+- Build packaging and regression coverage now enforce each attendant's provenance and transparency. **Owner in-engine visual review still required** for sizing, overlap and perspective. Do not merge PR #34 or parent PR #33 without explicit approval. See `docs/story/GAME-SP4.0C-SUMMIT-THRONE-ART.md`.
+
 ## GAME-SP4.0C — Stair-foot staging and attendant visual concept (15 October 2026)
 
 - In response to owner feedback, David and Paul were **shrunk and moved inward to the base of the throne stairs** at desktop/tablet/mobile breakpoints, retaining the approved Stephen scale and all existing ending logic/speaker glow.
