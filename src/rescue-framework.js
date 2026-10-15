@@ -18,7 +18,8 @@
         { speaker:"Gatekeeper", text:"Then yes." },
         { speaker:"Paul", text:"Does he know he's a chairman?" },
         { speaker:"Gatekeeper", text:"He didn't yesterday." },
-        { speaker:"David", text:"We've infiltrated the inner circle." }
+        { speaker:"David", text:"We've infiltrated the inner circle." },
+        { speaker:"Paul", text:"We're standing outside the gate." }
       ])
     }),
     detention: Object.freeze({
