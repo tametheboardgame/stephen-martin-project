@@ -299,6 +299,145 @@
     scheduleAdvance();
   }
 
+  // GAME-SP3.4: The office owns its voiced timeline. Holiday scenes are
+  // text-timed, pauseable cinematic dialogue; choices and puzzle inputs never
+  // advance by themselves. One shared toolbar owns Pause / Next / Change route.
+  let holidayAutoPlaying = true;
+  let holidayAdvanceTimer = null;
+  let holidayAdvanceAction = null;
+  let holidayAdvanceToken = 0;
+
+  function clearHolidayAdvanceTimer() {
+    holidayAdvanceToken++;
+    if (holidayAdvanceTimer !== null) {
+      clearTimeout(holidayAdvanceTimer);
+      holidayAdvanceTimer = null;
+    }
+    holidayAdvanceAction = null;
+  }
+
+  function holidayLineMs(text, isCard = false) {
+    if (isCard) return 3600;
+    const chars = typeof text === "string" ? text.length : 0;
+    return Math.min(8500, Math.max(2600, 1550 + chars * 43));
+  }
+
+  // Return only steps with no unresolved choice, active clue or puzzle gesture.
+  // Scene-specific continuations can still be used by the legacy test harness.
+  function holidayStoryStep() {
+    const phase = state.holidayPhase;
+    const step = (run, text, isCard = false) => ({run, wait:holidayLineMs(text, isCard)});
+    if (phase === "transition") return step(startWall, "", true);
+    if (phase === "wall") {
+      if (state.wallStep < greatWall.lines.length && !state.wallDecision) {
+        return step(nextWallLine, greatWall.lines[state.wallStep]?.text);
+      }
+      if (state.wallDecision === "accept") return step(() => beginRouteHandoff("cult"), "", true);
+      if (state.wallDecision === "decline") return step(() => beginIntermission("palace"), "", true);
+    }
+    if (phase === "palace") {
+      if (state.palaceStep < palace.lines.length) return step(nextPalaceLine, palace.lines[state.palaceStep]?.text);
+      if (state.palaceDecision === "accept" &&
+          state.palaceReplyStep < palace.acceptReply.length)
+        return step(nextPalaceLine, palace.acceptReply[state.palaceReplyStep]?.text);
+      if (state.palaceDecision === "accept") return step(() => beginRouteHandoff("detention"), "", true);
+      if (state.palaceDecision === "decline") return step(() => beginIntermission("market"), "", true);
+    }
+    if (phase === "market") {
+      if (state.marketStep < market.lines.length) return step(nextMarketLine,market.lines[state.marketStep]?.text);
+      if (state.marketDecision === "accept") return step(()=>beginRouteHandoff("reassemble"), "", true);
+    }
+    if (phase === "intermission") return step(continueIntermission, "", true);
+    if (phase === "route-handoff") return step(continueRouteHandoff, "", true);
+    if (phase === "final-message") return step(advanceFinalMessage, "", true);
+    if (phase === "rescue-alarm") {
+      if (state.rescueAlarmStep < rescueAlarm.lines.length)
+        return step(nextRescueAlarmLine, rescueAlarm.lines[state.rescueAlarmStep]?.text);
+      return step(startRescueTravel, "", true);
+    }
+    if (phase === "rescue-travel") {
+      const line = rescueAlarm.montage[state.rescueTravelStep];
+      return step(nextRescueTravel, line?.text || line?.detail, true);
+    }
+    if (phase === "rescue-hub-arrival") return step(enterHotelInvestigation, "", true);
+    if (phase === "rescue-hotel") {
+      if (state.hubIntroStep < rescueHub.opening.length)
+        return step(nextHotelIntro, rescueHub.opening[state.hubIntroStep]?.text);
+      if (state.hubMatched === true) {
+        const line = rescueHub.correct[Math.min(state.hubCorrectStep || 0,rescueHub.correct.length - 1)];
+        return step(advanceHotelResolution, line?.text);
+      }
+      return null; // Stop while clues or destination options are active.
+    }
+    if (phase === "rescue-route-intro") {
+      const route = rescueFramework.routes[state.route];
+      if (!route) return null;
+      return step(nextRouteIntro, route.intro[state.rescueProgress?.introStep]?.text, 
+        state.rescueProgress?.introStep >= route.intro.length);
+    }
+    if (phase === "rescue-minigame") {
+      const p = rescueFramework.normalise(state.rescueProgress,state.route);
+      if (!p) return null;
+      if (state.route === "cult" && state.summitResponse?.correct === true &&
+          state.summitResponse.round === p.miniGameStage - 1)
+        return step(continueSummit, summit.rounds[state.summitResponse.round]?.options.find(o=>o.id===state.summitResponse.choice)?.response);
+      if (state.route === "detention" && state.detentionResponse?.correct === true &&
+          state.detentionResponse.round === p.miniGameStage - 1)
+        return step(continueDetention, detention.rounds[state.detentionResponse.round]?.approvedResponse || "Form accepted.");
+      return null; // All new answers, stamp and assembly pieces are manual.
+    }
+    if (phase === "rescue-route-ending") {
+      const p = rescueFramework.normalise(state.rescueProgress,state.route);
+      if (!p?.finished) return null;
+      const data = state.route === "cult" ? summit : state.route === "detention" ? detention
+        : state.route === "reassemble" && state.assemblyPowered === true ? assembly : null;
+      const action = state.route === "cult" ? advanceSummitEnding
+        : state.route === "detention" ? advanceDetentionEnding : advanceAssemblyEnding;
+      if (!data) return null;
+      return step(action,data.ending[p.endingStep]?.text,p.endingStep >= data.ending.length);
+    }
+    return null; // Ending summaries and unresolved decisions wait for input.
+  }
+
+  function scheduleHolidayAdvance() {
+    clearHolidayAdvanceTimer();
+    if (screens.holiday.hidden) return;
+    const next = holidayStoryStep();
+    holidayAdvanceAction = next?.run || null;
+    const playing = holidayAutoPlaying && !document.hidden;
+    $("holidayScreen").dataset.autoAdvance = playing ? "playing" : "paused";
+    $("holidayPauseButton").textContent = playing ? "Ⅱ Pause" : "▶ Play";
+    $("holidayPauseButton").setAttribute("aria-pressed", String(playing));
+    $("holidayNextButton").hidden = !next;
+    const canChange = state.wallDecision === "accept" || state.wallDecision === "decline";
+    $("holidayRouteButton").hidden = !canChange;
+    $("holidayRouteButton").textContent = state.holidayPhase === "rescue-ending-summary"
+      ? "Play another ending ↺" : "Change route ↺";
+    $("holidayPlaybackStatus").textContent = !playing ? "Paused · Next advances one line"
+      : next ? "Playing · choices and puzzles pause automatically"
+        : "Waiting for your choice";
+    if (!playing || !next) return;
+    const token = holidayAdvanceToken;
+    holidayAdvanceTimer = setTimeout(() => {
+      holidayAdvanceTimer = null;
+      if (token !== holidayAdvanceToken || !holidayAutoPlaying ||
+          screens.holiday.hidden || document.hidden) return;
+      next.run();
+    },next.wait);
+  }
+
+  function setHolidayAutoplay(enabled) {
+    holidayAutoPlaying = Boolean(enabled);
+    scheduleHolidayAdvance();
+  }
+
+  function nextHolidayStoryBeat() {
+    if (screens.holiday.hidden || !holidayAdvanceAction) return;
+    const run = holidayAdvanceAction;
+    clearHolidayAdvanceTimer();
+    run();
+  }
+
   let soundEnabled = false;
   // Keep the initial menu muted. Clicking Start/Continue is an explicit gesture
   // to play the voiced story; an intentional Sound toggle always wins.
@@ -404,6 +543,7 @@
   }
 
   function reveal(screenName) {
+    if (screenName !== "holiday") clearHolidayAdvanceTimer();
     if (screenName !== "office") {
       clearAdvanceTimer();
       stopVoice();
@@ -603,6 +743,7 @@
     delete state.assemblyPowered;
   }
   function renderHoliday() {
+    clearHolidayAdvanceTimer();
     reveal("holiday");
     if (["rescue-route-intro", "rescue-minigame", "rescue-route-ending", "rescue-ending-summary"].includes(state.holidayPhase) &&
         (!rescueFramework.validRoute(state.route) || state.hubMatched !== true)) {
@@ -1096,9 +1237,11 @@
     }
     state.holidayFlowVersion = 2;
     persist();
+    scheduleHolidayAdvance();
   }
 
   function showHoliday() {
+    holidayAutoPlaying = true;
     state.scene = "holiday";
     state.openingSeen = true;
     state.beatId = finalBeatId;
@@ -1563,12 +1706,7 @@
 
   function chooseAnotherEnding() {
     if (screens.holiday.hidden ||
-        !(state.holidayPhase === "final-message" && state.finalStep === 2 ||
-          state.holidayPhase === "rescue-hub-arrival" ||
-          state.holidayPhase === "rescue-route-intro" ||
-          state.holidayPhase === "rescue-minigame" ||
-          state.holidayPhase === "rescue-route-ending" ||
-          state.holidayPhase === "rescue-ending-summary")) return;
+        !(state.wallDecision === "accept" || state.wallDecision === "decline")) return;
     // Rewind explicitly to the first route choice, preserving the voiced
     // office story and Great Wall dialogue but clearing all branch decisions.
     state.wallStep = greatWall.lines.length;
@@ -1586,6 +1724,8 @@
 
   function resume() {
     clearAdvanceTimer();
+    clearHolidayAdvanceTimer();
+    holidayAutoPlaying = true;
     if (!soundPreferenceSet) setSound(true);
     autoPlaying = true;
     const saved = readSave();
@@ -1694,6 +1834,9 @@
   $("rescueSummaryReplayButton").addEventListener("click", chooseAnotherEnding);
   $("rescueSummaryRestartButton").addEventListener("click", startOffice);
   $("rescueSummaryMenuButton").addEventListener("click", showMenu);
+  $("holidayPauseButton").addEventListener("click",()=>setHolidayAutoplay(!holidayAutoPlaying));
+  $("holidayNextButton").addEventListener("click",nextHolidayStoryBeat);
+  $("holidayRouteButton").addEventListener("click",chooseAnotherEnding);
   $("soundButton").addEventListener("click", () => setSound(!soundEnabled, true));
   $("sceneSoundButton").addEventListener("click", () => setSound(!soundEnabled, true));
   $("menuSoundButton").addEventListener("click", () => setSound(!soundEnabled, true));
@@ -1703,7 +1846,11 @@
   $("paulProofButton").addEventListener("click", cyclePaulProof);
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
-      // Pausing on hidden tabs prevents timed dialogue from being skipped while away.
+      // Never consume story lines in a background tab.
+      if (!screens.holiday.hidden) {
+        holidayAutoPlaying = false;
+        scheduleHolidayAdvance();
+      }
       clearAdvanceTimer();
       autoPlaying = false;
       if (voice) {

@@ -352,7 +352,7 @@ test("pause, auto next, skip and resume work without restarting dialogue",()=>{
   p.el("playPauseButton").click();
   assert.equal(p.timeouts.size,1);
   p.el("skipButton").click();
-  assert.equal(p.timeouts.size,0);
+  assert.equal(p.timeouts.size,1,"Holiday cinematic now auto-advances by default");
   assert.equal(saved(p).scene,"holiday");
   assert.equal(Object.hasOwn(saved(p),"route"),false);
   p.el("homeButton").click();p.el("resumeButton").click();
@@ -1675,4 +1675,137 @@ test("SP3.3 gate blocks unfinished and route-mismatched ending saves",()=>{
   assert.equal(p.el("rescueEndingSummary").hidden,true);
   p.el("detentionNextButton").click();p.el("summitNextButton").click();
   assert.equal(saved(p).rescueProgress.miniGameStage,0);
+});
+
+test("SP3.4 shared footer replaces the forest of Next/Replay buttons",()=>{
+  for(const id of ["holidayPauseButton","holidayNextButton","holidayRouteButton",
+    "holidayPlaybackStatus","homeButton"])assert.ok(html.includes('id="'+id+'"'),id);
+  const hiddenInUnifiedBar=["wallReplayButton","palaceReplayButton",
+    "hotelRouteReplayButton","rescueMiniGameReplayButton","rescueSummaryReplayButton",
+    "rescueAlarmNextButton","routeIntroNextButton","summitEndingNextButton"];
+  for(const id of hiddenInUnifiedBar)assert.match(css,new RegExp("#holidayScreen #"+id.replace(/[.*+?^$\\{}()|[\\]\\]/g,"\\$&")),
+    "Legacy duplicate "+id+" is hidden in the unified footer layout");
+  assert.match(css,/\.china-footer \{[\s\S]*?top:10px !important;right:10px !important/);
+  assert.match(engine,/function scheduleHolidayAdvance\(/);
+  assert.match(engine,/function holidayStoryStep\(/);
+});
+test("SP3.4 chapter two auto-advances dialogue but stops for Great Wall decisions",()=>{
+  const p=preview();p.start();p.el("skipButton").click();
+  assert.equal(saved(p).holidayPhase,"transition");
+  assert.equal(p.timeouts.size,1);
+  p.el("holidayPauseButton").click();
+  assert.equal(p.timeouts.size,0,"Pause cancels existing holiday timer");
+  assert.match(p.el("holidayPauseButton").textContent,/Play/);
+  assert.equal(p.el("holidayNextButton").hidden,false,"Manual Next is always available");
+  p.el("holidayNextButton").click();
+  assert.equal(saved(p).holidayPhase,"wall");
+  assert.equal(saved(p).wallStep,0);
+  assert.equal(p.timeouts.size,0,"Manual mode does not create another timer");
+  p.el("holidayPauseButton").click();
+  assert.equal(p.timeouts.size,1);
+  for(let i=0;i<story().SMP_CHINA_WALL.lines.length;i++)assert.equal(p.tick(),true);
+  assert.equal(saved(p).wallStep,story().SMP_CHINA_WALL.lines.length);
+  assert.equal(p.timeouts.size,0,"No auto selection of travel destination");
+  assert.equal(p.el("holidayRouteButton").hidden,true);
+  assert.equal(p.el("holidayNextButton").hidden,true);
+  p.el("wallAcceptButton").click();
+  assert.equal(p.el("holidayRouteButton").hidden,false);
+  assert.equal(p.timeouts.size,1,"Safe handoff resumes after user's selection");
+  p.el("holidayRouteButton").click();
+  assert.equal(saved(p).holidayPhase,"wall");
+  assert.equal(saved(p).wallDecision,null);
+  assert.equal(p.el("wallChoices").hidden,false);
+  assert.equal(p.el("holidayRouteButton").hidden,true);
+  assert.equal(p.timeouts.size,0);
+});
+test("SP3.4 auto-progresses cinematic cards and pauses for hotel clues and puzzle input",()=>{
+  const p=toWallChoice();
+  p.el("wallAcceptButton").click();
+  assert.equal(p.tick(),true);
+  assert.equal(saved(p).holidayPhase,"route-handoff");
+  assert.equal(p.tick(),true);
+  assert.equal(saved(p).holidayPhase,"final-message");
+  for(let i=0;i<3;i++)assert.equal(p.tick(),true);
+  assert.equal(saved(p).holidayPhase,"rescue-alarm");
+  const lines=story().SMP_RESCUE_ALARM.lines.length;
+  for(let i=0;i<=lines;i++)assert.equal(p.tick(),true);
+  assert.equal(saved(p).holidayPhase,"rescue-travel");
+  const montage=story().SMP_RESCUE_ALARM.montage.length;
+  for(let i=0;i<montage;i++)assert.equal(p.tick(),true);
+  assert.equal(saved(p).holidayPhase,"rescue-hub-arrival");
+  assert.equal(p.tick(),true);
+  assert.equal(saved(p).holidayPhase,"rescue-hotel");
+  const arrival=story().SMP_RESCUE_HUB.opening.length;
+  for(let i=0;i<arrival;i++)assert.equal(p.tick(),true);
+  assert.equal(p.timeouts.size,0,"Hotel evidence and decision must be manual");
+  assert.equal(p.el("rescueHotelHotspots").hidden,false);
+  p.el("hotelCultButton").click();
+  assert.equal(saved(p).hubMatched,true);
+  assert.equal(p.timeouts.size,1,"Resolution dialogue now continues automatically");
+});
+test("SP3.4 pause, hidden-tab and route choice guard do not advance puzzle",()=>{
+  const p=toSummitAdmissions();
+  assert.equal(p.timeouts.size,0,"Unanswered admission test never advances");
+  p.el("summitChoice2").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,1);
+  assert.equal(p.timeouts.size,1,"Correct joke response advances after reading");
+  p.document.hidden=true;
+  p.listeners.get("visibilitychange")();
+  assert.equal(p.timeouts.size,0);
+  assert.match(p.el("holidayPauseButton").textContent,/Play/);
+  p.document.hidden=false;
+  assert.equal(p.timeouts.size,0,"Return from hidden tab never skips a line");
+  p.el("holidayNextButton").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,1);
+  assert.equal(p.el("summitRoundTitle").textContent,"Recite the highest compliment");
+  assert.equal(p.timeouts.size,0,"Remains paused until Play is explicitly pressed");
+  p.el("summitChoice0").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,1);
+  assert.equal(p.timeouts.size,0);
+});
+
+test("SP3.4 all three fully-earned finales autoplay their lines but stop at summary",()=>{
+  const cases=[
+    {route:"cult",make:()=>{
+      const p=toSummitAdmissions();
+      for(const index of [2,1,2]){
+        p.el("summitChoice"+index).click();
+        assert.equal(p.tick(),true,"Correct answer acknowledgment advances automatically");
+      }
+      return p;
+    },lines:story().SMP_SUMMIT.ending.length},
+    {route:"detention",make:()=>{
+      const p=toDetentionPaperwork();
+      finishDetentionForms(p);
+      p.el("detentionChoice2").click();
+      p.el("detentionStampButton").click();
+      p.el("detentionPermitButton").click();
+      p.el("detentionNextButton").click();
+      return p;
+    },lines:story().SMP_DETENTION.ending.length},
+    {route:"reassemble",make:()=>{
+      const p=toAssemblyWorkshop();
+      for(let i=0;i<6;i++){
+        p.el("assemblyPiece"+i).click();
+        p.el("assemblySlot"+i).click();
+      }
+      assert.equal(p.timeouts.size,0,"POWER ON must never trigger automatically");
+      p.el("assemblyPowerButton").click();
+      return p;
+    },lines:story().SMP_REASSEMBLE.ending.length}
+  ];
+  for(const c of cases){
+    const p=c.make();
+    assert.equal(saved(p).route,c.route);
+    assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+    for(let i=0;i<=c.lines;i++)assert.equal(p.tick(),true,"Ending "+c.route+" should autoplay beat "+i);
+    assert.equal(saved(p).holidayPhase,"rescue-ending-summary");
+    assert.equal(p.timeouts.size,0,"Summary waits for player; never auto-replays");
+    assert.equal(p.el("holidayRouteButton").hidden,false);
+    assert.match(p.el("holidayRouteButton").textContent,/Play another ending/);
+    p.el("holidayRouteButton").click();
+    assert.equal(saved(p).holidayPhase,"wall");
+    assert.equal(saved(p).wallDecision,null);
+    assert.equal(Object.hasOwn(saved(p),"route"),false);
+  }
 });

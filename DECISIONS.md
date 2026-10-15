@@ -2,6 +2,10 @@
 
 Entries are concise, durable design decisions. Additional decisions are added only where they materially affect scope, design, delivery or implementation.
 
+## SP-D039, 15 October 2026: Autoplay cinematic scenes, keep one consistent route control
+
+Owner requested that most scenes play and advance without constant clicking and that replay/alternate-choice controls be consolidated into one reliable location. For SP3.4, preserve automatic recorded office voices and add **text-paced autoplay only for subsequent scripted scenes**, never automatic choices or puzzle inputs. Offer one persistent top-right Pause/Next/Change route toolbar, with the route-reset action returning to the Great Wall checkpoint; stop timers on hidden tab and allow manual continuation. Keep this navigation pass scoped and separate from the individually approved SP4.0 artwork phase. Final dialogue pacing and UI layout remain a human browser-review gate.
+
 ## SP-D038, 15 October 2026: Merge complete mechanics, make the art pass first, polish last
 
 Owner approved merging all four functional rescue packages, and requested a dedicated visual/artwork phase **before** final tidying, minor expansion and game-wide polish. PRs #27–#30 were merged to `main` at `aa1ea5a2ed8df7b1db4bfb89028d9ac81f6b5605`, preserving the three distinct route endings. Keep the 15–25-minute narrative and privacy safeguards; visual output needs individual asset approval through the existing manifest/Drive pipeline. Record a short SP3.4 integration/visual inventory, deliver art as SP4.0, then assess small improvements, pacing and final QA as SP4.1. No fourth route, long campaign or ungated release.
