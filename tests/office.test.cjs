@@ -8,6 +8,7 @@ const read = name => fs.readFileSync(path.join(root, name), "utf8");
 const source = read("src/office-data.js");
 const reactions = read("src/reactions.js");
 const china = read("src/china-data.js");
+const rescueFrameworkSource = read("src/rescue-framework.js");
 const engine = read("src/game.js");
 const html = read("index.html");
 const css = read("src/styles.css");
@@ -17,6 +18,7 @@ function story() {
   vm.runInNewContext(source, { window }, { timeout: 1000 });
   vm.runInNewContext(reactions, { window }, { timeout: 1000 });
   vm.runInNewContext(china, { window }, { timeout: 1000 });
+  vm.runInNewContext(rescueFrameworkSource, { window }, { timeout: 1000 });
   return window;
 }
 const beats = () => Array.from(story().SMP_OFFICE_SHOTS, shot => Array.from(shot.lines)).flat();
@@ -53,6 +55,7 @@ function preview({audio=false}={}) {
   vm.runInNewContext(source,{window},{timeout:1000});
   vm.runInNewContext(reactions,{window},{timeout:1000});
   vm.runInNewContext(china,{window},{timeout:1000});
+  vm.runInNewContext(rescueFrameworkSource,{window},{timeout:1000});
   let timer=0;
   const context={window,document,HTMLElement:Element,
     setTimeout(callback,delay){timeouts.set(++timer,{callback,delay});return timer;},
@@ -1061,4 +1064,119 @@ test("new expressions need only a registered seated source and no story edits",(
   assert.ok(engine.includes("applySeatedExpression(name)"));
   assert.ok(!reactions.includes("http"));
   assert.ok(read("index.html").indexOf("office-data.js")<read("index.html").indexOf("reactions.js"));
+});
+
+test("SP3.0 shared framework exposes the three approved intros and ending contracts",()=>{
+  const f=story().SMP_RESCUE_FRAMEWORK;
+  assert.deepEqual(Object.keys(f.routes),["cult","detention","reassemble"]);
+  assert.equal(f.routes.cult.gameTitle,"The Summit Admissions Test");
+  assert.equal(f.routes.detention.gameTitle,"The Great Stamp Catastrophe");
+  assert.equal(f.routes.reassemble.endingTitle,"SOME ASSEMBLY REQUIRED");
+  assert.match(f.routes.cult.intro[0].text,/radiant new chairman/);
+  assert.match(f.routes.detention.intro.at(-1).text,/printer/);
+  assert.match(f.routes.reassemble.intro[2].text,/replacement parts/);
+  assert.equal(f.fresh("bogus"),null);
+  for(const [route,def] of Object.entries(f.routes)){
+    assert.ok(def.intro.length>=6);
+    assert.equal(f.fresh(route).route,route);
+    assert.equal(f.fresh(route).finished,false);
+    assert.equal(f.fresh(route).miniGameStage,0);
+  }
+  assert.ok(html.includes('src="./src/rescue-framework.js"'));
+  assert.ok(read("scripts/build.mjs").includes('"src/rescue-framework.js"'));
+  assert.ok(html.indexOf('src="./src/rescue-framework.js"')<html.indexOf('src="./src/game.js"'));
+});
+test("SP3.0 choice rounds are monotonic and no-fail, with Paul hint after two errors",()=>{
+  const f=story().SMP_RESCUE_FRAMEWORK;
+  for(const route of ["cult","detention"]){
+    let p=f.fresh(route);
+    p=f.wrong(p,route);
+    assert.equal(p.wrongAnswers,1);assert.equal(p.hintVisible,false);
+    p=f.wrong(p,route);
+    assert.equal(p.wrongAnswers,2);assert.equal(p.hintVisible,true);
+    p=f.completeStep(p,route,1);
+    assert.equal(p.miniGameStage,0,"Cannot complete a future round early");
+    p=f.completeStep(p,route,0);
+    assert.equal(p.miniGameStage,1);assert.equal(p.wrongAnswers,0);
+    p=f.completeStep(p,route,0);
+    assert.equal(p.miniGameStage,1,"Repeated answer cannot skip a step");
+    p=f.completeStep(p,route,1);
+    p=f.completeStep(p,route,2);
+    assert.equal(p.finished,true);assert.equal(p.miniGameStage,3);
+    p=f.wrong(p,route);
+    assert.equal(p.miniGameStage,3);
+  }
+});
+test("SP3.0 cardboard matching retains six distinct slots, rejects extras and resumes idempotently",()=>{
+  const f=story().SMP_RESCUE_FRAMEWORK;
+  let p=f.fresh("reassemble");
+  p=f.placePart(p,"reassemble","toaster","torso");
+  p=f.placePart(p,"reassemble","banana","head");
+  assert.equal(p.hintVisible,true);
+  assert.equal(p.miniGameStage,0);
+  p=f.placePart(p,"reassemble","head","torso");
+  assert.equal(p.miniGameStage,0);
+  p=f.placePart(p,"reassemble","head","head");
+  assert.equal(p.miniGameStage,1);assert.equal(p.hintVisible,false);
+  p=f.placePart(p,"reassemble","head","head");
+  assert.equal(p.miniGameStage,1,"Duplicate piece cannot increase count");
+  const restored=f.normalise(JSON.parse(JSON.stringify(p)),"reassemble");
+  assert.equal(restored.miniGameStage,1);
+  for(const part of ["torso","left-arm","right-arm","left-leg","right-leg"])
+    p=f.placePart(p,"reassemble",part,part);
+  assert.equal(p.finished,true);
+  assert.equal(p.miniGameStage,6);
+  assert.equal(p.placedParts.length,6);
+});
+test("SP3.0 save normaliser rejects mismatched routes and bounds progress",()=>{
+  const f=story().SMP_RESCUE_FRAMEWORK;
+  const bad={version:1,route:"cult",introStep:999,miniGameStage:999,wrongAnswers:999,
+    placedParts:["head"],finished:true,endingStep:999999};
+  const changed=f.normalise(bad,"detention");
+  assert.equal(changed.route,"detention");assert.equal(changed.miniGameStage,0);
+  const same=f.normalise(bad,"cult");
+  assert.equal(same.introStep,f.routes.cult.intro.length);
+  assert.equal(same.miniGameStage,3);
+  assert.equal(same.wrongAnswers,4);
+  assert.equal(same.finished,true);
+  const assembly=f.normalise({...bad,route:"reassemble",placedParts:["head","head","toaster"]},"reassemble");
+  assert.equal(assembly.miniGameStage,1);
+  assert.equal(assembly.finished,false,"Incomplete assembly never resumes as completed");
+});
+test("SP3.0 all committed routes play canonical briefing then stop at honest mini-game gate",()=>{
+  const f=story().SMP_RESCUE_FRAMEWORK;
+  for(const route of ["cult","detention","reassemble"]){
+    const p=toHotelInvestigation(route);
+    completeHotelIntro(p);
+    const button="hotel"+route[0].toUpperCase()+route.slice(1)+"Button";
+    p.el(button).click();
+    for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+    assert.equal(saved(p).rescueProgress.route,route);
+    assert.equal(saved(p).rescueProgress.introStep,0);
+    assert.equal(p.el("routeIntroSpeaker").textContent,f.routes[route].intro[0].speaker.toUpperCase());
+    p.el("routeIntroNextButton").click();
+    p.el("homeButton").click();p.el("resumeButton").click();
+    assert.equal(saved(p).rescueProgress.introStep,1,"Continue must restore the exact spoken line");
+    assert.equal(p.el("routeIntroLine").textContent,f.routes[route].intro[1].text);
+    for(let i=1;i<f.routes[route].intro.length;i++)p.el("routeIntroNextButton").click();
+    assert.equal(saved(p).rescueProgress.introStep,f.routes[route].intro.length);
+    p.el("routeIntroNextButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-minigame");
+    assert.match(p.el("rescueMiniGameStatus").textContent,/not be skipped/);
+    assert.equal(p.el("rescueMiniGameTitle").textContent,f.routes[route].gameTitle);
+    assert.equal(p.el("rescueEndingSummary").hidden,true,"Do not present an unbuilt ending");
+    p.el("homeButton").click();p.el("resumeButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-minigame");
+    p.el("rescueMiniGameBackButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+    p.el("routeIntroNextButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-minigame");
+    p.el("rescueMiniGameReplayButton").click();
+    assert.equal(saved(p).holidayPhase,"wall");
+    assert.equal(saved(p).wallDecision,null);
+    assert.equal(saved(p).hubMatched,false);
+    assert.equal(Object.hasOwn(saved(p),"rescueProgress"),false);
+    assert.equal(Object.hasOwn(saved(p),"route"),false);
+  }
 });
