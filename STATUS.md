@@ -2,6 +2,11 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP4.0B — Summit perspective revision ready for review (15 October 2026)
+
+- Owner approved a revised Summit scene *composition*: gatekeeper on the left, Paul centre-right and David far right, all smaller and visually grounded farther back along the cobbled entrance path. Do not regenerate the approved transparent sprite artwork; independently mirror the three characters in CSS so they face one another. Preserve the approved exterior, bottom speech bar, current-speaker glow, persistent story controls and central Admissions Test panel.
+- The scene was restaged at desktop/tablet/mobile breakpoints on draft PR #33. Targeted regression now guards mirrored orientation, positions, smaller scale and preserved speaker glow. The owner still needs to inspect the new **actual in-engine** layout before merging; no changes to the throne-room ending, other routes, saved game or art pipeline.
+
 ## GAME-SP4.0B — Approved Summit entrance cast and bottom dialogue (15 October 2026)
 
 - Owner approved the revised transparent **David (gesturing with phone)**, **Paul (wary, raised hand)** and **Asian Summit gatekeeper (ceremonial uniform)** cutouts and asked that the Summit approach use the same *character scene plus bottom dialogue* treatment as the hotel. Approved PNG originals are staged individually in Google Drive; three manifests materialised alpha-preserving WebPs into `public/assets/generated/characters/` without committing PNG sources.
