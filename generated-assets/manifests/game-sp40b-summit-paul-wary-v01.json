@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1OXQBHmHoSgJSAVxFKA2-0uaDwCVuZuc-"
+  },
+  "expectedSourceName": "summit-entrance-paul-wary-v01.png",
+  "destination": "public/assets/generated/characters/summit-paul-wary-v01.webp",
+  "transform": {
+    "maxWidth": 1024,
+    "maxHeight": 1536,
+    "quality": 86
+  },
+  "revision": 1
+}
