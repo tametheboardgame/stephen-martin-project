@@ -552,10 +552,13 @@
             <button id="rescueSummaryMenuButton" class="btn btn-secondary" type="button">Main menu</button>
           </div>
         </div>
-        <div class="china-footer">
-          <button id="replayButton" type="button" class="mini-button">Replay office ↺</button>
-          <button id="homeButton" type="button" class="mini-button">Main menu</button>
-          <span>GAME-SP3.3 · Reassemble Stephen preview · Fictional comedy</span>
+        <div class="china-footer" role="group" aria-label="Story playback and navigation">
+          <button id="holidayPauseButton" type="button" class="mini-button" aria-pressed="true" title="Pause or resume automatically advancing dialogue">Ⅱ Pause</button>
+          <button id="holidayNextButton" type="button" class="mini-button" title="Advance to the next story line" hidden>Next line →</button>
+          <button id="holidayRouteButton" type="button" class="mini-button" title="Return to the Great Wall decision and clear later choices" hidden>Change route ↺</button>
+          <button id="replayButton" type="button" class="mini-button" hidden>Replay office ↺</button>
+          <button id="homeButton" type="button" class="mini-button">Menu</button>
+          <span id="holidayPlaybackStatus" role="status" aria-live="off">Story plays automatically · choices wait for you</span>
         </div>
       </section>
     </main>
