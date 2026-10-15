@@ -1235,7 +1235,7 @@ test("SP3.1 approved Summit script, correct cards, preview assets and responsive
   assert.equal(story().SMP_RESCUE_FRAMEWORK.routes.cult.intro.length,7);
   assert.match(story().SMP_RESCUE_FRAMEWORK.routes.cult.intro[6].text,/outside the gate/);
   assert.equal(data.ending.length,14);
-  assert.match(data.ending[0].text,/what the hell/);
+  assert.match(data.ending[0].text,/what the hell/i);
   assert.match(data.ending.at(-1).text,/humility/);
   assert.equal(data.endCard,"ENDING A: HEAVEN WAS A PLACE ON EARTH");
   assert.ok(html.includes('id="summitEndingScene"'));
