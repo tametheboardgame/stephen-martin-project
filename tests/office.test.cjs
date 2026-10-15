@@ -778,6 +778,282 @@ test("Holiday story data retains locked 5 Wall, 4 Palace and 6 Market dialogue b
   assert.equal(w.SMP_CHINA_FINAL.stephenLastLine,"Oh, for fuck's sake.");
 });
 
+
+function toRescueAlarm(route="cult") {
+  let p;
+  if(route==="cult") {
+    p=toWallChoice();
+    p.el("wallAcceptButton").click();p.el("wallGoIncidentButton").click();
+  } else if(route==="detention") {
+    p=toPalaceChoice();
+    p.el("palaceAcceptButton").click();
+    for(let i=0;i<5;i++)p.el("palaceNextButton").click();
+    p.el("palaceGoIncidentButton").click();
+  } else {
+    p=toMarket();
+    finishMarket(p);
+    p.el("marketGoIncidentButton").click();
+  }
+  finishPhone(p);
+  p.el("chinaFinalNextButton").click();
+  return p;
+}
+test("GAME-SP2.4A alarm uses all ten approved lines and the route-specific last transmission",()=>{
+  const alarm=story().SMP_RESCUE_ALARM;
+  assert.equal(alarm.lines.length,10);
+  assert.deepEqual(Array.from(alarm.lines,x=>x.id),Array.from({length:10},(_,i)=>"rescue.alarm."+String(i+1).padStart(3,"0")));
+  assert.equal(alarm.lines[0].text,"Stephen has stopped responding.");
+  assert.equal(alarm.lines[6].text,"Could just be his battery.");
+  assert.equal(alarm.lines[9].text,"Pack everything.");
+  assert.equal(alarm.montage.length,4);
+  assert.match(alarm.montage[3].title,/UNNECESSARY SPENDING/);
+  for(const [route,fragment] of [
+    ["cult","asked me to be their"],
+    ["detention","introduced as the official"],
+    ["reassemble","taking my entire"]
+  ]){
+    const p=toRescueAlarm(route);
+    assert.equal(saved(p).route,route,"Route cannot change when rescue starts");
+    assert.equal(saved(p).holidayPhase,"rescue-alarm");
+    assert.equal(saved(p).rescueAlarmStep,0);
+    assert.equal(p.el("rescueAlarmScene").hidden,false);
+    assert.equal(p.el("rescueAlarmTravelButton").hidden,true);
+    assert.equal(p.el("rescueAlarmSpeaker").textContent,"DAVID");
+    assert.equal(p.el("rescueAlarmPhone").hidden,true);
+    p.el("rescueAlarmTravelButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-alarm","Cannot skip dialogue");
+    for(let i=0;i<5;i++)p.el("rescueAlarmNextButton").click();
+    assert.equal(p.el("rescueAlarmPhone").hidden,false,"Final transmission visual on sixth line");
+    assert.match(p.el("rescueAlarmPhoneText").textContent,new RegExp(fragment));
+    assert.equal(p.el("rescueAlarmDavid").dataset.sprite,"systems-expert");
+    p.el("rescueAlarmNextButton").click();
+    assert.equal(p.el("rescueAlarmPaul").dataset.sprite,"confused");
+  }
+});
+
+test("GAME-SP2.4A travel montage is a bounded four-beat cutaway after the last alarm line",()=>{
+  const p=toRescueAlarm();
+  for(let i=0;i<10;i++)p.el("rescueAlarmNextButton").click();
+  assert.equal(saved(p).rescueAlarmStep,10);
+  assert.equal(p.el("rescueAlarmNextButton").hidden,true);
+  assert.equal(p.el("rescueAlarmTravelButton").hidden,false);
+  p.el("rescueAlarmNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-alarm");
+  p.el("rescueAlarmTravelButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-travel");
+  assert.equal(p.el("rescueTravelTitle").textContent,"TWO TICKETS. ZERO PLANNING.");
+  for(let i=0;i<3;i++)p.el("rescueTravelNextButton").click();
+  assert.equal(saved(p).rescueTravelStep,3);
+  assert.match(p.el("rescueTravelTitle").textContent,/UNNECESSARY SPENDING/);
+  p.el("rescueTravelNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-hub-arrival");
+  assert.equal(saved(p).route,"cult");
+  assert.equal(p.el("rescueHubArrival").hidden,false);
+  assert.match(html,/GAME-SP2\.4B/,"Hotel investigation is explicitly future work");
+  assert.ok(!html.includes("hotel-visitor-information-background-v01.webp"),"Unapproved generated art must not be packaged");
+});
+
+test("GAME-SP2.4A Continue checkpoints alarm, travel and hub arrival; replay resets to first choice",()=>{
+  const p=toRescueAlarm("detention");
+  p.el("rescueAlarmNextButton").click();p.el("rescueAlarmNextButton").click();
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-alarm");
+  assert.equal(saved(p).rescueAlarmStep,2);
+  assert.equal(p.el("rescueAlarmLine").textContent,"Exactly. Pre-arranged silence. A signal.");
+  for(let i=2;i<10;i++)p.el("rescueAlarmNextButton").click();
+  p.el("rescueAlarmTravelButton").click();
+  p.el("rescueTravelNextButton").click();
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-travel");
+  assert.equal(saved(p).rescueTravelStep,1);
+  p.el("rescueTravelNextButton").click();
+  p.el("rescueTravelNextButton").click();
+  p.el("rescueTravelNextButton").click();
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-hub-arrival");
+  p.el("rescueHubReplayButton").click();
+  assert.equal(saved(p).holidayPhase,"wall");
+  assert.equal(saved(p).wallDecision,null);
+  assert.equal(saved(p).rescueAlarmStep,0);
+  assert.equal(saved(p).rescueTravelStep,0);
+  assert.equal(Object.hasOwn(saved(p),"route"),false);
+});
+
+test("GAME-SP2.4A uses existing approved characters and 16:9 scene; no new art imported",()=>{
+  assert.match(css,/GAME-SP2\.4A — OFFICE-ALARM/);
+  assert.match(css,/#holidayScreen #rescueAlarmScene\[hidden\]/);
+  assert.match(css,/\.rescue-alarm-stage,\s*#holidayScreen \.rescue-travel-stage/);
+  assert.match(css,/aspect-ratio:1672\/941/);
+  for(const name of ["david-office-seated-serious-v01.webp","david-office-seated-confident-v01.webp",
+    "david-office-seated-frustrated-v01.webp","david-office-seated-systems-expert-v01.webp",
+    "paul-office-seated-neutral-v01.webp","paul-office-seated-confused-v01.webp",
+    "paul-office-seated-pleased-v01.webp","office-clean-01-v01.webp","office-foreground-01-v01.webp"])
+    assert.ok(html.includes(name)||engine.includes(name),name);
+  for(const id of ["rescueAlarmScene","rescueAlarmLine","rescueAlarmNextButton",
+    "rescueAlarmTravelButton","rescueTravelScene","rescueTravelNextButton",
+    "rescueHubArrival","rescueHubReplayButton"])
+    assert.ok(html.includes('id="'+id+'"'),id);
+  assert.equal(story().SMP_RESCUE_ALARM.lines.length,10);
+});
+
+
+function toHotelInvestigation(route="cult"){
+  const p=toRescueAlarm(route);
+  for(let i=0;i<10;i++)p.el("rescueAlarmNextButton").click();
+  p.el("rescueAlarmTravelButton").click();
+  for(let i=0;i<4;i++)p.el("rescueTravelNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-hub-arrival");
+  p.el("rescueHubStartButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-hotel");
+  return p;
+}
+function completeHotelIntro(p) {
+  for(let i=0;i<8;i++)p.el("hotelNextButton").click();
+  assert.equal(saved(p).hubIntroStep,8);
+}
+test("SP2.4B hotel starts only after four travel cards; canonical eight arrival lines gate evidence",()=>{
+  const p=toHotelInvestigation("cult");
+  assert.equal(p.el("rescueHotelScene").hidden,false);
+  assert.equal(p.el("rescueHotelHotspots").hidden,true);
+  assert.equal(p.el("hotelLine").textContent,"We begin with intelligence gathering. Observe, analyse, act.");
+  p.el("hotelCultButton").click();
+  p.el("hotelPhoneButton").click();
+  assert.equal(saved(p).hubMatched,false);
+  assert.equal(saved(p).hubActiveClue,null);
+  assert.equal(saved(p).hubWrongGuesses,0);
+  completeHotelIntro(p);
+  assert.equal(p.el("hotelLine").textContent,"Same thing, isn't it?");
+  assert.equal(p.el("rescueHotelHotspots").hidden,false);
+  assert.equal(p.el("hotelDeductions").hidden,false);
+  assert.equal(p.el("hotelNextButton").hidden,true);
+  assert.equal(story().SMP_RESCUE_HUB.opening.length,8);
+});
+test("SP2.4B approved background remains separate from actors, clickable clues and dialogue UI",()=>{
+  const name="china-visitor-information-lobby-background-v01.webp";
+  const p="public/assets/generated/locations/"+name;
+  const buf=fs.readFileSync(path.join(root,p));
+  assert.equal(buf.toString("ascii",0,4),"RIFF");
+  assert.equal(buf.toString("ascii",8,12),"WEBP");
+  assert.ok(read("scripts/build.mjs").includes(p));
+  assert.ok(html.includes(p));
+  assert.match(css,/GAME-SP2\.4B — Approved empty Visitor Information environment/);
+  assert.match(css,/#holidayScreen \.rescue-hotel-hotspots/);
+  for(const id of ["rescueHotelScene","rescueHotelHotspots","hotelPhoneButton","hotelBrochureButton",
+    "hotelDeskButton","hotelEvidencePanel","hotelDeductions","hotelHint","hotelResolved"])
+    assert.ok(html.includes('id="'+id+'"'),id);
+  for(const [name,id] of [
+    ["david-hotel-standing-investigator-v01.webp","rescueHotelDavid"],
+    ["paul-hotel-standing-puzzled-v01.webp","rescueHotelPaul"]
+  ]){
+    const asset=path.join(root,"public/assets/generated/characters",name);
+    const buff=fs.readFileSync(asset);
+    assert.equal(buff.toString("ascii",0,4),"RIFF",name);
+    assert.equal(buff.toString("ascii",12,16),"VP8X",name);
+    assert.ok((buff[20]&0x10)!==0,"Standing sprite must have alpha: "+name);
+    assert.ok(read("scripts/build.mjs").includes(name));
+    assert.ok(html.includes(name) && html.includes('id="'+id+'"'),name);
+  }
+  // Stage David slightly farther back and smaller than before, while
+  // Paul's accepted positions are preserved at every responsive breakpoint.
+  assert.match(css,/\.rescue-hotel-actor \{[\s\S]*?bottom:24%/);
+  assert.match(css,/\.rescue-hotel-david \{height:56%;left:22%;bottom:28%;max-width:31%/);
+  assert.match(css,/\.rescue-hotel-paul \{height:50%;left:42%;max-width:28%/);
+  assert.match(css,/@media \(max-width:800px\) \{[\s\S]*?\.rescue-hotel-actor \{bottom:24%/);
+  assert.match(css,/\.rescue-hotel-david \{height:50%;left:16%;bottom:28%;max-width:42%/);
+  assert.match(css,/\.rescue-hotel-paul \{height:45%;left:44%;max-width:36%/);
+  assert.match(css,/@media \(max-width:450px\) \{[\s\S]*?\.rescue-hotel-actor \{bottom:26%/);
+  assert.match(css,/\.rescue-hotel-david \{height:42%;left:10%;bottom:30%;max-width:56%/);
+  assert.match(css,/\.rescue-hotel-paul \{height:38%;left:45%;max-width:54%/);
+  assert.match(css,/\.rescue-hotel-actor \{[\s\S]*?pointer-events:none/,"Cutouts cannot block hotel clue buttons");
+  assert.match(css,/\.rescue-hotel-hotspots \{[^}]*z-index:4/,"Clues stay above independent actors");
+});
+test("SP2.4B phone, brochure and desk are independent clues in any order; reading none is not a soft lock",()=>{
+  const p=toHotelInvestigation("reassemble");
+  completeHotelIntro(p);
+  p.el("hotelDeskButton").click();
+  assert.equal(saved(p).hubActiveClue,"desk");
+  assert.equal(saved(p).hubViewed[0],"desk");
+  assert.match(p.el("hotelEvidenceRouteClue").textContent,/⚙/);
+  assert.equal(p.el("hotelDeductions").hidden,true);
+  p.el("hotelCultButton").click();
+  assert.equal(saved(p).hubWrongGuesses,0,"Clue panel prevents accidental choice");
+  p.el("hotelEvidenceCloseButton").click();
+  p.el("hotelBrochureButton").click();
+  assert.match(p.el("hotelEvidenceText").textContent,/Total Renewal Spa/);
+  p.el("hotelEvidenceCloseButton").click();
+  p.el("hotelPhoneButton").click();
+  assert.match(p.el("hotelEvidenceText").textContent,/taking my entire/);
+  p.el("hotelEvidenceCloseButton").click();
+  assert.equal(saved(p).hubViewed.length,3);
+  assert.equal(p.el("hotelDeductions").hidden,false);
+});
+test("SP2.4B wrong guesses produce route-specific jokes, hints after 2 and reveal after 4",()=>{
+  const p=toHotelInvestigation("detention");
+  completeHotelIntro(p);
+  p.el("hotelCultButton").click();
+  assert.equal(saved(p).hubWrongGuesses,1);
+  assert.equal(p.el("hotelHint").hidden,true);
+  assert.match(p.el("hotelDeductionFeedback").textContent,/Topographic deception/);
+  p.el("hotelReassembleButton").click();
+  assert.equal(saved(p).hubWrongGuesses,2);
+  assert.equal(p.el("hotelHint").hidden,false);
+  assert.match(p.el("hotelHint").textContent,/banquet/);
+  p.el("hotelCultButton").click();
+  p.el("hotelReassembleButton").click();
+  assert.equal(saved(p).hubWrongGuesses,4);
+  assert.equal(p.el("hotelDetentionButton").dataset.correct,"true");
+  assert.equal(p.el("hotelCultButton").dataset.correct,"false");
+  p.el("hotelReassembleButton").click();
+  assert.equal(saved(p).hubWrongGuesses,4,"Mistakes capped to avoid unbounded state");
+  assert.equal(saved(p).route,"detention","Deduction never changes a route");
+});
+test("SP2.4B all three correct deductions lead through canonical five reply lines to their own route intro",()=>{
+  for(const [route,label] of [["cult","THE SUMMIT"],["detention","CULTURAL HONOURS BANQUET"],["reassemble","TOTAL RENEWAL SPA"]]){
+    const p=toHotelInvestigation(route);
+    completeHotelIntro(p);
+    p.el("hotel"+route[0].toUpperCase()+route.slice(1)+"Button").click();
+    assert.equal(saved(p).hubMatched,true);
+    assert.equal(saved(p).route,route);
+    assert.equal(p.el("hotelResolved").hidden,false);
+    assert.match(p.el("hotelResolvedText").textContent,/We have our location/);
+    for(let i=0;i<5;i++)p.el("hotelFinishButton").click();
+    assert.equal(saved(p).hubCorrectStep,5);
+    assert.match(p.el("hotelResolvedText").textContent,/Don't undermine/);
+    p.el("hotelFinishButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+    assert.equal(p.el("hotelRouteHeading").textContent,label);
+    assert.equal(p.el("rescueHotelScene").hidden,true);
+    assert.equal(p.el("rescueRouteIntro").hidden,false);
+    assert.match(p.el("hotelRouteDescription").textContent,/.+/);
+    assert.equal(saved(p).route,route);
+    p.el("hotelRouteReplayButton").click();
+    assert.equal(saved(p).holidayPhase,"wall");
+    assert.equal(saved(p).wallDecision,null);
+    assert.equal(saved(p).hubMatched,false);
+    assert.equal(Object.hasOwn(saved(p),"route"),false);
+  }
+});
+test("SP2.4B save/Continue holds mid-dialogue, inspected clues, wrong guesses and completion",()=>{
+  const p=toHotelInvestigation("cult");
+  p.el("hotelNextButton").click();p.el("hotelNextButton").click();
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).hubIntroStep,2);
+  completeHotelIntro(p);
+  p.el("hotelPhoneButton").click();
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).hubActiveClue,"phone");
+  assert.equal(saved(p).hubViewed[0],"phone");
+  assert.match(p.el("hotelEvidenceText").textContent,/asked me to be their/);
+  p.el("hotelEvidenceCloseButton").click();
+  p.el("hotelDetentionButton").click();
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).hubWrongGuesses,1);
+  p.el("hotelCultButton").click();
+  p.el("hotelFinishButton").click();
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).hubCorrectStep,1);
+  assert.equal(saved(p).route,"cult");
+});
 test("new expressions need only a registered seated source and no story edits",()=>{
   assert.ok(engine.includes("seatedExpressionSources"));
   assert.ok(engine.includes("David: {"));
