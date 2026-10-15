@@ -2167,6 +2167,7 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen #rescueMiniGameScene[hidden],
 #holidayScreen #rescueEndingSummary[hidden],
 #holidayScreen #summitEndingScene[hidden],
+#holidayScreen #detentionEndingScene[hidden],
 #holidayScreen #rescueHotelHotspots[hidden],
 #holidayScreen #rescueHotelDialogue[hidden],
 #holidayScreen #hotelNextButton[hidden],
@@ -2250,7 +2251,7 @@ body:has(#menuScreen:not([hidden])) main {
 @media (min-width:801px) {
   #holidayScreen #rescueHotelScene,#holidayScreen #rescueRouteIntro,
   #holidayScreen #rescueMiniGameScene,#holidayScreen #summitEndingScene,
-  #holidayScreen #rescueEndingSummary {
+  #holidayScreen #detentionEndingScene,#holidayScreen #rescueEndingSummary {
     position:absolute;inset:0;width:100%;height:100%;
   }
   #holidayScreen .rescue-hotel-stage,#holidayScreen .rescue-route-intro-stage {
@@ -2266,6 +2267,7 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen:has(#rescueRouteIntro:not([hidden])) .china-footer,
   #holidayScreen:has(#rescueMiniGameScene:not([hidden])) .china-footer,
   #holidayScreen:has(#summitEndingScene:not([hidden])) .china-footer,
+  #holidayScreen:has(#detentionEndingScene:not([hidden])) .china-footer,
   #holidayScreen:has(#rescueEndingSummary:not([hidden])) .china-footer {top:2%;right:2%;left:auto;bottom:auto;}
 }
 @media (max-width:800px) {
@@ -2350,4 +2352,62 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen #rescueMiniGameScene:has(#summitAdmissions:not([hidden])) .rescue-route-intro-stage,
   #holidayScreen .summit-ending-stage {padding:16px 3%;}
   #holidayScreen .summit-ending-content {padding:16px;}
+}
+
+/* GAME-SP3.2 provisional fictional paperwork setting, no final illustration. */
+#holidayScreen #detentionPaperwork[hidden],
+#holidayScreen #detentionChoiceCards[hidden],
+#holidayScreen #detentionStampPanel[hidden],
+#holidayScreen #detentionFeedback[hidden],
+#holidayScreen #detentionHint[hidden],
+#holidayScreen #detentionNextButton[hidden] {display:none !important;}
+#holidayScreen #rescueMiniGameScene:has(#detentionPaperwork:not([hidden])) .rescue-route-intro-stage,
+#holidayScreen .detention-ending-stage {
+  background:linear-gradient(145deg,rgba(15,41,43,.9),rgba(4,31,39,.86)),
+    repeating-linear-gradient(0deg,#74978c,#74978c 18px,#54796d 20px);
+  box-sizing:border-box;padding:24px 4% 95px;
+}
+#holidayScreen .detention-paperwork,#holidayScreen .detention-ending-content {
+  width:min(96%,900px);max-height:100%;box-sizing:border-box;overflow-y:auto;
+  padding:18px 25px;border:3px solid #c8d7bc;border-radius:7px;
+  background:rgba(244,245,219,.98);color:#1d3a36;box-shadow:0 14px 40px #10251d88;
+  text-align:center;
+}
+#holidayScreen .detention-eyebrow {font-weight:900;letter-spacing:.1em;font-size:11px;color:#52665e;}
+#holidayScreen .detention-paperwork h2 {font-size:clamp(21px,2.6vw,34px);margin:8px 0;color:#204640;}
+#holidayScreen .detention-progress {font-weight:800;color:#326b66;font-size:14px;margin:7px 0;}
+#holidayScreen .detention-prompt {font-size:clamp(16px,1.6vw,21px);font-weight:850;line-height:1.4;margin:9px 0;}
+#holidayScreen .detention-clue {font-size:clamp(13px,1.2vw,16px);color:#465b53;margin:8px 0 15px;}
+#holidayScreen .detention-cards {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:12px 0;}
+#holidayScreen .detention-card,#holidayScreen .detention-stamp,#holidayScreen .detention-permit {
+  cursor:pointer;border:3px solid #457b71;border-radius:7px;padding:13px;
+  min-height:65px;background:#fffdf2;color:#234c46;font-weight:900;
+  font-size:clamp(13px,1.2vw,17px);line-height:1.4;
+}
+#holidayScreen .detention-card:hover,#holidayScreen .detention-card:focus-visible,
+#holidayScreen .detention-stamp:hover,#holidayScreen .detention-stamp:focus-visible,
+#holidayScreen .detention-permit:hover,#holidayScreen .detention-permit:focus-visible {
+  outline:3px solid #a54444;outline-offset:2px;background:#fff1d5;
+}
+#holidayScreen .detention-feedback {font-weight:800;line-height:1.4;margin:11px 0;padding:12px;border-left:4px solid #457b71;background:#dcece3;color:#1e423b;}
+#holidayScreen .detention-hint {font-weight:850;line-height:1.4;margin:10px 0;padding:10px;background:#fff0ba;color:#33413d;border-radius:7px;}
+#holidayScreen .detention-stamp-panel {display:grid;gap:12px;margin:12px 0;}
+#holidayScreen .detention-stamp {width:min(100%,260px);margin:auto;color:#992c2c;border:4px solid #b34747;background:#ffefdf;transform:rotate(-2deg);}
+#holidayScreen .detention-stamp[data-selected="true"] {outline:4px solid #bb8b38;outline-offset:3px;}
+#holidayScreen .detention-permit {width:min(100%,520px);margin:auto;border:3px dashed #497f70;}
+#holidayScreen .detention-certificate {
+  display:block;margin:17px auto;padding:14px;border:5px double #a33f3f;
+  background:#fff8eb;color:#a33f3f;font-weight:950;transform:rotate(-1deg);
+  font-size:clamp(16px,2vw,26px);letter-spacing:.06em;
+}
+#holidayScreen .detention-art-note {color:#50645e;font-size:12px;}
+#holidayScreen .detention-ending-speaker {display:block;margin-top:13px;color:#254a42;font-size:clamp(17px,2vw,23px);}
+#holidayScreen .detention-ending-line {font-size:clamp(17px,2.1vw,26px);line-height:1.4;font-weight:850;color:#193a33;margin:13px 0;}
+@media (max-width:800px) {
+  #holidayScreen .detention-cards {grid-template-columns:1fr;gap:7px;}
+  #holidayScreen .detention-card {min-height:48px;padding:10px;}
+  #holidayScreen #rescueMiniGameScene:has(#detentionPaperwork:not([hidden])) .rescue-route-intro-stage,
+  #holidayScreen .detention-ending-stage {padding:12px 3%;}
+  #holidayScreen .detention-paperwork,#holidayScreen .detention-ending-content {padding:12px;}
+  #holidayScreen .detention-stamp,#holidayScreen .detention-permit {min-height:48px;}
 }
