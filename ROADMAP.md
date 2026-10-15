@@ -564,3 +564,7 @@ Owner approved separate transparent full-body David/Paul PNG sprites. Materialis
 
 Implement a narrow `rescueProgress` structure on the existing local V3 save, shared step/hint/assembly-slot helpers, approved spoken route introductions after the hotel deduction, restart/replay controls and a guarded ending-summary shell. The three actual interactive mini-games and completed end cutscenes belong only to SP3.1–SP3.3. Save/resume must preserve both the committed route and the exact briefing line; no dead ends, fake playable puzzles or extra media. Human inspect the draft Cloudflare preview, including laptop and touch layouts, before production merge. Work package: `docs/story/GAME-SP3.0-MINIGAME-FRAMEWORK.md`.
 
+
+## GAME-SP3.1 — The Summit Admissions Test (started 15 October 2026)
+
+Implement the approved three-round no-fail Summit dialogue/card puzzle, its complete original Ending A and shared replay path as a stacked draft after GAME-SP3.0. Retain saves, route isolation, hint-after-two, text and touch-accessible choice cards. The current proof uses intentionally provisional CSS/text staging only; separately approve new Summit and ending illustrations before final sign-off. `docs/story/GAME-SP3.1-SUMMIT-ADMISSIONS.md` records acceptance. SP3.2 (paperwork) and SP3.3 (cardboard assembly) are unchanged future work. No final game merge without owner approval.
