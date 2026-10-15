@@ -953,16 +953,16 @@ test("SP2.4B approved background remains separate from actors, clickable clues a
     assert.ok(read("scripts/build.mjs").includes(name));
     assert.ok(html.includes(name) && html.includes('id="'+id+'"'),name);
   }
-  // Stage actors on a shared floor line beyond the foreground table, with
-  // Paul visibly shorter than David at every responsive breakpoint.
+  // Stage David slightly farther back and smaller than before, while
+  // Paul's accepted positions are preserved at every responsive breakpoint.
   assert.match(css,/\.rescue-hotel-actor \{[\s\S]*?bottom:24%/);
-  assert.match(css,/\.rescue-hotel-david \{height:60%;left:23%;max-width:33%/);
+  assert.match(css,/\.rescue-hotel-david \{height:56%;left:22%;bottom:28%;max-width:31%/);
   assert.match(css,/\.rescue-hotel-paul \{height:50%;left:42%;max-width:28%/);
   assert.match(css,/@media \(max-width:800px\) \{[\s\S]*?\.rescue-hotel-actor \{bottom:24%/);
-  assert.match(css,/\.rescue-hotel-david \{height:54%;left:17%;max-width:44%/);
+  assert.match(css,/\.rescue-hotel-david \{height:50%;left:16%;bottom:28%;max-width:42%/);
   assert.match(css,/\.rescue-hotel-paul \{height:45%;left:44%;max-width:36%/);
   assert.match(css,/@media \(max-width:450px\) \{[\s\S]*?\.rescue-hotel-actor \{bottom:26%/);
-  assert.match(css,/\.rescue-hotel-david \{height:46%;left:11%;max-width:58%/);
+  assert.match(css,/\.rescue-hotel-david \{height:42%;left:10%;bottom:30%;max-width:56%/);
   assert.match(css,/\.rescue-hotel-paul \{height:38%;left:45%;max-width:54%/);
   assert.match(css,/\.rescue-hotel-actor \{[\s\S]*?pointer-events:none/,"Cutouts cannot block hotel clue buttons");
   assert.match(css,/\.rescue-hotel-hotspots \{[^}]*z-index:4/,"Clues stay above independent actors");
