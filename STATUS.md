@@ -2,6 +2,12 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP3.4 — Story playback and unified navigation draft (15 October 2026)
+
+- Owner identified repeated per-line clicks throughout the finished three-route game and requested **automatic scene progression** and **one consistent replay/change-choice location**. Draft branch `agent/game-sp34-autoplay-unified-controls` preserves voiced office autoplay but introduces time-based holiday/rescue/ending autoplay with global Pause/Next and one Change route/Play another ending control in the same top-right toolbar.
+- Every uncommitted invitation, hotel clue/deduction, quiz choice, stamp action and cardboard placement still waits for explicit user input. Scripted cards and dialogue advance hands-free, with timers cleared on pause, hidden tab, menu and scene changes. No art, dialogues, voice files, new game mechanics or V3 save format change.
+- Manual laptop/tablet toolbar-overlap review, realistic 15–25-minute timing, CI and owner approval remain outstanding. See `docs/story/GAME-SP3.4-PLAYBACK-CONTROLS-REVIEW.md`. Artwork phase SP4.0 remains next **after** this narrow SP3.4 gate.
+
 ## GAME-SP3.0–SP3.3 — All three rescue routes merged; artwork next (15 October 2026)
 
 - Owner authorised integrating the completed functional routes. Dependency PRs #30 → #29 → #28 → #27 were merged in that order, with successful combined smoke checks at each cumulative head. The final `main` integration commit is `aa1ea5a2ed8df7b1db4bfb89028d9ac81f6b5605`; Cloudflare Pages confirmed successful deployment at that exact commit.
