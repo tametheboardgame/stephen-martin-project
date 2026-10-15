@@ -7,6 +7,9 @@
   <meta name="description" content="A completely fictional, deeply unnecessary rescue. A short comedy adventure starring Stephen Martin, David and Paul.">
   <title>Rescue Stephen Martin from China | GAME-SP1 Office Preview</title>
   <link rel="stylesheet" href="./src/styles.css">
+  <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/david-hotel-standing-investigator-v01.webp">
+  <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/paul-hotel-standing-puzzled-v01.webp">
+
   <script defer src="./src/office-data.js"></script>
   <script defer src="./src/reactions.js"></script>
   <script defer src="./src/china-data.js"></script>
@@ -157,7 +160,7 @@
             <img class="wall-stephen" src="./public/assets/generated/characters/stephen-holiday-standing-neutral-v01.webp" alt="Stephen standing at the Great Wall, holding his phone" loading="eager">
             <img id="wallPromoter" class="wall-promoter" src="./public/assets/generated/characters/great-wall-summit-promoter-standing-v01.webp" alt="Friendly Summit event promoter showing a brochure" loading="eager" hidden>
             <div class="wall-place-label"><span>CHAPTER TWO · CHINA</span><strong>THE GREAT WALL</strong></div>
-            <div class="wall-booking" aria-live="polite"><span>TONIGHT'S PLAN</span><strong id="wallBookingLabel">Nothing booked yet</strong></div>
+            <div class="wall-booking" aria-live="polite"><span>THE INVITATION</span><strong id="wallBookingLabel">The Summit</strong></div>
             <div id="wallPhone" class="wall-phone" aria-label="Phone notification from David">
               <div class="wall-phone-heading">✉ DAVID · RESCUE GROUP</div>
               <p id="wallPhoneText">Please confirm you're safe. I've identified several geopolitical variables.</p>
@@ -179,7 +182,8 @@
             <div id="wallResult" class="wall-result" hidden>
               <strong id="wallResultTitle">Booking confirmed</strong>
               <p id="wallResultText" aria-live="polite"></p>
-              <button id="wallGoPalaceButton" type="button" class="btn btn-primary">Continue to Forbidden City →</button>
+              <button id="wallGoPalaceButton" type="button" class="btn btn-primary">A few days later… →</button>
+              <button id="wallGoIncidentButton" type="button" class="btn btn-primary" hidden>Head to The Summit →</button>
               <button id="wallReplayButton" type="button" class="btn btn-secondary">Replay Great Wall choice ↺</button>
             </div>
           </div>
@@ -190,7 +194,7 @@
             <img id="palaceStephen" class="wall-stephen" src="./public/assets/generated/characters/stephen-holiday-forbidden-city-pleased-v01.webp" alt="Stephen in his approved blue-quarter-zip Forbidden City pose" loading="eager">
             <img class="wall-promoter palace-attendant" src="./public/assets/generated/characters/china-banquet-attendant-standing-v01.webp" alt="A smiling banquet attendant with a red blazer and event folder" loading="eager">
             <div class="wall-place-label"><span>CHAPTER TWO · CHINA</span><strong>THE FORBIDDEN CITY</strong></div>
-            <div class="wall-booking" aria-live="polite"><span>TONIGHT'S PLAN</span><strong id="palaceBookingLabel">Nothing booked yet</strong></div>
+            <div class="wall-booking" aria-live="polite"><span>THE INVITATION</span><strong id="palaceBookingLabel">Honorary banquet</strong></div>
             <div class="palace-honour-badge" id="palaceHonourBadge" hidden>VISITING INTERNATIONAL SPECIALIST</div>
             <div class="wall-dialogue" id="palaceDialogue">
               <strong id="palaceSpeakerName">ATTENDANT</strong>
@@ -213,7 +217,8 @@
               <div id="palacePhotoGag" class="palace-photo-gag" hidden role="img" aria-label="Stephen's first phone photograph is Paul's ridiculous cartoon bear image">
                 <span aria-hidden="true">🐻</span><div><strong>FIRST PHOTO: UPLOADED</strong><small>Paul's rather unfortunate bear picture. Stephen hasn't noticed.</small></div>
               </div>
-              <button id="palaceGoMarketButton" type="button" class="btn btn-primary">Continue to Night Market →</button>
+              <button id="palaceGoMarketButton" type="button" class="btn btn-primary">The next evening… →</button>
+              <button id="palaceGoIncidentButton" type="button" class="btn btn-primary" hidden>Attend the banquet →</button>
               <button id="palaceReplayButton" type="button" class="btn btn-secondary">Replay Forbidden City choice ↺</button>
             </div>
           </div>
@@ -225,7 +230,7 @@
             <img class="wall-stephen" src="./public/assets/generated/characters/stephen-night-market-skewer-v01.webp" alt="Stephen enjoying a market snack in his blue quarter-zip" loading="eager">
             <img id="marketSpaRep" class="wall-promoter market-spa-rep" src="./public/assets/generated/characters/china-night-market-spa-representative-v01.webp" alt="A spa representative in a teal jacket holding a brochure" loading="eager" hidden>
             <div class="wall-place-label"><span>CHAPTER TWO · CHINA</span><strong>THE NIGHT MARKET</strong></div>
-            <div class="wall-booking" aria-live="polite"><span>TONIGHT'S PLAN</span><strong id="marketBookingLabel">Nothing booked yet</strong></div>
+            <div class="wall-booking" aria-live="polite"><span>THE OFFER</span><strong id="marketBookingLabel">Total Renewal Spa</strong></div>
             <div id="marketSpaSign" class="market-spa-sign" hidden><span>TOTAL RENEWAL SPA</span><strong>90% OFF</strong><span>THE COMPLETE STEPHEN EXPERIENCE</span><small>Replacement components sold separately.</small></div>
             <div class="wall-dialogue" id="marketDialogue"><strong id="marketSpeakerName">STEPHEN</strong><p id="marketLineText" aria-live="polite"></p></div>
           </div>
@@ -233,27 +238,38 @@
             <div class="wall-story-progress" id="marketProgressLabel"></div>
             <button id="marketBackButton" type="button" class="btn btn-small btn-secondary">← Forbidden City</button>
             <button id="marketNextButton" type="button" class="btn btn-primary">Next line →</button>
-            <div id="marketChoices" class="wall-choices" hidden>
-              <h3>The Total Renewal Spa offer</h3>
-              <p>A ninety-per-cent discount on a suspiciously complete spa experience.</p>
-              <button id="marketAcceptButton" type="button" class="wall-choice">Ninety per cent off? I'd be an idiot not to.</button>
-              <button id="marketDeclineButton" type="button" class="wall-choice">I think I'll stick with my existing plans.</button>
-            </div>
-            <div id="marketFallback" class="wall-result" hidden>
-              <strong>No evening plan booked</strong>
-              <p>Stephen has declined every invitation. Choose one of the three places he already encountered.</p>
-              <div class="market-fallback-options">
-                <button id="fallbackCultButton" type="button" class="wall-choice">The Summit</button>
-                <button id="fallbackDetentionButton" type="button" class="wall-choice">Honorary banquet</button>
-                <button id="fallbackReassembleButton" type="button" class="wall-choice">Total Renewal Spa</button>
-              </div>
-            </div>
             <div id="marketResult" class="wall-result" hidden>
-              <strong id="marketResultTitle">Evening plan confirmed</strong>
-              <p id="marketResultText" aria-live="polite"></p>
-              <button id="marketFinalButton" type="button" class="btn btn-primary">Send Stephen's final message →</button>
-              <button id="marketReplayButton" type="button" class="btn btn-secondary">Replay Night Market choice ↺</button>
+              <strong id="marketResultTitle">Total Renewal Spa — booked ✓</strong>
+              <p id="marketResultText" aria-live="polite">Ninety per cent off? I'd be an idiot not to.</p>
+              <button id="marketGoIncidentButton" type="button" class="btn btn-primary">Head to Total Renewal Spa →</button>
             </div>
+          </div>
+        </div>
+
+        <div id="chinaIntermission" class="china-intermission" hidden>
+          <div id="intermissionArt" class="china-intermission-art">
+            <div class="intermission-frame">
+              <span>MEANWHILE, STEPHEN IS STILL ON HOLIDAY…</span>
+              <h2 id="intermissionTime">A FEW DAYS LATER…</h2>
+              <h3 id="intermissionDestination">THE FORBIDDEN CITY</h3>
+              <p id="intermissionComment">Somehow, he's still having an absolutely wonderful time.</p>
+            </div>
+          </div>
+          <div class="china-intermission-actions">
+            <button id="intermissionContinueButton" type="button" class="btn btn-primary">Continue sightseeing →</button>
+          </div>
+        </div>
+        <div id="chinaRouteHandoff" class="china-route-handoff" hidden>
+          <div id="routeHandoffArt" class="china-route-handoff-art">
+            <div class="route-handoff-card">
+              <span>STEPHEN'S HOLIDAY HAS TAKEN A TURN…</span>
+              <h2 id="handoffTitle">THE SUMMIT</h2>
+              <p id="handoffDescription">Stephen arrives at his chosen destination.</p>
+              <small>Coming next: the corresponding incident and rescue mini-game.</small>
+            </div>
+          </div>
+          <div class="china-intermission-actions">
+            <button id="handoffContinueButton" type="button" class="btn btn-primary">Continue to Stephen's last message →</button>
           </div>
         </div>
         <div id="chinaFinalScene" class="china-final-scene" hidden>
@@ -264,7 +280,7 @@
               <strong id="chinaPhoneStatus">Sending…</strong>
             </div>
             <div id="chinaFinalReaction" class="china-final-reaction" hidden><strong>STEPHEN</strong><p>Oh, for fuck's sake.</p></div>
-            <div id="chinaFinalEngland" class="china-final-england" hidden><h2>BACK IN ENGLAND…</h2><p>Two idiots are about to make this considerably worse.</p><small>Rescue chapter — coming in the next game work package</small></div>
+            <div id="chinaFinalEngland" class="china-final-england" hidden><h2>BACK IN ENGLAND…</h2><p>Two idiots are about to make this considerably worse.</p><small>The next bit of the disaster is happening right now.</small></div>
           </div>
           <div class="wall-action-strip china-final-controls">
             <div class="wall-story-progress" id="chinaFinalProgress">Stephen's final message</div>
@@ -272,10 +288,112 @@
             <button id="chinaAnotherEndingButton" class="btn btn-secondary" type="button" hidden>Choose another ending ↺</button>
           </div>
         </div>
+
+        <div id="rescueAlarmScene" class="rescue-alarm-scene" hidden>
+          <div class="rescue-alarm-stage">
+            <img class="rescue-alarm-background" src="./public/assets/generated/locations/office-clean-01-v01.webp" alt="" loading="eager">
+            <img id="rescueAlarmDavid" class="rescue-alarm-actor rescue-alarm-david" src="./public/assets/generated/characters/david-office-seated-serious-v01.webp" alt="David, resolutely misinterpreting the situation" loading="eager">
+            <img id="rescueAlarmPaul" class="rescue-alarm-actor rescue-alarm-paul" src="./public/assets/generated/characters/paul-office-seated-neutral-v01.webp" alt="Paul seated in the office" loading="eager">
+            <img class="rescue-alarm-foreground" src="./public/assets/generated/locations/office-foreground-01-v01.webp" alt="" loading="eager">
+            <div class="wall-place-label"><span>CHAPTER THREE · BACK IN ENGLAND</span><strong>THE RESCUE ALARM</strong></div>
+            <div id="rescueAlarmPhone" class="rescue-alarm-phone" hidden><strong>STEPHEN RESCUE GROUP</strong><p id="rescueAlarmPhoneText"></p><span>Last message · Battery unknown</span></div>
+            <div class="wall-dialogue rescue-alarm-dialogue"><strong id="rescueAlarmSpeaker">DAVID</strong><p id="rescueAlarmLine" aria-live="polite"></p></div>
+          </div>
+          <div class="wall-action-strip">
+            <div id="rescueAlarmProgress" class="wall-story-progress">Rescue briefing</div>
+            <button id="rescueAlarmNextButton" class="btn btn-primary" type="button">Next line →</button>
+            <button id="rescueAlarmTravelButton" class="btn btn-primary" type="button" hidden>Launch Operation: Probably Fine →</button>
+          </div>
+        </div>
+        <div id="rescueTravelScene" class="rescue-travel-scene" hidden>
+          <div class="rescue-travel-stage">
+            <div class="rescue-travel-panel">
+              <span id="rescueTravelEyebrow">OPERATION: PROBABLY FINE</span>
+              <span id="rescueTravelSymbol" class="rescue-travel-symbol" aria-hidden="true">✈</span>
+              <h2 id="rescueTravelTitle">TWO TICKETS. ZERO PLANNING.</h2>
+              <p id="rescueTravelDetail"></p>
+            </div>
+          </div>
+          <div class="wall-action-strip">
+            <div id="rescueTravelProgress" class="wall-story-progress">Unnecessary international travel</div>
+            <button id="rescueTravelNextButton" class="btn btn-primary" type="button">Continue →</button>
+          </div>
+        </div>
+        <div id="rescueHubArrival" class="rescue-hub-arrival" hidden>
+          <div class="rescue-hub-arrival-stage">
+            <div class="rescue-travel-panel">
+              <span>CHAPTER THREE · THE WORLD'S WORST RESCUERS</span>
+              <h2>VISITOR INFORMATION</h2>
+              <p>They've arrived. Neither has considered calling Stephen's hotel.</p>
+              <small>David is about to begin what he insists is an intelligence operation.</small>
+            </div>
+          </div>
+          <div class="wall-action-strip">
+            <div class="wall-story-progress">Office Alarm and travel montage completed</div>
+            <button id="rescueHubStartButton" class="btn btn-primary" type="button">Enter visitor information →</button>
+            <button id="rescueHubReplayButton" class="btn btn-secondary" type="button">Choose another ending ↺</button>
+          </div>
+        </div>
+
+        <div id="rescueHotelScene" class="rescue-hotel-scene" hidden>
+          <div class="rescue-hotel-stage">
+            <img class="rescue-hotel-bg" src="./public/assets/generated/locations/china-visitor-information-lobby-background-v01.webp" alt="An empty, warmly lit fictional hotel visitor-information lobby with a brochure rack and reception counter" loading="eager">
+            <img id="rescueHotelDavid" class="rescue-hotel-actor rescue-hotel-david" src="./public/assets/generated/characters/david-hotel-standing-investigator-v01.webp" alt="David, standing with his phone, conducting a deeply unnecessary investigation" loading="eager">
+            <img id="rescueHotelPaul" class="rescue-hotel-actor rescue-hotel-paul" src="./public/assets/generated/characters/paul-hotel-standing-puzzled-v01.webp" alt="Paul, shorter than David, standing nearby looking puzzled" loading="eager">
+            <div class="wall-place-label"><span>CHAPTER THREE · THE WORLD'S WORST DETECTIVES</span><strong>VISITOR INFORMATION</strong></div>
+            <div id="rescueHotelHotspots" class="rescue-hotel-hotspots" hidden role="group" aria-label="Inspect the hotel for clues">
+              <button id="hotelPhoneButton" class="rescue-hotel-hotspot hotel-hotspot-phone" type="button"><span class="hub-symbol" aria-hidden="true">✉</span> Stephen's phone</button>
+              <button id="hotelBrochureButton" class="rescue-hotel-hotspot hotel-hotspot-brochure" type="button"><span class="hub-symbol" aria-hidden="true">▤</span> Activity brochures</button>
+              <button id="hotelDeskButton" class="rescue-hotel-hotspot hotel-hotspot-desk" type="button"><span class="hub-symbol" aria-hidden="true">⌕</span> Information desk</button>
+            </div>
+            <div id="rescueHotelDialogue" class="wall-dialogue rescue-hotel-dialogue">
+              <strong id="hotelSpeaker">DAVID</strong><p id="hotelLine" aria-live="polite"></p>
+            </div>
+          </div>
+          <div class="wall-action-strip rescue-hotel-action-strip">
+            <div id="hotelProgress" class="wall-story-progress">Visitor information</div>
+            <button id="hotelNextButton" class="btn btn-primary" type="button">Next line →</button>
+            <div id="hotelEvidencePanel" class="hotel-evidence-panel" hidden>
+              <strong id="hotelEvidenceTitle">Stephen's last message</strong>
+              <p id="hotelEvidenceText" aria-live="polite"></p>
+              <div id="hotelEvidenceRouteClue" class="hotel-evidence-route" hidden></div>
+              <button id="hotelEvidenceCloseButton" type="button" class="btn btn-secondary">Back to investigation</button>
+            </div>
+            <div id="hotelDeductions" class="hotel-deductions" hidden>
+              <p>David needs to identify Stephen's destination. Which activity matches the evidence?</p>
+              <div class="hotel-route-grid" role="group" aria-label="Choose the destination supported by the evidence">
+                <button id="hotelCultButton" class="wall-choice" type="button"><span aria-hidden="true">▲</span> The Summit</button>
+                <button id="hotelDetentionButton" class="wall-choice" type="button"><span aria-hidden="true">★</span> Cultural Honours Banquet</button>
+                <button id="hotelReassembleButton" class="wall-choice" type="button"><span aria-hidden="true">⚙</span> Total Renewal Spa</button>
+              </div>
+              <div id="hotelHint" class="hotel-hint" hidden aria-live="polite"></div>
+              <p id="hotelDeductionFeedback" class="hotel-feedback" aria-live="polite"></p>
+            </div>
+            <div id="hotelResolved" class="hotel-resolved" hidden>
+              <strong>Destination identified</strong>
+              <p id="hotelResolvedText" aria-live="polite"></p>
+              <button id="hotelFinishButton" class="btn btn-primary" type="button">Follow the evidence →</button>
+            </div>
+          </div>
+        </div>
+        <div id="rescueRouteIntro" class="rescue-route-intro" hidden>
+          <div class="rescue-route-intro-stage">
+            <div class="rescue-travel-panel">
+              <span>OPERATION: PROBABLY FINE</span>
+              <h2 id="hotelRouteHeading">THE SUMMIT</h2>
+              <p id="hotelRouteDescription"></p>
+              <small>The matching rescue mini-game is next (GAME-SP3.0/3.1–3.3). The location and ending cannot be changed by guessing another option.</small>
+            </div>
+          </div>
+          <div class="wall-action-strip">
+            <div class="wall-story-progress">Investigation complete · Mini-game coming next</div>
+            <button id="hotelRouteReplayButton" class="btn btn-secondary" type="button">Choose another ending ↺</button>
+          </div>
+        </div>
         <div class="china-footer">
           <button id="replayButton" type="button" class="mini-button">Replay office ↺</button>
           <button id="homeButton" type="button" class="mini-button">Main menu</button>
-          <span>GAME-SP2.3B · Three-scene Stephen holiday preview · Fictional comedy</span>
+          <span>GAME-SP2.4B · Visitor information investigation preview · Fictional comedy</span>
         </div>
       </section>
     </main>
