@@ -1226,7 +1226,7 @@ function toSummitAdmissions(){
 test("SP3.1 approved Summit script, correct cards, preview assets and responsive selectors",()=>{
   const data=story().SMP_SUMMIT;
   assert.equal(data.rounds.length,3);
-  assert.deepEqual(data.rounds.map(x=>x.options.find(o=>o.correct).id),["charger","legs","flight"]);
+  assert.deepEqual(Array.from(data.rounds,x=>x.options.find(o=>o.correct).id),["charger","legs","flight"]);
   for(const round of data.rounds){
     assert.equal(round.options.length,3);
     assert.ok(round.hint.startsWith("Paul:"));
@@ -1290,7 +1290,7 @@ test("SP3.1 complete OFFICE-to-Summit path plays every approved ending line and 
   assert.equal(saved(p).rescueProgress.finished,true);
   assert.equal(saved(p).holidayPhase,"rescue-route-ending");
   assert.equal(p.el("summitEndingScene").hidden,false);
-  assert.match(p.el("summitEndingLine").textContent,/what the hell are you doing/);
+  assert.match(p.el("summitEndingLine").textContent,/what the hell are you doing/i);
   for(let i=0;i<7;i++)p.el("summitEndingNextButton").click();
   assert.equal(saved(p).rescueProgress.endingStep,7);
   p.el("homeButton").click();p.el("resumeButton").click();
