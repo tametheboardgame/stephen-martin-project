@@ -2,6 +2,10 @@
 
 Entries are concise, durable design decisions. Additional decisions are added only where they materially affect scope, design, delivery or implementation.
 
+## SP-D041, 15 October 2026: Use character-scene dialogue at the Summit entrance
+
+Owner approved revised and distinct David, Paul and Asian Summit gatekeeper standing sprites, then directed integration into the Summit approach as a **proper in-scene conversation** rather than the large centred route-intro panel. Retain the approved exterior as an independent background, put the seven existing dialogue lines in the same bottom caption style as other story scenes, and keep SP3.4 autoplay and top-right transport. Show the blue central panel **only** for the Admissions Test. Render three separate transparent sprites on the Summit intro, not on the throne-room ending or other destinations. Assets go through the Drive → manifests → WebP pipeline. Require human in-engine scale/crop review and explicit owner merge authorisation.
+
 ## SP-D040, 15 October 2026: Approve Summit entrance environment for exterior scenes
 
 Owner approved the first GAME-SP4.0A illustrated Summit gate/lodge environment and directed that it replace provisional styling in every applicable **Summit exterior**: the cult branch briefing and three-round Admissions Test. The separate Summit throne-room ending requires a distinct indoor illustration and remains unchanged. The source PNG is staged privately in the dedicated Stephen Martin Drive folder under `summit-entrance-background-v01.png`, manifest `generated-assets/manifests/game-sp40a-summit-entrance-v01.json`, and materialised to `public/assets/generated/locations/summit-entrance-v01.webp`. Keep the approved original art separate from character sprites, gameplay objects and editable UI. Final in-engine visual approval is still required before merging SP4.0A to main.
