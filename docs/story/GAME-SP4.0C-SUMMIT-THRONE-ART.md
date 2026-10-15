@@ -1,3 +1,20 @@
+## Four approved attendants integrated as independent stage layers (15 October 2026)
+
+The owner approved **four individual, transparent full-body ceremonial attendant sprites**. All four original PNGs are stored in the project's dedicated Drive staging folder and have been materialised via the existing OIDC pipeline into four independent transparent WebPs. No flattened illustration, background replacement or baked UI is used.
+
+| Attendant | Drive file ID | Versioned manifest / generated WebP |
+|---|---|---|
+| Left fan bearer | `1O9kfCOVn0OYDdbfEPS42ba4L4cpF0vpe` | `game-sp40c-attendant-fan-v01.json` / `summit-throne-attendant-fan-v01.webp` |
+| Left serving-tray bearer | `1iA2GXZFCCjsuHf0uRdA2fLbveZenAT54` | `game-sp40c-attendant-tray-v01.json` / `summit-throne-attendant-tray-v01.webp` |
+| Right ceremonial-ewer bearer | `1wlAEh0S1V8gMoVYsoZId5edAPn_ZVLM9` | `game-sp40c-attendant-ewer-v01.json` / `summit-throne-attendant-ewer-v01.webp` |
+| Right towel bearer | `1IEruLeKIv-1HjO4eWUvADI4CzjM1fLw3` | `game-sp40c-attendant-towel-v01.json` / `summit-throne-attendant-towel-v01.webp` |
+
+All manifests are in `generated-assets/manifests/`; all generated files are in `public/assets/generated/characters/`. The two upper attendants flank the raised dais, while the tray and towel attendants frame the lower side areas. Existing David and Paul remain at the foot of the stairs; Stephen's approved placement stays unchanged. All attendants are silent and decorative (`aria-hidden`, `alt=""`, no pointer input), behind the principal actors and subtitle box.
+
+Responsive CSS individually positions all four attendants at desktop, tablet and narrow widths. The build rejects a WebP lacking alpha; regression tests guard each manifest, image path, layer count and breakpoint placement. These tests **do not confirm artistic placement or lack of visual overlap**, which remains an owner browser-review gate.
+
+Draft PR #34 remains stacked on draft PR #33, with **no merges authorised**. Subsequent visual feedback should be handled with CSS positioning changes rather than composite or image regeneration unless the owner requests otherwise.
+
 # GAME-SP4.0C — Approved Summit throne-room background and sprite candidates
 
 **Date:** 15 October 2026
