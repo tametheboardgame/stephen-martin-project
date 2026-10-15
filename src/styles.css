@@ -2164,6 +2164,8 @@ body:has(#menuScreen:not([hidden])) main {
  */
 #holidayScreen #rescueHotelScene[hidden],
 #holidayScreen #rescueRouteIntro[hidden],
+#holidayScreen #rescueMiniGameScene[hidden],
+#holidayScreen #rescueEndingSummary[hidden],
 #holidayScreen #rescueHotelHotspots[hidden],
 #holidayScreen #rescueHotelDialogue[hidden],
 #holidayScreen #hotelNextButton[hidden],
@@ -2172,6 +2174,15 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen #hotelResolved[hidden],
 #holidayScreen #hotelHint[hidden] {display:none !important;}
 #holidayScreen .rescue-hotel-scene,#holidayScreen .rescue-route-intro {position:relative;background:#102840;}
+#holidayScreen .rescue-intro-dialogue {
+  margin:14px auto 0;padding:12px 15px;max-width:650px;
+  background:rgba(4,28,51,.94);border:2px solid #7dd2f1;border-radius:9px;
+  text-align:left;color:#fff5de;
+}
+#holidayScreen .rescue-intro-dialogue strong {color:#ffdb87;font-size:14px;}
+#holidayScreen .rescue-intro-dialogue p {margin:6px 0 0;line-height:1.45;}
+#holidayScreen .rescue-framework-status {font-weight:750;color:#ffdb87;}
+#holidayScreen .rescue-route-intro .wall-action-strip {display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 #holidayScreen .rescue-hub-arrival-stage,
 #holidayScreen .rescue-route-intro-stage {
   background:linear-gradient(120deg,rgba(7,22,41,.72),rgba(9,34,57,.55)),
@@ -2236,7 +2247,8 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen .hotel-feedback {color:#ffd789 !important;font-weight:800;}
 #holidayScreen .rescue-hotel-action-strip:has(.hotel-deductions:not([hidden])) {padding:10px 2.5%;gap:8px;}
 @media (min-width:801px) {
-  #holidayScreen #rescueHotelScene,#holidayScreen #rescueRouteIntro {
+  #holidayScreen #rescueHotelScene,#holidayScreen #rescueRouteIntro,
+  #holidayScreen #rescueMiniGameScene,#holidayScreen #rescueEndingSummary {
     position:absolute;inset:0;width:100%;height:100%;
   }
   #holidayScreen .rescue-hotel-stage,#holidayScreen .rescue-route-intro-stage {
@@ -2249,7 +2261,9 @@ body:has(#menuScreen:not([hidden])) main {
     padding:9px 2.5%;background:rgba(5,25,46,.97);overflow-y:auto;
   }
   #holidayScreen:has(#rescueHotelScene:not([hidden])) .china-footer,
-  #holidayScreen:has(#rescueRouteIntro:not([hidden])) .china-footer {top:2%;right:2%;left:auto;bottom:auto;}
+  #holidayScreen:has(#rescueRouteIntro:not([hidden])) .china-footer,
+  #holidayScreen:has(#rescueMiniGameScene:not([hidden])) .china-footer,
+  #holidayScreen:has(#rescueEndingSummary:not([hidden])) .china-footer {top:2%;right:2%;left:auto;bottom:auto;}
 }
 @media (max-width:800px) {
   #holidayScreen .rescue-hotel-actor {bottom:24%;}
