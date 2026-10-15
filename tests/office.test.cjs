@@ -1763,3 +1763,49 @@ test("SP3.4 pause, hidden-tab and route choice guard do not advance puzzle",()=>
   assert.equal(saved(p).rescueProgress.miniGameStage,1);
   assert.equal(p.timeouts.size,0);
 });
+
+test("SP3.4 all three fully-earned finales autoplay their lines but stop at summary",()=>{
+  const cases=[
+    {route:"cult",make:()=>{
+      const p=toSummitAdmissions();
+      for(const index of [2,1,2]){
+        p.el("summitChoice"+index).click();
+        assert.equal(p.tick(),true,"Correct answer acknowledgment advances automatically");
+      }
+      return p;
+    },lines:story().SMP_SUMMIT.ending.length},
+    {route:"detention",make:()=>{
+      const p=toDetentionPaperwork();
+      finishDetentionForms(p);
+      p.el("detentionChoice2").click();
+      p.el("detentionStampButton").click();
+      p.el("detentionPermitButton").click();
+      p.el("detentionNextButton").click();
+      return p;
+    },lines:story().SMP_DETENTION.ending.length},
+    {route:"reassemble",make:()=>{
+      const p=toAssemblyWorkshop();
+      for(let i=0;i<6;i++){
+        p.el("assemblyPiece"+i).click();
+        p.el("assemblySlot"+i).click();
+      }
+      assert.equal(p.timeouts.size,0,"POWER ON must never trigger automatically");
+      p.el("assemblyPowerButton").click();
+      return p;
+    },lines:story().SMP_REASSEMBLE.ending.length}
+  ];
+  for(const c of cases){
+    const p=c.make();
+    assert.equal(saved(p).route,c.route);
+    assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+    for(let i=0;i<=c.lines;i++)assert.equal(p.tick(),true,"Ending "+c.route+" should autoplay beat "+i);
+    assert.equal(saved(p).holidayPhase,"rescue-ending-summary");
+    assert.equal(p.timeouts.size,0,"Summary waits for player; never auto-replays");
+    assert.equal(p.el("holidayRouteButton").hidden,false);
+    assert.match(p.el("holidayRouteButton").textContent,/Play another ending/);
+    p.el("holidayRouteButton").click();
+    assert.equal(saved(p).holidayPhase,"wall");
+    assert.equal(saved(p).wallDecision,null);
+    assert.equal(Object.hasOwn(saved(p),"route"),false);
+  }
+});
