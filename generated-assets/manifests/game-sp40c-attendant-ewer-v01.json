@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1wlAEh0S1V8gMoVYsoZId5edAPn_ZVLM9"
+  },
+  "expectedSourceName": "summit-throne-attendant-ewer-v01.png",
+  "destination": "public/assets/generated/characters/summit-throne-attendant-ewer-v01.webp",
+  "transform": {
+    "maxWidth": 1024,
+    "maxHeight": 1536,
+    "quality": 86
+  },
+  "revision": 1
+}
