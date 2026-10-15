@@ -572,3 +572,7 @@ Implement the approved three-round no-fail Summit dialogue/card puzzle, its comp
 ## GAME-SP3.2 — The Great Stamp Catastrophe (started 15 October 2026)
 
 Second gameplay-only route, stacked on GAME-SP3.1. The fictional Office of Ceremonial Misunderstandings requires Reason for Visit, classify-a-bear-document and find/apply an APPROVED stamp beneath Paul's takeaway drink. Accessible select-and-tap is required alongside optional mouse drag. Wrong choices are funny, never fatal, and trigger a Paul hint after two failures. A complete scripted Ending B and shared replay finish the route. New illustration/animation work is postponed until all three routes are functional, as agreed. See `docs/story/GAME-SP3.2-STAMP-CATASTROPHE.md`. SP3.3 remains next; no merge until owner review.
+
+## GAME-SP3.3 — Reassemble Stephen Martin (started 15 October 2026)
+
+Third and final route-specific functional puzzle, stacked on SP3.2. Assemble a clearly fictional foam/cardboard display using six labelled slots, touch/keyboard select-and-place and optional drag-and-drop, plus harmless comic extras, no-fail hints, checkpoints and POWER ON action. Completing it unlocks the complete approved spa Ending C and shared replay. Artwork remains deferred to the dedicated phase following SP3.4 full-game integration. Work package: `docs/story/GAME-SP3.3-REASSEMBLE.md`. Retain draft PR and owner review before any production merge.

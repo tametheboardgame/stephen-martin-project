@@ -11,6 +11,7 @@ const china = read("src/china-data.js");
 const rescueFrameworkSource = read("src/rescue-framework.js");
 const summitSource = read("src/summit-data.js");
 const detentionSource = read("src/detention-data.js");
+const assemblySource = read("src/reassemble-data.js");
 const engine = read("src/game.js");
 const html = read("index.html");
 const css = read("src/styles.css");
@@ -23,6 +24,7 @@ function story() {
   vm.runInNewContext(rescueFrameworkSource, { window }, { timeout: 1000 });
   vm.runInNewContext(summitSource, { window }, { timeout: 1000 });
   vm.runInNewContext(detentionSource, { window }, { timeout: 1000 });
+  vm.runInNewContext(assemblySource, { window }, { timeout: 1000 });
   return window;
 }
 const beats = () => Array.from(story().SMP_OFFICE_SHOTS, shot => Array.from(shot.lines)).flat();
@@ -62,6 +64,7 @@ function preview({audio=false}={}) {
   vm.runInNewContext(rescueFrameworkSource,{window},{timeout:1000});
   vm.runInNewContext(summitSource,{window},{timeout:1000});
   vm.runInNewContext(detentionSource,{window},{timeout:1000});
+  vm.runInNewContext(assemblySource,{window},{timeout:1000});
   let timer=0;
   const context={window,document,HTMLElement:Element,
     setTimeout(callback,delay){timeouts.set(++timer,{callback,delay});return timer;},
@@ -1172,7 +1175,7 @@ test("SP3.0 route briefings preserve progress and do not skip either available p
     assert.equal(p.el("rescueMiniGameTitle").textContent,f.routes[route].gameTitle);
     assert.equal(p.el("summitAdmissions").hidden,route!=="cult");
     assert.equal(p.el("detentionPaperwork").hidden,route!=="detention");
-    if(route==="reassemble")assert.match(p.el("rescueMiniGameStatus").textContent,/cannot be skipped|can be skipped/);
+    assert.equal(p.el("reassembleWorkshop").hidden,route!=="reassemble");
     assert.equal(p.el("rescueEndingSummary").hidden,true,"Do not present an unbuilt ending");
     p.el("homeButton").click();p.el("resumeButton").click();
     assert.equal(saved(p).holidayPhase,"rescue-minigame");
@@ -1513,4 +1516,163 @@ test("SP3.2 cannot activate paperwork or false ending on other committed routes"
     assert.equal(saved(p).rescueProgress.miniGameStage,0);
     assert.equal(p.el("detentionEndingScene").hidden,true);
   }
+});
+
+function toAssemblyWorkshop(){
+  const p=toHotelInvestigation("reassemble");
+  completeHotelIntro(p);
+  p.el("hotelReassembleButton").click();
+  for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+  const lines=story().SMP_RESCUE_FRAMEWORK.routes.reassemble.intro;
+  for(let i=0;i<=lines.length;i++)p.el("routeIntroNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  assert.equal(saved(p).route,"reassemble");
+  assert.equal(p.el("reassembleWorkshop").hidden,false);
+  return p;
+}
+test("SP3.3 approved cardboard puzzle, six named slots, comic extras and ending source",()=>{
+  const data=story().SMP_REASSEMBLE;
+  const ids=Array.from(data.parts,p=>p.id);
+  assert.deepEqual(ids,["head","torso","left-arm","right-arm","left-leg","right-leg"]);
+  assert.equal(data.decoys.length,7);
+  assert.ok(Array.from(data.decoys,p=>p.id).includes("toaster"));
+  assert.ok(Array.from(data.decoys,p=>p.id).includes("wifi-heart"));
+  assert.equal(data.ending.length,15);
+  assert.match(data.ending[0].text,/cardboard version/);
+  assert.match(data.ending[11].text,/WHY/);
+  assert.match(data.ending[12].text,/turning me off and on again/);
+  assert.match(data.ending.at(-1).text,/Stephen walks away/);
+  assert.equal(data.endCard,"ENDING C: SOME ASSEMBLY REQUIRED");
+  assert.match(data.reaction("head","left-arm"),/handshake/);
+  assert.match(data.reaction("toaster","torso"),/breakfast/);
+  assert.ok(read("scripts/build.mjs").includes('"src/reassemble-data.js"'));
+  assert.ok(html.indexOf('src="./src/reassemble-data.js"')<html.indexOf('src="./src/game.js"'));
+  for(const id of ["reassembleWorkshop","assemblyPowerButton","assemblyProgress",
+    "assemblyHint","assemblyFeedback","reassembleEndingScene","assemblyEndingLine"])
+    assert.ok(html.includes('id="'+id+'"'),id);
+  for(let i=0;i<13;i++)assert.ok(html.includes('id="assemblyPiece'+i+'"'));
+  for(let i=0;i<6;i++)assert.ok(html.includes('id="assemblySlot'+i+'"'));
+  assert.match(css,/\.assembly-layout \{display:grid;grid-template-columns:1\.1fr \.9fr/);
+  assert.match(css,/\.assembly-piece,#holidayScreen \.assembly-slot \{[\s\S]*?min-height:50px/);
+  assert.match(css,/@media \(max-width:800px\) \{[\s\S]*?\.assembly-layout \{grid-template-columns:1fr/);
+  assert.match(html,/This is a <strong>foam-and-cardboard souvenir model<\/strong>/);
+});
+test("SP3.3 wrong foam pieces are never consumed, Paul hints and correct slot highlighted",()=>{
+  const p=toAssemblyWorkshop();
+  p.el("assemblyPowerButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  p.el("assemblySlot0").click();
+  assert.match(p.el("assemblyFeedback").textContent,/Select a cardboard piece/);
+  p.el("assemblyPiece10").click(); // toaster
+  p.el("assemblySlot1").click();
+  assert.match(p.el("assemblyFeedback").textContent,/breakfast/);
+  assert.equal(saved(p).rescueProgress.wrongAnswers,1);
+  p.el("assemblySlot1").click();
+  assert.equal(saved(p).rescueProgress.wrongAnswers,2);
+  assert.equal(p.el("assemblyHint").hidden,false);
+  assert.match(p.el("assemblyHint").textContent,/Spare kidneys/);
+  assert.equal(p.el("assemblyPiece10").disabled,false);
+  p.el("assemblyPiece0").click();
+  assert.equal(p.el("assemblyPiece0").dataset.selected,"true");
+  assert.equal(p.el("assemblySlot0").dataset.hint,"true");
+  p.el("assemblySlot2").click();
+  assert.match(p.el("assemblyFeedback").textContent,/handshake/);
+  assert.equal(saved(p).rescueProgress.miniGameStage,0);
+  p.el("assemblySlot0").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,1);
+  assert.equal(saved(p).rescueProgress.wrongAnswers,0);
+  assert.equal(p.el("assemblyPiece0").disabled,true);
+  assert.equal(p.el("assemblySlot0").disabled,true);
+  assert.equal(p.el("assemblyHint").hidden,true);
+  p.el("assemblyPiece0").click();p.el("assemblySlot0").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,1);
+});
+test("SP3.3 all six placements persist individually and POWER ON is an explicit gate",()=>{
+  const p=toAssemblyWorkshop();
+  p.el("assemblyPiece0").click();p.el("assemblySlot0").click();
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).rescueProgress.placedParts.length,1);
+  assert.equal(p.el("assemblySlot0").disabled,true);
+  for(let i=1;i<6;i++){
+    p.el("assemblyPiece"+i).click();
+    p.el("assemblySlot"+i).click();
+    assert.equal(saved(p).rescueProgress.placedParts.length,i+1);
+  }
+  assert.equal(saved(p).rescueProgress.finished,true);
+  assert.equal(p.el("assemblyPowerButton").hidden,false);
+  assert.equal(p.el("reassembleEndingScene").hidden,true);
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(p.el("assemblyPowerButton").hidden,false);
+  p.el("assemblyPowerButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+  assert.equal(saved(p).assemblyPowered,true);
+  assert.equal(p.el("reassembleEndingScene").hidden,false);
+  p.el("assemblyPowerButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+});
+test("SP3.3 optional drag and drop plus keyboard/touch select-tap both use identical validation",()=>{
+  const p=toAssemblyWorkshop();
+  const transfer={value:"",setData(_type,value){this.value=value;},getData(){return this.value;}};
+  p.el("assemblyPiece3").events.dragstart({dataTransfer:transfer});
+  assert.equal(transfer.value,"right-arm");
+  let prevented=0;
+  p.el("assemblySlot3").events.dragover({preventDefault(){prevented++;}});
+  p.el("assemblySlot3").events.drop({preventDefault(){prevented++;},dataTransfer:transfer});
+  assert.equal(prevented,2);
+  assert.equal(saved(p).rescueProgress.miniGameStage,1);
+  assert.equal(saved(p).rescueProgress.placedParts[0],"right-arm");
+  p.el("assemblyPiece4").click();p.el("assemblySlot4").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,2);
+  p.el("assemblyPiece6").events.dragstart({dataTransfer:transfer}); // kidney
+  p.el("assemblySlot2").events.drop({preventDefault(){},dataTransfer:transfer});
+  assert.equal(saved(p).rescueProgress.miniGameStage,2,"Dragged decoy does not complete a slot");
+  assert.equal(p.el("assemblyPiece6").disabled,false);
+});
+test("SP3.3 all Ending C dialogue beats save and replay without leaking mannequin state",()=>{
+  const p=toAssemblyWorkshop();
+  for(let i=0;i<6;i++){p.el("assemblyPiece"+i).click();p.el("assemblySlot"+i).click();}
+  p.el("assemblyPowerButton").click();
+  assert.match(p.el("assemblyEndingLine").textContent,/cardboard version/);
+  for(let i=0;i<8;i++)p.el("assemblyEndingNextButton").click();
+  assert.equal(saved(p).rescueProgress.endingStep,8);
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).rescueProgress.endingStep,8);
+  assert.match(p.el("assemblyEndingLine").textContent,/translation was ambiguous/);
+  const total=story().SMP_REASSEMBLE.ending.length;
+  for(let i=8;i<total;i++)p.el("assemblyEndingNextButton").click();
+  assert.equal(saved(p).rescueProgress.endingStep,total);
+  assert.match(p.el("assemblyEndingLine").textContent,/SOME ASSEMBLY REQUIRED/);
+  p.el("assemblyEndingNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-ending-summary");
+  assert.equal(p.el("rescueSummaryHeading").textContent,"SOME ASSEMBLY REQUIRED");
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-ending-summary");
+  p.el("rescueSummaryReplayButton").click();
+  assert.equal(saved(p).holidayPhase,"wall");
+  assert.equal(Object.hasOwn(saved(p),"assemblyPowered"),false);
+  assert.equal(Object.hasOwn(saved(p),"assemblySelectedPart"),false);
+  assert.equal(Object.hasOwn(saved(p),"rescueProgress"),false);
+});
+test("SP3.3 gate blocks unfinished and route-mismatched ending saves",()=>{
+  const p=toAssemblyWorkshop();
+  p.el("assemblyPiece0").click();p.el("assemblySlot0").click();
+  let old=saved(p);
+  old.holidayPhase="rescue-route-ending";
+  old.assemblyPowered=true;
+  p.stored.set("stephen-martin-game-sp1-save-v1",JSON.stringify(old));
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  assert.equal(p.el("reassembleEndingScene").hidden,true);
+  old=saved(p);
+  old.holidayPhase="rescue-ending-summary";
+  old.rescueProgress={version:1,route:"detention",miniGameStage:3,finished:true};
+  old.assemblyPowered=true;
+  p.stored.set("stephen-martin-game-sp1-save-v1",JSON.stringify(old));
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  assert.equal(saved(p).rescueProgress.route,"reassemble");
+  assert.equal(p.el("rescueEndingSummary").hidden,true);
+  p.el("detentionNextButton").click();p.el("summitNextButton").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,0);
 });
