@@ -2,6 +2,10 @@
 
 Entries are concise, durable design decisions. Additional decisions are added only where they materially affect scope, design, delivery or implementation.
 
+## SP-D040, 15 October 2026: Approve Summit entrance environment for exterior scenes
+
+Owner approved the first GAME-SP4.0A illustrated Summit gate/lodge environment and directed that it replace provisional styling in every applicable **Summit exterior**: the cult branch briefing and three-round Admissions Test. The separate Summit throne-room ending requires a distinct indoor illustration and remains unchanged. The source PNG is staged privately in the dedicated Stephen Martin Drive folder under `summit-entrance-background-v01.png`, manifest `generated-assets/manifests/game-sp40a-summit-entrance-v01.json`, and materialised to `public/assets/generated/locations/summit-entrance-v01.webp`. Keep the approved original art separate from character sprites, gameplay objects and editable UI. Final in-engine visual approval is still required before merging SP4.0A to main.
+
 ## SP-D039, 15 October 2026: Autoplay cinematic scenes, keep one consistent route control
 
 Owner requested that most scenes play and advance without constant clicking and that replay/alternate-choice controls be consolidated into one reliable location. For SP3.4, preserve automatic recorded office voices and add **text-paced autoplay only for subsequent scripted scenes**, never automatic choices or puzzle inputs. Offer one persistent top-right Pause/Next/Change route toolbar, with the route-reset action returning to the Great Wall checkpoint; stop timers on hidden tab and allow manual continuation. Keep this navigation pass scoped and separate from the individually approved SP4.0 artwork phase. Final dialogue pacing and UI layout remain a human browser-review gate.
