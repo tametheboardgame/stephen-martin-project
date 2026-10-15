@@ -1940,3 +1940,63 @@ test("SP4.0B revised Summit arrangement uses mirrored small transparent sprites 
   assert.match(summitCss,/#routeIntroDialogue\[hidden\]/);
   assert.doesNotMatch(summitCss,/#summitAdmissions[^\n]*transform:scaleX/);
 });
+
+
+test("SP4.0C approved throne and Stephen sprite are separate, packaged and transparency-safe",()=>{
+  const background="summit-throne-room-v01.webp";
+  const sprite="summit-stephen-seated-chairman-v02.webp";
+  const room=fs.readFileSync(path.join(root,"public/assets/generated/locations",background));
+  const person=fs.readFileSync(path.join(root,"public/assets/generated/characters",sprite));
+  assert.ok(room.length>50000,"Approved illustrated room present");
+  assert.equal(room.toString("ascii",0,4),"RIFF");
+  assert.equal(room.toString("ascii",8,12),"WEBP");
+  assert.ok(person.length>30000,"Owner-approved Stephen present");
+  assert.equal(person.toString("ascii",0,4),"RIFF");
+  assert.equal(person.toString("ascii",12,16),"VP8X");
+  assert.ok((person[20]&0x10)!==0,"Seated Stephen must preserve transparency");
+  const bgManifest=JSON.parse(read("generated-assets/manifests/game-sp40c-summit-throne-room-v01.json"));
+  const stephenManifest=JSON.parse(read("generated-assets/manifests/game-sp40c-summit-stephen-chairman-v02.json"));
+  assert.equal(bgManifest.source.provider,"google-drive");
+  assert.equal(stephenManifest.source.provider,"google-drive");
+  assert.equal(bgManifest.destination,"public/assets/generated/locations/"+background);
+  assert.equal(stephenManifest.destination,"public/assets/generated/characters/"+sprite);
+  const build=read("scripts/build.mjs");
+  assert.ok(build.includes('"'+background+'"'));
+  assert.ok(build.includes('"'+sprite+'"'));
+  assert.ok(build.includes("Approved seated Stephen must preserve WebP alpha transparency"));
+  assert.match(html,/id="summitThroneStephen"[^>]*summit-stephen-seated-chairman-v02\.webp/);
+  assert.match(css,/#summitEndingScene \.summit-ending-stage \{/);
+  assert.ok(css.includes('url("../public/assets/generated/locations/'+background+'")'));
+  assert.ok(css.includes('#summitEndingScene .summit-throne-stephen'));
+  assert.ok(css.includes('#summitEndingScene[data-speaker="stephen"] .summit-throne-stephen'));
+  const scene=html.split('id="summitEndingScene"')[1].split('id="detentionEndingScene"')[0];
+  assert.doesNotMatch(scene,/summitEntrance(?:David|Paul|Gatekeeper)/);
+  assert.doesNotMatch(scene,/summit-chairman-sash/,"Do not overlay redundant chairman sash");
+  assert.doesNotMatch(scene,/summit-art-note/,"No placeholder text in approved art scene");
+  assert.match(css,/@media \(max-width:450px\) \{[\s\S]*?#summitEndingScene \.summit-throne-stephen/);
+});
+
+test("SP4.0C Stephen-only throne cutscene keeps all Ending A lines, speaker glow, autoplay and replay",()=>{
+  const p=toSummitAdmissions();
+  for(const correct of [2,1,2]){
+    p.el("summitChoice"+correct).click();
+    p.el("summitNextButton").click();
+  }
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+  assert.equal(p.el("summitEndingScene").hidden,false);
+  assert.equal(p.el("summitEndingSpeaker").textContent,"STEPHEN");
+  assert.equal(p.el("summitEndingScene").dataset.speaker,"stephen");
+  assert.match(p.el("summitEndingLine").textContent,/what the hell/i);
+  assert.equal(p.el("summitThroneStephen").hidden,false);
+  p.el("summitEndingNextButton").click();
+  assert.equal(p.el("summitEndingSpeaker").textContent,"DAVID");
+  assert.equal(p.el("summitEndingScene").dataset.speaker,"david");
+  for(let i=1;i<story().SMP_SUMMIT.ending.length;i++)p.el("summitEndingNextButton").click();
+  assert.equal(p.el("summitEndingSpeaker").textContent,"ENDING A");
+  assert.equal(p.el("summitEndingScene").dataset.speaker,"");
+  assert.match(p.el("summitEndingLine").textContent,/HEAVEN WAS A PLACE ON EARTH/);
+  p.el("summitEndingNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-ending-summary");
+  assert.equal(p.el("summitEndingScene").hidden,true);
+  assert.equal(p.el("rescueSummaryHeading").textContent,"HEAVEN WAS A PLACE ON EARTH");
+});
