@@ -55,7 +55,8 @@ const officeImages = [
   "public/assets/generated/locations/china-great-wall-background-v01.webp",
   "public/assets/generated/locations/china-forbidden-city-background-v01.webp",
   "public/assets/generated/locations/china-night-market-background-v01.webp",
-  "public/assets/generated/locations/china-visitor-information-lobby-background-v01.webp"
+  "public/assets/generated/locations/china-visitor-information-lobby-background-v01.webp",
+  "public/assets/generated/locations/summit-entrance-v01.webp"
 ];
 // Fail the public preview build if the independent desk accidentally becomes an
 // opaque image: a black/solid rectangle would cover all three actors.
