@@ -1904,3 +1904,39 @@ test("SP4.0B Summit foreground cast remains hidden on detention and spa briefing
     assert.equal(p.el("routeIntroDialogue").hidden,false);
   }
 });
+
+
+test("SP4.0B revised Summit arrangement uses mirrored small transparent sprites at every breakpoint",()=>{
+  // Flip each sprite rather than regenerating approved David, Paul and gatekeeper.
+  // Never mirror the background, editable text, or persistent story toolbar.
+  const summitCss=css.slice(css.indexOf("/* SP4.0B — Owner-approved Summit entrance cast"));
+  assert.ok(summitCss.includes("transform:scaleX(-1);transform-origin:center bottom;"));
+  const selector=label=>'#holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-'+label;
+  const block=(source,label)=>{
+    const search=selector(label)+" {";
+    const start=source.indexOf(search);
+    assert.notEqual(start,-1,"Missing "+label+" sprite CSS");
+    return source.slice(start,source.indexOf("}",start)+1);
+  };
+  const desktop=summitCss.split("@media (max-width:800px)")[0];
+  const tablet=summitCss.split("@media (max-width:800px)")[1].split("@media (max-width:450px)")[0];
+  const mobile=summitCss.split("@media (max-width:450px)")[1];
+  for(const part of [desktop,tablet,mobile]){
+    const guard=block(part,"gatekeeper"),paul=block(part,"paul"),david=block(part,"david");
+    assert.match(guard,/left:[\d.-]+%;right:auto/,"Guard stands at left");
+    assert.match(paul,/left:auto;right:[\d.-]+%/,"Paul stands on right side");
+    assert.match(david,/left:auto;right:[\d.-]+%/,"David stands on far right");
+    const h=label=>Number(block(part,label).match(/height:(\d+)%/)[1]);
+    assert.ok(h("gatekeeper")<=48 && h("david")<=48 && h("paul")<=40,
+      "Characters deliberately smaller than original hotel-sized first staging");
+    assert.ok(h("paul")<h("david"),"Paul smaller in distance/perspective");
+    const paulR=Number(paul.match(/right:([\d.-]+)%/)[1]);
+    const davidR=Number(david.match(/right:([\d.-]+)%/)[1]);
+    assert.ok(paulR>davidR,"Paul nearer centre, David far right");
+  }
+  assert.match(summitCss,/data-speaker="david"/);
+  assert.match(summitCss,/data-speaker="paul"/);
+  assert.match(summitCss,/data-speaker="gatekeeper"/);
+  assert.match(summitCss,/#routeIntroDialogue\[hidden\]/);
+  assert.doesNotMatch(summitCss,/#summitAdmissions[^\n]*transform:scaleX/);
+});
