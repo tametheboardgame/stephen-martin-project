@@ -2703,24 +2703,26 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen #summitEndingScene .summit-throne-label strong {
   font-size:clamp(15px,1.8vw,25px);letter-spacing:.05em;
 }
-/* Four independent silent attendant layers: two near the raised dais,
- * two at the room sides. Never obscure the centre throne or bottom subtitles. */
+/* Four independent silent attendant layers: fan/ewer grounded beside the
+ * raised staircase's lower side columns; tray/towel in the side aisles.
+ * Smaller scale and lower foot anchors fix the first floating-room staging.
+ * Never obscure the centre throne or bottom subtitles. */
 #holidayScreen #summitEndingScene .summit-throne-attendant {
   display:block;position:absolute;z-index:2;pointer-events:none;
   width:auto;object-fit:contain;object-position:center bottom;
   filter:drop-shadow(2px 4px 3px rgba(3,20,35,.42));
 }
 #holidayScreen #summitEndingScene .summit-throne-attendant-fan {
-  left:26%;bottom:51%;height:22%;max-width:16%;
+  left:23%;bottom:42%;height:17%;max-width:15%;
 }
 #holidayScreen #summitEndingScene .summit-throne-attendant-tray {
-  left:8%;bottom:29%;height:33%;max-width:22%;
+  left:6%;bottom:20%;height:24%;max-width:19%;
 }
 #holidayScreen #summitEndingScene .summit-throne-attendant-ewer {
-  right:26%;bottom:51%;height:22%;max-width:16%;
+  right:23%;bottom:42%;height:17%;max-width:15%;
 }
 #holidayScreen #summitEndingScene .summit-throne-attendant-towel {
-  right:8%;bottom:29%;height:31%;max-width:21%;
+  right:5%;bottom:18%;height:24%;max-width:19%;
 }
 #holidayScreen #summitEndingScene .summit-throne-stephen {
   display:block;position:absolute;z-index:2;
@@ -2780,16 +2782,16 @@ body:has(#menuScreen:not([hidden])) main {
     height:16%;bottom:46%;max-width:20%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-fan {
-    left:21%;bottom:52%;height:18%;max-width:21%;
+    left:20%;bottom:43%;height:15%;max-width:18%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-tray {
-    left:1%;bottom:32%;height:26%;max-width:27%;
+    left:2%;bottom:23%;height:21%;max-width:23%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-ewer {
-    right:21%;bottom:52%;height:18%;max-width:21%;
+    right:20%;bottom:43%;height:15%;max-width:18%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-towel {
-    right:1%;bottom:32%;height:25%;max-width:27%;
+    right:2%;bottom:22%;height:21%;max-width:23%;
   }
   #holidayScreen #summitEndingScene .summit-throne-david {
     left:24%;bottom:33%;height:26%;max-width:29%;
@@ -2806,16 +2808,16 @@ body:has(#menuScreen:not([hidden])) main {
     height:14%;bottom:43%;max-width:28%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-fan {
-    left:17%;bottom:53%;height:12%;max-width:23%;
+    left:13%;bottom:45%;height:11%;max-width:22%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-tray {
-    left:-4%;bottom:34%;height:19%;max-width:31%;
+    left:-3%;bottom:26%;height:17%;max-width:29%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-ewer {
-    right:17%;bottom:53%;height:12%;max-width:23%;
+    right:13%;bottom:45%;height:11%;max-width:22%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-towel {
-    right:-4%;bottom:34%;height:18%;max-width:31%;
+    right:-3%;bottom:25%;height:17%;max-width:29%;
   }
   #holidayScreen #summitEndingScene .summit-throne-david {
     left:12%;bottom:33%;height:22%;max-width:35%;
