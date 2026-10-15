@@ -26,6 +26,7 @@
   const rescueHub = window.SMP_RESCUE_HUB;
   const rescueFramework = window.SMP_RESCUE_FRAMEWORK;
   const summit = window.SMP_SUMMIT;
+  const detention = window.SMP_DETENTION;
   const rescuePortraits = {
     David: {
       serious: "./public/assets/generated/characters/david-office-seated-serious-v01.webp",
@@ -366,9 +367,10 @@
             delete migrated.rescueProgress;
           } else {
             migrated.rescueProgress = rescueFramework.normalise(migrated.rescueProgress, migrated.route);
-            if (["rescue-route-ending","rescue-ending-summary"].includes(migrated.holidayPhase) &&
-                (migrated.route !== "cult" || !migrated.rescueProgress.finished)) {
-              migrated.holidayPhase = "rescue-minigame";
+            if (["rescue-route-ending","rescue-ending-summary"].includes(migrated.holidayPhase)) {
+              const validEnding = migrated.rescueProgress.finished &&
+                (migrated.route === "cult" || migrated.route === "detention");
+              if (!validEnding) migrated.holidayPhase = "rescue-minigame";
             }
           }
         }
@@ -591,6 +593,9 @@
     state.hubCorrectStep = 0;
     delete state.rescueProgress;
     delete state.summitResponse;
+    delete state.detentionResponse;
+    delete state.detentionStampFound;
+    delete state.detentionStampSelected;
   }
   function renderHoliday() {
     reveal("holiday");
@@ -612,7 +617,8 @@
     const inHotel = phase === "rescue-hotel";
     const inRouteIntro = phase === "rescue-route-intro";
     const inMiniGame = phase === "rescue-minigame";
-    const inSummitEnding = phase === "rescue-route-ending";
+    const inSummitEnding = phase === "rescue-route-ending" && state.route === "cult";
+    const inDetentionEnding = phase === "rescue-route-ending" && state.route === "detention";
     const inSummary = phase === "rescue-ending-summary";
     $("chinaTransition").hidden = phase !== "transition";
     $("wallScene").hidden = !inWall;
@@ -628,6 +634,7 @@
     $("rescueRouteIntro").hidden = !inRouteIntro;
     $("rescueMiniGameScene").hidden = !inMiniGame;
     $("summitEndingScene").hidden = !inSummitEnding;
+    $("detentionEndingScene").hidden = !inDetentionEnding;
     $("rescueEndingSummary").hidden = !inSummary;
     if (inWall) {
       const position = Number.isInteger(state.wallStep)
@@ -864,7 +871,7 @@
             ? "Finish deduction →" : "Head to " + choice.label + " →";
       }
     }
-    if (inRouteIntro || inMiniGame || inSummitEnding || inSummary) {
+    if (inRouteIntro || inMiniGame || inSummitEnding || inDetentionEnding || inSummary) {
       const route = state.route;
       const config = rescueFramework.routes[route];
       const progress = rescueFramework.normalise(state.rescueProgress, route);
@@ -886,15 +893,19 @@
       }
       if (inMiniGame) {
         const playableSummit = route === "cult";
-        $("rescueMiniGamePlaceholder").hidden = playableSummit;
+        const playableDetention = route === "detention";
+        $("rescueMiniGamePlaceholder").hidden = playableSummit || playableDetention;
         $("summitAdmissions").hidden = !playableSummit;
+        $("detentionPaperwork").hidden = !playableDetention;
         $("rescueMiniGameTitle").textContent = config.gameTitle;
         $("rescueMiniGameDescription").textContent = rescueHub.routeIntro[route];
         $("rescueMiniGameStatus").textContent = config.workPackage
           + " will supply the playable puzzle. No rounds or ending can be skipped in this preview.";
         $("rescueMiniGameProgressLabel").textContent = playableSummit
           ? "Summit admissions · three checks to reach Stephen"
-          : "Briefing complete · Mini-game forthcoming";
+          : playableDetention
+            ? "Fictional paperwork · three steps to a permit"
+            : "Briefing complete · Mini-game forthcoming";
         if (playableSummit) {
           const savedReply = state.summitResponse;
           const acknowledging = savedReply && savedReply.correct === true &&
@@ -923,6 +934,47 @@
           $("summitNextButton").textContent = progress.finished
             ? "Find Stephen →" : "Continue to check " + (roundIndex + 2) + " →";
         }
+        if (playableDetention) {
+          const reply = state.detentionResponse;
+          const acknowledging = reply && reply.correct === true &&
+            reply.round === progress.miniGameStage - 1;
+          const roundIndex = acknowledging
+            ? reply.round : Math.min(progress.miniGameStage, detention.rounds.length - 1);
+          const round = detention.rounds[roundIndex];
+          const option = reply && reply.round === roundIndex
+            ? round.options.find(value => value.id === reply.choice) : null;
+          $("detentionRoundTitle").textContent = round.title;
+          $("detentionRoundProgress").textContent = "Form stage " + (roundIndex + 1)
+            + " of " + detention.rounds.length;
+          $("detentionRoundPrompt").textContent = round.prompt;
+          $("detentionRoundClue").textContent = round.clue;
+          $("detentionChoiceCards").hidden = acknowledging ||
+            (roundIndex === 2 && state.detentionStampFound === true);
+          for (let i = 0; i < round.options.length; i++) {
+            $("detentionChoice" + i).textContent = round.options[i].label;
+          }
+          const inStampSearch = roundIndex === 2 && state.detentionStampFound === true && !acknowledging;
+          $("detentionStampPanel").hidden = !inStampSearch;
+          $("detentionStampButton").dataset.selected = inStampSearch && state.detentionStampSelected === true ? "true" : "false";
+          const stampMessage = state.detentionStampSelected === true
+            ? "Stamp selected. Tap the permit or drag the stamp onto it."
+            : "The APPROVED stamp was under Paul's takeaway drink. Select it and then tap the permit, or drag it onto the permit.";
+          $("detentionStampInstructions").textContent = stampMessage;
+          $("detentionPermitButton").textContent = acknowledging
+            ? detention.permitText : "VISITOR RELEASE AUTHORISATION · APPLY STAMP HERE";
+          const feedback = acknowledging && roundIndex === 2
+            ? round.approvedResponse
+            : state.detentionStampSelected === true && inStampSearch
+              ? "Paul: That's it. Put it on the permit. David: I was about to suggest the same."
+              : option ? option.response : "";
+          $("detentionFeedback").hidden = !feedback;
+          $("detentionFeedback").textContent = feedback;
+          $("detentionHint").hidden = acknowledging || !progress.hintVisible;
+          $("detentionHint").textContent = progress.hintVisible ? round.hint : "";
+          $("detentionNextButton").hidden = !acknowledging;
+          $("detentionNextButton").textContent = progress.finished
+            ? "Collect Stephen →" : "Continue to form stage " + (roundIndex + 2) + " →";
+        }
       }
       if (inSummitEnding) {
         if (route !== "cult" || !progress.finished) {
@@ -942,17 +994,39 @@
           ? "See ending summary →" : step === summit.ending.length - 1
             ? "Reveal ending →" : "Next line →";
       }
+      if (inDetentionEnding) {
+        if (!progress.finished) {
+          state.holidayPhase = "rescue-minigame";
+          return renderHoliday();
+        }
+        const step = Math.min(progress.endingStep, detention.ending.length);
+        state.rescueProgress.endingStep = step;
+        const showCard = step === detention.ending.length;
+        const line = detention.ending[Math.min(step, detention.ending.length - 1)];
+        $("detentionEndingSpeaker").textContent = showCard ? "ENDING B" : line.speaker.toUpperCase();
+        $("detentionEndingLine").textContent = showCard ? detention.endCard : line.text;
+        $("detentionEndingProgress").textContent = showCard
+          ? "The printer has finally been left behind."
+          : "Diplomatic extraction · " + (step + 1) + " of " + detention.ending.length;
+        $("detentionEndingNextButton").textContent = showCard
+          ? "See ending summary →" : step === detention.ending.length - 1
+            ? "Reveal ending →" : "Next line →";
+      }
       if (inSummary) {
-        if (route !== "cult" || !progress.finished ||
-            progress.endingStep < summit.ending.length) {
+        const completedEnding = progress.finished &&
+          (route === "cult" && progress.endingStep >= summit.ending.length ||
+           route === "detention" && progress.endingStep >= detention.ending.length);
+        if (!completedEnding) {
           state.holidayPhase = "rescue-minigame";
           return renderHoliday();
         }
         $("rescueSummaryHeading").textContent = config.endingTitle;
-        $("rescueSummaryMessage").textContent =
-          "Stephen is perfectly happy at The Summit. David's operation has rescued absolutely nobody.";
-        $("rescueSummaryDisclaimer").textContent =
-          "Ending A complete. New final illustrated artwork remains subject to owner approval.";
+        $("rescueSummaryMessage").textContent = route === "cult"
+          ? "Stephen is perfectly happy at The Summit. David's operation has rescued absolutely nobody."
+          : "A bear meme caused an administrative queue, not a kidnapping. The fictitious office has approved everybody's departure.";
+        $("rescueSummaryDisclaimer").textContent = route === "cult"
+          ? "Ending A complete. New final illustrated artwork remains subject to owner approval."
+          : "Ending B complete. Final illustrated paperwork and departure scenes await the later artwork phase.";
       }
     }
     state.holidayFlowVersion = 2;
@@ -1289,6 +1363,81 @@
     renderHoliday();
   }
 
+  function chooseDetention(which) {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+        state.route !== "detention" || state.hubMatched !== true) return;
+    const progress = rescueFramework.normalise(state.rescueProgress, "detention");
+    if (progress.finished ||
+        (state.detentionResponse && state.detentionResponse.correct &&
+         state.detentionResponse.round === progress.miniGameStage - 1)) return;
+    const roundIndex = progress.miniGameStage;
+    const round = detention.rounds[roundIndex];
+    if (!round || !Number.isInteger(which) || which < 0 || which >= round.options.length ||
+        (roundIndex === 2 && state.detentionStampFound === true)) return;
+    const choice = round.options[which];
+    if (roundIndex === 2 && choice.correct) {
+      state.detentionStampFound = true;
+      state.detentionStampSelected = false;
+      state.detentionResponse = {round:roundIndex,choice:choice.id,correct:false};
+    } else {
+      state.rescueProgress = choice.correct
+        ? rescueFramework.completeStep(progress, "detention", roundIndex)
+        : rescueFramework.wrong(progress, "detention");
+      state.detentionResponse = {round:roundIndex,choice:choice.id,correct:choice.correct};
+    }
+    renderHoliday();
+  }
+
+  function selectDetentionStamp() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+        state.route !== "detention" || state.hubMatched !== true ||
+        state.detentionStampFound !== true) return;
+    const progress = rescueFramework.normalise(state.rescueProgress, "detention");
+    if (progress.miniGameStage !== 2 || progress.finished) return;
+    state.detentionStampSelected = true;
+    renderHoliday();
+  }
+
+  function applyDetentionStamp() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+        state.route !== "detention" || state.hubMatched !== true ||
+        state.detentionStampFound !== true || state.detentionStampSelected !== true) return;
+    const progress = rescueFramework.normalise(state.rescueProgress, "detention");
+    if (progress.miniGameStage !== 2 || progress.finished) return;
+    state.rescueProgress = rescueFramework.completeStep(progress,"detention",2);
+    state.detentionResponse = {round:2,choice:"approved",correct:true};
+    renderHoliday();
+  }
+
+  function continueDetention() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+        state.route !== "detention") return;
+    const progress = rescueFramework.normalise(state.rescueProgress, "detention");
+    const response = state.detentionResponse;
+    if (!response || response.correct !== true ||
+        response.round !== progress.miniGameStage - 1) return;
+    delete state.detentionResponse;
+    delete state.detentionStampFound;
+    delete state.detentionStampSelected;
+    if (progress.finished) {
+      progress.endingStep = 0;
+      state.holidayPhase = "rescue-route-ending";
+    }
+    state.rescueProgress = progress;
+    renderHoliday();
+  }
+
+  function advanceDetentionEnding() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-route-ending" ||
+        state.route !== "detention" || state.hubMatched !== true) return;
+    const progress = rescueFramework.normalise(state.rescueProgress,"detention");
+    if (!progress.finished) return;
+    if (progress.endingStep < detention.ending.length) progress.endingStep++;
+    else state.holidayPhase = "rescue-ending-summary";
+    state.rescueProgress = progress;
+    renderHoliday();
+  }
+
   function chooseAnotherEnding() {
     if (screens.holiday.hidden ||
         !(state.holidayPhase === "final-message" && state.finalStep === 2 ||
@@ -1374,6 +1523,25 @@
   }
   $("summitNextButton").addEventListener("click", continueSummit);
   $("summitEndingNextButton").addEventListener("click", advanceSummitEnding);
+  for (let i = 0; i < 3; i++) {
+    $("detentionChoice" + i).addEventListener("click", () => chooseDetention(i));
+  }
+  $("detentionStampButton").addEventListener("click", selectDetentionStamp);
+  $("detentionStampButton").addEventListener("dragstart", event => {
+    selectDetentionStamp();
+    if (event.dataTransfer) event.dataTransfer.setData("text/plain","approved-stamp");
+  });
+  $("detentionPermitButton").addEventListener("click", applyDetentionStamp);
+  $("detentionPermitButton").addEventListener("dragover", event => event.preventDefault());
+  $("detentionPermitButton").addEventListener("drop", event => {
+    event.preventDefault();
+    if (event.dataTransfer && event.dataTransfer.getData("text/plain") === "approved-stamp") {
+      selectDetentionStamp();
+      applyDetentionStamp();
+    }
+  });
+  $("detentionNextButton").addEventListener("click", continueDetention);
+  $("detentionEndingNextButton").addEventListener("click", advanceDetentionEnding);
   $("rescueMiniGameReplayButton").addEventListener("click", chooseAnotherEnding);
   $("rescueSummaryReplayButton").addEventListener("click", chooseAnotherEnding);
   $("rescueSummaryRestartButton").addEventListener("click", startOffice);
