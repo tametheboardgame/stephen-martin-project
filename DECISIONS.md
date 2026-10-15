@@ -2,6 +2,10 @@
 
 Entries are concise, durable design decisions. Additional decisions are added only where they materially affect scope, design, delivery or implementation.
 
+## SP-D035, 15 October 2026: Start the Summit route as the first complete playable ending
+
+After owner review of the SP3.0 preview, build GAME-SP3.1 on a separate branch stacked on SP3.0. Use the approved three-card admissions puzzle with three no-fail rounds, individual wrong responses, Paul's hint after two errors and checkpointed progress. Reproduce all approved Ending A dialogue, stinger and replay flow without unlocking the remaining two endings. Any new illustrated location, characters or poses remain subject to individual owner approval, so use a plainly provisional CSS/text stage for logic testing. No merge or production-release authorisation is inferred from the instruction to start development.
+
 ## SP-D034, 15 October 2026: Start a minimal shared mini-game framework
 
 Following owner instruction to start GAME-SP3.0, implement the small reusable route introduction / quiz and assembly progress contract on a separate draft development branch. Retain the existing V3 save key and immutable committed route; add only a narrow versioned rescue progress object, no-fail two-error hints and idempotent step completion. Play approved route-intro dialogue and show an explicit unfinished mini-game gate until SP3.1–SP3.3 supply actual routes. Prepare an ending-summary shell but do not expose unearned endings or invent art/voice recordings. Keep all production merges gated by owner preview approval.
