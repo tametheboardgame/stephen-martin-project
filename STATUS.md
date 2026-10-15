@@ -2,6 +2,13 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP4.0A — Summit exterior first visual proof brief (15 October 2026)
+
+- Owner asked to begin dedicated illustration production **one asset at a time**. Confirmed existing approved comic-poster visual direction, canonical Stephen/David/Paul references, and established Drive → manifest → optimised WebP pipeline.
+- Created branch `agent/game-sp40a-summit-visual-proof` and a proposed background-only Summit entrance composition in `docs/story/GAME-SP4.0A-SUMMIT-ENTRANCE-ART-BRIEF.md`.
+- **Awaiting owner confirmation of the composition before generating the first candidate.** No image has been created or added; no CSS/gameplay/audio/production changes. Next: generate and review one entrance candidate, then upload/materialise only after approval and test staging in a draft preview.
+- SP3.4 was approved, merged to `main` in `8a6ed2555e27eca078ecb17e47209cdb4882ca15`, and successfully deployed. The historical entry below predates the merge.
+
 ## GAME-SP3.4 — Story playback and unified navigation draft (15 October 2026)
 
 - Owner identified repeated per-line clicks throughout the finished three-route game and requested **automatic scene progression** and **one consistent replay/change-choice location**. Draft branch `agent/game-sp34-autoplay-unified-controls` preserves voiced office autoplay but introduces time-based holiday/rescue/ending autoplay with global Pause/Next and one Change route/Play another ending control in the same top-right toolbar.
