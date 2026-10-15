@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1_ZSzDWBOCQHTxXoIZvoUqbBeoPNL7Uzq"
+  },
+  "expectedSourceName": "china-forbidden-city-background-locked-v01.png",
+  "destination": "public/assets/generated/locations/china-forbidden-city-background-v01.webp",
+  "transform": {
+    "maxWidth": 1672,
+    "maxHeight": 941,
+    "quality": 85
+  },
+  "revision": 1
+}

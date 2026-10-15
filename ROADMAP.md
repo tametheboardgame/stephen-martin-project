@@ -513,3 +513,39 @@ Keep `STATUS.md` resumable, `DECISIONS.md` concise and `ROADMAP.md` authoritativ
 5. Continue bounded game development, with song drafting in parallel. Decide on comic only after pilot scoping.
 
 **Primary rule:** A complete, funny little game comes first. Do not build a grand project around what is supposed to be a joke.
+
+
+## GAME-SP2.3A (14 October 2026)
+The owner approved the Forbidden City asset trio. Its banquet choice overrides/preserves the provisional Great Wall booking; route remains unlocked until Night Market. Draft preview/playtest required before merge.
+
+
+## GAME-SP2.3B — Night Market, route lock and final message (14 October 2026)
+
+Owner-approved Night Market scene art, Spa representative and skewer Stephen. Implement the final short invitation choice (accept spa replaces earlier plans, decline preserves). Three-declined fallback offers only previously seen options; finalise one route at departure, then show a route-specific unfinished message, dead battery, Stephen's reaction and Back in England. Preserve the fixed laptop layout and the original office clips. This does **not** implement the David/Paul rescue chapter: proceed to GAME-SP2.4 after owner visual approval of the stacked draft branch.
+
+
+## GAME-SP2.3C — Branching, timeline intermissions and incident handoffs (14 October 2026)
+
+Owner-approved revision: The Summit accept bypasses Forbidden City and Night Market; declining it leads to A Few Days Later / Forbidden City. Banquet acceptance bypasses Night Market; decline leads to The Next Evening / Night Market. Spa is then unavoidable, with no third offer buttons or all-declined fallback. Each selection moves to its honest, not-yet-playable incident handoff and route-specific interrupted phone message. Choose Another Ending restarts the Great Wall decision. Preserve the approved 16:9 art and standalone characters; V3 legacy saves are migrated. Implement mini-games/rescue only after this bounded owner-approved preview. Story contract: `docs/story/GAME-SP2.3C-BRANCHING-STORY-V2.md`.
+
+
+## GAME-SP2.4–SP3.4 — Shared rescue, three mini-games and endings (approved 14 October 2026)
+
+**Owner-approved implementation order:** **SP2.4A/B** Office Alarm, comic travel montage and shared hotel/visitor-information evidence puzzle → **SP3.0** minimal reusable route mini-game, hints, save/replay and end-card framework → **SP3.1** Summit Admissions Test + *Heaven Was a Place on Earth* → **SP3.2** Great Stamp Catastrophe + *Detained by Administration* → **SP3.3** six-piece cardboard *Reassemble Stephen Martin* + *Some Assembly Required* → **SP3.4** integration, accessibility, timings and 3/3 endings playtest.
+
+Detailed approved spec: [`docs/story/GAME-SP2.4-SP3-RESCUE-IMPLEMENTATION-PLAN-V1.md`](docs/story/GAME-SP2.4-SP3-RESCUE-IMPLEMENTATION-PLAN-V1.md). Preserve the newer exclusive invitation routing in `GAME-SP2.3C-BRANCHING-STORY-V2.md`: the player experiences **one** matching route mini-game after the shared David/Paul investigation. One selected `route` is never silently changed by hub guesses or puzzle errors. Hint/no-fail rules, mouse/touch accessibility, mid-puzzle save/resume, existing 15–25-minute target and approved finale jokes are mandatory. New visual assets require separate owner approval and the established Drive/manifest pipeline; incident and rescue gameplay is **not yet implemented**. Do not merge to `main` or publish a release merely because this plan is approved.
+
+
+## GAME-SP2.4A — Office Alarm and travel montage vertical slice (14 October 2026)
+
+The original approved ten-line David/Paul OFFICE-ALARM now follows the Back in England cutaway. It reuses approved office actors/background and a route-specific phone prop; a short CSS/HTML travel montage finishes at Visitor Information. **The real hotel hub and evidence puzzle are SP2.4B**, not part of this code slice. Owner must review the draft game flow and separately accept an unoccupied fictional hotel concept before any new art is imported. Details: `docs/story/GAME-SP2.4A-OFFICE-ALARM-IMPLEMENTATION.md`. Retain stacked draft branches and explicit merge permission.
+
+
+## GAME-SP2.4B — Shared hotel clue investigation (14 October 2026)
+
+Implement the approved lobby as the sole shared investigation location, with eight canon arrival lines, three freely examined clues, a destination deduction that cannot alter the selected ending, Paul hints after mistakes and the five-line correct-guess payoff. The mini-games start in SP3.0 and are **not** built by SP2.4B. Save/resume each clue and deduction stage. Final staging requires independent owner approval of separate full-body standing David and Paul sprites; no scene composites or cutout of invented characters may be committed as substitutes. Refer to `docs/story/GAME-SP2.4B-HOTEL-INVESTIGATION.md` and existing approved treatment.
+
+
+## GAME-SP2.4B — Approved standing hotel cast integration (15 October 2026)
+
+Owner approved separate transparent full-body David/Paul PNG sprites. Materialise each via Google Drive manifests and place on independent layers above the approved lobby but under clue hit targets and subtitle UI. David taller, Paul visibly shorter across responsive breakpoints. Keep existing eight arrival beats, phone/brochures/desk interactions, hint and immutable route unchanged. Require a live human combined-scene composition review before merging any stacked PR; no release permission implied by art approval.
