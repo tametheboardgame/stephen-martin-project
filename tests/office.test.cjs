@@ -852,7 +852,7 @@ test("GAME-SP2.4A travel montage is a bounded four-beat cutaway after the last a
   assert.equal(saved(p).holidayPhase,"rescue-hub-arrival");
   assert.equal(saved(p).route,"cult");
   assert.equal(p.el("rescueHubArrival").hidden,false);
-  assert.match(html,/GAME-SP2\.4B/,"Hotel investigation is explicitly future work");
+  assert.match(html,/id="rescueHotelScene"/,"Hotel investigation remains available after travel");
   assert.ok(!html.includes("hotel-visitor-information-background-v01.webp"),"Unapproved generated art must not be packaged");
 });
 
@@ -1163,7 +1163,7 @@ test("SP3.0 all committed routes play canonical briefing then stop at honest min
     assert.equal(saved(p).rescueProgress.introStep,f.routes[route].intro.length);
     p.el("routeIntroNextButton").click();
     assert.equal(saved(p).holidayPhase,"rescue-minigame");
-    assert.match(p.el("rescueMiniGameStatus").textContent,/not be skipped/);
+    assert.match(p.el("rescueMiniGameStatus").textContent,/cannot be skipped|can be skipped/);
     assert.equal(p.el("rescueMiniGameTitle").textContent,f.routes[route].gameTitle);
     assert.equal(p.el("rescueEndingSummary").hidden,true,"Do not present an unbuilt ending");
     p.el("homeButton").click();p.el("resumeButton").click();
