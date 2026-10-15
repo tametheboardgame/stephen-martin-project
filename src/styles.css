@@ -2587,17 +2587,21 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-actor {
   display:block;position:absolute;z-index:2;pointer-events:none;
   width:auto;object-fit:contain;object-position:center bottom;
+  /* Mirror only the three transparent sprites, never the background or UI. */
+  transform:scaleX(-1);transform-origin:center bottom;
   filter:drop-shadow(3px 7px 5px rgba(5,20,32,.5));
   transition:filter 160ms ease;
 }
-#holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-david {
-  left:13%;bottom:22%;height:59%;max-width:30%;
+/* Deliberately smaller mid-ground figures with a clear view of the gates.
+   Guard addresses the pair from the left, Paul is centre-right, David is right. */
+#holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-gatekeeper {
+  left:16%;right:auto;bottom:20%;height:48%;max-width:26%;
 }
 #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-paul {
-  left:37%;bottom:22%;height:49%;max-width:28%;
+  left:auto;right:25%;bottom:20%;height:40%;max-width:23%;
 }
-#holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-gatekeeper {
-  right:12%;bottom:23%;height:59%;max-width:29%;
+#holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-david {
+  left:auto;right:9%;bottom:20%;height:48%;max-width:26%;
 }
 #holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-travel-panel {
   position:absolute;z-index:6;left:3%;right:3%;bottom:11%;width:94%;
@@ -2640,14 +2644,14 @@ body:has(#menuScreen:not([hidden])) main {
   filter:drop-shadow(3px 7px 5px rgba(5,20,32,.5)) drop-shadow(0 0 5px rgba(255,212,140,.52));
 }
 @media (max-width:800px) {
-  #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-david {
-    left:6%;bottom:27%;height:54%;max-width:36%;
+  #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-gatekeeper {
+    left:8%;right:auto;bottom:27%;height:43%;max-width:31%;
   }
   #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-paul {
-    left:36%;bottom:27%;height:44%;max-width:33%;
+    left:auto;right:27%;bottom:27%;height:36%;max-width:28%;
   }
-  #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-gatekeeper {
-    right:5%;bottom:28%;height:53%;max-width:36%;
+  #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-david {
+    left:auto;right:5%;bottom:27%;height:43%;max-width:32%;
   }
   #holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-travel-panel {
     left:3%;right:3%;bottom:15%;width:94%;max-height:31%;
@@ -2657,14 +2661,14 @@ body:has(#menuScreen:not([hidden])) main {
   }
 }
 @media (max-width:450px) {
-  #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-david {
-    left:-7%;bottom:31%;height:44%;max-width:45%;
+  #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-gatekeeper {
+    left:0%;right:auto;bottom:31%;height:36%;max-width:38%;
   }
   #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-paul {
-    left:29%;bottom:31%;height:39%;max-width:43%;
+    left:auto;right:29%;bottom:31%;height:30%;max-width:33%;
   }
-  #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-gatekeeper {
-    right:-8%;bottom:31%;height:46%;max-width:47%;
+  #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-david {
+    left:auto;right:-1%;bottom:31%;height:36%;max-width:40%;
   }
   #holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-travel-panel {
     bottom:16%;max-height:33%;
