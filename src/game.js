@@ -25,6 +25,7 @@
   const rescueAlarm = window.SMP_RESCUE_ALARM;
   const rescueHub = window.SMP_RESCUE_HUB;
   const rescueFramework = window.SMP_RESCUE_FRAMEWORK;
+  const summit = window.SMP_SUMMIT;
   const rescuePortraits = {
     David: {
       serious: "./public/assets/generated/characters/david-office-seated-serious-v01.webp",
@@ -357,7 +358,7 @@
         if (!beatIndexById.has(stored.beatId)) return null;
         const migrated = migrateHolidaySave(stored);
         if (migrated.scene === "holiday" &&
-            ["rescue-route-intro", "rescue-minigame", "rescue-ending-summary"].includes(migrated.holidayPhase)) {
+            ["rescue-route-intro", "rescue-minigame", "rescue-route-ending", "rescue-ending-summary"].includes(migrated.holidayPhase)) {
           // An old save is still valid: initialise the new narrow progress
           // record. Never revive an uncommitted or mismatched route.
           if (!rescueFramework.validRoute(migrated.route) || migrated.hubMatched !== true) {
@@ -365,8 +366,10 @@
             delete migrated.rescueProgress;
           } else {
             migrated.rescueProgress = rescueFramework.normalise(migrated.rescueProgress, migrated.route);
-            if (migrated.holidayPhase === "rescue-ending-summary" &&
-                !migrated.rescueProgress.finished) migrated.holidayPhase = "rescue-minigame";
+            if (["rescue-route-ending","rescue-ending-summary"].includes(migrated.holidayPhase) &&
+                (migrated.route !== "cult" || !migrated.rescueProgress.finished)) {
+              migrated.holidayPhase = "rescue-minigame";
+            }
           }
         }
         return migrated;
@@ -587,10 +590,11 @@
     state.hubMatched = false;
     state.hubCorrectStep = 0;
     delete state.rescueProgress;
+    delete state.summitResponse;
   }
   function renderHoliday() {
     reveal("holiday");
-    if (["rescue-route-intro", "rescue-minigame", "rescue-ending-summary"].includes(state.holidayPhase) &&
+    if (["rescue-route-intro", "rescue-minigame", "rescue-route-ending", "rescue-ending-summary"].includes(state.holidayPhase) &&
         (!rescueFramework.validRoute(state.route) || state.hubMatched !== true)) {
       state.holidayPhase = rescueFramework.validRoute(state.route) ? "rescue-hotel" : "wall";
       delete state.rescueProgress;
@@ -608,6 +612,7 @@
     const inHotel = phase === "rescue-hotel";
     const inRouteIntro = phase === "rescue-route-intro";
     const inMiniGame = phase === "rescue-minigame";
+    const inSummitEnding = phase === "rescue-route-ending";
     const inSummary = phase === "rescue-ending-summary";
     $("chinaTransition").hidden = phase !== "transition";
     $("wallScene").hidden = !inWall;
@@ -622,6 +627,7 @@
     $("rescueHotelScene").hidden = !inHotel;
     $("rescueRouteIntro").hidden = !inRouteIntro;
     $("rescueMiniGameScene").hidden = !inMiniGame;
+    $("summitEndingScene").hidden = !inSummitEnding;
     $("rescueEndingSummary").hidden = !inSummary;
     if (inWall) {
       const position = Number.isInteger(state.wallStep)
@@ -858,7 +864,7 @@
             ? "Finish deduction →" : "Head to " + choice.label + " →";
       }
     }
-    if (inRouteIntro || inMiniGame || inSummary) {
+    if (inRouteIntro || inMiniGame || inSummitEnding || inSummary) {
       const route = state.route;
       const config = rescueFramework.routes[route];
       const progress = rescueFramework.normalise(state.rescueProgress, route);
@@ -879,19 +885,74 @@
           ? "Next line →" : "Continue to " + config.gameTitle + " →";
       }
       if (inMiniGame) {
+        const playableSummit = route === "cult";
+        $("rescueMiniGamePlaceholder").hidden = playableSummit;
+        $("summitAdmissions").hidden = !playableSummit;
         $("rescueMiniGameTitle").textContent = config.gameTitle;
         $("rescueMiniGameDescription").textContent = rescueHub.routeIntro[route];
         $("rescueMiniGameStatus").textContent = config.workPackage
           + " will supply the playable puzzle. No rounds or ending can be skipped in this preview.";
+        $("rescueMiniGameProgressLabel").textContent = playableSummit
+          ? "Summit admissions · three checks to reach Stephen"
+          : "Briefing complete · Mini-game forthcoming";
+        if (playableSummit) {
+          const savedReply = state.summitResponse;
+          const acknowledging = savedReply && savedReply.correct === true &&
+            savedReply.round === progress.miniGameStage - 1;
+          const roundIndex = acknowledging
+            ? savedReply.round : Math.min(progress.miniGameStage, summit.rounds.length - 1);
+          const round = summit.rounds[roundIndex];
+          const response = savedReply && savedReply.round === roundIndex
+            ? round.options.find(option => option.id === savedReply.choice) : null;
+          $("summitRoundTitle").textContent = round.title;
+          $("summitRoundProgress").textContent = "Admission check " + (roundIndex + 1)
+            + " of " + summit.rounds.length;
+          $("summitRoundPrompt").textContent = round.prompt;
+          $("summitRoundClue").textContent = round.clue;
+          $("summitChoiceCards").hidden = acknowledging;
+          for (let i = 0; i < round.options.length; i++) {
+            const button = $("summitChoice" + i);
+            button.textContent = round.options[i].label;
+            button.dataset.correct = "false";
+          }
+          $("summitFeedback").hidden = !response;
+          $("summitFeedback").textContent = response ? response.response : "";
+          $("summitHint").hidden = acknowledging || !progress.hintVisible;
+          $("summitHint").textContent = progress.hintVisible ? round.hint : "";
+          $("summitNextButton").hidden = !acknowledging;
+          $("summitNextButton").textContent = progress.finished
+            ? "Find Stephen →" : "Continue to check " + (roundIndex + 2) + " →";
+        }
+      }
+      if (inSummitEnding) {
+        if (route !== "cult" || !progress.finished) {
+          state.holidayPhase = "rescue-minigame";
+          return renderHoliday();
+        }
+        const step = Math.min(progress.endingStep, summit.ending.length);
+        state.rescueProgress.endingStep = step;
+        const card = step === summit.ending.length;
+        const line = summit.ending[Math.min(step, summit.ending.length - 1)];
+        $("summitEndingSpeaker").textContent = card ? "ENDING A" : line.speaker.toUpperCase();
+        $("summitEndingLine").textContent = card ? summit.endCard : line.text;
+        $("summitEndingProgress").textContent = card
+          ? "Stephen appears to be having the time of his life."
+          : "The unnecessary rescue · " + (step + 1) + " of " + summit.ending.length;
+        $("summitEndingNextButton").textContent = card
+          ? "See ending summary →" : step === summit.ending.length - 1
+            ? "Reveal ending →" : "Next line →";
       }
       if (inSummary) {
-        if (!progress.finished) {
+        if (route !== "cult" || !progress.finished ||
+            progress.endingStep < summit.ending.length) {
           state.holidayPhase = "rescue-minigame";
           return renderHoliday();
         }
         $("rescueSummaryHeading").textContent = config.endingTitle;
         $("rescueSummaryMessage").textContent =
-          "Route completed: " + config.gameTitle + ". The matching ending scene is part of " + config.workPackage + ".";
+          "Stephen is perfectly happy at The Summit. David's operation has rescued absolutely nobody.";
+        $("rescueSummaryDisclaimer").textContent =
+          "Ending A complete. New final illustrated artwork remains subject to owner approval.";
       }
     }
     state.holidayFlowVersion = 2;
@@ -1184,12 +1245,57 @@
     renderHoliday();
   }
 
+  function answerSummit(which) {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+        state.route !== "cult" || state.hubMatched !== true) return;
+    const progress = rescueFramework.normalise(state.rescueProgress, "cult");
+    if (progress.finished || (state.summitResponse && state.summitResponse.correct &&
+        state.summitResponse.round === progress.miniGameStage - 1)) return;
+    const round = summit.rounds[progress.miniGameStage];
+    if (!round || !Number.isInteger(which) || which < 0 || which >= round.options.length) return;
+    const choice = round.options[which];
+    const at = progress.miniGameStage;
+    state.rescueProgress = choice.correct
+      ? rescueFramework.completeStep(progress, "cult", at)
+      : rescueFramework.wrong(progress, "cult");
+    state.summitResponse = { round:at, choice:choice.id, correct:choice.correct };
+    renderHoliday();
+  }
+
+  function continueSummit() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+        state.route !== "cult") return;
+    const progress = rescueFramework.normalise(state.rescueProgress, "cult");
+    const response = state.summitResponse;
+    if (!response || response.correct !== true ||
+        response.round !== progress.miniGameStage - 1) return;
+    delete state.summitResponse;
+    if (progress.finished) {
+      state.holidayPhase = "rescue-route-ending";
+      progress.endingStep = 0;
+    }
+    state.rescueProgress = progress;
+    renderHoliday();
+  }
+
+  function advanceSummitEnding() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-route-ending" ||
+        state.route !== "cult") return;
+    const progress = rescueFramework.normalise(state.rescueProgress, "cult");
+    if (!progress.finished) return;
+    if (progress.endingStep < summit.ending.length) progress.endingStep++;
+    else state.holidayPhase = "rescue-ending-summary";
+    state.rescueProgress = progress;
+    renderHoliday();
+  }
+
   function chooseAnotherEnding() {
     if (screens.holiday.hidden ||
         !(state.holidayPhase === "final-message" && state.finalStep === 2 ||
           state.holidayPhase === "rescue-hub-arrival" ||
           state.holidayPhase === "rescue-route-intro" ||
           state.holidayPhase === "rescue-minigame" ||
+          state.holidayPhase === "rescue-route-ending" ||
           state.holidayPhase === "rescue-ending-summary")) return;
     // Rewind explicitly to the first route choice, preserving the voiced
     // office story and Great Wall dialogue but clearing all branch decisions.
@@ -1263,6 +1369,11 @@
   $("hotelRouteReplayButton").addEventListener("click", chooseAnotherEnding);
   $("routeIntroNextButton").addEventListener("click", nextRouteIntro);
   $("rescueMiniGameBackButton").addEventListener("click", backToRescueBriefing);
+  for (let i = 0; i < 3; i++) {
+    $("summitChoice" + i).addEventListener("click", () => answerSummit(i));
+  }
+  $("summitNextButton").addEventListener("click", continueSummit);
+  $("summitEndingNextButton").addEventListener("click", advanceSummitEnding);
   $("rescueMiniGameReplayButton").addEventListener("click", chooseAnotherEnding);
   $("rescueSummaryReplayButton").addEventListener("click", chooseAnotherEnding);
   $("rescueSummaryRestartButton").addEventListener("click", startOffice);
