@@ -1835,3 +1835,72 @@ test("SP4.0A Summit entrance art is route-scoped, materialised and build-package
   for(let i=0;i<6;i++)q.el("hotelFinishButton").click();
   assert.equal(q.el("rescueRouteIntro").dataset.route,"other");
 });
+
+
+test("SP4.0B three approved Summit PNGs become independent transparent WebP cutouts",()=>{
+  const spriteFiles=[
+    "summit-david-speaking-v01.webp",
+    "summit-paul-wary-v01.webp",
+    "summit-gatekeeper-v01.webp"
+  ];
+  for(const name of spriteFiles){
+    const data=fs.readFileSync(path.join(root,"public/assets/generated/characters",name));
+    assert.ok(data.length>10000,"Nonempty Summit cutout: "+name);
+    assert.equal(data.toString("ascii",0,4),"RIFF");
+    assert.equal(data.toString("ascii",12,16),"VP8X");
+    assert.ok(data[20]&0x10,"Must retain alpha: "+name);
+    assert.ok(read("scripts/build.mjs").includes('"'+name+'"'));
+    assert.ok(html.includes("public/assets/generated/characters/"+name));
+  }
+  for(const name of ["david-speaking","paul-wary","gatekeeper"]){
+    const j=JSON.parse(read("generated-assets/manifests/game-sp40b-summit-"+name+"-v01.json"));
+    assert.equal(j.source.provider,"google-drive");
+    assert.match(j.destination,/\/characters\/summit-/);
+    assert.ok(j.expectedSourceName.endsWith(".png"));
+  }
+  assert.match(html,/id="summitEntranceDavid"/);
+  assert.match(html,/id="summitEntrancePaul"/);
+  assert.match(html,/id="summitEntranceGatekeeper"/);
+  assert.match(css,/#rescueRouteIntro\[data-route="cult"\] \.rescue-travel-panel/);
+  assert.match(css,/#rescueRouteIntro\[data-route="cult"\] \.rescue-intro-dialogue/);
+  assert.match(css,/#rescueRouteIntro\[data-route="cult"\] \.summit-entrance-gatekeeper/);
+  assert.match(css,/#rescueRouteIntro \.(?:summit-entrance-label|summit-entrance-actor)/);
+  assert.match(css,/@media \(max-width:450px\) \{/);
+  assert.doesNotMatch(html,/id="summitEndingScene"[^>]*summit-entrance-(?:david|paul|gatekeeper)/);
+});
+
+test("SP4.0B Summit briefing uses lower dialogue and highlights the correct speaker, then shows puzzle panel",()=>{
+  const p=toHotelInvestigation("cult");
+  completeHotelIntro(p);
+  p.el("hotelCultButton").click();
+  for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+  assert.equal(p.el("rescueRouteIntro").dataset.route,"cult");
+  const intro=story().SMP_RESCUE_FRAMEWORK.routes.cult.intro;
+  for(let i=0;i<intro.length;i++){
+    assert.equal(p.el("routeIntroLine").textContent,intro[i].text);
+    assert.equal(p.el("rescueRouteIntro").dataset.speaker,intro[i].speaker.toLowerCase());
+    assert.equal(p.el("routeIntroDialogue").hidden,false);
+    p.el("routeIntroNextButton").click();
+  }
+  assert.equal(p.el("routeIntroDialogue").hidden,true);
+  assert.match(p.el("routeIntroStatus").textContent,/Briefing complete/);
+  p.el("routeIntroNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  assert.equal(p.el("summitAdmissions").hidden,false);
+  assert.equal(p.el("summitRoundTitle").textContent,"Offer a sacred object");
+  assert.equal(p.el("summitEndingScene").hidden,true);
+});
+
+test("SP4.0B Summit foreground cast remains hidden on detention and spa briefings",()=>{
+  for(const route of ["detention","reassemble"]){
+    const p=toHotelInvestigation(route);
+    completeHotelIntro(p);
+    p.el("hotel"+route[0].toUpperCase()+route.slice(1)+"Button").click();
+    for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+    assert.equal(p.el("rescueRouteIntro").dataset.route,"other");
+    assert.equal(p.el("rescueRouteIntro").dataset.speaker,"");
+    assert.equal(p.el("routeIntroDialogue").hidden,false);
+  }
+});
