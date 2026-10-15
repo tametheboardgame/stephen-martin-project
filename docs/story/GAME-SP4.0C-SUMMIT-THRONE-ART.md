@@ -3,7 +3,7 @@
 **Date:** 15 October 2026
 **Base:** `agent/game-sp40a-summit-visual-proof` / draft PR #33.
 **Branch:** `agent/game-sp40c-summit-throne-art`
-**Status:** Throne-room background and corrected Stephen v02 approved; Stephen-only scene integrated for in-engine visual review. David and Paul remain unapproved for throne-room use.
+**Status:** Corrected Stephen v02 approved and fitted; new David-left and Paul-right sprites integrated on the development branch for owner in-engine visual review.
 
 ## Background approval and provenance
 
@@ -49,3 +49,17 @@ All three are in the project's existing comic-poster style, generated without an
 Inspect the **actual playable browser preview**: does Stephen's size, centre position and seated posture align with the painted throne and steps? Check at desktop and tablet widths, subtitle contrast and whether all ending lines progress naturally. Treat this as a **placement proof**, not final sign-off for throne-room character proportions. Adjust CSS first if he is too large or too far forward. Do not generate/add David or Paul until this composition is approved.
 
 **No merge** of draft PR #34 or stacked PR #33 without the user's separate explicit approval.
+
+
+## David and Paul added for three-character staging (15 October 2026)
+
+Following the user's explicit approval of the regenerated throne-room David and Paul cutouts, both have been added **as separate transparent foreground WebPs**, without flattening the room artwork.
+
+- **David left:** `summit-throne-david-confrontational-v01.png` from the project Drive staging folder (ID `1rvVoWU8cXy0Ytc1-40d-KklDBlg8Snhs`); manifest `generated-assets/manifests/game-sp40c-throne-david-v01.json`; derived `public/assets/generated/characters/summit-throne-david-confrontational-v01.webp`.
+- **Paul right:** `summit-throne-paul-astonished-v01.png` (Drive ID `1r04ZU2PdwvGCRuQFaTF-WbsWRH3aTUw8`); manifest `generated-assets/manifests/game-sp40c-throne-paul-v01.json`; derived `public/assets/generated/characters/summit-throne-paul-astonished-v01.webp`.
+- Existing Stephen v02 remains **17% stage height on desktop**, 16% tablet and 14% mobile, centred on the painted throne exactly as the owner approved.
+- Desktop staging: David left at 11%, 43% stage height; Paul right at 11%, 40% height; both bottom 19%, partially behind the readable dialogue strip. Tablet/mobile positions scale inward appropriately.
+- The existing `data-speaker` field highlights Stephen, David or Paul on their own dialogue lines. The ending, autoplay and other routes are unchanged.
+- The player must inspect the **actual in-engine result** for scale, foot grounding, composition and captions. Automated checks verify source provenance, alpha, packaging, routing and speaker cues; they cannot replace visual approval.
+
+This supersedes the earlier *Stephen-only* staging gate while preserving its historical approval record. PR #34 remains draft, stacked on draft PR #33. **No merge without explicit authorisation.**
