@@ -2,6 +2,10 @@
 
 Entries are concise, durable design decisions. Additional decisions are added only where they materially affect scope, design, delivery or implementation.
 
+## SP-D043, 15 October 2026: Lock the approved Summit throne-room background
+
+Owner approved the detailed alpine social-club throne room for Ending A and requested three different foreground character sprites: Stephen seated joyfully with chairman regalia, David confronting him and Paul looking impressed/confused. Lock the approved **empty** background as a separately materialised asset, then review independent transparent sprite candidates before integrating them; preserve the existing Summit entrance, bottom-dialogue presentation, speaker glow and route state. In particular, do not commit a composite image with a second room or double throne as finished game art. The sprite candidates are not yet owner-approved. Maintain the stacked draft-PR and manual-merge gates.
+
 ## SP-D042, 15 October 2026: Mirror and scale approved Summit characters rather than regenerate
 
 Owner endorsed the concept with **gatekeeper on the left facing inward, Paul centre-right and David far right**, but at a noticeably smaller perspective-correct scale than the first assembled scene. Implement only CSS `scaleX(-1)` transforms and responsive repositioning of the three approved transparent sprites, not a flattened concept image, new sprites or a horizontally flipped background/UI. Keep all existing seven-line bottom dialogue, speaker-specific glow, Summit Admissions Test and route isolation. Owner in-engine visual approval remains required before merging draft PR #33.
