@@ -2716,8 +2716,8 @@ body:has(#menuScreen:not([hidden])) main {
   filter:drop-shadow(2px 4px 3px rgba(3,20,35,.42))
     drop-shadow(0 0 7px rgba(255,215,143,.75));
 }
-/* David and Paul occupy the lower foreground, on opposite sides of the
- * central stairway. Stephen remains unchanged on the throne in the distance. */
+/* David and Paul stand at the foot of the staircase, in the mid-ground,
+ * not on the front marble floor. Stephen remains unchanged on his throne. */
 #holidayScreen #summitEndingScene .summit-throne-actor {
   display:block;position:absolute;z-index:3;pointer-events:none;
   width:auto;object-fit:contain;object-position:center bottom;
@@ -2725,10 +2725,10 @@ body:has(#menuScreen:not([hidden])) main {
   transition:filter 160ms ease;
 }
 #holidayScreen #summitEndingScene .summit-throne-david {
-  left:11%;bottom:19%;height:43%;max-width:32%;
+  left:30%;bottom:33%;height:28%;max-width:23%;
 }
 #holidayScreen #summitEndingScene .summit-throne-paul {
-  right:11%;bottom:19%;height:40%;max-width:30%;
+  right:29%;bottom:33%;height:27%;max-width:23%;
 }
 #holidayScreen #summitEndingScene[data-speaker="david"] .summit-throne-david,
 #holidayScreen #summitEndingScene[data-speaker="paul"] .summit-throne-paul {
@@ -2761,10 +2761,10 @@ body:has(#menuScreen:not([hidden])) main {
     height:16%;bottom:46%;max-width:20%;
   }
   #holidayScreen #summitEndingScene .summit-throne-david {
-    left:5%;bottom:24%;height:39%;max-width:38%;
+    left:24%;bottom:33%;height:26%;max-width:29%;
   }
   #holidayScreen #summitEndingScene .summit-throne-paul {
-    right:5%;bottom:24%;height:37%;max-width:36%;
+    right:23%;bottom:33%;height:25%;max-width:29%;
   }
   #holidayScreen #summitEndingScene .summit-ending-content {
     bottom:10%;max-height:30%;padding:10px 12px;
@@ -2775,10 +2775,10 @@ body:has(#menuScreen:not([hidden])) main {
     height:14%;bottom:43%;max-width:28%;
   }
   #holidayScreen #summitEndingScene .summit-throne-david {
-    left:-6%;bottom:30%;height:32%;max-width:48%;
+    left:12%;bottom:33%;height:22%;max-width:35%;
   }
   #holidayScreen #summitEndingScene .summit-throne-paul {
-    right:-6%;bottom:30%;height:31%;max-width:48%;
+    right:12%;bottom:33%;height:22%;max-width:35%;
   }
   #holidayScreen #summitEndingScene .summit-ending-content {
     bottom:13%;max-height:33%;padding:8px 10px;border-width:2px;
