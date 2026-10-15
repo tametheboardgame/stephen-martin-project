@@ -2560,3 +2560,120 @@ body:has(#menuScreen:not([hidden])) main {
   background:rgba(5,25,47,.9);
   box-shadow:0 12px 38px rgba(0,0,0,.35);
 }
+
+
+/* SP4.0B — Owner-approved Summit entrance cast and dialogue presentation.
+   The briefing is a playable character scene, not the admissions modal.
+   The blue centred panel is deliberately reserved for #summitAdmissions. */
+#holidayScreen #rescueRouteIntro .summit-entrance-label,
+#holidayScreen #rescueRouteIntro .summit-entrance-actor {display:none;}
+#holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-route-intro-stage {
+  display:block;
+  padding:0;
+}
+#holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-label {
+  position:absolute;left:2.7%;top:3%;z-index:4;
+  display:grid;gap:2px;padding:9px 12px;
+  border:2px solid rgba(244,209,145,.9);border-radius:9px;
+  background:rgba(7,30,53,.84);color:#fff0c9;
+  max-width:45%;pointer-events:none;
+}
+#holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-label span {
+  color:#a5def7;font-size:clamp(10px,1vw,13px);font-weight:850;letter-spacing:.1em;
+}
+#holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-label strong {
+  font-size:clamp(15px,1.8vw,25px);letter-spacing:.05em;
+}
+#holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-actor {
+  display:block;position:absolute;z-index:2;pointer-events:none;
+  width:auto;object-fit:contain;object-position:center bottom;
+  filter:drop-shadow(3px 7px 5px rgba(5,20,32,.5));
+  transition:filter 160ms ease;
+}
+#holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-david {
+  left:13%;bottom:22%;height:59%;max-width:30%;
+}
+#holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-paul {
+  left:37%;bottom:22%;height:49%;max-width:28%;
+}
+#holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-gatekeeper {
+  right:12%;bottom:23%;height:59%;max-width:29%;
+}
+#holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-travel-panel {
+  position:absolute;z-index:6;left:3%;right:3%;bottom:11%;width:94%;
+  max-height:25%;margin:0;padding:0;max-width:none;
+  border:none;box-shadow:none;border-radius:0;background:transparent;
+  display:block;text-align:left;color:#fff4df;overflow:visible;
+}
+#holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-travel-panel > span,
+#holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-travel-panel > h2,
+#holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-travel-panel > p:not(#routeIntroStatus),
+#holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-travel-panel > small {
+  display:none;
+}
+#holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-intro-dialogue,
+#holidayScreen #rescueRouteIntro[data-route="cult"] #routeIntroStatus {
+  box-sizing:border-box;max-width:none;width:100%;margin:0;
+  padding:12px 18px;border:3px solid #f0cf89;border-radius:11px;
+  background:rgba(5,25,48,.94);
+  box-shadow:4px 5px 0 rgba(0,0,0,.4);
+  color:#fff5dd;text-align:left;
+}
+#holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-intro-dialogue strong {
+  color:#ffd98d;font-size:clamp(13px,1.25vw,18px);font-weight:900;
+}
+#holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-intro-dialogue p {
+  margin:5px 0 0;font-size:clamp(16px,1.8vw,25px);font-weight:800;line-height:1.35;
+}
+#holidayScreen #rescueRouteIntro[data-route="cult"] #routeIntroStatus {
+  font-size:clamp(14px,1.5vw,20px);font-weight:800;
+}
+#holidayScreen #rescueRouteIntro[data-route="cult"]:has(#routeIntroDialogue:not([hidden])) #routeIntroStatus {
+  display:none;
+}
+#holidayScreen #rescueRouteIntro[data-route="cult"] #routeIntroDialogue[hidden] {display:none !important;}
+/* The active speaker brightens slightly but never moves, avoiding visual
+   jumps between consecutive automatically paced dialogue lines. */
+#holidayScreen #rescueRouteIntro[data-route="cult"][data-speaker="david"] .summit-entrance-david,
+#holidayScreen #rescueRouteIntro[data-route="cult"][data-speaker="paul"] .summit-entrance-paul,
+#holidayScreen #rescueRouteIntro[data-route="cult"][data-speaker="gatekeeper"] .summit-entrance-gatekeeper {
+  filter:drop-shadow(3px 7px 5px rgba(5,20,32,.5)) drop-shadow(0 0 5px rgba(255,212,140,.52));
+}
+@media (max-width:800px) {
+  #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-david {
+    left:6%;bottom:27%;height:54%;max-width:36%;
+  }
+  #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-paul {
+    left:36%;bottom:27%;height:44%;max-width:33%;
+  }
+  #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-gatekeeper {
+    right:5%;bottom:28%;height:53%;max-width:36%;
+  }
+  #holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-travel-panel {
+    left:3%;right:3%;bottom:15%;width:94%;max-height:31%;
+  }
+  #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-label {
+    left:2%;top:9%;max-width:47%;padding:6px 9px;
+  }
+}
+@media (max-width:450px) {
+  #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-david {
+    left:-7%;bottom:31%;height:44%;max-width:45%;
+  }
+  #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-paul {
+    left:29%;bottom:31%;height:39%;max-width:43%;
+  }
+  #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-gatekeeper {
+    right:-8%;bottom:31%;height:46%;max-width:47%;
+  }
+  #holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-travel-panel {
+    bottom:16%;max-height:33%;
+  }
+  #holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-intro-dialogue,
+  #holidayScreen #rescueRouteIntro[data-route="cult"] #routeIntroStatus {
+    padding:8px 10px;border-width:2px;
+  }
+  #holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-intro-dialogue p {
+    font-size:clamp(14px,3.6vw,17px);
+  }
+}
