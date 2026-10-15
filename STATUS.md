@@ -2,6 +2,12 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP4.0C — Stephen-only throne-room integration preview (15 October 2026)
+
+- User approved the corrected original Steve likeness (blond side-parted hair, blue zip-neck top) and directed an in-engine Ending A check **with Stephen only**. The previously approved throne-room background is reused unchanged. His transparent seated sprite (ceremonial cape, gold goblet and SUPREME CHAIRMAN sash, with **no baked chair**) was uploaded to the project's Drive staging folder and materialised through its OIDC workflow.
+- The new Ending A stage layers **one** Stephen over the existing throne, changes the oversized centre placeholder into a bottom dialogue strip, and highlights Stephen on his spoken lines. Original 14 ending beats, autoplay, cards, saves and the other two routes are unchanged. No new David/Paul throne-room sprites were added.
+- Source and review plan: `docs/story/GAME-SP4.0C-SUMMIT-THRONE-ART.md`. Desktop/tablet alignment, CSS crop and end-card pacing still require owner visual review. PR #34 remains draft and stacked on entrance PR #33; no main merge authorised.
+
 ## GAME-SP4.0C — Summit throne-room environment locked; sprite review next (15 October 2026)
 
 - Owner approved the original Summit throne-room background and requested Stephen, David and Paul in distinct new poses. The room is locked as `summit-throne-room-background-v01.png` in the dedicated Google Drive staging folder, derived via `generated-assets/manifests/game-sp40c-summit-throne-room-v01.json` into `public/assets/generated/locations/summit-throne-room-v01.webp` on stacked art branch `agent/game-sp40c-summit-throne-art`.
