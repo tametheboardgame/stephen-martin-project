@@ -2,6 +2,13 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP3.2 — Great Stamp Catastrophe and Ending B draft (15 October 2026)
+
+- Stacked branch `agent/game-sp32-stamp-catastrophe` develops the second complete route: fictional Reason for Visit form, bear-image classification, Paul's takeaway cup revealing the APPROVED stamp and an accessible select-stamp/tap-permit option alongside mouse drag/drop.
+- Individual wrong answer jokes, hints after two attempts, stage acknowledgements, immutable `detention` route and V3 save/resume are implemented. The original Ending B dialogue, PLEASE LEAVE authorisation and David's framed-certificate stinger lead to the shared summary/replay. Summit stays playable; SPA remains a labelled unfinished gate.
+- No image assets or voices were added: owner asked to defer the dedicated art phase until all routes function. `docs/story/GAME-SP3.2-STAMP-CATASTROPHE.md` captures the subsequent art handoff.
+- Draft PR, latest automated CI, browser/touch preview and owner gameplay approval remain release gates. No merge to `main` without explicit authorisation.
+
 ## GAME-SP3.1 — Summit Admissions Test and Ending A draft (15 October 2026)
 
 - Built on the still-draft SP3.0 branch via `agent/game-sp31-summit-admissions`. The Summit now has three interactive no-fail admission rounds with three answer cards each, individual joke responses, a two-mistake Paul hint, explicit acknowledgement, and saved progress. Wrong guesses never alter Stephen's committed route.
