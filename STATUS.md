@@ -6,7 +6,8 @@
 
 - Owner asked to begin dedicated illustration production **one asset at a time**. Confirmed existing approved comic-poster visual direction, canonical Stephen/David/Paul references, and established Drive → manifest → optimised WebP pipeline.
 - Created branch `agent/game-sp40a-summit-visual-proof` and a proposed background-only Summit entrance composition in `docs/story/GAME-SP4.0A-SUMMIT-ENTRANCE-ART-BRIEF.md`.
-- **Awaiting owner confirmation of the composition before generating the first candidate.** No image has been created or added; no CSS/gameplay/audio/production changes. Next: generate and review one entrance candidate, then upload/materialise only after approval and test staging in a draft preview.
+- Owner approved the first Summit entrance image and explicitly requested it be integrated into every applicable exterior scene. Original `summit-entrance-background-v01.png` is staged in the dedicated Drive folder (ID `1xg4uRcBbX9-R9Zodh4pn5G94aI71B8z2`); manifest `generated-assets/manifests/game-sp40a-summit-entrance-v01.json` materialised a 485,550-byte WebP through the existing OIDC workflow.
+- The Summit-specific route briefing and Admissions Test now use `summit-entrance-v01.webp` with readable HTML overlays. The throne-room ending and detention/spa routes are deliberately unchanged. Build packaging and tests were updated; draft Cloudflare preview and owner in-engine layout review remain required.
 - SP3.4 was approved, merged to `main` in `8a6ed2555e27eca078ecb17e47209cdb4882ca15`, and successfully deployed. The historical entry below predates the merge.
 
 ## GAME-SP3.4 — Story playback and unified navigation draft (15 October 2026)
