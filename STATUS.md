@@ -2,6 +2,12 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP4.0C — Stair-foot staging and attendant visual concept (15 October 2026)
+
+- In response to owner feedback, David and Paul were **shrunk and moved inward to the base of the throne stairs** at desktop/tablet/mobile breakpoints, retaining the approved Stephen scale and all existing ending logic/speaker glow.
+- A concept illustration explored four-to-six muscular adult East Asian ceremonial attendants around the room, but it came back as a **flattened screenshot**, not game-ready standalone sprites. The approved throne room and character art remain unchanged. The next art-only task is four **separate transparent attendant cutouts** (with fan/tray/jug/towel variants), followed by owner approval and then the normal Drive → manifest → WebP pipeline. See `docs/story/GAME-SP4.0C-SUMMIT-THRONE-ART.md`.
+- Draft PR #34 remains unmerged; revised stair-foot arrangement awaits actual playable visual sign-off.
+
 ## GAME-SP4.0C — David and Paul integrated into the throne-room cast (15 October 2026)
 
 - Owner approved the separately regenerated David and Paul throne-room sprites and directed David **to the left of the throne** and Paul **to the right**, while retaining the approved smaller Stephen on the throne. Uploaded both original transparent PNGs to the dedicated project Drive folder; the standard materialisation workflow created their individual WebP assets from versioned `game-sp40c-throne-david-v01.json` and `game-sp40c-throne-paul-v01.json` manifests.
