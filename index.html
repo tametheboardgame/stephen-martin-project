@@ -15,6 +15,8 @@
   <script defer src="./src/china-data.js"></script>
   <script defer src="./src/rescue-framework.js"></script>
   <script defer src="./src/summit-data.js"></script>
+  <script defer src="./src/detention-data.js"></script>
+  <script defer src="./src/reassemble-data.js"></script>
   <script defer src="./src/game.js"></script>
   <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/david-office-seated-confident-v01.webp?v=4">
   <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/david-office-seated-systems-expert-v01.webp?v=1">
@@ -421,6 +423,64 @@
               <p id="summitHint" class="summit-hint" aria-live="polite" hidden></p>
               <button id="summitNextButton" class="btn btn-primary" type="button" hidden>Continue →</button>
             </section>
+            <section id="detentionPaperwork" class="detention-paperwork" hidden aria-label="The Great Stamp Catastrophe">
+              <span class="detention-eyebrow">OFFICE OF CEREMONIAL MISUNDERSTANDINGS · FORM 001</span>
+              <h2 id="detentionRoundTitle">Visitor Release Authorisation</h2>
+              <p id="detentionRoundProgress" class="detention-progress"></p>
+              <p id="detentionRoundPrompt" class="detention-prompt"></p>
+              <p id="detentionRoundClue" class="detention-clue"></p>
+              <div id="detentionChoiceCards" class="detention-cards" role="group" aria-label="Select the answer for the fictional form">
+                <button id="detentionChoice0" class="detention-card" type="button"></button>
+                <button id="detentionChoice1" class="detention-card" type="button"></button>
+                <button id="detentionChoice2" class="detention-card" type="button"></button>
+              </div>
+              <div id="detentionStampPanel" class="detention-stamp-panel" hidden>
+                <p id="detentionStampInstructions">The stamp was under Paul's takeaway drink. Select the stamp, then apply it to the permit.</p>
+                <button id="detentionStampButton" class="detention-stamp" type="button" draggable="true" aria-label="Select APPROVED stamp, or drag to permit">APPROVED stamp</button>
+                <button id="detentionPermitButton" class="detention-permit" type="button" aria-label="Apply the selected stamp to the Visitor Release Authorisation">VISITOR RELEASE AUTHORISATION · APPLY STAMP HERE</button>
+              </div>
+              <p id="detentionFeedback" class="detention-feedback" aria-live="polite" hidden></p>
+              <p id="detentionHint" class="detention-hint" aria-live="polite" hidden></p>
+              <button id="detentionNextButton" class="btn btn-primary" type="button" hidden>Continue →</button>
+            </section>
+            <section id="reassembleWorkshop" class="assembly-workshop" hidden aria-label="Assemble the cardboard Stephen display">
+              <span class="assembly-eyebrow">TOTAL RENEWAL SPA · PROMOTIONAL DISPLAY WORKSHOP</span>
+              <h2>Reassemble Stephen Martin</h2>
+              <p class="assembly-description">This is a <strong>foam-and-cardboard souvenir model</strong>, not a person. Select a piece, then its labelled silhouette slot. Mouse users can drag a piece onto a slot instead.</p>
+              <p id="assemblyProgress" class="assembly-progress" aria-live="polite">0 of 6 correct pieces placed</p>
+              <div class="assembly-layout">
+                <div class="assembly-tray" role="group" aria-label="Select cardboard pieces and comical extras">
+                  <strong>Souvenir kit and absolutely unnecessary extras</strong>
+                  <button id="assemblyPiece0" class="assembly-piece" type="button" draggable="true" data-piece="head" aria-pressed="false">Head</button>
+                  <button id="assemblyPiece1" class="assembly-piece" type="button" draggable="true" data-piece="torso" aria-pressed="false">Torso</button>
+                  <button id="assemblyPiece2" class="assembly-piece" type="button" draggable="true" data-piece="left-arm" aria-pressed="false">Left arm</button>
+                  <button id="assemblyPiece3" class="assembly-piece" type="button" draggable="true" data-piece="right-arm" aria-pressed="false">Right arm</button>
+                  <button id="assemblyPiece4" class="assembly-piece" type="button" draggable="true" data-piece="left-leg" aria-pressed="false">Left leg</button>
+                  <button id="assemblyPiece5" class="assembly-piece" type="button" draggable="true" data-piece="right-leg" aria-pressed="false">Right leg</button>
+                  <button id="assemblyPiece6" class="assembly-piece" type="button" draggable="true" data-piece="kidney-1" aria-pressed="false">Spare kidney 1</button>
+                  <button id="assemblyPiece7" class="assembly-piece" type="button" draggable="true" data-piece="kidney-2" aria-pressed="false">Spare kidney 2</button>
+                  <button id="assemblyPiece8" class="assembly-piece" type="button" draggable="true" data-piece="kidney-3" aria-pressed="false">Spare kidney 3</button>
+                  <button id="assemblyPiece9" class="assembly-piece" type="button" draggable="true" data-piece="wifi-heart" aria-pressed="false">Wi-Fi heart</button>
+                  <button id="assemblyPiece10" class="assembly-piece" type="button" draggable="true" data-piece="toaster" aria-pressed="false">Toaster</button>
+                  <button id="assemblyPiece11" class="assembly-piece" type="button" draggable="true" data-piece="banana" aria-pressed="false">Plastic banana</button>
+                  <button id="assemblyPiece12" class="assembly-piece" type="button" draggable="true" data-piece="spleen" aria-pressed="false">Mystery foam spleen</button>
+                </div>
+                <div class="assembly-board" role="group" aria-label="Place selected piece in a matching slot">
+                  <strong>Custom souvenir cut-out</strong>
+                  <div class="assembly-silhouette">
+                  <button id="assemblySlot0" class="assembly-slot assembly-slot-head" type="button" data-slot="head" aria-label="Place Head on cardboard model">Head</button>
+                  <button id="assemblySlot1" class="assembly-slot assembly-slot-torso" type="button" data-slot="torso" aria-label="Place Torso on cardboard model">Torso</button>
+                  <button id="assemblySlot2" class="assembly-slot assembly-slot-left-arm" type="button" data-slot="left-arm" aria-label="Place Left arm on cardboard model">Left arm</button>
+                  <button id="assemblySlot3" class="assembly-slot assembly-slot-right-arm" type="button" data-slot="right-arm" aria-label="Place Right arm on cardboard model">Right arm</button>
+                  <button id="assemblySlot4" class="assembly-slot assembly-slot-left-leg" type="button" data-slot="left-leg" aria-label="Place Left leg on cardboard model">Left leg</button>
+                  <button id="assemblySlot5" class="assembly-slot assembly-slot-right-leg" type="button" data-slot="right-leg" aria-label="Place Right leg on cardboard model">Right leg</button>
+                  </div>
+                </div>
+              </div>
+              <p id="assemblyFeedback" class="assembly-feedback" aria-live="polite">Choose a piece from the tray.</p>
+              <p id="assemblyHint" class="assembly-hint" aria-live="polite" hidden></p>
+              <button id="assemblyPowerButton" class="btn btn-primary" type="button" hidden>POWER ON STEPHEN →</button>
+            </section>
           </div>
           <div class="wall-action-strip">
             <div class="wall-story-progress" id="rescueMiniGameProgressLabel">Briefing complete · Mini-game forthcoming</div>
@@ -444,6 +504,38 @@
             <button id="summitEndingNextButton" class="btn btn-primary" type="button">Next line →</button>
           </div>
         </div>
+        <div id="detentionEndingScene" class="rescue-route-intro detention-ending" hidden>
+          <div class="rescue-route-intro-stage detention-ending-stage">
+            <div class="detention-ending-content">
+              <span class="detention-eyebrow">OFFICE OF CEREMONIAL MISUNDERSTANDINGS · DEPARTURE DESK</span>
+              <div class="detention-certificate">APPROVED: ALL OF YOU PLEASE LEAVE</div>
+              <p class="detention-art-note">Finished illustrated scene awaiting the dedicated artwork phase.</p>
+              <strong id="detentionEndingSpeaker" class="detention-ending-speaker">STEPHEN</strong>
+              <p id="detentionEndingLine" class="detention-ending-line" aria-live="polite"></p>
+              <p id="detentionEndingProgress" class="detention-progress"></p>
+            </div>
+          </div>
+          <div class="wall-action-strip">
+            <div class="wall-story-progress">Ending B · The diplomatic extraction nobody requested</div>
+            <button id="detentionEndingNextButton" class="btn btn-primary" type="button">Next line →</button>
+          </div>
+        </div>
+        <div id="reassembleEndingScene" class="rescue-route-intro assembly-ending" hidden>
+          <div class="rescue-route-intro-stage assembly-ending-stage">
+            <div class="assembly-ending-content">
+              <span class="assembly-eyebrow">TOTAL RENEWAL SPA · COMPLETELY NORMAL MASSAGE</span>
+              <div class="assembly-reveal">CUSTOM SOUVENIR CUT-OUT · POWERED ON</div>
+              <p class="assembly-art-note">Illustrated spa and display cutscene will be added during the dedicated art phase.</p>
+              <strong id="assemblyEndingSpeaker" class="assembly-ending-speaker">STEPHEN</strong>
+              <p id="assemblyEndingLine" class="assembly-ending-line" aria-live="polite"></p>
+              <p id="assemblyEndingProgress" class="assembly-progress"></p>
+            </div>
+          </div>
+          <div class="wall-action-strip">
+            <div class="wall-story-progress">Ending C · A completely unnecessary rebuild</div>
+            <button id="assemblyEndingNextButton" class="btn btn-primary" type="button">Next line →</button>
+          </div>
+        </div>
         <div id="rescueEndingSummary" class="rescue-route-intro" hidden>
           <div class="rescue-route-intro-stage">
             <div class="rescue-travel-panel">
@@ -463,7 +555,7 @@
         <div class="china-footer">
           <button id="replayButton" type="button" class="mini-button">Replay office ↺</button>
           <button id="homeButton" type="button" class="mini-button">Main menu</button>
-          <span>GAME-SP3.1 · Summit admissions preview · Fictional comedy</span>
+          <span>GAME-SP3.3 · Reassemble Stephen preview · Fictional comedy</span>
         </div>
       </section>
     </main>

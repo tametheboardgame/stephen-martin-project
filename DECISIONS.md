@@ -2,6 +2,14 @@
 
 Entries are concise, durable design decisions. Additional decisions are added only where they materially affect scope, design, delivery or implementation.
 
+## SP-D037, 15 October 2026: Build the third route as harmless labelled cardboard assembly
+
+GAME-SP3.3 completes the mechanical third ending with six idempotently placed foam/cardboard pieces, funny reject items and a separate explicit POWER ON interaction. Accept mouse drag but require equally capable select-piece and labelled-slot controls on keyboard and touch. Save progress in the existing route-locked V3 key; wrong pieces never disappear or soft-lock the scene. Deliver the complete approved spa dialogue and Ending C; keep all new illustration work queued until after all three functional routes and integration tests are accepted.
+
+## SP-D036, 15 October 2026: Finish all three playable routes before visual polish
+
+The project owner instructed the team to complete all three route mechanics first, then run a dedicated art pass. Deliver SP3.2 with fictional CSS/text form controls and an accessible tap or drag stamp. Prepare an art inventory without producing new images now. Keep human preview approval and stacked PR safety gates.
+
 ## SP-D035, 15 October 2026: Start the Summit route as the first complete playable ending
 
 After owner review of the SP3.0 preview, build GAME-SP3.1 on a separate branch stacked on SP3.0. Use the approved three-card admissions puzzle with three no-fail rounds, individual wrong responses, Paul's hint after two errors and checkpointed progress. Reproduce all approved Ending A dialogue, stinger and replay flow without unlocking the remaining two endings. Any new illustrated location, characters or poses remain subject to individual owner approval, so use a plainly provisional CSS/text stage for logic testing. No merge or production-release authorisation is inferred from the instruction to start development.

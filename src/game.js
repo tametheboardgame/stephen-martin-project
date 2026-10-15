@@ -26,6 +26,8 @@
   const rescueHub = window.SMP_RESCUE_HUB;
   const rescueFramework = window.SMP_RESCUE_FRAMEWORK;
   const summit = window.SMP_SUMMIT;
+  const detention = window.SMP_DETENTION;
+  const assembly = window.SMP_REASSEMBLE;
   const rescuePortraits = {
     David: {
       serious: "./public/assets/generated/characters/david-office-seated-serious-v01.webp",
@@ -366,9 +368,11 @@
             delete migrated.rescueProgress;
           } else {
             migrated.rescueProgress = rescueFramework.normalise(migrated.rescueProgress, migrated.route);
-            if (["rescue-route-ending","rescue-ending-summary"].includes(migrated.holidayPhase) &&
-                (migrated.route !== "cult" || !migrated.rescueProgress.finished)) {
-              migrated.holidayPhase = "rescue-minigame";
+            if (["rescue-route-ending","rescue-ending-summary"].includes(migrated.holidayPhase)) {
+              const validEnding = migrated.rescueProgress.finished &&
+                (migrated.route === "cult" || migrated.route === "detention" ||
+                 migrated.route === "reassemble" && migrated.assemblyPowered === true);
+              if (!validEnding) migrated.holidayPhase = "rescue-minigame";
             }
           }
         }
@@ -591,6 +595,12 @@
     state.hubCorrectStep = 0;
     delete state.rescueProgress;
     delete state.summitResponse;
+    delete state.detentionResponse;
+    delete state.detentionStampFound;
+    delete state.detentionStampSelected;
+    delete state.assemblySelectedPart;
+    delete state.assemblyFeedback;
+    delete state.assemblyPowered;
   }
   function renderHoliday() {
     reveal("holiday");
@@ -612,7 +622,9 @@
     const inHotel = phase === "rescue-hotel";
     const inRouteIntro = phase === "rescue-route-intro";
     const inMiniGame = phase === "rescue-minigame";
-    const inSummitEnding = phase === "rescue-route-ending";
+    const inSummitEnding = phase === "rescue-route-ending" && state.route === "cult";
+    const inDetentionEnding = phase === "rescue-route-ending" && state.route === "detention";
+    const inAssemblyEnding = phase === "rescue-route-ending" && state.route === "reassemble";
     const inSummary = phase === "rescue-ending-summary";
     $("chinaTransition").hidden = phase !== "transition";
     $("wallScene").hidden = !inWall;
@@ -628,6 +640,8 @@
     $("rescueRouteIntro").hidden = !inRouteIntro;
     $("rescueMiniGameScene").hidden = !inMiniGame;
     $("summitEndingScene").hidden = !inSummitEnding;
+    $("detentionEndingScene").hidden = !inDetentionEnding;
+    $("reassembleEndingScene").hidden = !inAssemblyEnding;
     $("rescueEndingSummary").hidden = !inSummary;
     if (inWall) {
       const position = Number.isInteger(state.wallStep)
@@ -864,7 +878,7 @@
             ? "Finish deduction →" : "Head to " + choice.label + " →";
       }
     }
-    if (inRouteIntro || inMiniGame || inSummitEnding || inSummary) {
+    if (inRouteIntro || inMiniGame || inSummitEnding || inDetentionEnding || inAssemblyEnding || inSummary) {
       const route = state.route;
       const config = rescueFramework.routes[route];
       const progress = rescueFramework.normalise(state.rescueProgress, route);
@@ -886,15 +900,23 @@
       }
       if (inMiniGame) {
         const playableSummit = route === "cult";
-        $("rescueMiniGamePlaceholder").hidden = playableSummit;
+        const playableDetention = route === "detention";
+        const playableAssembly = route === "reassemble";
+        $("rescueMiniGamePlaceholder").hidden = playableSummit || playableDetention || playableAssembly;
         $("summitAdmissions").hidden = !playableSummit;
+        $("detentionPaperwork").hidden = !playableDetention;
+        $("reassembleWorkshop").hidden = !playableAssembly;
         $("rescueMiniGameTitle").textContent = config.gameTitle;
         $("rescueMiniGameDescription").textContent = rescueHub.routeIntro[route];
         $("rescueMiniGameStatus").textContent = config.workPackage
           + " will supply the playable puzzle. No rounds or ending can be skipped in this preview.";
         $("rescueMiniGameProgressLabel").textContent = playableSummit
           ? "Summit admissions · three checks to reach Stephen"
-          : "Briefing complete · Mini-game forthcoming";
+          : playableDetention
+            ? "Fictional paperwork · three steps to a permit"
+            : playableAssembly
+              ? "Cardboard souvenir · six slots and a POWER ON button"
+              : "Briefing complete · Mini-game forthcoming";
         if (playableSummit) {
           const savedReply = state.summitResponse;
           const acknowledging = savedReply && savedReply.correct === true &&
@@ -923,6 +945,80 @@
           $("summitNextButton").textContent = progress.finished
             ? "Find Stephen →" : "Continue to check " + (roundIndex + 2) + " →";
         }
+        if (playableDetention) {
+          const reply = state.detentionResponse;
+          const acknowledging = reply && reply.correct === true &&
+            reply.round === progress.miniGameStage - 1;
+          const roundIndex = acknowledging
+            ? reply.round : Math.min(progress.miniGameStage, detention.rounds.length - 1);
+          const round = detention.rounds[roundIndex];
+          const option = reply && reply.round === roundIndex
+            ? round.options.find(value => value.id === reply.choice) : null;
+          $("detentionRoundTitle").textContent = round.title;
+          $("detentionRoundProgress").textContent = "Form stage " + (roundIndex + 1)
+            + " of " + detention.rounds.length;
+          $("detentionRoundPrompt").textContent = round.prompt;
+          $("detentionRoundClue").textContent = round.clue;
+          $("detentionChoiceCards").hidden = acknowledging ||
+            (roundIndex === 2 && state.detentionStampFound === true);
+          for (let i = 0; i < round.options.length; i++) {
+            $("detentionChoice" + i).textContent = round.options[i].label;
+          }
+          const inStampSearch = roundIndex === 2 && state.detentionStampFound === true && !acknowledging;
+          $("detentionStampPanel").hidden = !inStampSearch;
+          $("detentionStampButton").dataset.selected = inStampSearch && state.detentionStampSelected === true ? "true" : "false";
+          const stampMessage = state.detentionStampSelected === true
+            ? "Stamp selected. Tap the permit or drag the stamp onto it."
+            : "The APPROVED stamp was under Paul's takeaway drink. Select it and then tap the permit, or drag it onto the permit.";
+          $("detentionStampInstructions").textContent = stampMessage;
+          $("detentionPermitButton").textContent = acknowledging
+            ? detention.permitText : "VISITOR RELEASE AUTHORISATION · APPLY STAMP HERE";
+          const feedback = acknowledging && roundIndex === 2
+            ? round.approvedResponse
+            : state.detentionStampSelected === true && inStampSearch
+              ? "Paul: That's it. Put it on the permit. David: I was about to suggest the same."
+              : option ? option.response : "";
+          $("detentionFeedback").hidden = !feedback;
+          $("detentionFeedback").textContent = feedback;
+          $("detentionHint").hidden = acknowledging || !progress.hintVisible;
+          $("detentionHint").textContent = progress.hintVisible ? round.hint : "";
+          $("detentionNextButton").hidden = !acknowledging;
+          $("detentionNextButton").textContent = progress.finished
+            ? "Collect Stephen →" : "Continue to form stage " + (roundIndex + 2) + " →";
+        }
+        if (playableAssembly) {
+          const placed = progress.placedParts;
+          const selected = state.assemblySelectedPart;
+          const selectedPart = [...assembly.parts,...assembly.decoys].find(part => part.id === selected);
+          $("assemblyProgress").textContent = placed.length + " of 6 cardboard pieces placed";
+          for(let i=0;i<assembly.parts.length+assembly.decoys.length;i++){
+            const part = [...assembly.parts,...assembly.decoys][i];
+            const pieceButton = $("assemblyPiece"+i);
+            const isPlaced = placed.includes(part.id);
+            pieceButton.textContent = part.mark + " " + part.label + (isPlaced ? " ✓ Placed" : "");
+            pieceButton.disabled = isPlaced || progress.finished;
+            pieceButton.dataset.placed = isPlaced ? "true" : "false";
+            pieceButton.dataset.selected = selected === part.id && !isPlaced ? "true" : "false";
+            pieceButton.setAttribute("aria-pressed",selected === part.id && !isPlaced ? "true" : "false");
+          }
+          for(let i=0;i<assembly.parts.length;i++){
+            const part = assembly.parts[i];
+            const slot = $("assemblySlot"+i);
+            const filled = placed.includes(part.id);
+            slot.textContent = filled ? "✓ "+part.label+" fitted" : part.label+" · empty slot";
+            slot.disabled = filled || progress.finished;
+            slot.dataset.filled = filled ? "true" : "false";
+            slot.dataset.hint = progress.hintVisible && selected === part.id && !filled ? "true" : "false";
+          }
+          $("assemblyFeedback").textContent = state.assemblyFeedback ||
+            "Select a labelled foam/cardboard part and tap the matching silhouette slot.";
+          $("assemblyHint").hidden = !progress.hintVisible || progress.finished;
+          $("assemblyHint").textContent = selectedPart && assembly.parts.some(part => part.id === selected)
+            ? "Paul: "+selectedPart.label+" goes in the "+selectedPart.label+" slot. It's written on both, mate."
+            : "Paul: Try the six normal cardboard bits. Spare kidneys, Wi-Fi hearts and toasters are extras.";
+          $("assemblyPowerButton").hidden = !progress.finished || state.assemblyPowered === true;
+          $("assemblyPowerButton").textContent = assembly.powerText+" →";
+        }
       }
       if (inSummitEnding) {
         if (route !== "cult" || !progress.finished) {
@@ -942,17 +1038,60 @@
           ? "See ending summary →" : step === summit.ending.length - 1
             ? "Reveal ending →" : "Next line →";
       }
+      if (inDetentionEnding) {
+        if (!progress.finished) {
+          state.holidayPhase = "rescue-minigame";
+          return renderHoliday();
+        }
+        const step = Math.min(progress.endingStep, detention.ending.length);
+        state.rescueProgress.endingStep = step;
+        const showCard = step === detention.ending.length;
+        const line = detention.ending[Math.min(step, detention.ending.length - 1)];
+        $("detentionEndingSpeaker").textContent = showCard ? "ENDING B" : line.speaker.toUpperCase();
+        $("detentionEndingLine").textContent = showCard ? detention.endCard : line.text;
+        $("detentionEndingProgress").textContent = showCard
+          ? "The printer has finally been left behind."
+          : "Diplomatic extraction · " + (step + 1) + " of " + detention.ending.length;
+        $("detentionEndingNextButton").textContent = showCard
+          ? "See ending summary →" : step === detention.ending.length - 1
+            ? "Reveal ending →" : "Next line →";
+      }
+      if (inAssemblyEnding) {
+        if (!progress.finished || state.assemblyPowered !== true) {
+          state.holidayPhase = "rescue-minigame";
+          return renderHoliday();
+        }
+        const step = Math.min(progress.endingStep, assembly.ending.length);
+        state.rescueProgress.endingStep = step;
+        const card = step === assembly.ending.length;
+        const line = assembly.ending[Math.min(step,assembly.ending.length-1)];
+        $("assemblyEndingSpeaker").textContent = card ? "ENDING C" : line.speaker.toUpperCase();
+        $("assemblyEndingLine").textContent = card ? assembly.endCard : line.text;
+        $("assemblyEndingProgress").textContent = card
+          ? "Nobody needed rebuilding. Especially not Stephen."
+          : "Spa misunderstanding · "+(step+1)+" of "+assembly.ending.length;
+        $("assemblyEndingNextButton").textContent = card
+          ? "See ending summary →" : step === assembly.ending.length-1
+            ? "Reveal ending →" : "Next line →";
+      }
       if (inSummary) {
-        if (route !== "cult" || !progress.finished ||
-            progress.endingStep < summit.ending.length) {
+        const completedEnding = progress.finished &&
+          (route === "cult" && progress.endingStep >= summit.ending.length ||
+           route === "detention" && progress.endingStep >= detention.ending.length ||
+           route === "reassemble" && state.assemblyPowered === true &&
+              progress.endingStep >= assembly.ending.length);
+        if (!completedEnding) {
           state.holidayPhase = "rescue-minigame";
           return renderHoliday();
         }
         $("rescueSummaryHeading").textContent = config.endingTitle;
-        $("rescueSummaryMessage").textContent =
-          "Stephen is perfectly happy at The Summit. David's operation has rescued absolutely nobody.";
-        $("rescueSummaryDisclaimer").textContent =
-          "Ending A complete. New final illustrated artwork remains subject to owner approval.";
+        $("rescueSummaryMessage").textContent = route === "cult"
+          ? "Stephen is perfectly happy at The Summit. David's operation has rescued absolutely nobody."
+          : route === "detention"
+            ? "A bear meme caused an administrative queue, not a kidnapping. The fictitious office has approved everybody's departure."
+            : "Stephen was enjoying a massage. The lads bought a cardboard cut-out and spare parts, then congratulated themselves.";
+        $("rescueSummaryDisclaimer").textContent = "Ending "+(route === "cult" ? "A" : route === "detention" ? "B" : "C")
+          + " complete. New illustrations are deferred until the full functional game is approved.";
       }
     }
     state.holidayFlowVersion = 2;
@@ -1289,6 +1428,139 @@
     renderHoliday();
   }
 
+  function chooseDetention(which) {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+        state.route !== "detention" || state.hubMatched !== true) return;
+    const progress = rescueFramework.normalise(state.rescueProgress, "detention");
+    if (progress.finished ||
+        (state.detentionResponse && state.detentionResponse.correct &&
+         state.detentionResponse.round === progress.miniGameStage - 1)) return;
+    const roundIndex = progress.miniGameStage;
+    const round = detention.rounds[roundIndex];
+    if (!round || !Number.isInteger(which) || which < 0 || which >= round.options.length ||
+        (roundIndex === 2 && state.detentionStampFound === true)) return;
+    const choice = round.options[which];
+    if (roundIndex === 2 && choice.correct) {
+      state.detentionStampFound = true;
+      state.detentionStampSelected = false;
+      state.detentionResponse = {round:roundIndex,choice:choice.id,correct:false};
+    } else {
+      state.rescueProgress = choice.correct
+        ? rescueFramework.completeStep(progress, "detention", roundIndex)
+        : rescueFramework.wrong(progress, "detention");
+      state.detentionResponse = {round:roundIndex,choice:choice.id,correct:choice.correct};
+    }
+    renderHoliday();
+  }
+
+  function selectDetentionStamp() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+        state.route !== "detention" || state.hubMatched !== true ||
+        state.detentionStampFound !== true) return;
+    const progress = rescueFramework.normalise(state.rescueProgress, "detention");
+    if (progress.miniGameStage !== 2 || progress.finished) return;
+    state.detentionStampSelected = true;
+    renderHoliday();
+  }
+
+  function applyDetentionStamp() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+        state.route !== "detention" || state.hubMatched !== true ||
+        state.detentionStampFound !== true || state.detentionStampSelected !== true) return;
+    const progress = rescueFramework.normalise(state.rescueProgress, "detention");
+    if (progress.miniGameStage !== 2 || progress.finished) return;
+    state.rescueProgress = rescueFramework.completeStep(progress,"detention",2);
+    state.detentionResponse = {round:2,choice:"approved",correct:true};
+    renderHoliday();
+  }
+
+  function continueDetention() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+        state.route !== "detention") return;
+    const progress = rescueFramework.normalise(state.rescueProgress, "detention");
+    const response = state.detentionResponse;
+    if (!response || response.correct !== true ||
+        response.round !== progress.miniGameStage - 1) return;
+    delete state.detentionResponse;
+    delete state.detentionStampFound;
+    delete state.detentionStampSelected;
+    if (progress.finished) {
+      progress.endingStep = 0;
+      state.holidayPhase = "rescue-route-ending";
+    }
+    state.rescueProgress = progress;
+    renderHoliday();
+  }
+
+  function advanceDetentionEnding() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-route-ending" ||
+        state.route !== "detention" || state.hubMatched !== true) return;
+    const progress = rescueFramework.normalise(state.rescueProgress,"detention");
+    if (!progress.finished) return;
+    if (progress.endingStep < detention.ending.length) progress.endingStep++;
+    else state.holidayPhase = "rescue-ending-summary";
+    state.rescueProgress = progress;
+    renderHoliday();
+  }
+
+  function selectAssemblyPiece(id) {
+    if(screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+       state.route !== "reassemble" || state.hubMatched !== true) return;
+    const progress = rescueFramework.normalise(state.rescueProgress,"reassemble");
+    const item = [...assembly.parts,...assembly.decoys].find(part => part.id === id);
+    if (!item || progress.finished || progress.placedParts.includes(id)) return;
+    state.assemblySelectedPart = id;
+    state.assemblyFeedback = item.label+" selected. Tap its matching silhouette slot.";
+    renderHoliday();
+  }
+
+  function placeAssemblyPiece(slot) {
+    if(screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+       state.route !== "reassemble" || state.hubMatched !== true) return;
+    const progress = rescueFramework.normalise(state.rescueProgress,"reassemble");
+    const selected = state.assemblySelectedPart;
+    if(progress.finished || !assembly.parts.some(part=>part.id===slot) ||
+       progress.placedParts.includes(slot)) return;
+    if(!selected || ![...assembly.parts,...assembly.decoys].some(part=>part.id===selected)){
+      state.assemblyFeedback = "Paul: Select a cardboard piece from the tray first.";
+      renderHoliday();
+      return;
+    }
+    const accepted = selected === slot;
+    state.rescueProgress = rescueFramework.placePart(progress,"reassemble",selected,slot);
+    state.assemblyFeedback = accepted
+      ? "✓ "+assembly.parts.find(part=>part.id===selected).label
+        +" snapped into the foam display. Paul: That actually fits."
+      : assembly.reaction(selected,slot);
+    if(accepted) delete state.assemblySelectedPart;
+    renderHoliday();
+  }
+
+  function powerOnAssembly() {
+    if(screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+       state.route !== "reassemble" || state.hubMatched !== true ||
+       state.assemblyPowered === true) return;
+    const progress = rescueFramework.normalise(state.rescueProgress,"reassemble");
+    if(!progress.finished || progress.placedParts.length !== rescueFramework.slots.length) return;
+    state.assemblyPowered = true;
+    state.rescueProgress = progress;
+    state.rescueProgress.endingStep = 0;
+    state.holidayPhase = "rescue-route-ending";
+    renderHoliday();
+  }
+
+  function advanceAssemblyEnding() {
+    if(screens.holiday.hidden || state.holidayPhase !== "rescue-route-ending" ||
+       state.route !== "reassemble" || state.hubMatched !== true ||
+       state.assemblyPowered !== true) return;
+    const progress = rescueFramework.normalise(state.rescueProgress,"reassemble");
+    if(!progress.finished) return;
+    if(progress.endingStep < assembly.ending.length) progress.endingStep++;
+    else state.holidayPhase = "rescue-ending-summary";
+    state.rescueProgress = progress;
+    renderHoliday();
+  }
+
   function chooseAnotherEnding() {
     if (screens.holiday.hidden ||
         !(state.holidayPhase === "final-message" && state.finalStep === 2 ||
@@ -1374,6 +1646,50 @@
   }
   $("summitNextButton").addEventListener("click", continueSummit);
   $("summitEndingNextButton").addEventListener("click", advanceSummitEnding);
+  for (let i = 0; i < 3; i++) {
+    $("detentionChoice" + i).addEventListener("click", () => chooseDetention(i));
+  }
+  $("detentionStampButton").addEventListener("click", selectDetentionStamp);
+  $("detentionStampButton").addEventListener("dragstart", event => {
+    selectDetentionStamp();
+    if (event.dataTransfer) event.dataTransfer.setData("text/plain","approved-stamp");
+  });
+  $("detentionPermitButton").addEventListener("click", applyDetentionStamp);
+  $("detentionPermitButton").addEventListener("dragover", event => event.preventDefault());
+  $("detentionPermitButton").addEventListener("drop", event => {
+    event.preventDefault();
+    if (event.dataTransfer && event.dataTransfer.getData("text/plain") === "approved-stamp") {
+      selectDetentionStamp();
+      applyDetentionStamp();
+    }
+  });
+  $("detentionNextButton").addEventListener("click", continueDetention);
+  $("detentionEndingNextButton").addEventListener("click", advanceDetentionEnding);
+  for(let i=0;i<assembly.parts.length+assembly.decoys.length;i++){
+    const item=[...assembly.parts,...assembly.decoys][i];
+    const element=$("assemblyPiece"+i);
+    element.addEventListener("click",()=>selectAssemblyPiece(item.id));
+    element.addEventListener("dragstart",event=>{
+      selectAssemblyPiece(item.id);
+      if(event.dataTransfer) event.dataTransfer.setData("text/plain",item.id);
+    });
+  }
+  for(let i=0;i<assembly.parts.length;i++){
+    const slot=assembly.parts[i];
+    const element=$("assemblySlot"+i);
+    element.addEventListener("click",()=>placeAssemblyPiece(slot.id));
+    element.addEventListener("dragover",event=>event.preventDefault());
+    element.addEventListener("drop",event=>{
+      event.preventDefault();
+      if(!event.dataTransfer) return;
+      const id=event.dataTransfer.getData("text/plain");
+      if(![...assembly.parts,...assembly.decoys].some(item=>item.id===id)) return;
+      selectAssemblyPiece(id);
+      placeAssemblyPiece(slot.id);
+    });
+  }
+  $("assemblyPowerButton").addEventListener("click",powerOnAssembly);
+  $("assemblyEndingNextButton").addEventListener("click",advanceAssemblyEnding);
   $("rescueMiniGameReplayButton").addEventListener("click", chooseAnotherEnding);
   $("rescueSummaryReplayButton").addEventListener("click", chooseAnotherEnding);
   $("rescueSummaryRestartButton").addEventListener("click", startOffice);
