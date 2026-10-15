@@ -2,6 +2,13 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP3.1 — Summit Admissions Test and Ending A draft (15 October 2026)
+
+- Built on the still-draft SP3.0 branch via `agent/game-sp31-summit-admissions`. The Summit now has three interactive no-fail admission rounds with three answer cards each, individual joke responses, a two-mistake Paul hint, explicit acknowledgement, and saved progress. Wrong guesses never alter Stephen's committed route.
+- Correct charger, compliment and return-flight selections lead into all fourteen approved Ending A beats, including the failed humility application stinger, then the shared end-card/replay/start/menu summary. All progress, feedback and finishing dialogue can be resumed within the existing V3 save system. Other two routes remain honestly unplayable pending SP3.2–SP3.3.
+- A CSS-only provisional stage and sash are for functional preview, **not an approved final illustration**. Separate human sign-off is required for Summit entrance, throne scene and any new character/gatekeeper poses. No unapproved art or audio was added.
+- New route tests, live Cloudflare preview, human pacing, accessibility, responsive layout and final merge qualification pending. Work package: `docs/story/GAME-SP3.1-SUMMIT-ADMISSIONS.md`.
+
 ## GAME-SP3.0 — Shared route framework draft (15 October 2026)
 
 - Draft branch `agent/game-sp30-minigame-framework`: implemented the approved route introductions for Summit, fictional ceremonial bureaucracy and spa using existing screenplay dialogue. After a correct hotel deduction, the user plays each briefing line then reaches an honestly labelled mini-game gate; no unavailable mini-game or ending is shown as playable.
