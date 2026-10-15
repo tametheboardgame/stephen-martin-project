@@ -1831,3 +1831,444 @@ body:has(#menuScreen:not([hidden])) main {
     padding: 5px 9px;
   }
 }
+
+
+/* GAME-SP2.3B — Night Market, third provisional offer and final phone beat.
+ * Reuse the approved laptop-composition scale and two-column choice treatment.
+ * Art remains independently layered; the fictional spa advert is editable UI.
+ */
+#holidayScreen #marketScene[hidden],
+#holidayScreen #chinaFinalScene[hidden],
+#holidayScreen #marketSpaSign[hidden],
+#holidayScreen #marketSpaRep[hidden],
+#holidayScreen #marketFallback[hidden],
+#holidayScreen #marketResult[hidden],
+#holidayScreen #chinaFinalReaction[hidden],
+#holidayScreen #chinaFinalEngland[hidden] { display: none !important; }
+#holidayScreen .market-scene { background: #10233b; }
+#holidayScreen .market-stage .wall-background { object-position: center; }
+#holidayScreen .market-spa-sign {
+  position: absolute;
+  top: 16%;
+  left: 43%;
+  width: 24%;
+  z-index: 3;
+  border: 2px solid #deb571;
+  background: rgba(9, 39, 44, .92);
+  color: #fff2bf;
+  padding: 9px 11px;
+  border-radius: 8px;
+  box-shadow: 4px 5px 0 rgba(0,0,0,.35);
+  text-align: center;
+  font-weight: 900;
+  pointer-events: none;
+}
+#holidayScreen .market-spa-sign span { display: block; font-size: clamp(9px, .95vw, 14px); }
+#holidayScreen .market-spa-sign strong {
+  display: block; color: #ffdb6d; font-size: clamp(22px, 2.1vw, 32px);
+}
+#holidayScreen .market-spa-sign small { display:block; font-size: 9px; margin-top: 3px; font-weight: 700; }
+#holidayScreen .market-fallback-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 9px;
+}
+#holidayScreen .market-fallback-options .wall-choice {
+  min-width: 0;
+  min-height: 45px;
+  margin: 0;
+  padding: 7px 10px;
+  font-size: clamp(12px,1.05vw,15px);
+  text-align: center;
+}
+#holidayScreen .market-scene .wall-result strong {font-size:clamp(16px,1.5vw,21px);}
+#holidayScreen .china-final-scene {
+  background: #0a1d2e;
+}
+#holidayScreen .china-final-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1672/941;
+  background: linear-gradient(rgba(5,15,29,.75),rgba(3,13,24,.9)),
+    url("../public/assets/generated/locations/china-night-market-background-v01.webp") center/cover;
+  color: #f5f0e3;
+  display: grid;
+  place-items: center;
+  padding: 5% 8%;
+}
+#holidayScreen .china-final-phone {
+  width: min(82%,640px);
+  border: 3px solid #6098b9;
+  border-radius: 17px;
+  background: #102b42;
+  box-shadow: 8px 10px 0 rgba(0,0,0,.35);
+  padding: clamp(15px,2.4vw,30px);
+}
+#holidayScreen .china-final-phone-top {display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#ffd56e;font-size:clamp(10px,1.2vw,14px);}
+#holidayScreen .china-final-phone p {font-size:clamp(19px,2.6vw,35px);font-weight:900;line-height:1.3;margin:18px 0 22px;color:white;}
+#holidayScreen .china-final-phone > strong {color:#e9b1a7;font-size:clamp(12px,1.2vw,16px);}
+#holidayScreen .china-final-reaction {
+  position:absolute;bottom:19%;left:20%;right:20%;
+  padding:12px 20px;border:3px solid #347ea0;border-radius:10px;
+  background:#fff3d6;color:#17354b;text-align:center;
+}
+#holidayScreen .china-final-reaction p {font-size:clamp(20px,2.1vw,31px);font-weight:900;margin:5px 0;}
+#holidayScreen .china-final-england {position:absolute;inset:0;display:grid;align-content:center;justify-items:center;text-align:center;background:#090e18;padding:20px;}
+#holidayScreen .china-final-england h2 {font-size:clamp(28px,4.5vw,67px);margin:0;color:#fff0c7;}
+#holidayScreen .china-final-england p {font-size:clamp(15px,2vw,29px);font-style:italic;margin:14px 0;color:#d8c1a1;}
+#holidayScreen .china-final-england small {color:#9aa6ba;font-size:11px;margin-top:20px;}
+@media (min-width:801px) {
+  #holidayScreen #marketScene,#holidayScreen #chinaFinalScene {position:absolute;inset:0;width:100%;height:100%;}
+  #holidayScreen .market-scene .wall-stage {position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;}
+  #holidayScreen .market-scene .wall-stephen {left:15%;height:73%;max-width:42%;}
+  #holidayScreen .market-scene .wall-promoter {right:11%;height:73%;max-width:42%;}
+  #holidayScreen .market-scene .wall-dialogue {left:3%;bottom:max(15%,96px);width:min(74%,820px);padding:9px 13px;border-width:3px;}
+  #holidayScreen:has(#marketScene:not([hidden])) .china-footer,
+  #holidayScreen:has(#chinaFinalScene:not([hidden])) .china-footer {
+    top:2%;right:2%;left:auto;bottom:auto;padding:4px 5px;gap:5px;border-radius:7px;
+  }
+  #holidayScreen .china-final-stage {position:absolute;inset:0;aspect-ratio:auto;height:100%;}
+  #holidayScreen .china-final-controls {position:absolute;z-index:8;bottom:0;left:0;right:0;min-height:50px;max-height:35%;padding:9px 2.5%;background:rgba(5,24,45,.96);}
+  #holidayScreen .market-scene .wall-action-strip:has(.wall-choices:not([hidden])) #marketBackButton {
+    min-height:30px;padding:5px 9px;
+  }
+}
+@media (max-width:800px) {
+  #holidayScreen .market-scene .wall-stage {aspect-ratio:4/3;}
+  #holidayScreen .market-spa-sign {top:20%;left:41%;width:27%;padding:6px;}
+  #holidayScreen .china-final-phone {width:100%;}
+  #holidayScreen .market-fallback-options {grid-template-columns:1fr;}
+}
+@media (max-width:450px) {
+  #holidayScreen .market-scene .wall-stage {aspect-ratio:3/4;}
+  #holidayScreen .china-final-stage {aspect-ratio:3/4;}
+  #holidayScreen .market-spa-sign {top:24%;left:43%;width:37%;}
+  #holidayScreen .china-final-reaction {left:5%;right:5%;bottom:18%;}
+}
+
+
+/*
+ * GAME-SP2.3C — timeline intermissions & mutually exclusive route handoffs.
+ * Reuse the approved location backgrounds. Art, cutouts and laptop framing
+ * are untouched; no new rendered images or giant full-page scroll regions.
+ */
+#holidayScreen #chinaIntermission[hidden],
+#holidayScreen #chinaRouteHandoff[hidden],
+#holidayScreen #wallGoPalaceButton[hidden],
+#holidayScreen #wallGoIncidentButton[hidden],
+#holidayScreen #palaceGoMarketButton[hidden],
+#holidayScreen #palaceGoIncidentButton[hidden] { display:none !important; }
+#holidayScreen .china-intermission,
+#holidayScreen .china-route-handoff {position:relative;background:#0a1d30;}
+#holidayScreen .china-intermission-art,
+#holidayScreen .china-route-handoff-art {
+  position:relative;width:100%;aspect-ratio:1672/941;
+  display:grid;place-items:center;padding:5%;
+  background-color:#102841;
+  background-size:cover;background-position:center;
+  isolation:isolate;
+}
+#holidayScreen .china-intermission-art::before,
+#holidayScreen .china-route-handoff-art::before {
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(125deg,rgba(5,19,35,.85),rgba(6,23,42,.35) 55%,rgba(6,22,35,.70));
+}
+#holidayScreen .china-intermission-art[data-destination="palace"] {
+  background-image:url("../public/assets/generated/locations/china-forbidden-city-background-v01.webp");
+}
+#holidayScreen .china-intermission-art[data-destination="market"] {
+  background-image:url("../public/assets/generated/locations/china-night-market-background-v01.webp");
+}
+#holidayScreen .china-route-handoff-art[data-route="cult"] {
+  background-image:url("../public/assets/generated/locations/china-great-wall-background-v01.webp");
+}
+#holidayScreen .china-route-handoff-art[data-route="detention"] {
+  background-image:url("../public/assets/generated/locations/china-forbidden-city-background-v01.webp");
+}
+#holidayScreen .china-route-handoff-art[data-route="reassemble"] {
+  background-image:url("../public/assets/generated/locations/china-night-market-background-v01.webp");
+}
+#holidayScreen .intermission-frame,
+#holidayScreen .route-handoff-card {
+  position:relative;z-index:1;
+  width:min(86%,920px);
+  padding:clamp(24px,4vw,58px) clamp(18px,4vw,65px);
+  color:#fff4dc;text-align:center;
+  border:3px solid #e4b766;border-radius:18px;
+  background:rgba(9,31,54,.89);
+  box-shadow:6px 8px 0 rgba(0,0,0,.36);
+}
+#holidayScreen .intermission-frame > span,
+#holidayScreen .route-handoff-card > span {
+  display:block;color:#96dcff;font-size:clamp(10px,1.2vw,15px);
+  font-weight:900;letter-spacing:.14em;
+}
+#holidayScreen .intermission-frame h2,
+#holidayScreen .route-handoff-card h2 {
+  margin:12px 0 6px;font-size:clamp(25px,4.1vw,62px);
+  color:#ffdb83;line-height:1.1;
+}
+#holidayScreen .intermission-frame h3 {
+  margin:6px 0;font-size:clamp(17px,2.4vw,35px);line-height:1.2;
+}
+#holidayScreen .intermission-frame p,
+#holidayScreen .route-handoff-card p {
+  margin:13px 0 0;font-size:clamp(13px,1.45vw,20px);
+  font-weight:650;line-height:1.4;
+}
+#holidayScreen .route-handoff-card small {
+  display:block;margin:15px 0 0;font-size:clamp(10px,1vw,13px);
+  color:#b8cfe1;font-weight:700;
+}
+#holidayScreen .china-intermission-actions {
+  display:flex;justify-content:center;align-items:center;
+  gap:10px;padding:12px;background:#071e36;
+}
+#holidayScreen .china-intermission-actions .btn {min-height:46px;}
+/* Choice result still uses the established compact action strip; only one
+   of the branch navigation buttons is visible at a time. */
+#holidayScreen .wall-result .btn[hidden] {display:none !important;}
+@media (min-width:801px) {
+  #holidayScreen #chinaIntermission,
+  #holidayScreen #chinaRouteHandoff {
+    position:absolute;inset:0;height:100%;width:100%;
+  }
+  #holidayScreen .china-intermission-art,
+  #holidayScreen .china-route-handoff-art {
+    position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;
+  }
+  #holidayScreen .china-intermission-actions {
+    position:absolute;left:0;right:0;bottom:0;z-index:5;
+    background:rgba(5,23,43,.9);
+  }
+  #holidayScreen:has(#chinaIntermission:not([hidden])) .china-footer,
+  #holidayScreen:has(#chinaRouteHandoff:not([hidden])) .china-footer {
+    top:2%;right:2%;left:auto;bottom:auto;
+  }
+}
+@media (max-width:800px) {
+  #holidayScreen .china-intermission-art,
+  #holidayScreen .china-route-handoff-art {aspect-ratio:4/3;}
+  #holidayScreen .intermission-frame,
+  #holidayScreen .route-handoff-card {width:94%;padding:17px 13px;}
+}
+@media (max-width:450px) {
+  #holidayScreen .china-intermission-art,
+  #holidayScreen .china-route-handoff-art {aspect-ratio:3/4;}
+  #holidayScreen .intermission-frame h2,
+  #holidayScreen .route-handoff-card h2 {font-size:25px;}
+}
+
+
+/* GAME-SP2.4A — OFFICE-ALARM with already approved office layers and actors;
+ * no new illustrated hotel source can enter the playable build without approval. */
+#holidayScreen #rescueAlarmScene[hidden],
+#holidayScreen #rescueTravelScene[hidden],
+#holidayScreen #rescueHubArrival[hidden],
+#holidayScreen #rescueAlarmPhone[hidden],
+#holidayScreen #rescueAlarmNextButton[hidden],
+#holidayScreen #rescueAlarmTravelButton[hidden] {display:none !important;}
+#holidayScreen .rescue-alarm-scene,#holidayScreen .rescue-travel-scene,
+#holidayScreen .rescue-hub-arrival {position:relative;background:#10243e;}
+#holidayScreen .rescue-alarm-stage,#holidayScreen .rescue-travel-stage,
+#holidayScreen .rescue-hub-arrival-stage {
+  position:relative;isolation:isolate;overflow:hidden;
+  width:100%;aspect-ratio:1672/941;
+}
+#holidayScreen .rescue-alarm-background,#holidayScreen .rescue-alarm-foreground {
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+}
+#holidayScreen .rescue-alarm-background {z-index:0;}
+#holidayScreen .rescue-alarm-actor {
+  position:absolute;z-index:2;bottom:0;height:79%;width:auto;max-width:42%;
+  object-fit:contain;object-position:center bottom;
+  filter:drop-shadow(5px 6px 5px rgba(0,0,0,.3));
+}
+#holidayScreen .rescue-alarm-david {left:17%;}
+#holidayScreen .rescue-alarm-paul {right:14%;}
+#holidayScreen .rescue-alarm-foreground {z-index:3;pointer-events:none;}
+#holidayScreen .rescue-alarm-dialogue {bottom:11%;left:3%;width:min(73%,850px);z-index:7;}
+#holidayScreen .rescue-alarm-phone {
+  position:absolute;z-index:6;top:15%;right:3%;width:min(34%,360px);
+  padding:12px 14px;border-radius:10px;border:2px solid #86d3ed;
+  background:rgba(8,30,54,.96);color:#f8f1db;
+  box-shadow:5px 7px 0 rgba(0,0,0,.38);
+}
+#holidayScreen .rescue-alarm-phone strong {font-size:clamp(10px,1.15vw,14px);color:#f9ce75;}
+#holidayScreen .rescue-alarm-phone p {font-weight:800;font-size:clamp(12px,1.38vw,18px);line-height:1.35;margin:10px 0;}
+#holidayScreen .rescue-alarm-phone span {display:block;font-size:11px;color:#9ed5ed;}
+#holidayScreen .rescue-travel-stage,#holidayScreen .rescue-hub-arrival-stage {
+  display:grid;place-items:center;padding:4%;
+  background:linear-gradient(115deg,rgba(10,24,48,.88),rgba(10,36,55,.72)),
+    url("../public/assets/generated/locations/china-night-market-background-v01.webp") center/cover;
+}
+#holidayScreen .rescue-travel-panel {
+  width:min(87%,960px);max-height:80%;
+  display:grid;justify-items:center;align-content:center;
+  text-align:center;gap:12px;
+  border:3px solid #eac57f;border-radius:14px;
+  padding:clamp(20px,3vw,44px);
+  color:#fff4d9;background:rgba(9,29,52,.91);
+  box-shadow:7px 9px 0 rgba(0,0,0,.4);
+}
+#holidayScreen .rescue-travel-panel > span:not(.rescue-travel-symbol) {
+  font-size:clamp(10px,1.2vw,15px);color:#90d9f5;letter-spacing:.12em;font-weight:900;
+}
+#holidayScreen .rescue-travel-symbol {font-size:clamp(30px,5vw,70px);line-height:1;}
+#holidayScreen .rescue-travel-panel h2 {font-size:clamp(23px,3.2vw,48px);line-height:1.14;color:#ffdc8c;margin:0;}
+#holidayScreen .rescue-travel-panel p {font-size:clamp(13px,1.45vw,21px);line-height:1.35;margin:0;font-weight:750;}
+#holidayScreen .rescue-travel-panel small {font-size:clamp(11px,1vw,15px);color:#b8d3df;}
+@media (min-width:801px) {
+  #holidayScreen #rescueAlarmScene,
+  #holidayScreen #rescueTravelScene,
+  #holidayScreen #rescueHubArrival {position:absolute;inset:0;height:100%;width:100%;}
+  #holidayScreen .rescue-alarm-stage,
+  #holidayScreen .rescue-travel-stage,
+  #holidayScreen .rescue-hub-arrival-stage {position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;}
+  #holidayScreen:has(#rescueAlarmScene:not([hidden])) .china-footer,
+  #holidayScreen:has(#rescueTravelScene:not([hidden])) .china-footer,
+  #holidayScreen:has(#rescueHubArrival:not([hidden])) .china-footer {
+    top:2%;right:2%;left:auto;bottom:auto;
+  }
+  #holidayScreen .rescue-alarm-scene .wall-action-strip,
+  #holidayScreen .rescue-travel-scene .wall-action-strip,
+  #holidayScreen .rescue-hub-arrival .wall-action-strip {
+    position:absolute;z-index:8;bottom:0;left:0;right:0;
+    min-height:52px;max-height:35%;
+    padding:9px 2.5%;background:rgba(5,25,46,.96);
+  }
+}
+@media (max-width:800px) {
+  #holidayScreen .rescue-alarm-stage,#holidayScreen .rescue-travel-stage,
+  #holidayScreen .rescue-hub-arrival-stage {aspect-ratio:4/3;}
+  #holidayScreen .rescue-alarm-actor {height:67%;max-width:48%;}
+  #holidayScreen .rescue-alarm-david {left:7%;}
+  #holidayScreen .rescue-alarm-paul {right:4%;}
+  #holidayScreen .rescue-alarm-phone {top:13%;right:2%;width:45%;padding:8px;}
+  #holidayScreen .rescue-alarm-dialogue {width:95%;left:2%;bottom:2%;}
+  #holidayScreen .rescue-travel-panel {width:96%;padding:18px 12px;}
+}
+@media (max-width:450px) {
+  #holidayScreen .rescue-alarm-stage,#holidayScreen .rescue-travel-stage,
+  #holidayScreen .rescue-hub-arrival-stage {aspect-ratio:3/4;}
+  #holidayScreen .rescue-alarm-actor {height:57%;max-width:65%;}
+  #holidayScreen .rescue-alarm-david {left:-5%;}
+  #holidayScreen .rescue-alarm-paul {right:-5%;}
+  #holidayScreen .rescue-alarm-phone {top:18%;width:54%;}
+}
+
+
+/* GAME-SP2.4B — Approved empty Visitor Information environment.
+ * Main cast remains an independent layer: standing full-body sprite approval
+ * is outstanding; do not flatten invented character composites into the BG.
+ */
+#holidayScreen #rescueHotelScene[hidden],
+#holidayScreen #rescueRouteIntro[hidden],
+#holidayScreen #rescueHotelHotspots[hidden],
+#holidayScreen #rescueHotelDialogue[hidden],
+#holidayScreen #hotelNextButton[hidden],
+#holidayScreen #hotelEvidencePanel[hidden],
+#holidayScreen #hotelDeductions[hidden],
+#holidayScreen #hotelResolved[hidden],
+#holidayScreen #hotelHint[hidden] {display:none !important;}
+#holidayScreen .rescue-hotel-scene,#holidayScreen .rescue-route-intro {position:relative;background:#102840;}
+#holidayScreen .rescue-hub-arrival-stage,
+#holidayScreen .rescue-route-intro-stage {
+  background:linear-gradient(120deg,rgba(7,22,41,.72),rgba(9,34,57,.55)),
+    url("../public/assets/generated/locations/china-visitor-information-lobby-background-v01.webp") center/cover;
+}
+#holidayScreen .rescue-hotel-stage,#holidayScreen .rescue-route-intro-stage {
+  position:relative;isolation:isolate;overflow:hidden;width:100%;aspect-ratio:1672/941;
+}
+#holidayScreen .rescue-route-intro-stage {display:grid;place-items:center;padding:5%;}
+#holidayScreen .rescue-hotel-bg {position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+
+/* Owner-approved standing cast: David stands slightly farther back than Paul,
+   who keeps his approved hotel position. Clues and subtitles remain above them. */
+#holidayScreen .rescue-hotel-actor {
+  position:absolute;bottom:24%;width:auto;object-fit:contain;
+  object-position:center bottom;pointer-events:none;
+  filter:drop-shadow(4px 6px 4px rgba(8,22,34,.35));z-index:2;
+}
+#holidayScreen .rescue-hotel-david {height:56%;left:22%;bottom:28%;max-width:31%;}
+#holidayScreen .rescue-hotel-paul {height:50%;left:42%;max-width:28%;}
+
+#holidayScreen .rescue-hotel-hotspots {position:absolute;inset:0;z-index:4;pointer-events:none;}
+#holidayScreen .rescue-hotel-hotspot {
+  position:absolute;pointer-events:auto;z-index:5;display:flex;gap:8px;align-items:center;
+  min-height:46px;min-width:130px;max-width:30%;
+  padding:9px 12px;text-align:left;border:2px solid #7dd2f1;border-radius:10px;
+  background:rgba(4,35,60,.94);color:#fff4d9;font-weight:850;
+  box-shadow:4px 5px 0 rgba(0,0,0,.42);font-size:clamp(12px,1.15vw,16px);
+  cursor:pointer;
+}
+#holidayScreen .rescue-hotel-hotspot .hub-symbol {color:#ffdc87;font-size:clamp(16px,1.65vw,24px);}
+#holidayScreen .rescue-hotel-hotspot:focus-visible,
+#holidayScreen .rescue-hotel-hotspot:hover {background:#144d79;border-color:#ffdb88;outline:3px solid #ffdb88;outline-offset:2px;}
+#holidayScreen .hotel-hotspot-phone {left:9%;bottom:34%;}
+#holidayScreen .hotel-hotspot-brochure {right:8%;top:30%;}
+#holidayScreen .hotel-hotspot-desk {left:40%;top:36%;}
+#holidayScreen .rescue-hotel-dialogue {bottom:12%;left:3%;width:min(73%,850px);}
+#holidayScreen .hotel-evidence-panel,
+#holidayScreen .hotel-deductions,#holidayScreen .hotel-resolved {width:100%;display:grid;gap:9px;color:#f9f0d9;}
+#holidayScreen .hotel-evidence-panel strong,
+#holidayScreen .hotel-resolved strong {font-size:clamp(16px,1.6vw,23px);color:#ffdb87;}
+#holidayScreen .hotel-evidence-panel p,
+#holidayScreen .hotel-deductions p,#holidayScreen .hotel-resolved p {
+  margin:0;color:#fff3d8;line-height:1.4;font-size:clamp(13px,1.3vw,17px);font-weight:700;
+}
+#holidayScreen .hotel-evidence-route {
+  border-left:4px solid #ffc76f;padding:7px 11px;
+  background:rgba(255,245,210,.11);color:#fff8db;font-weight:850;
+}
+#holidayScreen .hotel-route-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+#holidayScreen .hotel-route-grid .wall-choice {
+  min-height:45px;padding:7px 11px;margin:0;text-align:center;
+  font-size:clamp(12px,1.1vw,16px);width:100%;
+}
+#holidayScreen .hotel-route-grid button[data-correct="true"] {
+  border-color:#8cf3a3;box-shadow:0 0 0 3px #8cf3a3;background:#e0ffdc;
+}
+#holidayScreen .hotel-hint {
+  padding:8px 11px;border-radius:7px;background:#fff0bb;color:#283646;
+  font-size:clamp(12px,1.15vw,16px);font-weight:800;
+}
+#holidayScreen .hotel-feedback {color:#ffd789 !important;font-weight:800;}
+#holidayScreen .rescue-hotel-action-strip:has(.hotel-deductions:not([hidden])) {padding:10px 2.5%;gap:8px;}
+@media (min-width:801px) {
+  #holidayScreen #rescueHotelScene,#holidayScreen #rescueRouteIntro {
+    position:absolute;inset:0;width:100%;height:100%;
+  }
+  #holidayScreen .rescue-hotel-stage,#holidayScreen .rescue-route-intro-stage {
+    position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;
+  }
+  #holidayScreen .rescue-hotel-action-strip,
+  #holidayScreen .rescue-route-intro .wall-action-strip {
+    position:absolute;z-index:8;bottom:0;left:0;right:0;
+    min-height:54px;max-height:42%;
+    padding:9px 2.5%;background:rgba(5,25,46,.97);overflow-y:auto;
+  }
+  #holidayScreen:has(#rescueHotelScene:not([hidden])) .china-footer,
+  #holidayScreen:has(#rescueRouteIntro:not([hidden])) .china-footer {top:2%;right:2%;left:auto;bottom:auto;}
+}
+@media (max-width:800px) {
+  #holidayScreen .rescue-hotel-actor {bottom:24%;}
+  #holidayScreen .rescue-hotel-david {height:50%;left:16%;bottom:28%;max-width:42%;}
+  #holidayScreen .rescue-hotel-paul {height:45%;left:44%;max-width:36%;}
+  #holidayScreen .rescue-hotel-stage,#holidayScreen .rescue-route-intro-stage {aspect-ratio:4/3;}
+  #holidayScreen .hotel-route-grid {grid-template-columns:1fr;}
+  #holidayScreen .rescue-hotel-hotspot {padding:7px 9px;min-width:0;min-height:44px;max-width:39%;}
+  #holidayScreen .hotel-hotspot-phone {left:3%;bottom:36%;}
+  #holidayScreen .hotel-hotspot-brochure {right:2%;top:29%;}
+  #holidayScreen .hotel-hotspot-desk {left:42%;top:47%;}
+}
+@media (max-width:450px) {
+  #holidayScreen .rescue-hotel-actor {bottom:26%;}
+  #holidayScreen .rescue-hotel-david {height:42%;left:10%;bottom:30%;max-width:56%;}
+  #holidayScreen .rescue-hotel-paul {height:38%;left:45%;max-width:54%;}
+  #holidayScreen .rescue-hotel-stage,#holidayScreen .rescue-route-intro-stage {aspect-ratio:3/4;}
+  #holidayScreen .rescue-hotel-hotspot {font-size:11px;max-width:47%;}
+  #holidayScreen .hotel-hotspot-phone {bottom:25%;}
+  #holidayScreen .hotel-hotspot-brochure {top:26%;}
+  #holidayScreen .hotel-hotspot-desk {left:35%;top:49%;}
+}
