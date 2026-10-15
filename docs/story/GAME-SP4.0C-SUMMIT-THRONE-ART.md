@@ -1,3 +1,11 @@
+## Attendant perspective correction after first live screenshot (15 October 2026)
+
+The owner reviewed the first live composition and rejected all four attendant positions as physically implausible, particularly the **floating fan/ewer near the back columns** and the detached tray/towel at the side edges. The source PNGs and alpha WebPs remain approved; the failure is **CSS perspective/foot grounding only**.
+
+A new staging-only CSS pass lowers the fan and ewer bearers to the architecture at the sides of the stairs (desktop left/right 23%, bottom 42%, height 17%), and reduces/lowers the tray and towel bearers into the side aisles (left 6%, bottom 20%, height 24%; right 5%, bottom 18%, height 24%). Tablet and phone cases are scaled and anchored independently. Stephen, David and Paul keep their owner-approved locations and all spoken dialogue/UI remain unchanged.
+
+The automated position regression ensures no accidental reversion, but **physical contact with the floor and lack of overlap require visual inspection of the revised Cloudflare build** before this art pass can be locked. No merge of this draft or its parent without the owner's explicit command.
+
 ## Four approved attendants integrated as independent stage layers (15 October 2026)
 
 The owner approved **four individual, transparent full-body ceremonial attendant sprites**. All four original PNGs are stored in the project's dedicated Drive staging folder and have been materialised via the existing OIDC pipeline into four independent transparent WebPs. No flattened illustration, background replacement or baked UI is used.
