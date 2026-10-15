@@ -5,9 +5,9 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const output = path.join(root, "dist");
-const files = ["index.html", "src/office-data.js", "src/reactions.js", "src/game.js", "src/styles.css"];
+const files = ["index.html", "src/office-data.js", "src/reactions.js", "src/china-data.js", "src/game.js", "src/styles.css"];
 const imageSource = "public/assets/generated/characters";
-const images = ["stephen-martin-baseline.webp", "david-baseline.webp", "paul-baseline.webp", "stephen-office-seated-neutral-v01.webp", "stephen-office-seated-amused-v01.webp", "stephen-office-seated-confused-v01.webp", "stephen-office-seated-annoyed-v01.webp", "stephen-office-seated-exasperated-v01.webp", "stephen-office-seated-laughing-v01.webp", "david-office-seated-neutral-v01.webp", "david-office-seated-confident-v01.webp", "david-office-seated-systems-expert-v01.webp", "david-office-seated-shocked-v01.webp", "david-office-seated-frustrated-v01.webp", "david-office-seated-serious-v01.webp", "paul-office-seated-neutral-v01.webp", "paul-office-seated-confused-v01.webp", "paul-office-seated-pleased-v01.webp"];
+const images = ["stephen-martin-baseline.webp", "david-baseline.webp", "paul-baseline.webp", "stephen-office-seated-neutral-v01.webp", "stephen-office-seated-amused-v01.webp", "stephen-office-seated-confused-v01.webp", "stephen-office-seated-annoyed-v01.webp", "stephen-office-seated-exasperated-v01.webp", "stephen-office-seated-laughing-v01.webp", "david-office-seated-neutral-v01.webp", "david-office-seated-confident-v01.webp", "david-office-seated-systems-expert-v01.webp", "david-office-seated-shocked-v01.webp", "david-office-seated-frustrated-v01.webp", "david-office-seated-serious-v01.webp", "paul-office-seated-neutral-v01.webp", "paul-office-seated-confused-v01.webp", "paul-office-seated-pleased-v01.webp", "stephen-holiday-standing-neutral-v01.webp", "great-wall-summit-promoter-standing-v01.webp", "china-banquet-attendant-standing-v01.webp", "stephen-holiday-forbidden-city-pleased-v01.webp", "china-night-market-spa-representative-v01.webp", "stephen-night-market-skewer-v01.webp", "david-hotel-standing-investigator-v01.webp", "paul-hotel-standing-puzzled-v01.webp"];
 
 await rm(output, { recursive: true, force: true });
 await mkdir(path.join(output, "src"), { recursive: true });
@@ -50,7 +50,12 @@ for (const name of expectedNames) {
 const officeImages = [
   "public/assets/generated/locations/office-clean-01-v01.webp",
   "public/assets/generated/locations/office-foreground-01-v01.webp",
-  "public/assets/generated/locations/office-exterior-opening-v01.webp"
+  "public/assets/generated/locations/office-exterior-opening-v01.webp",
+  "public/assets/generated/locations/chapter-two-days-later-title-v01.webp",
+  "public/assets/generated/locations/china-great-wall-background-v01.webp",
+  "public/assets/generated/locations/china-forbidden-city-background-v01.webp",
+  "public/assets/generated/locations/china-night-market-background-v01.webp",
+  "public/assets/generated/locations/china-visitor-information-lobby-background-v01.webp"
 ];
 // Fail the public preview build if the independent desk accidentally becomes an
 // opaque image: a black/solid rectangle would cover all three actors.
@@ -66,6 +71,46 @@ for (const relative of officeImages) {
   if (!(await stat(officeSource)).size) throw new Error("Missing office layer: " + relative);
   await mkdir(path.dirname(path.join(output, relative)), { recursive: true });
   await copyFile(officeSource, path.join(output, relative));
+}
+
+// The Chapter Two background and sprite remain independently approved WebP
+// assets. Refuse accidental opaque travel sprites or incorrectly sized art.
+const holidaySprite = await readFile(path.join(root, imageSource, "stephen-holiday-standing-neutral-v01.webp"));
+if (holidaySprite.toString("ascii", 0, 4) !== "RIFF" ||
+    holidaySprite.toString("ascii", 12, 16) !== "VP8X" ||
+    (holidaySprite[20] & 0x10) === 0) {
+  throw new Error("Approved Stephen travel sprite must preserve alpha transparency.");
+}
+const promoterSprite = await readFile(path.join(root, imageSource, "great-wall-summit-promoter-standing-v01.webp"));
+if (promoterSprite.toString("ascii", 0, 4) !== "RIFF" ||
+    promoterSprite.toString("ascii", 12, 16) !== "VP8X" ||
+    (promoterSprite[20] & 0x10) === 0) {
+  throw new Error("Approved Summit promoter sprite must preserve alpha transparency.");
+}
+for (const name of ["china-banquet-attendant-standing-v01.webp", "stephen-holiday-forbidden-city-pleased-v01.webp", "china-night-market-spa-representative-v01.webp", "stephen-night-market-skewer-v01.webp"]) {
+  const cutout = await readFile(path.join(root, imageSource, name));
+  if (cutout.toString("ascii", 0, 4) !== "RIFF" ||
+      cutout.toString("ascii", 12, 16) !== "VP8X" ||
+      (cutout[20] & 0x10) === 0) {
+    throw new Error("Approved Forbidden City sprite lost WebP transparency: " + name);
+  }
+}
+for (const file of ["chapter-two-days-later-title-v01.webp", "china-great-wall-background-v01.webp", "china-forbidden-city-background-v01.webp", "china-night-market-background-v01.webp"]) {
+  const data = await readFile(path.join(root, "public/assets/generated/locations", file));
+  if (data.toString("ascii", 0, 4) !== "RIFF" || data.toString("ascii", 8, 12) !== "WEBP") {
+    throw new Error("Invalid approved Chapter Two background: " + file);
+  }
+}
+
+// The approved hotel cast must remain two *independent transparent sprites*,
+// not full-scene screenshots or opaque images that obscure the empty lobby.
+for (const name of ["david-hotel-standing-investigator-v01.webp", "paul-hotel-standing-puzzled-v01.webp"]) {
+  const sprite = await readFile(path.join(root, imageSource, name));
+  if (sprite.toString("ascii", 0, 4) !== "RIFF" ||
+      sprite.toString("ascii", 12, 16) !== "VP8X" ||
+      (sprite[20] & 0x10) === 0) {
+    throw new Error("Approved hotel actor must preserve WebP alpha transparency: " + name);
+  }
 }
 
 // Voice files are supplied independently via GitHub's Upload files UI. The

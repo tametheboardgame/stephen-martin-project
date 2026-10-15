@@ -1294,3 +1294,981 @@ body:has(#menuScreen:not([hidden])) main {
   #officeScreen .expression-proof-controls { order: 2; }
   #officeScreen .d2-proof-button { order: initial; }
 }
+
+
+/* GAME-SP2.2: three approved, independent Chapter Two layers. The authored
+   title text is part of the approved card; explanatory alt text is on <img>. */
+#holidayScreen.china-screen {
+  display: block;
+  min-height: 0;
+  background: #101d30;
+  border: 2px solid #427c9f;
+  border-radius: 14px;
+}
+#holidayScreen .china-transition { position: relative; background: #152c49; }
+#holidayScreen .china-transition-art {
+  display: block; width: 100%; aspect-ratio: 1672 / 941; object-fit: contain;
+}
+#holidayScreen .china-transition-actions {
+  position: absolute; right: 3%; bottom: 3%; z-index: 2;
+}
+#holidayScreen .china-transition-actions .btn {
+  min-height: 46px; padding: 10px 19px; box-shadow: 4px 5px 0 rgba(0,0,0,.5);
+}
+#holidayScreen .wall-scene { background: #071c35; }
+#holidayScreen .wall-stage {
+  position: relative; width: 100%; aspect-ratio: 1672 / 941;
+  overflow: hidden; isolation: isolate;
+}
+#holidayScreen .wall-background {
+  position: absolute; inset: 0; height: 100%; width: 100%;
+  object-fit: cover; z-index: 0;
+}
+#holidayScreen .wall-stephen {
+  position: absolute; z-index: 2; height: 91%; width: auto; max-width: 51%;
+  left: 13%; bottom: 0; object-fit: contain; object-position: center bottom;
+  filter: drop-shadow(5px 6px 4px rgba(12,27,34,.38));
+}
+#holidayScreen .wall-place-label {
+  position: absolute; z-index: 3; left: 2%; top: 3%;
+  color: #f7efdb; background: rgba(5,30,55,.93);
+  border: 1px solid #7bc0dc; border-radius: 8px; padding: 9px 12px;
+}
+#holidayScreen .wall-place-label span { display:block; color:#86d7ff; font-size:10px; font-weight:900; letter-spacing:.13em; }
+#holidayScreen .wall-place-label strong { display:block; font-size:clamp(15px,1.8vw,24px); }
+#holidayScreen .wall-booking {
+  position: absolute; z-index: 3; left: 2%; top: 17%;
+  max-width: 34%; background: rgba(255,244,214,.94); color: #173349;
+  padding: 7px 11px; border-left: 5px solid #dd9d31; border-radius: 5px;
+}
+#holidayScreen .wall-booking span {display:block; font-size:10px; font-weight:900; letter-spacing:.12em}
+#holidayScreen .wall-booking strong {display:block; font-size:clamp(12px,1.4vw,18px)}
+#holidayScreen .wall-phone {
+  position:absolute; z-index:4; right:3%; top:4%; width:min(36%,380px);
+  border: 2px solid #6cc2da; background:rgba(7,25,45,.94); color:white;
+  border-radius: 13px; padding: 12px 14px; box-shadow: 6px 7px 0 rgba(0,0,0,.28);
+}
+#holidayScreen .wall-phone-heading { font-size:clamp(10px,1.05vw,13px);font-weight:900;color:#ffdb6c; }
+#holidayScreen .wall-phone p { margin:5px 0 0; font-size:clamp(12px,1.27vw,16px);line-height:1.3; }
+#holidayScreen .wall-dialogue {
+  position:absolute; z-index:5; bottom:3%; left:3%; width:min(94%,860px);
+  border: 4px solid #063058; border-radius: 12px; background:#fff5df;
+  color:#183348; padding: 12px 17px; box-shadow:6px 7px 0 rgba(5,30,50,.4);
+}
+#holidayScreen .wall-dialogue strong {
+  display:inline-block; background:#0e5389; color:#fff;
+  font-size:13px; font-weight:900; letter-spacing:.1em; padding:4px 10px;
+}
+#holidayScreen .wall-dialogue p {
+  font-size:clamp(14px,1.65vw,21px); font-weight:800; margin:7px 0 1px;
+  line-height:1.33;
+}
+#holidayScreen .wall-action-strip {display:flex;gap:14px;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:16px 3%;background:#0a2949;}
+#holidayScreen .wall-story-progress {font-weight:900;color:#dbecef;font-size:12px;letter-spacing:.04em}
+#holidayScreen .wall-action-strip .btn {min-height:45px}
+#holidayScreen .wall-choices,#holidayScreen .wall-result {width:100%;padding:4px 0 9px}
+#holidayScreen .wall-choices h3 {font-size:clamp(18px,2.2vw,26px);color:#ffe08c;margin:0 0 6px}
+#holidayScreen .wall-choices p,#holidayScreen .wall-result p {font-size:clamp(13px,1.35vw,16px);margin:4px 0 13px;color:#deebed}
+#holidayScreen .wall-choice {
+  display:block;width:100%; min-height:50px; margin-top:9px;padding:11px 14px;
+  text-align:left;font-size:clamp(13px,1.5vw,18px);font-weight:900;
+  border:2px solid #8dcbe5;border-radius:9px;background:#fff4d5;color:#0a2845;
+}
+#holidayScreen .wall-choice:hover,#holidayScreen .wall-choice:focus-visible {background:#ffdf87;border-color:#fff}
+#holidayScreen .wall-result strong {display:block;color:#ffda76;font-size:23px}
+#holidayScreen .wall-next-tease {font-weight:800;color:#a7cedd !important}
+#holidayScreen .china-footer {
+  background:#061b31;padding:11px 3%;display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+}
+#holidayScreen .china-footer span {margin-left:auto;color:#a0c2cb;font-size:11px;}
+@media (max-width:800px) {
+  #holidayScreen .wall-stage {aspect-ratio:4 / 3;}
+  #holidayScreen .wall-stephen {left:6%;max-width:55%;height:76%;}
+  #holidayScreen .wall-phone {top:3%;right:2%;width:53%;padding:8px;}
+  #holidayScreen .wall-place-label {left:2%;top:2%;padding:5px 8px;}
+  #holidayScreen .wall-place-label span {font-size:9px;}
+  #holidayScreen .wall-booking {left:2%;top:18%;padding:5px 7px;max-width:40%;}
+  #holidayScreen .wall-dialogue {left:2%;bottom:2%;width:96%;padding:8px 10px;border-width:3px;}
+  #holidayScreen .wall-dialogue p {font-size:clamp(12px,2.7vw,18px)}
+}
+@media (max-width:450px) {
+  #holidayScreen .wall-stage {aspect-ratio:3 / 4;}
+  #holidayScreen .wall-stephen {height:66%;left:-1%;bottom:14%;max-width:74%;}
+  #holidayScreen .wall-booking {top:17%;}
+  #holidayScreen .wall-place-label strong {font-size:13px;}
+  #holidayScreen .wall-dialogue p {font-size:13px;}
+  #holidayScreen .china-transition-actions {position:relative;padding:12px;right:auto;bottom:auto;}
+  #holidayScreen .china-transition-actions .btn {width:100%}
+  #holidayScreen .china-footer span {width:100%;margin:0;}
+}
+@media (prefers-reduced-motion:reduce) {
+  #holidayScreen .wall-stephen,#holidayScreen .wall-dialogue {transition:none !important;animation:none !important;}
+}
+
+
+/*
+ * GAME-SP2.2-F1 — Chapter Two desktop viewport fit.
+ * Match the approved office's 16:9 cinematic surface. The previous holiday
+ * layout stacked the site header, 16:9 art and action/footer rows, forcing a
+ * browser scrollbar even at a normal desktop viewport height.
+ *
+ * Only use the overlay arrangement on desktop: mobile/touch layouts retain
+ * natural document flow and readable, scrollable controls.
+ */
+@media (min-width: 801px) {
+  body:has(#holidayScreen:not([hidden])) {
+    overflow-x: hidden;
+  }
+  body:has(#holidayScreen:not([hidden])) .game-shell {
+    width: 100%;
+    max-width: none;
+    min-height: 100dvh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  body:has(#holidayScreen:not([hidden])) .topbar,
+  body:has(#holidayScreen:not([hidden])) .footnote {
+    display: none;
+  }
+  body:has(#holidayScreen:not([hidden])) main {
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    place-items: center;
+  }
+  #holidayScreen.china-screen {
+    position: relative;
+    width: min(calc(100vw - 22px), calc(177.68dvh - 32px), 1672px);
+    height: auto;
+    aspect-ratio: 1672 / 941;
+    min-height: 0;
+    max-width: none;
+    margin: 0 auto;
+    display: block;
+    overflow: hidden;
+  }
+  #holidayScreen #chinaTransition,
+  #holidayScreen #wallScene {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  #holidayScreen .china-transition-art {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    object-fit: fill;
+  }
+  #holidayScreen .wall-stage {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    aspect-ratio: auto;
+  }
+  /* Natural story controls become a translucent overlay on the same
+     background, not an extra row that grows the page. */
+  #holidayScreen .wall-action-strip {
+    position: absolute;
+    z-index: 8;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    min-height: 56px;
+    max-height: 48%;
+    padding: 10px 2.5%;
+    background: rgba(6, 29, 53, .96);
+    border-top: 1px solid rgba(112, 203, 241, .58);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  #holidayScreen .wall-dialogue {
+    bottom: 10.5%;
+    width: min(72%, 860px);
+  }
+  #holidayScreen .china-footer {
+    position: absolute;
+    z-index: 10;
+    width: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 5px 7px;
+    border: 1px solid rgba(117, 194, 229, .5);
+    border-radius: 7px;
+    background: rgba(4, 25, 48, .86);
+  }
+  #holidayScreen .china-footer .mini-button {
+    padding: 6px 9px;
+    font-size: 11px;
+    min-height: 32px;
+  }
+  #holidayScreen .china-footer span { display: none; }
+  /* The title image has its chapter heading in the middle and the Explore
+     button bottom-right; footer controls live bottom-left within the art. */
+  #holidayScreen:has(#chinaTransition:not([hidden])) .china-footer {
+    left: 1.7%;
+    bottom: 2%;
+  }
+  /* Great Wall: keep Replay/Main Menu in clear sky, between the left
+     location badge and the right phone notification. */
+  #holidayScreen:has(#wallScene:not([hidden])) .china-footer {
+    left: 30%;
+    top: 2%;
+  }
+}
+/* In a short landscape viewport we still allow the choice panel itself to
+   scroll if necessary, rather than crop the two minimum-size tap targets. */
+@media (min-width: 801px) and (max-height: 620px) {
+  #holidayScreen .wall-action-strip {
+    max-height: 62%;
+  }
+  #holidayScreen .wall-dialogue {
+    bottom: 13%;
+  }
+}
+
+
+/*
+ * GAME-SP2.2-F2 — Summit promoter, independently registered actor.
+ * Matches approved full-height Stephen scale (91%) at desktop; the promoter
+ * enters only on his first spoken line. David's temporary phone UI disappears
+ * at that beat so it cannot obscure the right actor.
+ * Keep the full-body figures out of the title and choice controls.
+ */
+#holidayScreen .wall-promoter {
+  position: absolute;
+  z-index: 2;
+  right: 7%;
+  bottom: 0;
+  height: 91%;
+  width: auto;
+  max-width: 51%;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(5px 6px 4px rgba(12,27,34,.38));
+}
+@media (max-width: 800px) {
+  #holidayScreen .wall-promoter {
+    right: 0;
+    height: 76%;
+    max-width: 55%;
+  }
+}
+@media (max-width: 450px) {
+  #holidayScreen .wall-promoter {
+    right: -4%;
+    bottom: 14%;
+    height: 66%;
+    max-width: 72%;
+  }
+}
+
+
+/*
+ * GAME-SP2.3A: second short holiday encounter, same cinematic 1672:941 frame.
+ * Scene overlays remain editable HTML, not text baked into location artwork.
+ * The banquet stand and characters are fictional; the historic location is
+ * background only. Compact controls scroll inside the frame if required.
+ */
+#holidayScreen .palace-scene { background: #112f51; }
+#holidayScreen .palace-honour-badge {
+  position: absolute; z-index: 6; right: 2%; top: 19%; max-width: 32%;
+  background: rgba(255, 231, 156, .95); border: 3px solid #803638;
+  color: #4f1820; font-size: clamp(10px, 1.25vw, 16px);
+  font-weight: 900; letter-spacing: .05em;
+  text-align: center; padding: 8px 10px; border-radius: 6px;
+}
+#holidayScreen .palace-photo-gag {
+  display: flex; align-items: center; gap: 14px;
+  margin: 7px 0 12px; max-width: 520px;
+  padding: 7px 10px; border-radius: 9px;
+  border: 2px solid #c29d5d;
+  background: #fff3d5; color: #233346;
+}
+#holidayScreen .palace-photo-gag > span {
+  font-size: 39px; line-height: 1;
+}
+#holidayScreen .palace-photo-gag div { display: grid; gap: 3px; }
+#holidayScreen .palace-photo-gag strong { color: #1f4565; font-size: 12px; }
+#holidayScreen .palace-photo-gag small { color: #323c45; font-size: 12px; }
+#holidayScreen .palace-scene .wall-choices p {
+  max-width: 750px;
+}
+@media (min-width: 801px) {
+  #holidayScreen #palaceScene {
+    position: absolute; inset: 0;
+    height: 100%; width: 100%;
+  }
+  #holidayScreen #palaceScene .wall-stage {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; aspect-ratio: auto;
+  }
+  #holidayScreen:has(#palaceScene:not([hidden])) .china-footer {
+    left: 31%; top: 2%;
+  }
+  #holidayScreen .palace-scene .wall-dialogue {
+    bottom: 10.5%; width: min(72%, 860px);
+  }
+}
+@media (max-width: 800px) {
+  #holidayScreen .palace-honour-badge { right: 2%; top: 16%; }
+  #holidayScreen .palace-scene .wall-stage { aspect-ratio: 4 / 3; }
+}
+@media (max-width: 450px) {
+  #holidayScreen .palace-scene .wall-stage { aspect-ratio: 3 / 4; }
+  #holidayScreen .palace-honour-badge { font-size: 10px; max-width: 50%; top: 16%; }
+  #holidayScreen .palace-photo-gag > span { font-size: 30px; }
+}
+
+
+/*
+ * GAME-SP2.3A-F1 — laptop composition pass, approved 14 October 2026.
+ * The cinematic frame itself stays 16:9 and viewport-fitted. Scale both
+ * encounters' character cutouts down, keep nav clear of their heads and
+ * reserve breathing room for the dialogue ABOVE the action strip.
+ * All selectors are desktop-scoped; mobile remains naturally scrollable.
+ */
+@media (min-width: 801px) {
+  /* Great Wall: maintain parity between the two full-standing cutouts. */
+  #holidayScreen .wall-scene .wall-stephen {
+    left: 14%;
+    height: 77%;
+    max-width: 44%;
+  }
+  #holidayScreen .wall-scene .wall-promoter {
+    right: 10%;
+    height: 77%;
+    max-width: 44%;
+  }
+
+  /* Palace: a slightly wider, more scenic shot, with the approved SECOND
+     Stephen holiday sprite and independently staged banquet attendant. */
+  #holidayScreen .palace-scene .wall-stephen {
+    left: 15%;
+    height: 73%;
+    max-width: 42%;
+  }
+  #holidayScreen .palace-scene .wall-promoter {
+    right: 11%;
+    height: 73%;
+    max-width: 42%;
+  }
+
+  /* Remove the top-centre menu obstruction shown on laptop screenshots. */
+  #holidayScreen:has(#wallScene:not([hidden])) .china-footer,
+  #holidayScreen:has(#palaceScene:not([hidden])) .china-footer {
+    top: 2%;
+    right: 2%;
+    left: auto;
+    bottom: auto;
+    padding: 4px 5px;
+    gap: 5px;
+    border-radius: 7px;
+  }
+  #holidayScreen .china-footer .mini-button {
+    min-height: 32px;
+    padding: 6px 9px;
+    font-size: 11px;
+  }
+
+  /* Tighter chapter/booking cards: neither can sprawl across Stephen. */
+  #holidayScreen .wall-place-label {
+    left: 2%;
+    top: 2%;
+    max-width: 31%;
+    padding: 7px 10px;
+  }
+  #holidayScreen .wall-place-label strong {
+    font-size: clamp(14px, 1.5vw, 22px);
+  }
+  #holidayScreen .wall-booking {
+    left: 2%;
+    top: 17%;
+    width: 27%;
+    max-width: 27%;
+    padding: 6px 9px;
+  }
+  #holidayScreen .wall-booking strong {
+    font-size: clamp(12px, 1.05vw, 16px);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+  /* On the Great Wall opening beat, David's notification sits BELOW nav;
+     it disappears automatically when the promoter starts speaking. */
+  #holidayScreen .wall-phone {
+    right: 2%;
+    top: 14%;
+    width: min(30%, 340px);
+  }
+
+  /* The earlier dialogue bottom:10.5% slipped BEHIND the action strip,
+     clipping the last line. Keep the entire speech card above it. */
+  #holidayScreen .wall-scene .wall-dialogue,
+  #holidayScreen .palace-scene .wall-dialogue {
+    left: 3%;
+    bottom: max(15%, 96px);
+    width: min(74%, 820px);
+    padding: 9px 13px;
+    border-width: 3px;
+    box-sizing: border-box;
+  }
+  #holidayScreen .wall-dialogue strong {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+  #holidayScreen .wall-dialogue p {
+    margin: 5px 0 1px;
+    font-size: clamp(13px, 1.32vw, 19px);
+    line-height: 1.28;
+  }
+
+  /* Compact decisions and results, leaving more of the location visible;
+     a short-height laptop can still scroll the choice strip internally. */
+  #holidayScreen .wall-action-strip {
+    max-height: 35%;
+    min-height: 50px;
+    gap: 8px;
+    padding: 8px 2.5%;
+  }
+  #holidayScreen .wall-story-progress { font-size: 11px; }
+  #holidayScreen .wall-action-strip .btn {
+    min-height: 38px;
+    padding: 9px 13px;
+    font-size: 13px;
+  }
+  #holidayScreen .wall-result { padding: 0 0 5px; }
+  #holidayScreen .wall-result strong {
+    font-size: clamp(16px, 1.6vw, 22px);
+  }
+  #holidayScreen .wall-result p {
+    font-size: clamp(12px, 1.12vw, 15px);
+    margin: 3px 0 8px;
+  }
+  #holidayScreen .wall-result .btn { margin: 2px 8px 0 0; }
+  #holidayScreen .wall-choices { padding: 0 0 7px; }
+  #holidayScreen .wall-choices h3 {
+    font-size: clamp(16px, 1.5vw, 21px);
+    margin: 0 0 3px;
+  }
+  #holidayScreen .wall-choices p {
+    font-size: clamp(12px, 1.1vw, 14px);
+    margin: 0 0 5px;
+  }
+  #holidayScreen .wall-choice {
+    min-height: 44px;
+    margin-top: 6px;
+    padding: 8px 11px;
+    font-size: clamp(12px, 1.15vw, 15px);
+  }
+  #holidayScreen .palace-honour-badge {
+    top: 17%;
+    right: 2%;
+    max-width: 26%;
+    padding: 6px 8px;
+    font-size: clamp(9px, .95vw, 13px);
+  }
+}
+
+
+/*
+ * GAME-SP2.3A-F2 — side-by-side invitation choices on laptops.
+ * Both accepted/rejected options fit in a single row inside the cinematic
+ * frame. The descriptive copy stays above them, and the duplicated progress
+ * caption is removed only while a choice is visible. Keep touch/mobile
+ * choices stacked; never disable overflow as an accessibility shortcut.
+ */
+@media (min-width: 960px) {
+  #holidayScreen .wall-choices:not([hidden]) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 12px;
+    row-gap: 5px;
+    align-items: stretch;
+    width: 100%;
+    padding: 0 0 3px;
+  }
+  #holidayScreen .wall-choices > h3,
+  #holidayScreen .wall-choices > p {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+  #holidayScreen .wall-choices > h3 {
+    font-size: clamp(15px, 1.45vw, 20px);
+    line-height: 1.17;
+  }
+  #holidayScreen .wall-choices > p {
+    font-size: clamp(12px, 1.05vw, 14px);
+    line-height: 1.25;
+    max-width: none;
+  }
+  #holidayScreen .wall-choices > .wall-choice {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    min-width: 0;
+    min-height: 54px;
+    padding: 8px 12px;
+    font-size: clamp(12px, 1.13vw, 15px);
+    line-height: 1.25;
+    text-wrap: pretty;
+  }
+  #holidayScreen .wall-action-strip:has(.wall-choices:not([hidden])) .wall-story-progress {
+    display: none;
+  }
+  #holidayScreen .wall-action-strip:has(.wall-choices:not([hidden])) {
+    gap: 5px;
+    padding-block: 9px;
+  }
+  /* Keep the Palace Back button accessible, without requiring another
+     stacked button row once the two choices are displayed. */
+  #holidayScreen .palace-scene .wall-action-strip:has(.wall-choices:not([hidden])) #palaceBackButton {
+    min-height: 30px;
+    padding: 5px 9px;
+  }
+}
+
+
+/* GAME-SP2.3B — Night Market, third provisional offer and final phone beat.
+ * Reuse the approved laptop-composition scale and two-column choice treatment.
+ * Art remains independently layered; the fictional spa advert is editable UI.
+ */
+#holidayScreen #marketScene[hidden],
+#holidayScreen #chinaFinalScene[hidden],
+#holidayScreen #marketSpaSign[hidden],
+#holidayScreen #marketSpaRep[hidden],
+#holidayScreen #marketFallback[hidden],
+#holidayScreen #marketResult[hidden],
+#holidayScreen #chinaFinalReaction[hidden],
+#holidayScreen #chinaFinalEngland[hidden] { display: none !important; }
+#holidayScreen .market-scene { background: #10233b; }
+#holidayScreen .market-stage .wall-background { object-position: center; }
+#holidayScreen .market-spa-sign {
+  position: absolute;
+  top: 16%;
+  left: 43%;
+  width: 24%;
+  z-index: 3;
+  border: 2px solid #deb571;
+  background: rgba(9, 39, 44, .92);
+  color: #fff2bf;
+  padding: 9px 11px;
+  border-radius: 8px;
+  box-shadow: 4px 5px 0 rgba(0,0,0,.35);
+  text-align: center;
+  font-weight: 900;
+  pointer-events: none;
+}
+#holidayScreen .market-spa-sign span { display: block; font-size: clamp(9px, .95vw, 14px); }
+#holidayScreen .market-spa-sign strong {
+  display: block; color: #ffdb6d; font-size: clamp(22px, 2.1vw, 32px);
+}
+#holidayScreen .market-spa-sign small { display:block; font-size: 9px; margin-top: 3px; font-weight: 700; }
+#holidayScreen .market-fallback-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 9px;
+}
+#holidayScreen .market-fallback-options .wall-choice {
+  min-width: 0;
+  min-height: 45px;
+  margin: 0;
+  padding: 7px 10px;
+  font-size: clamp(12px,1.05vw,15px);
+  text-align: center;
+}
+#holidayScreen .market-scene .wall-result strong {font-size:clamp(16px,1.5vw,21px);}
+#holidayScreen .china-final-scene {
+  background: #0a1d2e;
+}
+#holidayScreen .china-final-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1672/941;
+  background: linear-gradient(rgba(5,15,29,.75),rgba(3,13,24,.9)),
+    url("../public/assets/generated/locations/china-night-market-background-v01.webp") center/cover;
+  color: #f5f0e3;
+  display: grid;
+  place-items: center;
+  padding: 5% 8%;
+}
+#holidayScreen .china-final-phone {
+  width: min(82%,640px);
+  border: 3px solid #6098b9;
+  border-radius: 17px;
+  background: #102b42;
+  box-shadow: 8px 10px 0 rgba(0,0,0,.35);
+  padding: clamp(15px,2.4vw,30px);
+}
+#holidayScreen .china-final-phone-top {display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#ffd56e;font-size:clamp(10px,1.2vw,14px);}
+#holidayScreen .china-final-phone p {font-size:clamp(19px,2.6vw,35px);font-weight:900;line-height:1.3;margin:18px 0 22px;color:white;}
+#holidayScreen .china-final-phone > strong {color:#e9b1a7;font-size:clamp(12px,1.2vw,16px);}
+#holidayScreen .china-final-reaction {
+  position:absolute;bottom:19%;left:20%;right:20%;
+  padding:12px 20px;border:3px solid #347ea0;border-radius:10px;
+  background:#fff3d6;color:#17354b;text-align:center;
+}
+#holidayScreen .china-final-reaction p {font-size:clamp(20px,2.1vw,31px);font-weight:900;margin:5px 0;}
+#holidayScreen .china-final-england {position:absolute;inset:0;display:grid;align-content:center;justify-items:center;text-align:center;background:#090e18;padding:20px;}
+#holidayScreen .china-final-england h2 {font-size:clamp(28px,4.5vw,67px);margin:0;color:#fff0c7;}
+#holidayScreen .china-final-england p {font-size:clamp(15px,2vw,29px);font-style:italic;margin:14px 0;color:#d8c1a1;}
+#holidayScreen .china-final-england small {color:#9aa6ba;font-size:11px;margin-top:20px;}
+@media (min-width:801px) {
+  #holidayScreen #marketScene,#holidayScreen #chinaFinalScene {position:absolute;inset:0;width:100%;height:100%;}
+  #holidayScreen .market-scene .wall-stage {position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;}
+  #holidayScreen .market-scene .wall-stephen {left:15%;height:73%;max-width:42%;}
+  #holidayScreen .market-scene .wall-promoter {right:11%;height:73%;max-width:42%;}
+  #holidayScreen .market-scene .wall-dialogue {left:3%;bottom:max(15%,96px);width:min(74%,820px);padding:9px 13px;border-width:3px;}
+  #holidayScreen:has(#marketScene:not([hidden])) .china-footer,
+  #holidayScreen:has(#chinaFinalScene:not([hidden])) .china-footer {
+    top:2%;right:2%;left:auto;bottom:auto;padding:4px 5px;gap:5px;border-radius:7px;
+  }
+  #holidayScreen .china-final-stage {position:absolute;inset:0;aspect-ratio:auto;height:100%;}
+  #holidayScreen .china-final-controls {position:absolute;z-index:8;bottom:0;left:0;right:0;min-height:50px;max-height:35%;padding:9px 2.5%;background:rgba(5,24,45,.96);}
+  #holidayScreen .market-scene .wall-action-strip:has(.wall-choices:not([hidden])) #marketBackButton {
+    min-height:30px;padding:5px 9px;
+  }
+}
+@media (max-width:800px) {
+  #holidayScreen .market-scene .wall-stage {aspect-ratio:4/3;}
+  #holidayScreen .market-spa-sign {top:20%;left:41%;width:27%;padding:6px;}
+  #holidayScreen .china-final-phone {width:100%;}
+  #holidayScreen .market-fallback-options {grid-template-columns:1fr;}
+}
+@media (max-width:450px) {
+  #holidayScreen .market-scene .wall-stage {aspect-ratio:3/4;}
+  #holidayScreen .china-final-stage {aspect-ratio:3/4;}
+  #holidayScreen .market-spa-sign {top:24%;left:43%;width:37%;}
+  #holidayScreen .china-final-reaction {left:5%;right:5%;bottom:18%;}
+}
+
+
+/*
+ * GAME-SP2.3C — timeline intermissions & mutually exclusive route handoffs.
+ * Reuse the approved location backgrounds. Art, cutouts and laptop framing
+ * are untouched; no new rendered images or giant full-page scroll regions.
+ */
+#holidayScreen #chinaIntermission[hidden],
+#holidayScreen #chinaRouteHandoff[hidden],
+#holidayScreen #wallGoPalaceButton[hidden],
+#holidayScreen #wallGoIncidentButton[hidden],
+#holidayScreen #palaceGoMarketButton[hidden],
+#holidayScreen #palaceGoIncidentButton[hidden] { display:none !important; }
+#holidayScreen .china-intermission,
+#holidayScreen .china-route-handoff {position:relative;background:#0a1d30;}
+#holidayScreen .china-intermission-art,
+#holidayScreen .china-route-handoff-art {
+  position:relative;width:100%;aspect-ratio:1672/941;
+  display:grid;place-items:center;padding:5%;
+  background-color:#102841;
+  background-size:cover;background-position:center;
+  isolation:isolate;
+}
+#holidayScreen .china-intermission-art::before,
+#holidayScreen .china-route-handoff-art::before {
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(125deg,rgba(5,19,35,.85),rgba(6,23,42,.35) 55%,rgba(6,22,35,.70));
+}
+#holidayScreen .china-intermission-art[data-destination="palace"] {
+  background-image:url("../public/assets/generated/locations/china-forbidden-city-background-v01.webp");
+}
+#holidayScreen .china-intermission-art[data-destination="market"] {
+  background-image:url("../public/assets/generated/locations/china-night-market-background-v01.webp");
+}
+#holidayScreen .china-route-handoff-art[data-route="cult"] {
+  background-image:url("../public/assets/generated/locations/china-great-wall-background-v01.webp");
+}
+#holidayScreen .china-route-handoff-art[data-route="detention"] {
+  background-image:url("../public/assets/generated/locations/china-forbidden-city-background-v01.webp");
+}
+#holidayScreen .china-route-handoff-art[data-route="reassemble"] {
+  background-image:url("../public/assets/generated/locations/china-night-market-background-v01.webp");
+}
+#holidayScreen .intermission-frame,
+#holidayScreen .route-handoff-card {
+  position:relative;z-index:1;
+  width:min(86%,920px);
+  padding:clamp(24px,4vw,58px) clamp(18px,4vw,65px);
+  color:#fff4dc;text-align:center;
+  border:3px solid #e4b766;border-radius:18px;
+  background:rgba(9,31,54,.89);
+  box-shadow:6px 8px 0 rgba(0,0,0,.36);
+}
+#holidayScreen .intermission-frame > span,
+#holidayScreen .route-handoff-card > span {
+  display:block;color:#96dcff;font-size:clamp(10px,1.2vw,15px);
+  font-weight:900;letter-spacing:.14em;
+}
+#holidayScreen .intermission-frame h2,
+#holidayScreen .route-handoff-card h2 {
+  margin:12px 0 6px;font-size:clamp(25px,4.1vw,62px);
+  color:#ffdb83;line-height:1.1;
+}
+#holidayScreen .intermission-frame h3 {
+  margin:6px 0;font-size:clamp(17px,2.4vw,35px);line-height:1.2;
+}
+#holidayScreen .intermission-frame p,
+#holidayScreen .route-handoff-card p {
+  margin:13px 0 0;font-size:clamp(13px,1.45vw,20px);
+  font-weight:650;line-height:1.4;
+}
+#holidayScreen .route-handoff-card small {
+  display:block;margin:15px 0 0;font-size:clamp(10px,1vw,13px);
+  color:#b8cfe1;font-weight:700;
+}
+#holidayScreen .china-intermission-actions {
+  display:flex;justify-content:center;align-items:center;
+  gap:10px;padding:12px;background:#071e36;
+}
+#holidayScreen .china-intermission-actions .btn {min-height:46px;}
+/* Choice result still uses the established compact action strip; only one
+   of the branch navigation buttons is visible at a time. */
+#holidayScreen .wall-result .btn[hidden] {display:none !important;}
+@media (min-width:801px) {
+  #holidayScreen #chinaIntermission,
+  #holidayScreen #chinaRouteHandoff {
+    position:absolute;inset:0;height:100%;width:100%;
+  }
+  #holidayScreen .china-intermission-art,
+  #holidayScreen .china-route-handoff-art {
+    position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;
+  }
+  #holidayScreen .china-intermission-actions {
+    position:absolute;left:0;right:0;bottom:0;z-index:5;
+    background:rgba(5,23,43,.9);
+  }
+  #holidayScreen:has(#chinaIntermission:not([hidden])) .china-footer,
+  #holidayScreen:has(#chinaRouteHandoff:not([hidden])) .china-footer {
+    top:2%;right:2%;left:auto;bottom:auto;
+  }
+}
+@media (max-width:800px) {
+  #holidayScreen .china-intermission-art,
+  #holidayScreen .china-route-handoff-art {aspect-ratio:4/3;}
+  #holidayScreen .intermission-frame,
+  #holidayScreen .route-handoff-card {width:94%;padding:17px 13px;}
+}
+@media (max-width:450px) {
+  #holidayScreen .china-intermission-art,
+  #holidayScreen .china-route-handoff-art {aspect-ratio:3/4;}
+  #holidayScreen .intermission-frame h2,
+  #holidayScreen .route-handoff-card h2 {font-size:25px;}
+}
+
+
+/* GAME-SP2.4A — OFFICE-ALARM with already approved office layers and actors;
+ * no new illustrated hotel source can enter the playable build without approval. */
+#holidayScreen #rescueAlarmScene[hidden],
+#holidayScreen #rescueTravelScene[hidden],
+#holidayScreen #rescueHubArrival[hidden],
+#holidayScreen #rescueAlarmPhone[hidden],
+#holidayScreen #rescueAlarmNextButton[hidden],
+#holidayScreen #rescueAlarmTravelButton[hidden] {display:none !important;}
+#holidayScreen .rescue-alarm-scene,#holidayScreen .rescue-travel-scene,
+#holidayScreen .rescue-hub-arrival {position:relative;background:#10243e;}
+#holidayScreen .rescue-alarm-stage,#holidayScreen .rescue-travel-stage,
+#holidayScreen .rescue-hub-arrival-stage {
+  position:relative;isolation:isolate;overflow:hidden;
+  width:100%;aspect-ratio:1672/941;
+}
+#holidayScreen .rescue-alarm-background,#holidayScreen .rescue-alarm-foreground {
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+}
+#holidayScreen .rescue-alarm-background {z-index:0;}
+#holidayScreen .rescue-alarm-actor {
+  position:absolute;z-index:2;bottom:0;height:79%;width:auto;max-width:42%;
+  object-fit:contain;object-position:center bottom;
+  filter:drop-shadow(5px 6px 5px rgba(0,0,0,.3));
+}
+#holidayScreen .rescue-alarm-david {left:17%;}
+#holidayScreen .rescue-alarm-paul {right:14%;}
+#holidayScreen .rescue-alarm-foreground {z-index:3;pointer-events:none;}
+#holidayScreen .rescue-alarm-dialogue {bottom:11%;left:3%;width:min(73%,850px);z-index:7;}
+#holidayScreen .rescue-alarm-phone {
+  position:absolute;z-index:6;top:15%;right:3%;width:min(34%,360px);
+  padding:12px 14px;border-radius:10px;border:2px solid #86d3ed;
+  background:rgba(8,30,54,.96);color:#f8f1db;
+  box-shadow:5px 7px 0 rgba(0,0,0,.38);
+}
+#holidayScreen .rescue-alarm-phone strong {font-size:clamp(10px,1.15vw,14px);color:#f9ce75;}
+#holidayScreen .rescue-alarm-phone p {font-weight:800;font-size:clamp(12px,1.38vw,18px);line-height:1.35;margin:10px 0;}
+#holidayScreen .rescue-alarm-phone span {display:block;font-size:11px;color:#9ed5ed;}
+#holidayScreen .rescue-travel-stage,#holidayScreen .rescue-hub-arrival-stage {
+  display:grid;place-items:center;padding:4%;
+  background:linear-gradient(115deg,rgba(10,24,48,.88),rgba(10,36,55,.72)),
+    url("../public/assets/generated/locations/china-night-market-background-v01.webp") center/cover;
+}
+#holidayScreen .rescue-travel-panel {
+  width:min(87%,960px);max-height:80%;
+  display:grid;justify-items:center;align-content:center;
+  text-align:center;gap:12px;
+  border:3px solid #eac57f;border-radius:14px;
+  padding:clamp(20px,3vw,44px);
+  color:#fff4d9;background:rgba(9,29,52,.91);
+  box-shadow:7px 9px 0 rgba(0,0,0,.4);
+}
+#holidayScreen .rescue-travel-panel > span:not(.rescue-travel-symbol) {
+  font-size:clamp(10px,1.2vw,15px);color:#90d9f5;letter-spacing:.12em;font-weight:900;
+}
+#holidayScreen .rescue-travel-symbol {font-size:clamp(30px,5vw,70px);line-height:1;}
+#holidayScreen .rescue-travel-panel h2 {font-size:clamp(23px,3.2vw,48px);line-height:1.14;color:#ffdc8c;margin:0;}
+#holidayScreen .rescue-travel-panel p {font-size:clamp(13px,1.45vw,21px);line-height:1.35;margin:0;font-weight:750;}
+#holidayScreen .rescue-travel-panel small {font-size:clamp(11px,1vw,15px);color:#b8d3df;}
+@media (min-width:801px) {
+  #holidayScreen #rescueAlarmScene,
+  #holidayScreen #rescueTravelScene,
+  #holidayScreen #rescueHubArrival {position:absolute;inset:0;height:100%;width:100%;}
+  #holidayScreen .rescue-alarm-stage,
+  #holidayScreen .rescue-travel-stage,
+  #holidayScreen .rescue-hub-arrival-stage {position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;}
+  #holidayScreen:has(#rescueAlarmScene:not([hidden])) .china-footer,
+  #holidayScreen:has(#rescueTravelScene:not([hidden])) .china-footer,
+  #holidayScreen:has(#rescueHubArrival:not([hidden])) .china-footer {
+    top:2%;right:2%;left:auto;bottom:auto;
+  }
+  #holidayScreen .rescue-alarm-scene .wall-action-strip,
+  #holidayScreen .rescue-travel-scene .wall-action-strip,
+  #holidayScreen .rescue-hub-arrival .wall-action-strip {
+    position:absolute;z-index:8;bottom:0;left:0;right:0;
+    min-height:52px;max-height:35%;
+    padding:9px 2.5%;background:rgba(5,25,46,.96);
+  }
+}
+@media (max-width:800px) {
+  #holidayScreen .rescue-alarm-stage,#holidayScreen .rescue-travel-stage,
+  #holidayScreen .rescue-hub-arrival-stage {aspect-ratio:4/3;}
+  #holidayScreen .rescue-alarm-actor {height:67%;max-width:48%;}
+  #holidayScreen .rescue-alarm-david {left:7%;}
+  #holidayScreen .rescue-alarm-paul {right:4%;}
+  #holidayScreen .rescue-alarm-phone {top:13%;right:2%;width:45%;padding:8px;}
+  #holidayScreen .rescue-alarm-dialogue {width:95%;left:2%;bottom:2%;}
+  #holidayScreen .rescue-travel-panel {width:96%;padding:18px 12px;}
+}
+@media (max-width:450px) {
+  #holidayScreen .rescue-alarm-stage,#holidayScreen .rescue-travel-stage,
+  #holidayScreen .rescue-hub-arrival-stage {aspect-ratio:3/4;}
+  #holidayScreen .rescue-alarm-actor {height:57%;max-width:65%;}
+  #holidayScreen .rescue-alarm-david {left:-5%;}
+  #holidayScreen .rescue-alarm-paul {right:-5%;}
+  #holidayScreen .rescue-alarm-phone {top:18%;width:54%;}
+}
+
+
+/* GAME-SP2.4B — Approved empty Visitor Information environment.
+ * Main cast remains an independent layer: standing full-body sprite approval
+ * is outstanding; do not flatten invented character composites into the BG.
+ */
+#holidayScreen #rescueHotelScene[hidden],
+#holidayScreen #rescueRouteIntro[hidden],
+#holidayScreen #rescueHotelHotspots[hidden],
+#holidayScreen #rescueHotelDialogue[hidden],
+#holidayScreen #hotelNextButton[hidden],
+#holidayScreen #hotelEvidencePanel[hidden],
+#holidayScreen #hotelDeductions[hidden],
+#holidayScreen #hotelResolved[hidden],
+#holidayScreen #hotelHint[hidden] {display:none !important;}
+#holidayScreen .rescue-hotel-scene,#holidayScreen .rescue-route-intro {position:relative;background:#102840;}
+#holidayScreen .rescue-hub-arrival-stage,
+#holidayScreen .rescue-route-intro-stage {
+  background:linear-gradient(120deg,rgba(7,22,41,.72),rgba(9,34,57,.55)),
+    url("../public/assets/generated/locations/china-visitor-information-lobby-background-v01.webp") center/cover;
+}
+#holidayScreen .rescue-hotel-stage,#holidayScreen .rescue-route-intro-stage {
+  position:relative;isolation:isolate;overflow:hidden;width:100%;aspect-ratio:1672/941;
+}
+#holidayScreen .rescue-route-intro-stage {display:grid;place-items:center;padding:5%;}
+#holidayScreen .rescue-hotel-bg {position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+
+/* Owner-approved standing cast: David stands slightly farther back than Paul,
+   who keeps his approved hotel position. Clues and subtitles remain above them. */
+#holidayScreen .rescue-hotel-actor {
+  position:absolute;bottom:24%;width:auto;object-fit:contain;
+  object-position:center bottom;pointer-events:none;
+  filter:drop-shadow(4px 6px 4px rgba(8,22,34,.35));z-index:2;
+}
+#holidayScreen .rescue-hotel-david {height:56%;left:22%;bottom:28%;max-width:31%;}
+#holidayScreen .rescue-hotel-paul {height:50%;left:42%;max-width:28%;}
+
+#holidayScreen .rescue-hotel-hotspots {position:absolute;inset:0;z-index:4;pointer-events:none;}
+#holidayScreen .rescue-hotel-hotspot {
+  position:absolute;pointer-events:auto;z-index:5;display:flex;gap:8px;align-items:center;
+  min-height:46px;min-width:130px;max-width:30%;
+  padding:9px 12px;text-align:left;border:2px solid #7dd2f1;border-radius:10px;
+  background:rgba(4,35,60,.94);color:#fff4d9;font-weight:850;
+  box-shadow:4px 5px 0 rgba(0,0,0,.42);font-size:clamp(12px,1.15vw,16px);
+  cursor:pointer;
+}
+#holidayScreen .rescue-hotel-hotspot .hub-symbol {color:#ffdc87;font-size:clamp(16px,1.65vw,24px);}
+#holidayScreen .rescue-hotel-hotspot:focus-visible,
+#holidayScreen .rescue-hotel-hotspot:hover {background:#144d79;border-color:#ffdb88;outline:3px solid #ffdb88;outline-offset:2px;}
+#holidayScreen .hotel-hotspot-phone {left:9%;bottom:34%;}
+#holidayScreen .hotel-hotspot-brochure {right:8%;top:30%;}
+#holidayScreen .hotel-hotspot-desk {left:40%;top:36%;}
+#holidayScreen .rescue-hotel-dialogue {bottom:12%;left:3%;width:min(73%,850px);}
+#holidayScreen .hotel-evidence-panel,
+#holidayScreen .hotel-deductions,#holidayScreen .hotel-resolved {width:100%;display:grid;gap:9px;color:#f9f0d9;}
+#holidayScreen .hotel-evidence-panel strong,
+#holidayScreen .hotel-resolved strong {font-size:clamp(16px,1.6vw,23px);color:#ffdb87;}
+#holidayScreen .hotel-evidence-panel p,
+#holidayScreen .hotel-deductions p,#holidayScreen .hotel-resolved p {
+  margin:0;color:#fff3d8;line-height:1.4;font-size:clamp(13px,1.3vw,17px);font-weight:700;
+}
+#holidayScreen .hotel-evidence-route {
+  border-left:4px solid #ffc76f;padding:7px 11px;
+  background:rgba(255,245,210,.11);color:#fff8db;font-weight:850;
+}
+#holidayScreen .hotel-route-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+#holidayScreen .hotel-route-grid .wall-choice {
+  min-height:45px;padding:7px 11px;margin:0;text-align:center;
+  font-size:clamp(12px,1.1vw,16px);width:100%;
+}
+#holidayScreen .hotel-route-grid button[data-correct="true"] {
+  border-color:#8cf3a3;box-shadow:0 0 0 3px #8cf3a3;background:#e0ffdc;
+}
+#holidayScreen .hotel-hint {
+  padding:8px 11px;border-radius:7px;background:#fff0bb;color:#283646;
+  font-size:clamp(12px,1.15vw,16px);font-weight:800;
+}
+#holidayScreen .hotel-feedback {color:#ffd789 !important;font-weight:800;}
+#holidayScreen .rescue-hotel-action-strip:has(.hotel-deductions:not([hidden])) {padding:10px 2.5%;gap:8px;}
+@media (min-width:801px) {
+  #holidayScreen #rescueHotelScene,#holidayScreen #rescueRouteIntro {
+    position:absolute;inset:0;width:100%;height:100%;
+  }
+  #holidayScreen .rescue-hotel-stage,#holidayScreen .rescue-route-intro-stage {
+    position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;
+  }
+  #holidayScreen .rescue-hotel-action-strip,
+  #holidayScreen .rescue-route-intro .wall-action-strip {
+    position:absolute;z-index:8;bottom:0;left:0;right:0;
+    min-height:54px;max-height:42%;
+    padding:9px 2.5%;background:rgba(5,25,46,.97);overflow-y:auto;
+  }
+  #holidayScreen:has(#rescueHotelScene:not([hidden])) .china-footer,
+  #holidayScreen:has(#rescueRouteIntro:not([hidden])) .china-footer {top:2%;right:2%;left:auto;bottom:auto;}
+}
+@media (max-width:800px) {
+  #holidayScreen .rescue-hotel-actor {bottom:24%;}
+  #holidayScreen .rescue-hotel-david {height:50%;left:16%;bottom:28%;max-width:42%;}
+  #holidayScreen .rescue-hotel-paul {height:45%;left:44%;max-width:36%;}
+  #holidayScreen .rescue-hotel-stage,#holidayScreen .rescue-route-intro-stage {aspect-ratio:4/3;}
+  #holidayScreen .hotel-route-grid {grid-template-columns:1fr;}
+  #holidayScreen .rescue-hotel-hotspot {padding:7px 9px;min-width:0;min-height:44px;max-width:39%;}
+  #holidayScreen .hotel-hotspot-phone {left:3%;bottom:36%;}
+  #holidayScreen .hotel-hotspot-brochure {right:2%;top:29%;}
+  #holidayScreen .hotel-hotspot-desk {left:42%;top:47%;}
+}
+@media (max-width:450px) {
+  #holidayScreen .rescue-hotel-actor {bottom:26%;}
+  #holidayScreen .rescue-hotel-david {height:42%;left:10%;bottom:30%;max-width:56%;}
+  #holidayScreen .rescue-hotel-paul {height:38%;left:45%;max-width:54%;}
+  #holidayScreen .rescue-hotel-stage,#holidayScreen .rescue-route-intro-stage {aspect-ratio:3/4;}
+  #holidayScreen .rescue-hotel-hotspot {font-size:11px;max-width:47%;}
+  #holidayScreen .hotel-hotspot-phone {bottom:25%;}
+  #holidayScreen .hotel-hotspot-brochure {top:26%;}
+  #holidayScreen .hotel-hotspot-desk {left:35%;top:49%;}
+}

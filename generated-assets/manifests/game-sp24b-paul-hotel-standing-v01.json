@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1RRMN0_nXsaHFlEkaqr4DVNabR2ceP59Z"
+  },
+  "expectedSourceName": "paul-hotel-standing-puzzled-locked-v01.png",
+  "destination": "public/assets/generated/characters/paul-hotel-standing-puzzled-v01.webp",
+  "transform": {
+    "maxWidth": 1200,
+    "maxHeight": 1600,
+    "quality": 88
+  },
+  "revision": 1
+}

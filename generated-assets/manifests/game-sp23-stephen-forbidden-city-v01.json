@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1FZXgrofuUNEIvD2y340KiieDXBH9AHYe"
+  },
+  "expectedSourceName": "stephen-holiday-forbidden-city-pleased-locked-v01.png",
+  "destination": "public/assets/generated/characters/stephen-holiday-forbidden-city-pleased-v01.webp",
+  "transform": {
+    "maxWidth": 1200,
+    "maxHeight": 1600,
+    "quality": 88
+  },
+  "revision": 1
+}

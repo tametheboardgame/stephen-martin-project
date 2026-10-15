@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1Itsnjm2blwhzhciRP94aBUIWxlL4N1Td"
+  },
+  "expectedSourceName": "china-banquet-attendant-standing-locked-v01.png",
+  "destination": "public/assets/generated/characters/china-banquet-attendant-standing-v01.webp",
+  "transform": {
+    "maxWidth": 1200,
+    "maxHeight": 1600,
+    "quality": 88
+  },
+  "revision": 1
+}
