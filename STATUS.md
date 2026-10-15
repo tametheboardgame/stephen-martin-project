@@ -2,6 +2,12 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP4.0B — Approved Summit entrance cast and bottom dialogue (15 October 2026)
+
+- Owner approved the revised transparent **David (gesturing with phone)**, **Paul (wary, raised hand)** and **Asian Summit gatekeeper (ceremonial uniform)** cutouts and asked that the Summit approach use the same *character scene plus bottom dialogue* treatment as the hotel. Approved PNG originals are staged individually in Google Drive; three manifests materialised alpha-preserving WebPs into `public/assets/generated/characters/` without committing PNG sources.
+- `#rescueRouteIntro[data-route="cult"]` now layers all three sprites over the previously approved Summit exterior and moves the editable seven-line narrative caption to the bottom. The global SP3.4 autoplay/Next/Pause toolbar remains unchanged, and correct-speaker highlighting is visual only. The central blue panel is reserved for the **Admissions Test**; throne-room ending and non-Summit routes are unchanged.
+- Added build WebP-alpha checks and route/dialogue regression tests. The approved scene is playable on the SP4.0 development branch, pending final human desktop/tablet visual sign-off. Work package: `docs/story/GAME-SP4.0B-SUMMIT-ENTRANCE-CAST.md`. PR #33 remains draft; do not merge without owner approval.
+
 ## GAME-SP4.0A — Summit exterior first visual proof brief (15 October 2026)
 
 - Owner asked to begin dedicated illustration production **one asset at a time**. Confirmed existing approved comic-poster visual direction, canonical Stephen/David/Paul references, and established Drive → manifest → optimised WebP pipeline.
