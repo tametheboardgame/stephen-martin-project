@@ -2480,3 +2480,65 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen .assembly-tray {grid-template-columns:repeat(2,minmax(0,1fr));}
   #holidayScreen .assembly-piece,#holidayScreen .assembly-slot {min-height:48px;font-size:13px;}
 }
+
+/* GAME-SP3.4 unified controls: one predictable toolbar, no scene-specific
+   Next/Replay button forest. Existing ID hooks remain for old save regressions. */
+#holidayScreen .china-footer {
+  position:absolute;z-index:15;top:10px !important;right:10px !important;
+  bottom:auto !important;left:auto !important;display:flex;
+  align-items:center;justify-content:flex-end;gap:6px;
+  max-width:min(95%,560px);padding:7px 8px;
+  border:1px solid rgba(155,210,230,.7);border-radius:9px;
+  background:rgba(4,25,48,.94);
+}
+#holidayScreen #holidayNextButton[hidden],
+#holidayScreen #holidayRouteButton[hidden] {display:none !important;}
+#holidayScreen #holidayPauseButton,
+#holidayScreen #holidayNextButton,
+#holidayScreen #holidayRouteButton,
+#holidayScreen #homeButton {min-height:38px;font-size:12px;white-space:nowrap;}
+#holidayScreen #holidayPlaybackStatus {font-size:10px;color:#c9dfe3;max-width:180px;}
+#holidayScreen #replayButton,
+#holidayScreen #wallReplayButton,
+#holidayScreen #palaceReplayButton,
+#holidayScreen #chinaAnotherEndingButton,
+#holidayScreen #rescueHubReplayButton,
+#holidayScreen #hotelRouteReplayButton,
+#holidayScreen #rescueMiniGameReplayButton,
+#holidayScreen #rescueSummaryReplayButton,
+#holidayScreen #rescueSummaryMenuButton,
+#holidayScreen #chinaStartButton,
+#holidayScreen #wallNextButton,
+#holidayScreen #wallGoPalaceButton,
+#holidayScreen #wallGoIncidentButton,
+#holidayScreen #palaceNextButton,
+#holidayScreen #palaceGoMarketButton,
+#holidayScreen #palaceGoIncidentButton,
+#holidayScreen #marketNextButton,
+#holidayScreen #marketGoIncidentButton,
+#holidayScreen #intermissionContinueButton,
+#holidayScreen #handoffContinueButton,
+#holidayScreen #chinaFinalNextButton,
+#holidayScreen #rescueAlarmNextButton,
+#holidayScreen #rescueAlarmTravelButton,
+#holidayScreen #rescueTravelNextButton,
+#holidayScreen #rescueHubStartButton,
+#holidayScreen #hotelNextButton,
+#holidayScreen #hotelFinishButton,
+#holidayScreen #routeIntroNextButton,
+#holidayScreen #summitNextButton,
+#holidayScreen #detentionNextButton,
+#holidayScreen #summitEndingNextButton,
+#holidayScreen #detentionEndingNextButton,
+#holidayScreen #assemblyEndingNextButton {display:none !important;}
+@media (max-width:800px) {
+  #holidayScreen .china-footer {top:5px !important;right:5px !important;max-width:98%;gap:4px;padding:4px 5px;}
+  #holidayScreen #holidayPauseButton,#holidayScreen #holidayNextButton,
+  #holidayScreen #holidayRouteButton,#holidayScreen #homeButton {font-size:11px;padding:6px 7px;min-height:36px;}
+  #holidayScreen #holidayPlaybackStatus {display:none;}
+}
+@media (max-width:450px) {
+  #holidayScreen .china-footer {max-width:calc(100% - 10px);flex-wrap:wrap;}
+  #holidayScreen #holidayPauseButton,#holidayScreen #holidayNextButton,
+  #holidayScreen #holidayRouteButton,#holidayScreen #homeButton {font-size:10px;min-height:34px;}
+}
