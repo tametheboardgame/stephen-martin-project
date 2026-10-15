@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "11yVSHsny_Ff4I7KCSA9GCmf0o2gS6FNV"
+  },
+  "expectedSourceName": "summit-throne-stephen-seated-chairman-v02.png",
+  "destination": "public/assets/generated/characters/summit-stephen-seated-chairman-v02.webp",
+  "transform": {
+    "maxWidth": 1024,
+    "maxHeight": 1536,
+    "quality": 86
+  },
+  "revision": 1
+}
