@@ -2,6 +2,13 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP3.0 — Shared route framework draft (15 October 2026)
+
+- Draft branch `agent/game-sp30-minigame-framework`: implemented the approved route introductions for Summit, fictional ceremonial bureaucracy and spa using existing screenplay dialogue. After a correct hotel deduction, the user plays each briefing line then reaches an honestly labelled mini-game gate; no unavailable mini-game or ending is shown as playable.
+- Added `src/rescue-framework.js` with per-route fixed destinations, small normalised `rescueProgress` V1 inside the existing V3 save, hint-after-two wrong answers, step/checkpoint helpers, and six idempotent cardboard piece matches. Restart and Choose Another Ending clear downstream state; existing voice clips, hotel logic and Stephen branching remain unchanged.
+- Shared inaccessible-until-completion ending summary shell prepared with three approved titles and restart/replay/menu. SP3.1–SP3.3 will supply actual choices and cutscenes.
+- Tests and real Cloudflare laptop/tablet review required before owner acceptance. `docs/story/GAME-SP3.0-MINIGAME-FRAMEWORK.md` describes this bounded increment; do not merge to main without approval.
+
 ## GAME-SP2.4B — Hotel scene accepted and stacked gameplay merged (15 October 2026)
 
 - Owner visually approved the hotel cast's final perspective: Paul remains at the accepted reception-floor position and David stands slightly farther back/smaller. The two independently materialised transparent figures remain over the approved empty visitor-information background, with clickable clues and subtitles layered above.
