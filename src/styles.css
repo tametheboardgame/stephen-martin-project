@@ -2706,7 +2706,7 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen #summitEndingScene .summit-throne-stephen {
   display:block;position:absolute;z-index:2;
   /* Scale for the throne *behind* him, not a foreground full-size chair. */
-  left:50%;bottom:46%;height:23%;width:auto;max-width:22%;
+  left:50%;bottom:46%;height:17%;width:auto;max-width:18%;
   transform:translateX(-50%);transform-origin:center bottom;
   object-fit:contain;object-position:center bottom;pointer-events:none;
   filter:drop-shadow(2px 4px 3px rgba(3,20,35,.42));
@@ -2739,7 +2739,7 @@ body:has(#menuScreen:not([hidden])) main {
     top:9%;left:2%;padding:6px 9px;
   }
   #holidayScreen #summitEndingScene .summit-throne-stephen {
-    height:21%;bottom:46%;max-width:25%;
+    height:16%;bottom:46%;max-width:20%;
   }
   #holidayScreen #summitEndingScene .summit-ending-content {
     bottom:10%;max-height:30%;padding:10px 12px;
@@ -2747,7 +2747,7 @@ body:has(#menuScreen:not([hidden])) main {
 }
 @media (max-width:450px) {
   #holidayScreen #summitEndingScene .summit-throne-stephen {
-    height:19%;bottom:43%;max-width:34%;
+    height:14%;bottom:43%;max-width:28%;
   }
   #holidayScreen #summitEndingScene .summit-ending-content {
     bottom:13%;max-height:33%;padding:8px 10px;border-width:2px;
