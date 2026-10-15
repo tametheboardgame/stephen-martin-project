@@ -1180,3 +1180,29 @@ test("SP3.0 all committed routes play canonical briefing then stop at honest min
     assert.equal(Object.hasOwn(saved(p),"route"),false);
   }
 });
+
+test("SP3.0 legacy V3 hotel handoff saves migrate without changing Stephen's route",()=>{
+  const p=toHotelInvestigation("cult");
+  completeHotelIntro(p);
+  p.el("hotelCultButton").click();
+  for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
+  const legacy=saved(p);
+  assert.equal(legacy.holidayPhase,"rescue-route-intro");
+  delete legacy.rescueProgress;
+  p.stored.set("stephen-martin-game-sp1-save-v1",JSON.stringify(legacy));
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).route,"cult");
+  assert.equal(saved(p).rescueProgress.version,1);
+  assert.equal(saved(p).rescueProgress.route,"cult");
+  assert.equal(saved(p).rescueProgress.introStep,0);
+  // An invalid unfinished ending summary must never masquerade as a win.
+  const corrupted=saved(p);
+  corrupted.holidayPhase="rescue-ending-summary";
+  corrupted.rescueProgress={version:1,route:"detention",miniGameStage:3,finished:true};
+  p.stored.set("stephen-martin-game-sp1-save-v1",JSON.stringify(corrupted));
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  assert.equal(saved(p).rescueProgress.route,"cult");
+  assert.equal(saved(p).rescueProgress.finished,false);
+  assert.equal(p.el("rescueEndingSummary").hidden,true);
+});
