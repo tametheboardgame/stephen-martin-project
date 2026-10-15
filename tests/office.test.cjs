@@ -1809,3 +1809,29 @@ test("SP3.4 all three fully-earned finales autoplay their lines but stop at summ
     assert.equal(Object.hasOwn(saved(p),"route"),false);
   }
 });
+
+
+test("SP4.0A Summit entrance art is route-scoped, materialised and build-packaged",()=>{
+  const manifest=JSON.parse(read("generated-assets/manifests/game-sp40a-summit-entrance-v01.json"));
+  assert.equal(manifest.source.provider,"google-drive");
+  assert.equal(manifest.expectedSourceName,"summit-entrance-background-v01.png");
+  assert.equal(manifest.destination,"public/assets/generated/locations/summit-entrance-v01.webp");
+  assert.ok(read("scripts/build.mjs").includes('"public/assets/generated/locations/summit-entrance-v01.webp"'));
+  assert.match(css,/#rescueRouteIntro\[data-route="cult"\] \.rescue-route-intro-stage/);
+  assert.match(css,/#rescueMiniGameScene:has\(#summitAdmissions:not\(\[hidden\]\)\) \.rescue-route-intro-stage/);
+  assert.equal(css.split('url("../public/assets/generated/locations/summit-entrance-v01.webp")').length,2);
+  assert.doesNotMatch(css,/#summitEndingScene[^\n]*summit-entrance-v01\.webp/);
+  const p=toHotelInvestigation("cult");
+  completeHotelIntro(p);
+  p.el("hotelCultButton").click();
+  for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+  assert.equal(p.el("rescueRouteIntro").dataset.route,"cult");
+  p.el("hotelRouteReplayButton").click();
+  assert.equal(p.el("rescueRouteIntro").dataset.route,"other");
+  const q=toHotelInvestigation("detention");
+  completeHotelIntro(q);
+  q.el("hotelDetentionButton").click();
+  for(let i=0;i<6;i++)q.el("hotelFinishButton").click();
+  assert.equal(q.el("rescueRouteIntro").dataset.route,"other");
+});
