@@ -559,3 +559,8 @@ Implement the approved lobby as the sole shared investigation location, with eig
 ## GAME-SP2.4B — Approved standing hotel cast integration (15 October 2026)
 
 Owner approved separate transparent full-body David/Paul PNG sprites. Materialise each via Google Drive manifests and place on independent layers above the approved lobby but under clue hit targets and subtitle UI. David taller, Paul visibly shorter across responsive breakpoints. Keep existing eight arrival beats, phone/brochures/desk interactions, hint and immutable route unchanged. Require a live human combined-scene composition review before merging any stacked PR; no release permission implied by art approval.
+
+## GAME-SP3.0 — Small reusable route framework (started 15 October 2026)
+
+Implement a narrow `rescueProgress` structure on the existing local V3 save, shared step/hint/assembly-slot helpers, approved spoken route introductions after the hotel deduction, restart/replay controls and a guarded ending-summary shell. The three actual interactive mini-games and completed end cutscenes belong only to SP3.1–SP3.3. Save/resume must preserve both the committed route and the exact briefing line; no dead ends, fake playable puzzles or extra media. Human inspect the draft Cloudflare preview, including laptop and touch layouts, before production merge. Work package: `docs/story/GAME-SP3.0-MINIGAME-FRAMEWORK.md`.
+
