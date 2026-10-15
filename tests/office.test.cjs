@@ -2016,10 +2016,10 @@ test("SP4.0C Stephen is sized for the background's raised throne at desktop/tabl
   const desktop=readPlacement(part.split("@media (max-width:800px)")[0]);
   const tablet=readPlacement(part.split("@media (max-width:800px)")[1].split("@media (max-width:450px)")[0]);
   const mobile=readPlacement(part.split("@media (max-width:450px)")[1]);
-  assert.deepEqual(desktop,{height:23,bottom:46});
-  assert.deepEqual(tablet,{height:21,bottom:46});
-  assert.deepEqual(mobile,{height:19,bottom:43});
-  assert.ok(desktop.height<32,"Stephen reduced from original oversized sprite");
+  assert.deepEqual(desktop,{height:17,bottom:46});
+  assert.deepEqual(tablet,{height:16,bottom:46});
+  assert.deepEqual(mobile,{height:14,bottom:43});
+  assert.ok(desktop.height<23,"Stephen reduced further after second owner screenshot");
   assert.ok(desktop.bottom>39,"Stephen raised onto chair rather than steps");
   assert.match(part,/transform:translateX\(-50%\)/,"Sprite stays centred on original throne");
   assert.match(part,/data-speaker="stephen"/,"Speaker highlight retained");
