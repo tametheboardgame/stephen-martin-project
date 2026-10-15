@@ -1976,7 +1976,7 @@ test("SP4.0C approved throne and Stephen sprite are separate, packaged and trans
   assert.match(css,/@media \(max-width:450px\) \{[\s\S]*?#summitEndingScene \.summit-throne-stephen/);
 });
 
-test("SP4.0C Stephen-only throne cutscene keeps all Ending A lines, speaker glow, autoplay and replay",()=>{
+test("SP4.0C throne cutscene keeps all Ending A lines, speaker glow, autoplay and replay",()=>{
   const p=toSummitAdmissions();
   for(const correct of [2,1,2]){
     p.el("summitChoice"+correct).click();
@@ -2023,4 +2023,47 @@ test("SP4.0C Stephen is sized for the background's raised throne at desktop/tabl
   assert.ok(desktop.bottom>39,"Stephen raised onto chair rather than steps");
   assert.match(part,/transform:translateX\(-50%\)/,"Sprite stays centred on original throne");
   assert.match(part,/data-speaker="stephen"/,"Speaker highlight retained");
+});
+
+
+test("SP4.0C approved David-left and Paul-right actors are independently packaged and focused",()=>{
+  const scenes=[
+    {name:"david",asset:"summit-throne-david-confrontational-v01.webp",manifest:"game-sp40c-throne-david-v01.json",id:"summitThroneDavid"},
+    {name:"paul",asset:"summit-throne-paul-astonished-v01.webp",manifest:"game-sp40c-throne-paul-v01.json",id:"summitThronePaul"}
+  ];
+  const build=read("scripts/build.mjs");
+  for(const c of scenes){
+    const img=fs.readFileSync(path.join(root,"public/assets/generated/characters",c.asset));
+    assert.ok(img.length>10000,"Nonempty sprite "+c.name);
+    assert.equal(img.toString("ascii",0,4),"RIFF");
+    assert.equal(img.toString("ascii",12,16),"VP8X");
+    assert.ok((img[20]&0x10)!==0,"Transparency preserved "+c.name);
+    assert.ok(build.includes('"'+c.asset+'"'));
+    const manifest=JSON.parse(read("generated-assets/manifests/"+c.manifest));
+    assert.equal(manifest.source.provider,"google-drive");
+    assert.equal(manifest.destination,"public/assets/generated/characters/"+c.asset);
+    assert.ok(html.includes('id="'+c.id+'"'));
+    assert.ok(html.includes('public/assets/generated/characters/'+c.asset));
+    assert.ok(css.includes('.summit-throne-'+c.name+" {"));
+    assert.ok(css.includes('[data-speaker="'+c.name+'"] .summit-throne-'+c.name));
+  }
+  const throneMarkup=html.split('id="summitEndingScene"')[1].split('id="detentionEndingScene"')[0];
+  assert.ok(throneMarkup.indexOf("summitThroneDavid")<throneMarkup.indexOf("summit-ending-content"));
+  assert.ok(throneMarkup.indexOf("summitThronePaul")<throneMarkup.indexOf("summit-ending-content"));
+  const cssBlock=css.slice(css.indexOf("/* GAME-SP4.0C — Owner-approved Summit throne"));
+  assert.match(cssBlock,/\.summit-throne-david \{\s*left:11%;bottom:19%;height:43%/);
+  assert.match(cssBlock,/\.summit-throne-paul \{\s*right:11%;bottom:19%;height:40%/);
+  assert.match(cssBlock,/@media \(max-width:800px\)/);
+  assert.match(cssBlock,/@media \(max-width:450px\)/);
+  assert.ok(cssBlock.includes('height:17%;width:auto;max-width:18%;'),"Stephen's approved desktop scale is unchanged");
+  const p=toSummitAdmissions();
+  for(const correct of [2,1,2]){p.el("summitChoice"+correct).click();p.el("summitNextButton").click();}
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+  assert.equal(p.el("summitEndingScene").dataset.speaker,"stephen");
+  p.el("summitEndingNextButton").click();
+  assert.equal(p.el("summitEndingScene").dataset.speaker,"david");
+  p.el("summitEndingNextButton").click();
+  assert.equal(p.el("summitEndingScene").dataset.speaker,"stephen");
+  p.el("summitEndingNextButton").click();
+  assert.equal(p.el("summitEndingScene").dataset.speaker,"paul");
 });
