@@ -2,6 +2,10 @@
 
 Entries are concise, durable design decisions. Additional decisions are added only where they materially affect scope, design, delivery or implementation.
 
+## SP-D044, 15 October 2026: Layer four silent ceremonial attendants around the Summit throne
+
+Owner approved four individually generated, transparent adult ceremonial attendants (fan, tray, ewer, towel) and directed their addition to Ending A. Preserve the original approved throne-room background, Stephen's owner-approved size on the existing chair, and David/Paul near the base of the stairs. Keep four attendants as separate Drive-provenanced alpha WebPs, positioned in left/right pairs, behind principals and dialogue, without new dialogue or gameplay mechanics. Allow responsive repositioning and require owner in-engine visual approval prior to merging the two stacked draft artwork PRs.
+
 ## SP-D043, 15 October 2026: Lock the approved Summit throne-room background
 
 Owner approved the detailed alpine social-club throne room for Ending A and requested three different foreground character sprites: Stephen seated joyfully with chairman regalia, David confronting him and Paul looking impressed/confused. Lock the approved **empty** background as a separately materialised asset, then review independent transparent sprite candidates before integrating them; preserve the existing Summit entrance, bottom-dialogue presentation, speaker glow and route state. In particular, do not commit a composite image with a second room or double throne as finished game art. The sprite candidates are not yet owner-approved. Maintain the stacked draft-PR and manual-merge gates.
