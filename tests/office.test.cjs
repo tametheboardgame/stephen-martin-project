@@ -1961,7 +1961,7 @@ test("SP4.0C approved throne and Stephen sprite are separate, packaged and trans
   assert.equal(bgManifest.destination,"public/assets/generated/locations/"+background);
   assert.equal(stephenManifest.destination,"public/assets/generated/characters/"+sprite);
   const build=read("scripts/build.mjs");
-  assert.ok(build.includes('"'+background+'"'));
+  assert.ok(build.includes('"public/assets/generated/locations/'+background+'"'));
   assert.ok(build.includes('"'+sprite+'"'));
   assert.ok(build.includes("Approved seated Stephen must preserve WebP alpha transparency"));
   assert.match(html,/id="summitThroneStephen"[^>]*summit-stephen-seated-chairman-v02\.webp/);
