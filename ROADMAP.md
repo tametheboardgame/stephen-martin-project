@@ -559,3 +559,20 @@ Implement the approved lobby as the sole shared investigation location, with eig
 ## GAME-SP2.4B — Approved standing hotel cast integration (15 October 2026)
 
 Owner approved separate transparent full-body David/Paul PNG sprites. Materialise each via Google Drive manifests and place on independent layers above the approved lobby but under clue hit targets and subtitle UI. David taller, Paul visibly shorter across responsive breakpoints. Keep existing eight arrival beats, phone/brochures/desk interactions, hint and immutable route unchanged. Require a live human combined-scene composition review before merging any stacked PR; no release permission implied by art approval.
+
+## GAME-SP3.0 — Small reusable route framework (started 15 October 2026)
+
+Implement a narrow `rescueProgress` structure on the existing local V3 save, shared step/hint/assembly-slot helpers, approved spoken route introductions after the hotel deduction, restart/replay controls and a guarded ending-summary shell. The three actual interactive mini-games and completed end cutscenes belong only to SP3.1–SP3.3. Save/resume must preserve both the committed route and the exact briefing line; no dead ends, fake playable puzzles or extra media. Human inspect the draft Cloudflare preview, including laptop and touch layouts, before production merge. Work package: `docs/story/GAME-SP3.0-MINIGAME-FRAMEWORK.md`.
+
+
+## GAME-SP3.1 — The Summit Admissions Test (started 15 October 2026)
+
+Implement the approved three-round no-fail Summit dialogue/card puzzle, its complete original Ending A and shared replay path as a stacked draft after GAME-SP3.0. Retain saves, route isolation, hint-after-two, text and touch-accessible choice cards. The current proof uses intentionally provisional CSS/text staging only; separately approve new Summit and ending illustrations before final sign-off. `docs/story/GAME-SP3.1-SUMMIT-ADMISSIONS.md` records acceptance. SP3.2 (paperwork) and SP3.3 (cardboard assembly) are unchanged future work. No final game merge without owner approval.
+
+## GAME-SP3.2 — The Great Stamp Catastrophe (started 15 October 2026)
+
+Second gameplay-only route, stacked on GAME-SP3.1. The fictional Office of Ceremonial Misunderstandings requires Reason for Visit, classify-a-bear-document and find/apply an APPROVED stamp beneath Paul's takeaway drink. Accessible select-and-tap is required alongside optional mouse drag. Wrong choices are funny, never fatal, and trigger a Paul hint after two failures. A complete scripted Ending B and shared replay finish the route. New illustration/animation work is postponed until all three routes are functional, as agreed. See `docs/story/GAME-SP3.2-STAMP-CATASTROPHE.md`. SP3.3 remains next; no merge until owner review.
+
+## GAME-SP3.3 — Reassemble Stephen Martin (started 15 October 2026)
+
+Third and final route-specific functional puzzle, stacked on SP3.2. Assemble a clearly fictional foam/cardboard display using six labelled slots, touch/keyboard select-and-place and optional drag-and-drop, plus harmless comic extras, no-fail hints, checkpoints and POWER ON action. Completing it unlocks the complete approved spa Ending C and shared replay. Artwork remains deferred to the dedicated phase following SP3.4 full-game integration. Work package: `docs/story/GAME-SP3.3-REASSEMBLE.md`. Retain draft PR and owner review before any production merge.

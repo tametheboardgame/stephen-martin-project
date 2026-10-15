@@ -2,6 +2,22 @@
 
 Entries are concise, durable design decisions. Additional decisions are added only where they materially affect scope, design, delivery or implementation.
 
+## SP-D037, 15 October 2026: Build the third route as harmless labelled cardboard assembly
+
+GAME-SP3.3 completes the mechanical third ending with six idempotently placed foam/cardboard pieces, funny reject items and a separate explicit POWER ON interaction. Accept mouse drag but require equally capable select-piece and labelled-slot controls on keyboard and touch. Save progress in the existing route-locked V3 key; wrong pieces never disappear or soft-lock the scene. Deliver the complete approved spa dialogue and Ending C; keep all new illustration work queued until after all three functional routes and integration tests are accepted.
+
+## SP-D036, 15 October 2026: Finish all three playable routes before visual polish
+
+The project owner instructed the team to complete all three route mechanics first, then run a dedicated art pass. Deliver SP3.2 with fictional CSS/text form controls and an accessible tap or drag stamp. Prepare an art inventory without producing new images now. Keep human preview approval and stacked PR safety gates.
+
+## SP-D035, 15 October 2026: Start the Summit route as the first complete playable ending
+
+After owner review of the SP3.0 preview, build GAME-SP3.1 on a separate branch stacked on SP3.0. Use the approved three-card admissions puzzle with three no-fail rounds, individual wrong responses, Paul's hint after two errors and checkpointed progress. Reproduce all approved Ending A dialogue, stinger and replay flow without unlocking the remaining two endings. Any new illustrated location, characters or poses remain subject to individual owner approval, so use a plainly provisional CSS/text stage for logic testing. No merge or production-release authorisation is inferred from the instruction to start development.
+
+## SP-D034, 15 October 2026: Start a minimal shared mini-game framework
+
+Following owner instruction to start GAME-SP3.0, implement the small reusable route introduction / quiz and assembly progress contract on a separate draft development branch. Retain the existing V3 save key and immutable committed route; add only a narrow versioned rescue progress object, no-fail two-error hints and idempotent step completion. Play approved route-intro dialogue and show an explicit unfinished mini-game gate until SP3.1–SP3.3 supply actual routes. Prepare an ending-summary shell but do not expose unearned endings or invent art/voice recordings. Keep all production merges gated by owner preview approval.
+
 ## SP-D033, 15 October 2026: Approve final hotel composition and integrate stacked game work
 
 Owner accepted the final GAME-SP2.4B in-browser hotel composition after David was moved slightly farther into the room than Paul; Paul's position remains unchanged. The owner explicitly authorised merging the connected approved development, including voiced office playback, Stephen's mutually exclusive holiday visits, the office alarm, travel montage, hotel evidence puzzle and standalone standing character assets. PRs #16 and #18–#25 were merged in dependency order into `main`, culminating in integration commit `dffc02d854f5784dd2a9faf7c9540259e0a14f7b`. This is **not** approval of unreleased mini-games or three finished endings. The next package is GAME-SP3.0, the small route-specific puzzle/ending framework; retain the 15–25-minute target and separate new-art/release gates.

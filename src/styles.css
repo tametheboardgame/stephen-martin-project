@@ -2164,6 +2164,11 @@ body:has(#menuScreen:not([hidden])) main {
  */
 #holidayScreen #rescueHotelScene[hidden],
 #holidayScreen #rescueRouteIntro[hidden],
+#holidayScreen #rescueMiniGameScene[hidden],
+#holidayScreen #rescueEndingSummary[hidden],
+#holidayScreen #summitEndingScene[hidden],
+#holidayScreen #detentionEndingScene[hidden],
+#holidayScreen #reassembleEndingScene[hidden],
 #holidayScreen #rescueHotelHotspots[hidden],
 #holidayScreen #rescueHotelDialogue[hidden],
 #holidayScreen #hotelNextButton[hidden],
@@ -2172,6 +2177,15 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen #hotelResolved[hidden],
 #holidayScreen #hotelHint[hidden] {display:none !important;}
 #holidayScreen .rescue-hotel-scene,#holidayScreen .rescue-route-intro {position:relative;background:#102840;}
+#holidayScreen .rescue-intro-dialogue {
+  margin:14px auto 0;padding:12px 15px;max-width:650px;
+  background:rgba(4,28,51,.94);border:2px solid #7dd2f1;border-radius:9px;
+  text-align:left;color:#fff5de;
+}
+#holidayScreen .rescue-intro-dialogue strong {color:#ffdb87;font-size:14px;}
+#holidayScreen .rescue-intro-dialogue p {margin:6px 0 0;line-height:1.45;}
+#holidayScreen .rescue-framework-status {font-weight:750;color:#ffdb87;}
+#holidayScreen .rescue-route-intro .wall-action-strip {display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 #holidayScreen .rescue-hub-arrival-stage,
 #holidayScreen .rescue-route-intro-stage {
   background:linear-gradient(120deg,rgba(7,22,41,.72),rgba(9,34,57,.55)),
@@ -2236,7 +2250,10 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen .hotel-feedback {color:#ffd789 !important;font-weight:800;}
 #holidayScreen .rescue-hotel-action-strip:has(.hotel-deductions:not([hidden])) {padding:10px 2.5%;gap:8px;}
 @media (min-width:801px) {
-  #holidayScreen #rescueHotelScene,#holidayScreen #rescueRouteIntro {
+  #holidayScreen #rescueHotelScene,#holidayScreen #rescueRouteIntro,
+  #holidayScreen #rescueMiniGameScene,#holidayScreen #summitEndingScene,
+  #holidayScreen #detentionEndingScene,#holidayScreen #reassembleEndingScene,
+  #holidayScreen #rescueEndingSummary {
     position:absolute;inset:0;width:100%;height:100%;
   }
   #holidayScreen .rescue-hotel-stage,#holidayScreen .rescue-route-intro-stage {
@@ -2249,7 +2266,12 @@ body:has(#menuScreen:not([hidden])) main {
     padding:9px 2.5%;background:rgba(5,25,46,.97);overflow-y:auto;
   }
   #holidayScreen:has(#rescueHotelScene:not([hidden])) .china-footer,
-  #holidayScreen:has(#rescueRouteIntro:not([hidden])) .china-footer {top:2%;right:2%;left:auto;bottom:auto;}
+  #holidayScreen:has(#rescueRouteIntro:not([hidden])) .china-footer,
+  #holidayScreen:has(#rescueMiniGameScene:not([hidden])) .china-footer,
+  #holidayScreen:has(#summitEndingScene:not([hidden])) .china-footer,
+  #holidayScreen:has(#detentionEndingScene:not([hidden])) .china-footer,
+  #holidayScreen:has(#reassembleEndingScene:not([hidden])) .china-footer,
+  #holidayScreen:has(#rescueEndingSummary:not([hidden])) .china-footer {top:2%;right:2%;left:auto;bottom:auto;}
 }
 @media (max-width:800px) {
   #holidayScreen .rescue-hotel-actor {bottom:24%;}
@@ -2271,4 +2293,190 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen .hotel-hotspot-phone {bottom:25%;}
   #holidayScreen .hotel-hotspot-brochure {top:26%;}
   #holidayScreen .hotel-hotspot-desk {left:35%;top:49%;}
+}
+
+
+/* GAME-SP3.1: CSS-only provisional Summit backdrop until dedicated art approval.
+   Readable, touch-sized controls and no character/scene image fabrication. */
+#holidayScreen #summitAdmissions[hidden],
+#holidayScreen #summitChoiceCards[hidden],
+#holidayScreen #summitFeedback[hidden],
+#holidayScreen #summitHint[hidden],
+#holidayScreen #summitNextButton[hidden],
+#holidayScreen #rescueMiniGamePlaceholder[hidden] {display:none !important;}
+#holidayScreen #rescueMiniGameScene:has(#summitAdmissions:not([hidden])) .rescue-route-intro-stage,
+#holidayScreen .summit-ending-stage {
+  background:linear-gradient(to top,rgba(5,19,38,.96),rgba(5,23,40,.38) 68%),
+    radial-gradient(ellipse at 70% 12%,#e9c88a 0%,transparent 38%),
+    linear-gradient(155deg,#8a9dab 1%,#3a5e76 48%,#142b4c 100%);
+  box-sizing:border-box;padding:25px 4% 95px;
+}
+#holidayScreen .summit-admissions {
+  width:min(96%,900px);max-height:100%;overflow-y:auto;overscroll-behaviour:contain;
+  box-sizing:border-box;padding:20px 24px;
+  background:rgba(5,25,47,.94);border:2px solid #f6d28b;border-radius:15px;
+  color:#fff5df;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.45);
+}
+#holidayScreen .summit-eyebrow {display:block;color:#ffda8e;letter-spacing:.12em;font-size:12px;font-weight:850;}
+#holidayScreen .summit-admissions h2 {font-size:clamp(22px,2.6vw,35px);margin:9px 0 4px;color:#fff9dc;}
+#holidayScreen .summit-progress {font-size:14px;color:#bce9ff;font-weight:750;margin:6px 0;}
+#holidayScreen .summit-prompt {font-size:clamp(15px,1.5vw,20px);font-weight:850;margin:11px 0;color:#fff;}
+#holidayScreen .summit-clue {font-size:clamp(13px,1.2vw,16px);color:#fff2c2;margin:10px 0 15px;}
+#holidayScreen .summit-cards {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:12px;}
+#holidayScreen .summit-card {
+  display:block;min-height:80px;width:100%;padding:14px 10px;
+  background:#eaf4ff;color:#163a56;border:3px solid #91c4df;border-radius:11px;
+  box-shadow:0 5px 0 rgba(0,0,0,.37);cursor:pointer;
+  font-size:clamp(14px,1.3vw,18px);line-height:1.3;font-weight:850;
+}
+#holidayScreen .summit-card:hover,#holidayScreen .summit-card:focus-visible {
+  background:#fff1bf;border-color:#ffdb87;outline:3px solid #ffdb87;outline-offset:2px;
+}
+#holidayScreen .summit-feedback {margin:13px 0;padding:12px;background:rgba(134,200,238,.16);border-left:4px solid #8cd9ff;font-weight:800;line-height:1.4;}
+#holidayScreen .summit-hint {margin:12px 0;padding:11px;background:#fff1bf;color:#203a52;border-radius:7px;font-weight:850;}
+#holidayScreen #summitNextButton {margin:8px auto 0;min-height:46px;}
+#holidayScreen .summit-ending-content {
+  width:min(92%,800px);padding:23px 26px;max-height:100%;overflow-y:auto;
+  text-align:center;background:rgba(5,25,47,.94);border:2px solid #ffdb87;
+  border-radius:15px;box-shadow:0 12px 45px rgba(0,0,0,.5);
+}
+#holidayScreen .summit-chairman-sash {
+  display:inline-block;transform:rotate(-2deg);margin:12px auto 4px;
+  padding:8px 15px;background:#fff5d2;color:#803846;border:3px solid #d9b56c;
+  font-size:clamp(12px,1.5vw,19px);font-weight:900;letter-spacing:.1em;
+}
+#holidayScreen .summit-art-note {font-size:12px;color:#c8d5e1;margin:4px 0 18px;}
+#holidayScreen .summit-ending-speaker {display:block;color:#ffdb87;font-size:clamp(17px,1.9vw,24px);}
+#holidayScreen .summit-ending-line {font-size:clamp(17px,2vw,26px);font-weight:800;line-height:1.4;color:#fff9e9;margin:13px 0 20px;}
+@media (max-width:800px) {
+  #holidayScreen .summit-cards {grid-template-columns:1fr;gap:8px;}
+  #holidayScreen .summit-card {min-height:50px;padding:10px;}
+  #holidayScreen .summit-admissions {padding:14px;}
+  #holidayScreen #rescueMiniGameScene:has(#summitAdmissions:not([hidden])) .rescue-route-intro-stage,
+  #holidayScreen .summit-ending-stage {padding:16px 3%;}
+  #holidayScreen .summit-ending-content {padding:16px;}
+}
+
+/* GAME-SP3.2 provisional fictional paperwork setting, no final illustration. */
+#holidayScreen #detentionPaperwork[hidden],
+#holidayScreen #detentionChoiceCards[hidden],
+#holidayScreen #detentionStampPanel[hidden],
+#holidayScreen #detentionFeedback[hidden],
+#holidayScreen #detentionHint[hidden],
+#holidayScreen #detentionNextButton[hidden] {display:none !important;}
+#holidayScreen #rescueMiniGameScene:has(#detentionPaperwork:not([hidden])) .rescue-route-intro-stage,
+#holidayScreen .detention-ending-stage {
+  background:linear-gradient(145deg,rgba(15,41,43,.9),rgba(4,31,39,.86)),
+    repeating-linear-gradient(0deg,#74978c,#74978c 18px,#54796d 20px);
+  box-sizing:border-box;padding:24px 4% 95px;
+}
+#holidayScreen .detention-paperwork,#holidayScreen .detention-ending-content {
+  width:min(96%,900px);max-height:100%;box-sizing:border-box;overflow-y:auto;
+  padding:18px 25px;border:3px solid #c8d7bc;border-radius:7px;
+  background:rgba(244,245,219,.98);color:#1d3a36;box-shadow:0 14px 40px #10251d88;
+  text-align:center;
+}
+#holidayScreen .detention-eyebrow {font-weight:900;letter-spacing:.1em;font-size:11px;color:#52665e;}
+#holidayScreen .detention-paperwork h2 {font-size:clamp(21px,2.6vw,34px);margin:8px 0;color:#204640;}
+#holidayScreen .detention-progress {font-weight:800;color:#326b66;font-size:14px;margin:7px 0;}
+#holidayScreen .detention-prompt {font-size:clamp(16px,1.6vw,21px);font-weight:850;line-height:1.4;margin:9px 0;}
+#holidayScreen .detention-clue {font-size:clamp(13px,1.2vw,16px);color:#465b53;margin:8px 0 15px;}
+#holidayScreen .detention-cards {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:12px 0;}
+#holidayScreen .detention-card,#holidayScreen .detention-stamp,#holidayScreen .detention-permit {
+  cursor:pointer;border:3px solid #457b71;border-radius:7px;padding:13px;
+  min-height:65px;background:#fffdf2;color:#234c46;font-weight:900;
+  font-size:clamp(13px,1.2vw,17px);line-height:1.4;
+}
+#holidayScreen .detention-card:hover,#holidayScreen .detention-card:focus-visible,
+#holidayScreen .detention-stamp:hover,#holidayScreen .detention-stamp:focus-visible,
+#holidayScreen .detention-permit:hover,#holidayScreen .detention-permit:focus-visible {
+  outline:3px solid #a54444;outline-offset:2px;background:#fff1d5;
+}
+#holidayScreen .detention-feedback {font-weight:800;line-height:1.4;margin:11px 0;padding:12px;border-left:4px solid #457b71;background:#dcece3;color:#1e423b;}
+#holidayScreen .detention-hint {font-weight:850;line-height:1.4;margin:10px 0;padding:10px;background:#fff0ba;color:#33413d;border-radius:7px;}
+#holidayScreen .detention-stamp-panel {display:grid;gap:12px;margin:12px 0;}
+#holidayScreen .detention-stamp {width:min(100%,260px);margin:auto;color:#992c2c;border:4px solid #b34747;background:#ffefdf;transform:rotate(-2deg);}
+#holidayScreen .detention-stamp[data-selected="true"] {outline:4px solid #bb8b38;outline-offset:3px;}
+#holidayScreen .detention-permit {width:min(100%,520px);margin:auto;border:3px dashed #497f70;}
+#holidayScreen .detention-certificate {
+  display:block;margin:17px auto;padding:14px;border:5px double #a33f3f;
+  background:#fff8eb;color:#a33f3f;font-weight:950;transform:rotate(-1deg);
+  font-size:clamp(16px,2vw,26px);letter-spacing:.06em;
+}
+#holidayScreen .detention-art-note {color:#50645e;font-size:12px;}
+#holidayScreen .detention-ending-speaker {display:block;margin-top:13px;color:#254a42;font-size:clamp(17px,2vw,23px);}
+#holidayScreen .detention-ending-line {font-size:clamp(17px,2.1vw,26px);line-height:1.4;font-weight:850;color:#193a33;margin:13px 0;}
+@media (max-width:800px) {
+  #holidayScreen .detention-cards {grid-template-columns:1fr;gap:7px;}
+  #holidayScreen .detention-card {min-height:48px;padding:10px;}
+  #holidayScreen #rescueMiniGameScene:has(#detentionPaperwork:not([hidden])) .rescue-route-intro-stage,
+  #holidayScreen .detention-ending-stage {padding:12px 3%;}
+  #holidayScreen .detention-paperwork,#holidayScreen .detention-ending-content {padding:12px;}
+  #holidayScreen .detention-stamp,#holidayScreen .detention-permit {min-height:48px;}
+}
+
+
+/* GAME-SP3.3: provisional cartoon cardboard-board UI.
+   Final character and workshop illustration belongs to the later art phase. */
+#holidayScreen #reassembleWorkshop[hidden],
+#holidayScreen #assemblyHint[hidden],
+#holidayScreen #assemblyPowerButton[hidden] {display:none !important;}
+#holidayScreen #rescueMiniGameScene:has(#reassembleWorkshop:not([hidden])) .rescue-route-intro-stage,
+#holidayScreen .assembly-ending-stage {
+  background:linear-gradient(140deg,rgba(23,49,64,.93),rgba(9,25,48,.96)),
+    repeating-linear-gradient(90deg,#e4af63 0 30px,#cf9c57 30px 35px);
+  padding:18px 3% 85px;box-sizing:border-box;
+}
+#holidayScreen .assembly-workshop,#holidayScreen .assembly-ending-content {
+  width:min(100%,1060px);height:100%;box-sizing:border-box;overflow:auto;
+  background:rgba(247,240,214,.98);border:3px solid #e6bd73;border-radius:14px;
+  padding:12px 18px;color:#193e4a;text-align:center;
+}
+#holidayScreen .assembly-eyebrow {font-size:11px;font-weight:900;letter-spacing:.1em;color:#6c4850;}
+#holidayScreen .assembly-workshop h2 {font-size:clamp(22px,2.5vw,32px);margin:4px 0;}
+#holidayScreen .assembly-description {font-size:clamp(12px,1.12vw,15px);margin:3px 0 6px;}
+#holidayScreen .assembly-progress {font-size:14px;font-weight:800;color:#256056;margin:4px 0 7px;}
+#holidayScreen .assembly-layout {display:grid;grid-template-columns:1.1fr .9fr;gap:14px;align-items:stretch;}
+#holidayScreen .assembly-tray,#holidayScreen .assembly-board {
+  border:3px dashed #b57e4b;border-radius:10px;padding:9px;
+  background:#fff9e9;min-width:0;display:grid;gap:7px;align-content:start;
+}
+#holidayScreen .assembly-tray {grid-template-columns:repeat(3,minmax(0,1fr));}
+#holidayScreen .assembly-tray strong,#holidayScreen .assembly-board strong {grid-column:1/-1;font-size:13px;}
+#holidayScreen .assembly-piece,#holidayScreen .assembly-slot {
+  min-height:50px;padding:9px 5px;background:#e5f4f3;
+  color:#234a55;border:2px solid #578b91;border-radius:9px;cursor:pointer;
+  font-weight:850;font-size:clamp(12px,1vw,15px);line-height:1.25;
+  touch-action:manipulation;
+}
+#holidayScreen .assembly-piece[data-selected="true"] {background:#ffe5a9;border-color:#945921;outline:3px solid #e29e35;outline-offset:1px;}
+#holidayScreen .assembly-piece[data-placed="true"],#holidayScreen .assembly-slot[data-filled="true"] {background:#d0edd2;border-color:#347859;color:#255841;}
+#holidayScreen .assembly-slot[data-hint="true"] {outline:4px solid #d78d21;outline-offset:2px;background:#ffedbc;}
+#holidayScreen .assembly-piece:focus-visible,#holidayScreen .assembly-slot:focus-visible {
+  outline:3px solid #ce6428;outline-offset:2px;
+}
+#holidayScreen .assembly-silhouette {
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;
+  width:min(100%,300px);margin:0 auto;
+}
+#holidayScreen .assembly-slot-head {grid-column:1/-1;width:45%;justify-self:center;}
+#holidayScreen .assembly-slot-torso {grid-column:1/-1;width:70%;justify-self:center;}
+#holidayScreen .assembly-slot-left-leg,#holidayScreen .assembly-slot-right-leg {min-height:60px;}
+#holidayScreen .assembly-feedback {font-size:14px;font-weight:800;margin:10px 0;color:#344c60;}
+#holidayScreen .assembly-hint {font-weight:900;background:#ffecb9;color:#3c322b;border-radius:8px;padding:9px;}
+#holidayScreen #assemblyPowerButton {margin:8px auto 0;min-height:48px;font-weight:900;}
+#holidayScreen .assembly-reveal {
+  font-size:clamp(14px,1.6vw,21px);font-weight:900;color:#724c22;
+  padding:12px;background:#fff0bd;border:4px double #ac7944;margin:12px 0;
+}
+#holidayScreen .assembly-art-note {font-size:12px;color:#58666a;margin:7px 0 14px;}
+#holidayScreen .assembly-ending-speaker {font-size:clamp(18px,2vw,25px);color:#395665;}
+#holidayScreen .assembly-ending-line {font-size:clamp(17px,2.2vw,29px);font-weight:850;line-height:1.4;color:#203d4b;}
+@media (max-width:800px) {
+  #holidayScreen #rescueMiniGameScene:has(#reassembleWorkshop:not([hidden])) .rescue-route-intro-stage,
+  #holidayScreen .assembly-ending-stage {padding:10px 2%;}
+  #holidayScreen .assembly-workshop,#holidayScreen .assembly-ending-content {padding:10px;}
+  #holidayScreen .assembly-layout {grid-template-columns:1fr;gap:9px;}
+  #holidayScreen .assembly-tray {grid-template-columns:repeat(2,minmax(0,1fr));}
+  #holidayScreen .assembly-piece,#holidayScreen .assembly-slot {min-height:48px;font-size:13px;}
 }

@@ -2,6 +2,33 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP3.3 — Reassemble Stephen Martin and Ending C draft (15 October 2026)
+
+- Stacked branch `agent/game-sp33-reassemble-stephen` adds the third functional route: six labelled foam/cardboard pieces, seven comic extras, accessible select-piece/place-slot and optional mouse drag, a two-error Paul hint with matching-slot highlight, no consumed pieces or dead ends, saved progress and an explicit POWER ON STEPHEN gate.
+- Full approved spa misunderstanding dialogue and stinger unlock the Ending C card, shared replay and restart summary. The Summit and fictional paperwork branches remain playable and isolated. New art and polish are deliberately deferred as requested by the owner.
+- `docs/story/GAME-SP3.3-REASSEMBLE.md` lists all later-art requirements. CI, Cloudflare laptop/touch preview and functional approval remain pending; follow with GAME-SP3.4 full-game integration rather than producing unapproved artwork.
+
+## GAME-SP3.2 — Great Stamp Catastrophe and Ending B draft (15 October 2026)
+
+- Stacked branch `agent/game-sp32-stamp-catastrophe` develops the second complete route: fictional Reason for Visit form, bear-image classification, Paul's takeaway cup revealing the APPROVED stamp and an accessible select-stamp/tap-permit option alongside mouse drag/drop.
+- Individual wrong answer jokes, hints after two attempts, stage acknowledgements, immutable `detention` route and V3 save/resume are implemented. The original Ending B dialogue, PLEASE LEAVE authorisation and David's framed-certificate stinger lead to the shared summary/replay. Summit stays playable; SPA remains a labelled unfinished gate.
+- No image assets or voices were added: owner asked to defer the dedicated art phase until all routes function. `docs/story/GAME-SP3.2-STAMP-CATASTROPHE.md` captures the subsequent art handoff.
+- Draft PR, latest automated CI, browser/touch preview and owner gameplay approval remain release gates. No merge to `main` without explicit authorisation.
+
+## GAME-SP3.1 — Summit Admissions Test and Ending A draft (15 October 2026)
+
+- Built on the still-draft SP3.0 branch via `agent/game-sp31-summit-admissions`. The Summit now has three interactive no-fail admission rounds with three answer cards each, individual joke responses, a two-mistake Paul hint, explicit acknowledgement, and saved progress. Wrong guesses never alter Stephen's committed route.
+- Correct charger, compliment and return-flight selections lead into all fourteen approved Ending A beats, including the failed humility application stinger, then the shared end-card/replay/start/menu summary. All progress, feedback and finishing dialogue can be resumed within the existing V3 save system. Other two routes remain honestly unplayable pending SP3.2–SP3.3.
+- A CSS-only provisional stage and sash are for functional preview, **not an approved final illustration**. Separate human sign-off is required for Summit entrance, throne scene and any new character/gatekeeper poses. No unapproved art or audio was added.
+- New route tests, live Cloudflare preview, human pacing, accessibility, responsive layout and final merge qualification pending. Work package: `docs/story/GAME-SP3.1-SUMMIT-ADMISSIONS.md`.
+
+## GAME-SP3.0 — Shared route framework draft (15 October 2026)
+
+- Draft branch `agent/game-sp30-minigame-framework`: implemented the approved route introductions for Summit, fictional ceremonial bureaucracy and spa using existing screenplay dialogue. After a correct hotel deduction, the user plays each briefing line then reaches an honestly labelled mini-game gate; no unavailable mini-game or ending is shown as playable.
+- Added `src/rescue-framework.js` with per-route fixed destinations, small normalised `rescueProgress` V1 inside the existing V3 save, hint-after-two wrong answers, step/checkpoint helpers, and six idempotent cardboard piece matches. Restart and Choose Another Ending clear downstream state; existing voice clips, hotel logic and Stephen branching remain unchanged.
+- Shared inaccessible-until-completion ending summary shell prepared with three approved titles and restart/replay/menu. SP3.1–SP3.3 will supply actual choices and cutscenes.
+- Tests and real Cloudflare laptop/tablet review required before owner acceptance. `docs/story/GAME-SP3.0-MINIGAME-FRAMEWORK.md` describes this bounded increment; do not merge to main without approval.
+
 ## GAME-SP2.4B — Hotel scene accepted and stacked gameplay merged (15 October 2026)
 
 - Owner visually approved the hotel cast's final perspective: Paul remains at the accepted reception-floor position and David stands slightly farther back/smaller. The two independently materialised transparent figures remain over the approved empty visitor-information background, with clickable clues and subtitles layered above.
