@@ -113,3 +113,76 @@
     arriveNote: "Next: David and Paul's hotel evidence investigation (GAME-SP2.4B)."
   });
 })();
+
+
+// GAME-SP2.4B — shared visitor information evidence investigation.
+// Dialogue and clue design follow the approved SP-WP1.2-GAME-TREATMENT.
+// This is a single puzzle; it never changes Stephen's committed route.
+(function () {
+  "use strict";
+  window.SMP_RESCUE_HUB = Object.freeze({
+    opening: [
+      { id:"rescue.hub.001", speaker:"David", text:"We begin with intelligence gathering. Observe, analyse, act." },
+      { id:"rescue.hub.002", speaker:"Paul", text:"The hotel has little shampoos." },
+      { id:"rescue.hub.003", speaker:"David", text:"Paul, focus." },
+      { id:"rescue.hub.004", speaker:"Paul", text:"I am. They do conditioner too." },
+      { id:"rescue.hub.005", speaker:"David", text:"I don't know why I brought you." },
+      { id:"rescue.hub.006", speaker:"Paul", text:"You said you needed muscle." },
+      { id:"rescue.hub.007", speaker:"David", text:"I said I needed backup." },
+      { id:"rescue.hub.008", speaker:"Paul", text:"Same thing, isn't it?" }
+    ],
+    hotspots: {
+      phone: {
+        title:"Stephen's last message",
+        speaker:"David",
+        text:"An incomplete message. A disappearing signal. This is definitely a classified operation."
+      },
+      brochure: {
+        title:"Holiday activities",
+        speaker:"Paul",
+        text:"Look, they've got a brochure. It tells you where all the places are."
+      },
+      desk: {
+        title:"Visitor information desk",
+        speaker:"David",
+        text:"There's a booking receipt here. One symbol has been circled in red. A crucial clue."
+      }
+    },
+    destinations: [
+      {route:"cult",symbol:"▲",label:"The Summit",clue:"Mountain silhouette"},
+      {route:"detention",symbol:"★",label:"Cultural Honours Banquet",clue:"Ceremonial badge"},
+      {route:"reassemble",symbol:"⚙",label:"Total Renewal Spa",clue:"Spa cogwheel"}
+    ],
+    wrong: {
+      cult: [
+        {speaker:"Paul",text:"That's a hill, David."},
+        {speaker:"David",text:"Topographic deception."}
+      ],
+      detention: [
+        {speaker:"Paul",text:"Do we have to dress up?"},
+        {speaker:"David",text:"This is covert."}
+      ],
+      reassemble: [
+        {speaker:"Paul",text:"I wouldn't mind a massage."},
+        {speaker:"David",text:"Then you are an operational liability."}
+      ]
+    },
+    hint: {
+      cult:"Paul: He mentions being 'their' something. Could it be that mountain club?",
+      detention:"Paul: 'Official' sounds like the banquet people with the special badges.",
+      reassemble:"Paul: He said 'spa'. It probably means the spa, David."
+    },
+    correct: [
+      {speaker:"David",text:"We have our location."},
+      {speaker:"Paul",text:"The brochure has a map."},
+      {speaker:"David",text:"Exactly. My deduction has been confirmed."},
+      {speaker:"Paul",text:"By the brochure?"},
+      {speaker:"David",text:"Don't undermine the operation."}
+    ],
+    routeIntro: {
+      cult:"The Summit — Stephen's exclusive mountain social club.",
+      detention:"The Office of Ceremonial Misunderstandings — a purely fictional bureaucracy.",
+      reassemble:"Total Renewal Spa — the premium-person display workshop."
+    }
+  });
+})();
