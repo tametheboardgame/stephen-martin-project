@@ -2,6 +2,10 @@
 
 Entries are concise, durable design decisions. Additional decisions are added only where they materially affect scope, design, delivery or implementation.
 
+## SP-D042, 15 October 2026: Mirror and scale approved Summit characters rather than regenerate
+
+Owner endorsed the concept with **gatekeeper on the left facing inward, Paul centre-right and David far right**, but at a noticeably smaller perspective-correct scale than the first assembled scene. Implement only CSS `scaleX(-1)` transforms and responsive repositioning of the three approved transparent sprites, not a flattened concept image, new sprites or a horizontally flipped background/UI. Keep all existing seven-line bottom dialogue, speaker-specific glow, Summit Admissions Test and route isolation. Owner in-engine visual approval remains required before merging draft PR #33.
+
 ## SP-D041, 15 October 2026: Use character-scene dialogue at the Summit entrance
 
 Owner approved revised and distinct David, Paul and Asian Summit gatekeeper standing sprites, then directed integration into the Summit approach as a **proper in-scene conversation** rather than the large centred route-intro panel. Retain the approved exterior as an independent background, put the seven existing dialogue lines in the same bottom caption style as other story scenes, and keep SP3.4 autoplay and top-right transport. Show the blue central panel **only** for the Admissions Test. Render three separate transparent sprites on the Summit intro, not on the throne-room ending or other destinations. Assets go through the Drive → manifests → WebP pipeline. Require human in-engine scale/crop review and explicit owner merge authorisation.
