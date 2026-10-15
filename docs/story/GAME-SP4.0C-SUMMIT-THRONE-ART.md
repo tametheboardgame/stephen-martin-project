@@ -63,3 +63,15 @@ Following the user's explicit approval of the regenerated throne-room David and 
 - The player must inspect the **actual in-engine result** for scale, foot grounding, composition and captions. Automated checks verify source provenance, alpha, packaging, routing and speaker cues; they cannot replace visual approval.
 
 This supersedes the earlier *Stephen-only* staging gate while preserving its historical approval record. PR #34 remains draft, stacked on draft PR #33. **No merge without explicit authorisation.**
+
+
+## Planned attendants and staging correction (15 October 2026)
+
+Owner requested a visually lavish entourage of **adult East Asian ceremonial attendants**, styled as muscular shirtless adult men, and asked to bring David/Paul inward towards the **foot of the steps** at a plausible smaller scale. This is art direction for a fictional social club, not a real-world ethnic/cultural depiction.
+
+- The **in-engine David/Paul staging change is committed** in `src/styles.css` and protected by a regression: desktop David left 30% / height 28%, Paul right 29% / height 27%, both bottom 33%; corresponding tablet and mobile adjustments. Stephen's approved 17%/16%/14% dimensions and his original anchor are untouched.
+- A **concept composition** was generated with multiple service attendants, but it is a **flattened illustrated scene with background, David, Paul, Stephen and UI already baked in**, not separable transparent sprite art. **Do not upload or use it to replace** the approved throne room or duplicate the characters/UI.
+- **Attendant asset requirement pending:** Generate **four independent full-body transparent PNGs**, all adult East Asian men with athletic muscular physiques, respectful theatrical staff poses, varied blue-and-gold trousers/sashes and one of (feather fan, gold serving tray, ceremonial jug, folded white towel). No UI, throne, backdrop, dialogue, text or real-world insignia. Stage each separately through Google Drive and a versioned asset manifest; add two at each side of the room. Optionally reuse 1–2 at smaller scale nearer the dais, only after seeing the first four in-game.
+- Keep their speech silent and sprites background-only. Avoid turning the room into a crowded opaque composite: dialogue and stairs must remain legible. New attendant artwork should receive **owner image approval** before being integrated.
+- This branch remains an **unmerged draft**; no previous dialogue, audio or navigation change is intended.
+
