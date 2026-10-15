@@ -2,6 +2,12 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP4.0C — David and Paul integrated into the throne-room cast (15 October 2026)
+
+- Owner approved the separately regenerated David and Paul throne-room sprites and directed David **to the left of the throne** and Paul **to the right**, while retaining the approved smaller Stephen on the throne. Uploaded both original transparent PNGs to the dedicated project Drive folder; the standard materialisation workflow created their individual WebP assets from versioned `game-sp40c-throne-david-v01.json` and `game-sp40c-throne-paul-v01.json` manifests.
+- Ending A now has three independent actors, positioned in foreground/midground depth, and the established `data-speaker` cue highlights whichever of Stephen/David/Paul is speaking. Text/autoplay, responsive bottom captions, choices, Stephen scaling, existing throne background and all other routes remain unchanged.
+- PR #34 remains draft and stacked on PR #33. Automated test and deployed branch preview must be verified; **human sprite sizing/placement sign-off** required before any merge. See `docs/story/GAME-SP4.0C-SUMMIT-THRONE-ART.md`.
+
 ## GAME-SP4.0C — Stephen-only throne-room integration preview (15 October 2026)
 
 - User approved the corrected original Steve likeness (blond side-parted hair, blue zip-neck top) and directed an in-engine Ending A check **with Stephen only**. The previously approved throne-room background is reused unchanged. His transparent seated sprite (ceremonial cape, gold goblet and SUPREME CHAIRMAN sash, with **no baked chair**) was uploaded to the project's Drive staging folder and materialised through its OIDC workflow.
