@@ -2,6 +2,12 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP3.3 — Reassemble Stephen Martin and Ending C draft (15 October 2026)
+
+- Stacked branch `agent/game-sp33-reassemble-stephen` adds the third functional route: six labelled foam/cardboard pieces, seven comic extras, accessible select-piece/place-slot and optional mouse drag, a two-error Paul hint with matching-slot highlight, no consumed pieces or dead ends, saved progress and an explicit POWER ON STEPHEN gate.
+- Full approved spa misunderstanding dialogue and stinger unlock the Ending C card, shared replay and restart summary. The Summit and fictional paperwork branches remain playable and isolated. New art and polish are deliberately deferred as requested by the owner.
+- `docs/story/GAME-SP3.3-REASSEMBLE.md` lists all later-art requirements. CI, Cloudflare laptop/touch preview and functional approval remain pending; follow with GAME-SP3.4 full-game integration rather than producing unapproved artwork.
+
 ## GAME-SP3.2 — Great Stamp Catastrophe and Ending B draft (15 October 2026)
 
 - Stacked branch `agent/game-sp32-stamp-catastrophe` develops the second complete route: fictional Reason for Visit form, bear-image classification, Paul's takeaway cup revealing the APPROVED stamp and an accessible select-stamp/tap-permit option alongside mouse drag/drop.
