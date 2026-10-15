@@ -2000,3 +2000,27 @@ test("SP4.0C Stephen-only throne cutscene keeps all Ending A lines, speaker glow
   assert.equal(p.el("summitEndingScene").hidden,true);
   assert.equal(p.el("rescueSummaryHeading").textContent,"HEAVEN WAS A PLACE ON EARTH");
 });
+
+
+test("SP4.0C Stephen is sized for the background's raised throne at desktop/tablet/mobile widths",()=>{
+  const part=css.slice(css.indexOf("/* GAME-SP4.0C — Owner-approved Summit throne"));
+  const selector="#holidayScreen #summitEndingScene .summit-throne-stephen {";
+  const readPlacement=source=>{
+    const start=source.indexOf(selector);
+    assert.notEqual(start,-1,"Seated Stephen placement missing");
+    const block=source.slice(start,source.indexOf("}",start));
+    const height=Number(block.match(/height:(\d+)%/)[1]);
+    const bottom=Number(block.match(/bottom:(\d+)%/)[1]);
+    return {height,bottom};
+  };
+  const desktop=readPlacement(part.split("@media (max-width:800px)")[0]);
+  const tablet=readPlacement(part.split("@media (max-width:800px)")[1].split("@media (max-width:450px)")[0]);
+  const mobile=readPlacement(part.split("@media (max-width:450px)")[1]);
+  assert.deepEqual(desktop,{height:23,bottom:46});
+  assert.deepEqual(tablet,{height:21,bottom:46});
+  assert.deepEqual(mobile,{height:19,bottom:43});
+  assert.ok(desktop.height<32,"Stephen reduced from original oversized sprite");
+  assert.ok(desktop.bottom>39,"Stephen raised onto chair rather than steps");
+  assert.match(part,/transform:translateX\(-50%\)/,"Sprite stays centred on original throne");
+  assert.match(part,/data-speaker="stephen"/,"Speaker highlight retained");
+});
