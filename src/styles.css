@@ -2249,7 +2249,8 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen .rescue-hotel-action-strip:has(.hotel-deductions:not([hidden])) {padding:10px 2.5%;gap:8px;}
 @media (min-width:801px) {
   #holidayScreen #rescueHotelScene,#holidayScreen #rescueRouteIntro,
-  #holidayScreen #rescueMiniGameScene,#holidayScreen #rescueEndingSummary {
+  #holidayScreen #rescueMiniGameScene,#holidayScreen #summitEndingScene,
+  #holidayScreen #rescueEndingSummary {
     position:absolute;inset:0;width:100%;height:100%;
   }
   #holidayScreen .rescue-hotel-stage,#holidayScreen .rescue-route-intro-stage {
@@ -2264,6 +2265,7 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen:has(#rescueHotelScene:not([hidden])) .china-footer,
   #holidayScreen:has(#rescueRouteIntro:not([hidden])) .china-footer,
   #holidayScreen:has(#rescueMiniGameScene:not([hidden])) .china-footer,
+  #holidayScreen:has(#summitEndingScene:not([hidden])) .china-footer,
   #holidayScreen:has(#rescueEndingSummary:not([hidden])) .china-footer {top:2%;right:2%;left:auto;bottom:auto;}
 }
 @media (max-width:800px) {
