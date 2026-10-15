@@ -2051,8 +2051,8 @@ test("SP4.0C approved David-left and Paul-right actors are independently package
   assert.ok(throneMarkup.indexOf("summitThroneDavid")<throneMarkup.indexOf("summit-ending-content"));
   assert.ok(throneMarkup.indexOf("summitThronePaul")<throneMarkup.indexOf("summit-ending-content"));
   const cssBlock=css.slice(css.indexOf("/* GAME-SP4.0C — Owner-approved Summit throne"));
-  assert.match(cssBlock,/\.summit-throne-david \{\s*left:11%;bottom:19%;height:43%/);
-  assert.match(cssBlock,/\.summit-throne-paul \{\s*right:11%;bottom:19%;height:40%/);
+  assert.match(cssBlock,/\.summit-throne-david \{\s*left:30%;bottom:33%;height:28%/);
+  assert.match(cssBlock,/\.summit-throne-paul \{\s*right:29%;bottom:33%;height:27%/);
   assert.match(cssBlock,/@media \(max-width:800px\)/);
   assert.match(cssBlock,/@media \(max-width:450px\)/);
   assert.ok(cssBlock.includes('height:17%;width:auto;max-width:18%;'),"Stephen's approved desktop scale is unchanged");
@@ -2066,4 +2066,28 @@ test("SP4.0C approved David-left and Paul-right actors are independently package
   assert.equal(p.el("summitEndingScene").dataset.speaker,"stephen");
   p.el("summitEndingNextButton").click();
   assert.equal(p.el("summitEndingScene").dataset.speaker,"paul");
+});
+
+test("SP4.0C stair-foot placement keeps David and Paul near throne and Stephen unchanged at each breakpoint",()=>{
+ const stageCss=css.slice(css.indexOf("/* GAME-SP4.0C — Owner-approved Summit throne"));
+ const parts=[
+   {source:stageCss.split("@media (max-width:800px)")[0], left:30,right:29,bottom:33,davidH:28,paulH:27,stephenH:17},
+   {source:stageCss.split("@media (max-width:800px)")[1].split("@media (max-width:450px)")[0],left:24,right:23,bottom:33,davidH:26,paulH:25,stephenH:16},
+   {source:stageCss.split("@media (max-width:450px)")[1],left:12,right:12,bottom:33,davidH:22,paulH:22,stephenH:14}
+ ];
+ const rule=(source,name)=>{
+   const key="#holidayScreen #summitEndingScene .summit-throne-"+name+" {";
+   const start=source.indexOf(key);
+   assert.notEqual(start,-1,"Missing "+name+" positioning rule");
+   return source.slice(start,source.indexOf("}",start));
+ };
+ for(const p of parts){
+   const david=rule(p.source,"david"),paul=rule(p.source,"paul"),stephen=rule(p.source,"stephen");
+   assert.ok(david.includes("left:"+p.left+"%;bottom:"+p.bottom+"%;height:"+p.davidH+"%;"));
+   assert.ok(paul.includes("right:"+p.right+"%;bottom:"+p.bottom+"%;height:"+p.paulH+"%;"));
+   assert.ok(stephen.includes("height:"+p.stephenH+"%;"),"Approved Stephen scale unchanged");
+ }
+ assert.ok(stageCss.includes('[data-speaker="david"] .summit-throne-david'));
+ assert.ok(stageCss.includes('[data-speaker="paul"] .summit-throne-paul'));
+ assert.ok(stageCss.includes('[data-speaker="stephen"] .summit-throne-stephen'));
 });
