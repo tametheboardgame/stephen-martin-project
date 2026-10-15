@@ -2091,3 +2091,67 @@ test("SP4.0C stair-foot placement keeps David and Paul near throne and Stephen u
  assert.ok(stageCss.includes('[data-speaker="paul"] .summit-throne-paul'));
  assert.ok(stageCss.includes('[data-speaker="stephen"] .summit-throne-stephen'));
 });
+
+
+test("SP4.0C four approved attendants are independent alpha-transparent decorative actors",()=>{
+  const actors=[
+    ["fan","summitThroneAttendantFan"],
+    ["tray","summitThroneAttendantTray"],
+    ["ewer","summitThroneAttendantEwer"],
+    ["towel","summitThroneAttendantTowel"]
+  ];
+  const scene=html.split('id="summitEndingScene"')[1].split('id="detentionEndingScene"')[0];
+  const build=read("scripts/build.mjs");
+  for(const [name,id] of actors){
+    const basename="summit-throne-attendant-"+name+"-v01.webp";
+    const src="public/assets/generated/characters/"+basename;
+    const manifest=JSON.parse(read("generated-assets/manifests/game-sp40c-attendant-"+name+"-v01.json"));
+    assert.equal(manifest.source.provider,"google-drive");
+    assert.equal(manifest.destination,src);
+    assert.equal(manifest.expectedSourceName,"summit-throne-attendant-"+name+"-v01.png");
+    assert.ok(manifest.source.fileId,"Attendant provenance must be recorded");
+    const bytes=fs.readFileSync(path.join(root,src));
+    assert.ok(bytes.length>25000,"Approved attendant must be a full sprite "+name);
+    assert.equal(bytes.toString("ascii",0,4),"RIFF");
+    assert.equal(bytes.toString("ascii",12,16),"VP8X");
+    assert.ok((bytes[20]&0x10)!==0,"Attendant keeps transparency "+name);
+    assert.ok(build.includes('"'+basename+'"'),"Attendant is copied into deployed build "+name);
+    assert.ok(scene.includes('id="'+id+'"'),"Actor remains within Summit ending only");
+    assert.ok(scene.includes('src="./'+src+'"'));
+    assert.ok(scene.includes('class="summit-throne-attendant summit-throne-attendant-'+name+'"'));
+    assert.ok(css.includes('#holidayScreen #summitEndingScene .summit-throne-attendant-'+name+' {'));
+  }
+  assert.equal((scene.match(/class="summit-throne-attendant summit-throne-attendant-/g)||[]).length,4);
+  assert.ok(css.includes('z-index:2;pointer-events:none;'),"Attendants never intercept player actions");
+  assert.ok(css.includes('#holidayScreen #summitEndingScene .summit-ending-content {'),"Bottom captions remain separate");
+  assert.ok(css.includes('#holidayScreen #summitEndingScene[data-speaker="stephen"] .summit-throne-stephen'));
+  assert.ok(css.includes('#holidayScreen #summitEndingScene[data-speaker="david"] .summit-throne-david'));
+  assert.ok(css.includes('[data-speaker="paul"] .summit-throne-paul'));
+  assert.equal(css.includes('[data-speaker="fan"]'),false,"Attendants do not become dialogue speakers");
+});
+
+test("SP4.0C attendants frame throne at desktop, tablet and narrow breakpoints",()=>{
+  const stageCss=css.slice(css.indexOf("/* GAME-SP4.0C — Owner-approved Summit throne"));
+  const desktop=stageCss.split("@media (max-width:800px)")[0];
+  const tablet=stageCss.split("@media (max-width:800px)")[1].split("@media (max-width:450px)")[0];
+  const mobile=stageCss.split("@media (max-width:450px)")[1];
+  const expectations=[
+    {source:desktop,fan:"left:26%;bottom:51%;height:22%",tray:"left:8%;bottom:29%;height:33%",ewer:"right:26%;bottom:51%;height:22%",towel:"right:8%;bottom:29%;height:31%"},
+    {source:tablet,fan:"left:21%;bottom:52%;height:18%",tray:"left:1%;bottom:32%;height:26%",ewer:"right:21%;bottom:52%;height:18%",towel:"right:1%;bottom:32%;height:25%"},
+    {source:mobile,fan:"left:17%;bottom:53%;height:12%",tray:"left:-4%;bottom:34%;height:19%",ewer:"right:17%;bottom:53%;height:12%",towel:"right:-4%;bottom:34%;height:18%"}
+  ];
+  const rule=(text,name)=>{
+    const key="#holidayScreen #summitEndingScene .summit-throne-attendant-"+name+" {";
+    const index=text.indexOf(key);
+    assert.ok(index>=0,"Attendant positioned at this breakpoint: "+name);
+    return text.slice(index,text.indexOf("}",index));
+  };
+  for(const positions of expectations){
+    for(const name of ["fan","tray","ewer","towel"]){
+      assert.ok(rule(positions.source,name).includes(positions[name]),"Attendant placement: "+name);
+    }
+  }
+  assert.ok(desktop.includes("left:50%;bottom:46%;height:17%;width:auto;max-width:18%;"),"Stephen retains approved placement");
+  assert.ok(desktop.includes("left:30%;bottom:33%;height:28%;max-width:23%;"),"David retains foot-of-stairs placement");
+  assert.ok(desktop.includes("right:29%;bottom:33%;height:27%;max-width:23%;"),"Paul retains foot-of-stairs placement");
+});
