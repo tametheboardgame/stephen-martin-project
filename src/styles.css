@@ -2187,12 +2187,12 @@ body:has(#menuScreen:not([hidden])) main {
    of reception and behind the foreground coffee table. Paul remains shorter.
    Clues and subtitles stay independent, higher-z interactive layers. */
 #holidayScreen .rescue-hotel-actor {
-  position:absolute;bottom:19%;width:auto;object-fit:contain;
+  position:absolute;bottom:24%;width:auto;object-fit:contain;
   object-position:center bottom;pointer-events:none;
   filter:drop-shadow(4px 6px 4px rgba(8,22,34,.35));z-index:2;
 }
-#holidayScreen .rescue-hotel-david {height:56%;left:21%;max-width:31%;}
-#holidayScreen .rescue-hotel-paul {height:46%;left:40%;max-width:27%;}
+#holidayScreen .rescue-hotel-david {height:60%;left:23%;max-width:33%;}
+#holidayScreen .rescue-hotel-paul {height:50%;left:42%;max-width:28%;}
 
 #holidayScreen .rescue-hotel-hotspots {position:absolute;inset:0;z-index:4;pointer-events:none;}
 #holidayScreen .rescue-hotel-hotspot {
@@ -2253,9 +2253,9 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen:has(#rescueRouteIntro:not([hidden])) .china-footer {top:2%;right:2%;left:auto;bottom:auto;}
 }
 @media (max-width:800px) {
-  #holidayScreen .rescue-hotel-actor {bottom:20%;}
-  #holidayScreen .rescue-hotel-david {height:50%;left:15%;max-width:43%;}
-  #holidayScreen .rescue-hotel-paul {height:41%;left:42%;max-width:35%;}
+  #holidayScreen .rescue-hotel-actor {bottom:24%;}
+  #holidayScreen .rescue-hotel-david {height:54%;left:17%;max-width:44%;}
+  #holidayScreen .rescue-hotel-paul {height:45%;left:44%;max-width:36%;}
   #holidayScreen .rescue-hotel-stage,#holidayScreen .rescue-route-intro-stage {aspect-ratio:4/3;}
   #holidayScreen .hotel-route-grid {grid-template-columns:1fr;}
   #holidayScreen .rescue-hotel-hotspot {padding:7px 9px;min-width:0;min-height:44px;max-width:39%;}
@@ -2264,9 +2264,9 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen .hotel-hotspot-desk {left:42%;top:47%;}
 }
 @media (max-width:450px) {
-  #holidayScreen .rescue-hotel-actor {bottom:22%;}
-  #holidayScreen .rescue-hotel-david {height:42%;left:9%;max-width:58%;}
-  #holidayScreen .rescue-hotel-paul {height:35%;left:43%;max-width:54%;}
+  #holidayScreen .rescue-hotel-actor {bottom:26%;}
+  #holidayScreen .rescue-hotel-david {height:46%;left:11%;max-width:58%;}
+  #holidayScreen .rescue-hotel-paul {height:38%;left:45%;max-width:54%;}
   #holidayScreen .rescue-hotel-stage,#holidayScreen .rescue-route-intro-stage {aspect-ratio:3/4;}
   #holidayScreen .rescue-hotel-hotspot {font-size:11px;max-width:47%;}
   #holidayScreen .hotel-hotspot-phone {bottom:25%;}
