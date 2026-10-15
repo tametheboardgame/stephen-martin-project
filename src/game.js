@@ -1179,6 +1179,9 @@
         const card = step === summit.ending.length;
         const line = summit.ending[Math.min(step, summit.ending.length - 1)];
         $("summitEndingSpeaker").textContent = card ? "ENDING A" : line.speaker.toUpperCase();
+        // Only Stephen is illustrated in this first throne-room composition.
+        // Other speakers remain audible/readable through the existing captions.
+        $("summitEndingScene").dataset.speaker = card ? "" : line.speaker.toLowerCase();
         $("summitEndingLine").textContent = card ? summit.endCard : line.text;
         $("summitEndingProgress").textContent = card
           ? "Stephen appears to be having the time of his life."
