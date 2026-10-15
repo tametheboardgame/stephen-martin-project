@@ -2,6 +2,11 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP4.0C — Summit throne-room environment locked; sprite review next (15 October 2026)
+
+- Owner approved the original Summit throne-room background and requested Stephen, David and Paul in distinct new poses. The room is locked as `summit-throne-room-background-v01.png` in the dedicated Google Drive staging folder, derived via `generated-assets/manifests/game-sp40c-summit-throne-room-v01.json` into `public/assets/generated/locations/summit-throne-room-v01.webp` on stacked art branch `agent/game-sp40c-summit-throne-art`.
+- First Stephen/David/Paul transparent cutouts are produced as independent **candidates for owner review**, not approved or added to the game yet. Stephen's generated chair needs special consideration against the approved empty room throne. No gameplay or Ending A composition has been changed. See `docs/story/GAME-SP4.0C-SUMMIT-THRONE-ART.md`.
+
 ## GAME-SP4.0B — Summit perspective revision ready for review (15 October 2026)
 
 - Owner approved a revised Summit scene *composition*: gatekeeper on the left, Paul centre-right and David far right, all smaller and visually grounded farther back along the cobbled entrance path. Do not regenerate the approved transparent sprite artwork; independently mirror the three characters in CSS so they face one another. Preserve the approved exterior, bottom speech bar, current-speaker glow, persistent story controls and central Admissions Test panel.
