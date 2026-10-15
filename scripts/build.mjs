@@ -7,7 +7,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const output = path.join(root, "dist");
 const files = ["index.html", "src/office-data.js", "src/reactions.js", "src/china-data.js", "src/rescue-framework.js", "src/summit-data.js", "src/detention-data.js", "src/reassemble-data.js", "src/game.js", "src/styles.css"];
 const imageSource = "public/assets/generated/characters";
-const images = ["stephen-martin-baseline.webp", "david-baseline.webp", "paul-baseline.webp", "stephen-office-seated-neutral-v01.webp", "stephen-office-seated-amused-v01.webp", "stephen-office-seated-confused-v01.webp", "stephen-office-seated-annoyed-v01.webp", "stephen-office-seated-exasperated-v01.webp", "stephen-office-seated-laughing-v01.webp", "david-office-seated-neutral-v01.webp", "david-office-seated-confident-v01.webp", "david-office-seated-systems-expert-v01.webp", "david-office-seated-shocked-v01.webp", "david-office-seated-frustrated-v01.webp", "david-office-seated-serious-v01.webp", "paul-office-seated-neutral-v01.webp", "paul-office-seated-confused-v01.webp", "paul-office-seated-pleased-v01.webp", "stephen-holiday-standing-neutral-v01.webp", "great-wall-summit-promoter-standing-v01.webp", "china-banquet-attendant-standing-v01.webp", "stephen-holiday-forbidden-city-pleased-v01.webp", "china-night-market-spa-representative-v01.webp", "stephen-night-market-skewer-v01.webp", "david-hotel-standing-investigator-v01.webp", "paul-hotel-standing-puzzled-v01.webp", "summit-david-speaking-v01.webp", "summit-paul-wary-v01.webp", "summit-gatekeeper-v01.webp"];
+const images = ["stephen-martin-baseline.webp", "david-baseline.webp", "paul-baseline.webp", "stephen-office-seated-neutral-v01.webp", "stephen-office-seated-amused-v01.webp", "stephen-office-seated-confused-v01.webp", "stephen-office-seated-annoyed-v01.webp", "stephen-office-seated-exasperated-v01.webp", "stephen-office-seated-laughing-v01.webp", "david-office-seated-neutral-v01.webp", "david-office-seated-confident-v01.webp", "david-office-seated-systems-expert-v01.webp", "david-office-seated-shocked-v01.webp", "david-office-seated-frustrated-v01.webp", "david-office-seated-serious-v01.webp", "paul-office-seated-neutral-v01.webp", "paul-office-seated-confused-v01.webp", "paul-office-seated-pleased-v01.webp", "stephen-holiday-standing-neutral-v01.webp", "great-wall-summit-promoter-standing-v01.webp", "china-banquet-attendant-standing-v01.webp", "stephen-holiday-forbidden-city-pleased-v01.webp", "china-night-market-spa-representative-v01.webp", "stephen-night-market-skewer-v01.webp", "david-hotel-standing-investigator-v01.webp", "paul-hotel-standing-puzzled-v01.webp", "summit-david-speaking-v01.webp", "summit-paul-wary-v01.webp", "summit-gatekeeper-v01.webp", "summit-stephen-seated-chairman-v02.webp"];
 
 await rm(output, { recursive: true, force: true });
 await mkdir(path.join(output, "src"), { recursive: true });
@@ -56,7 +56,8 @@ const officeImages = [
   "public/assets/generated/locations/china-forbidden-city-background-v01.webp",
   "public/assets/generated/locations/china-night-market-background-v01.webp",
   "public/assets/generated/locations/china-visitor-information-lobby-background-v01.webp",
-  "public/assets/generated/locations/summit-entrance-v01.webp"
+  "public/assets/generated/locations/summit-entrance-v01.webp",
+  "public/assets/generated/locations/summit-throne-room-v01.webp"
 ];
 // Fail the public preview build if the independent desk accidentally becomes an
 // opaque image: a black/solid rectangle would cover all three actors.
@@ -123,6 +124,15 @@ for (const name of ["summit-david-speaking-v01.webp", "summit-paul-wary-v01.webp
       (sprite[20] & 0x10) === 0) {
     throw new Error("Approved Summit actor must preserve WebP alpha transparency: " + name);
   }
+}
+
+// Ending A uses one approved transparent seated Stephen cutout, not a
+// composite or another chair. Reject opaque outputs from the source pipeline.
+const seatedStephen = await readFile(path.join(root, imageSource, "summit-stephen-seated-chairman-v02.webp"));
+if (seatedStephen.toString("ascii", 0, 4) !== "RIFF" ||
+    seatedStephen.toString("ascii", 12, 16) !== "VP8X" ||
+    (seatedStephen[20] & 0x10) === 0) {
+  throw new Error("Approved seated Stephen must preserve WebP alpha transparency.");
 }
 
 // Voice files are supplied independently via GitHub's Upload files UI. The
