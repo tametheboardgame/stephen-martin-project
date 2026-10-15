@@ -32,8 +32,8 @@ class Element {
   click(){if(!this.disabled)this.events.click?.({target:this,preventDefault() {}});}
   closest(){return "button";}
 }
-function preview() {
-  const elements=new Map(),stored=new Map(),timeouts=new Map(),listeners=new Map();
+function preview({audio=false}={}) {
+  const elements=new Map(),stored=new Map(),timeouts=new Map(),listeners=new Map(),voices=[];
   const el=id=>{if(!elements.has(id))elements.set(id,new Element(id));return elements.get(id);};
   const document={getElementById:el,body:new Element("body"),hidden:false,
     addEventListener(type,cb){listeners.set(type,cb);}};
@@ -41,6 +41,13 @@ function preview() {
     getItem:key=>stored.get(key)||null,
     setItem:(key,value)=>stored.set(key,value)
   },scrollTo() {}};
+  if(audio) window.Audio=class {
+    constructor(){this.src="";this.preload="";this.paused=true;this.pauseCount=0;this.playCount=0;voices.push(this);}
+    play(){this.paused=false;this.playCount++;return Promise.resolve();}
+    pause(){this.paused=true;this.pauseCount++;}
+    finish(){this.onended?.();}
+    fail(){this.onerror?.();}
+  };
   vm.runInNewContext(source,{window},{timeout:1000});
   vm.runInNewContext(reactions,{window},{timeout:1000});
   let timer=0;
@@ -59,7 +66,7 @@ function preview() {
     }
     throw new Error("Did not reach "+id);
   };
-  return {el,start,at,stored,timeouts,tick,document,listeners};
+  return {el,start,at,stored,timeouts,tick,document,listeners,voices};
 }
 function saved(p){return JSON.parse(p.stored.values().next().value);}
 
@@ -389,6 +396,95 @@ test("existing artwork remains present with original alpha and dimensions",()=>{
   }
   for(const asset of ["office-clean-01-v01.webp","office-foreground-01-v01.webp","office-exterior-opening-v01.webp"])
     assert.ok(fs.statSync(path.join(root,"public/assets/generated/locations",asset)).size>0);
+});
+
+test("all 55 recordings map exactly to existing spoken beat IDs and never to silent actions",()=>{
+  const dialogue=all.filter(b=>b.type==="dialogue");
+  assert.equal(dialogue.length,55);
+  assert.deepEqual(dialogue.reduce((out,b)=>{
+    out[b.speaker]=(out[b.speaker]||0)+1;return out;
+  },{}),{Narrator:1,Stephen:16,Paul:20,David:18});
+  assert.deepEqual(dialogue.map(b=>b.id).slice(0,5),[
+    "intro.exterior","office.001","office.002","office.003","office.004"
+  ]);
+  assert.deepEqual(dialogue.slice(-2).map(b=>b.id),["office.053","office.054"]);
+  assert.ok(!all.some(b=>b.type!=="dialogue" && b.id.endsWith(".mp3")));
+  assert.ok(engine.includes('VOICE_PATH + beat.id + ".mp3"'));
+  assert.ok(read("scripts/build.mjs").includes('permitted.has(filename)'));
+  assert.ok(fs.existsSync(path.join(root,"public/assets/audio/dialogue/README.md")));
+});
+
+test("Start voiced story plays narration and follows its natural end instead of text timeout",async()=>{
+  const p=preview({audio:true});p.start();
+  assert.equal(p.el("soundButton").textContent,"Sound: On");
+  assert.equal(p.voices.length,1,"Start user gesture enables voice by default");
+  assert.ok(p.voices[0].src.endsWith("intro.exterior.mp3"));
+  await Promise.resolve();
+  assert.equal(p.timeouts.size,0,"Voice owns timeline");
+  p.voices[0].finish();
+  assert.equal(p.timeouts.size,1,"Natural delay scheduled after clip ended");
+  assert.equal(Array.from(p.timeouts.values())[0].delay,400);
+  p.tick();
+  assert.equal(saved(p).beatId,"office.001");
+  assert.equal(p.voices[0].paused,true,"Previous clip is released");
+  assert.ok(p.voices[1].src.endsWith("office.001.mp3"));
+});
+
+test("voice pause/resume retains clip position, and navigation stops previous audio",async()=>{
+  const p=preview({audio:true});p.start();
+  await Promise.resolve();
+  const first=p.voices[0];
+  p.el("playPauseButton").click();
+  assert.equal(first.paused,true);
+  assert.equal(p.timeouts.size,0);
+  const before=first.playCount;
+  p.el("playPauseButton").click();
+  assert.equal(first.playCount,before+1,"Unpausing reuses the existing clip");
+  await Promise.resolve();
+  p.el("nextButton").click();
+  assert.ok(p.voices.length>=2);
+  assert.equal(first.paused,true);
+  assert.ok(p.voices.at(-1).src.endsWith("office.001.mp3"));
+  first.finish();
+  assert.equal(saved(p).beatId,"office.001","Old clip cannot advance the next beat");
+  p.el("backButton").click();
+  assert.equal(p.voices.at(-2).paused,true);
+  assert.equal(saved(p).beatId,"intro.exterior");
+  await Promise.resolve(); // Wait for manually selected line's audio-loading promise.
+  assert.equal(p.timeouts.size,0,"Back leaves autoplay disabled");
+  p.el("skipButton").click();
+  assert.equal(p.voices.at(-1).paused,true);
+  assert.equal(saved(p).scene,"holiday");
+});
+
+test("missing MP3 and Sound Off fall back cleanly to the original text timer",async()=>{
+  const p=preview({audio:true});p.start();
+  await Promise.resolve();
+  p.voices[0].fail(); // A 404/missing asset.
+  assert.equal(p.timeouts.size,1);
+  assert.equal(Array.from(p.timeouts.values())[0].delay,4800,"Narrator text duration retained");
+  p.tick();
+  assert.equal(saved(p).beatId,"office.001");
+  const second=p.voices.at(-1);
+  p.el("sceneSoundButton").click();
+  assert.equal(second.paused,true);
+  assert.equal(p.timeouts.size,1,"Muting restores the text timer");
+  p.el("nextButton").click();
+  assert.equal(saved(p).beatId,"office.002");
+  assert.equal(p.voices.length,2,"Muted navigation never creates voice objects");
+});
+
+test("a deliberate Sound Off choice before Start remains muted across restart",()=>{
+  const p=preview({audio:true});
+  p.el("menuSoundButton").click(); // Sound On
+  p.el("menuSoundButton").click(); // Sound Off, deliberate user choice
+  p.start();
+  assert.equal(p.el("soundButton").textContent,"Sound: Off");
+  assert.equal(p.voices.length,0);
+  assert.equal(p.timeouts.size,1);
+  p.el("restartButton").click();
+  assert.equal(p.el("soundButton").textContent,"Sound: Off");
+  assert.equal(p.voices.length,0);
 });
 
 test("new expressions need only a registered seated source and no story edits",()=>{

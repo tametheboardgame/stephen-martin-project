@@ -1,5 +1,6 @@
 import { cp, copyFile, mkdir, readFile, readdir, rm, stat } from "node:fs/promises";
 import path from "node:path";
+import vm from "node:vm";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -66,6 +67,37 @@ for (const relative of officeImages) {
   await mkdir(path.dirname(path.join(output, relative)), { recursive: true });
   await copyFile(officeSource, path.join(output, relative));
 }
+
+// Voice files are supplied independently via GitHub's Upload files UI. The
+// canonical screenplay itself defines the permitted filenames, so uploading
+// 55 MP3s never requires hand-editing a manifest or changing application code.
+const audioSource = "public/assets/audio/dialogue";
+const audioFolder = path.join(root, audioSource);
+const voiceSandbox = { window: {} };
+vm.runInNewContext(await readFile(path.join(root, "src/office-data.js"), "utf8"), voiceSandbox);
+const spokenBeats = voiceSandbox.window.SMP_OFFICE_SHOTS.flatMap(shot => shot.lines)
+  .filter(beat => beat.type === "dialogue");
+const permitted = new Set(spokenBeats.map(beat => beat.id + ".mp3"));
+if (spokenBeats.length !== 55 || permitted.size !== 55) {
+  throw new Error("Approved voice script changed: expected 55 uniquely identified spoken beats.");
+}
+await mkdir(path.join(output, audioSource), { recursive: true });
+let voiceCount = 0;
+for (const filename of await readdir(audioFolder)) {
+  if (filename === "README.md") continue;
+  if (!permitted.has(filename)) {
+    throw new Error("Unexpected voice filename: " + filename + ". Use the exact script ID plus .mp3.");
+  }
+  const original = path.join(audioFolder, filename);
+  const audioStat = await stat(original);
+  if (!audioStat.isFile() || audioStat.size < 128 || audioStat.size > 25 * 1024 * 1024) {
+    throw new Error("Voice MP3 is empty, oversized or not a file: " + filename);
+  }
+  await copyFile(original, path.join(output, audioSource, filename));
+  voiceCount++;
+}
+console.log("Approved dialogue MP3s packaged: " + voiceCount + "/55.");
+// No README, metadata or source docs are published in dist.
 
 console.log("Cloudflare Pages static output: dist/");
 console.log("Only game HTML, scripts, styles, approved background and separate foreground desk, 3 Neutral seated sprites, six Stephen poses, six David poses and Paul's Confused and Pleased seated variants, plus base portraits and 18 reference expression WebPs were included.");

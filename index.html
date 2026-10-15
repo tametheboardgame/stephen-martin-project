@@ -32,7 +32,7 @@
       </div>
       <div class="topbar-right">
         <span class="build-label">GAME-SP1.1 · OFFICE PREVIEW</span>
-        <button class="header-button" id="soundButton" type="button" aria-pressed="false" title="Toggle short sound effects">Sound: Off</button>
+        <button class="header-button" id="soundButton" type="button" aria-pressed="false" title="Toggle voiced dialogue and sound effects">Sound: Off</button>
       </div>
     </header>
 
@@ -56,7 +56,7 @@
 
           <div class="menu-hero-utility">
             <span class="menu-hero-preview">CHAPTER ONE · OFFICE PREVIEW</span>
-            <button id="menuSoundButton" type="button" class="mini-button" aria-pressed="false" title="Toggle short sound effects">Sound: Off</button>
+            <button id="menuSoundButton" type="button" class="mini-button" aria-pressed="false" title="Toggle voiced dialogue and sound effects">Sound: Off</button>
           </div>
 
           <p class="menu-hero-tagline">Three mates. One spectacularly unnecessary international rescue.</p>
@@ -64,10 +64,10 @@
           <div class="menu-hero-actions">
             <strong>THE PRE-HOLIDAY BRIEFING</strong>
             <div class="menu-hero-buttons">
-              <button type="button" id="startButton" class="btn btn-primary">Start the story <span aria-hidden="true">→</span></button>
+              <button type="button" id="startButton" class="btn btn-primary">Start voiced story <span aria-hidden="true">→</span></button>
               <button type="button" id="resumeButton" class="btn btn-secondary" hidden>Continue preview</button>
             </div>
-            <small>Autoplays · Pause, Back and Next available</small>
+            <small>Starts with recorded voices · Sound Off to mute · Pause, Back and Next available</small>
           </div>
         </div>
       </section>
@@ -80,7 +80,7 @@
             <p id="sceneCaption">One continuous office conversation</p>
           </div>
           <div class="scene-toolbar-actions">
-            <button id="sceneSoundButton" type="button" class="mini-button" aria-pressed="false" title="Toggle short sound effects">Sound: Off</button>
+            <button id="sceneSoundButton" type="button" class="mini-button" aria-pressed="false" title="Toggle voiced dialogue and sound effects">Sound: Off</button>
             <button id="restartButton" type="button" class="mini-button">Restart</button>
             <button id="skipButton" type="button" class="mini-button">Skip intro <span aria-hidden="true">↗</span></button>
           </div>
@@ -123,7 +123,7 @@
 
         <div class="progress-track" role="progressbar" aria-label="Opening scene progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="storyProgress"><div class="progress-fill" id="progressFill"></div></div>
             <div class="dialogue-actions">
-              <span id="playbackStatus" class="dialogue-hint" role="status" aria-live="off">AUTO · NEXT LINE IN A MOMENT</span>
+              <span id="playbackStatus" class="dialogue-hint" role="status" aria-live="off">AUTO · RECORDED VOICES WHEN ENABLED</span>
               <div class="expression-proof-controls" role="group" aria-label="Character expression previews"><button id="stephenProofButton" class="d2-proof-button" type="button" aria-label="Stephen expression preview: Auto. Click to cycle Auto, Neutral, Amused, Confused, Annoyed, Exasperated and Laughing">Stephen: Auto ↻</button><button id="davidProofButton" class="d2-proof-button" type="button" aria-label="David expression preview: Auto. Click to cycle Auto, Neutral, Confident, Serious, Frustrated, Shocked and Systems Expert">David: Auto ↻</button><button id="paulProofButton" class="d2-proof-button" type="button" aria-label="Paul expression preview: Auto. Click to cycle Auto, Neutral, Confused and Pleased">Paul: Auto ↻</button></div>
               <div class="dialogue-buttons">
                 <button id="playPauseButton" type="button" class="btn btn-small btn-secondary" aria-pressed="true">Ⅱ Pause</button>
@@ -147,7 +147,7 @@
             <button id="replayButton" type="button" class="btn btn-primary">Replay the office <span aria-hidden="true">↺</span></button>
             <button id="homeButton" type="button" class="btn btn-secondary">Main menu</button>
           </div>
-          <p class="preview-label">GAME-SP1.1-D6: owner-approved full Paul expression family (Neutral, Confused, Pleased); compare all three in-scene before merging.</p>
+          <p class="preview-label">GAME-SP1.1-D7: voiced office dialogue preview. Upload script-ID MP3s to the dedicated GitHub branch folder to enable each line.</p>
         </div>
       </section>
     </main>

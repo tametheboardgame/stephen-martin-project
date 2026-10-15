@@ -10,6 +10,19 @@
 - **Next:** GAME-SP2.2 build transition and Great Wall vertical slice on a new agent branch after doc/story merge, with separately approved scene art and standing Stephen; then GAME-SP2.3 remaining two sites/choice state and GAME-SP2.4 David/Paul alarm-hub integration. No GAME-SP2 code or new artwork was approved or delivered by this story lock.
 - **Parallel pending work:** Game voice PR #16 remains open and draft as at story lock; the user confirmed the 55 uploaded MP3s play in its preview, but no instruction to merge the voice PR was given. Keep that separate worktree/PR's owner-gate.
 
+## GAME-SP1.1-D7A — Recording upload verified and audible Start UX (14 October 2026)
+
+- All **55/55 MP3** files uploaded directly to `public/assets/audio/dialogue/` on PR #16 at commit `8538eb9`; the targeted smoke build confirms `Approved dialogue MP3s packaged: 55/55` and Cloudflare Pages successfully deployed the new upload commit. Earlier deployment-specific URLs are immutable and cannot serve later uploaded files.
+- Revised opening UX: **Start voiced story** explicitly enables voice in the initiating click, while preserving any manual Sound Off preference; initial menu remains muted. Continue also opts into sound unless the owner deliberately disabled it. No voice generation keys, new external services or script changes.
+- Regression tests cover user-gesture activation, natural clip-end timing, manual mute persistence, navigation and fallback. Listening approval required before PR #16 merge.
+
+## GAME-SP1.1-D7 — Pre-recorded scene voice clips (14 October 2026)
+
+- Owner provided **55 stable recording IDs** for the approved script: Stephen 16, David 18, Paul 20, Narrator 1. Audio files will be uploaded by owner directly into `public/assets/audio/dialogue/` on `agent/game-sp11d7-dialogue-voice`, with filenames matching their exact beat IDs and `.mp3` suffix. No uploads are present at the time of initial D7 code integration.
+- Audio is controlled by the existing Sound On/Off buttons, starts only after explicit user interaction, plays each dialogue recording until completion, and only then auto-advances after a short natural gap. Unrecorded and unplayable dialogue falls back to the original text timer; non-dialogue beats retain their existing timings.
+- Pause/resume holds voice position; Next, Back, restart, skip, navigating home and muting stop old audio. Rapid jumps do not allow stale audio events to advance the scene. Voice filenames are whitelisted against actual dialogue IDs during production build, with no extra tracking, networking or TTS services.
+- Audio clips live in the public repo/preview; only approved synthetic voices should be committed. The audio-enabled PR must remain draft for owner listening/visual review before main merge.
+
 ## GAME-SP1.1-D6B — Paul Pleased expression proof (14 October 2026)
 
 - Owner approved Paul's Pleased artwork after Confused: subtle happy smile with head/eyes towards his right (picture left), preserving the approved bald head, glasses, white polo, skin tone and body proportions. His complete opening-scene expression set is Neutral/Blank, Confused and Pleased.
