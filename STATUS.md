@@ -2,6 +2,11 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP4.0C — Corrected attendant grounding (15 October 2026)
+
+- Owner's in-engine screenshot showed **all four ceremonial attendants floating or standing implausibly**, despite the correct transparent cutouts. Repositioned and reduced only the attendant CSS, across desktop/tablet/mobile: fan and ewer stand lower by the throne stairway's side columns, tray and towel frame the lower side aisles. No art regeneration or new manifests.
+- Stephen, David, Paul, the approved room background, text strip, speaker highlighting, controls and timing remain untouched. Updated tests verify all responsive foot anchors and sizes. Await owner visual inspection of the newly deployed scene before merging draft PR #34 or parent #33.
+
 ## GAME-SP4.0C — Four approved attendants integrated into Ending A (15 October 2026)
 
 - Owner approved four separate throne-room attendant sprites (fan, tray, ewer, towel) and explicitly directed integration. The transparent PNG originals are in the dedicated Google Drive staging folder. Each was materialised sequentially via a versioned manifest and the existing OIDC pipeline as an alpha-preserving WebP on draft PR #34.
