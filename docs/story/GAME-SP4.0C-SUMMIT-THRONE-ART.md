@@ -3,7 +3,7 @@
 **Date:** 15 October 2026
 **Base:** `agent/game-sp40a-summit-visual-proof` / draft PR #33.
 **Branch:** `agent/game-sp40c-summit-throne-art`
-**Status:** Throne-room **background approved and locked**; character sprite candidates generated but **not yet owner-approved for integration**.
+**Status:** Throne-room background and corrected Stephen v02 approved; Stephen-only scene integrated for in-engine visual review. David and Paul remain unapproved for throne-room use.
 
 ## Background approval and provenance
 
@@ -31,3 +31,21 @@ All three are in the project's existing comic-poster style, generated without an
 - Once approved, place each candidate source separately in the project Drive staging folder and create individual `generated-assets/manifests/` entries.
 - Integrate the original approved throne-room background plus individually approved foreground sprites into `#summitEndingScene`; move Ending A's spoken lines into a bottom dialogue box and apply current-speaker glow, preserving automatic playback and manual choices.
 - Make no changes to the already-approved Summit entrance, other two routes, or save-state contracts. Do not merge the stack into `main` without explicit owner approval.
+
+
+## Stephen-only in-engine layout proof (15 October 2026)
+
+**Owner approved the corrected Stephen likeness** using the original blond, side-parted Steve reference from the project and explicitly requested a real playable throne-room scene with **Stephen alone** before any David/Paul sprite integrations.
+
+- Approved source: `summit-throne-stephen-seated-chairman-v02.png`, Google Drive `11yVSHsny_Ff4I7KCSA9GCmf0o2gS6FNV`; he wears a blue top, cross-body SUPREME CHAIRMAN sash, fur-trimmed ceremonial cape, dark glasses and holds a gold goblet, **with no chair**.
+- Approved background: `summit-throne-room-background-v01.png` from Drive `1vlDRjDcHEux93sxTwG0EJa9s5cqez8LB`.
+- The already-validated OIDC asset pipeline materialised these to `public/assets/generated/characters/summit-stephen-seated-chairman-v02.webp` (alpha-preserving) and `public/assets/generated/locations/summit-throne-room-v01.webp`. The two files remain separate layers.
+- The Ending A `#summitEndingScene` now shows the room and one seated Stephen centred over the background's existing throne. The 14 approved ending dialogue beats and end card use a readable **bottom strip**; autoplay/Next, save/resume, replay and menu are unchanged. Current-speaker glow is enabled only on Stephen's lines; David, Paul and Narrator lines still play as editable dialogue **without** their unapproved foreground sprites.
+- The title badge is in the top-left, away from the existing top-right playback bar. CSS provides distinct desktop/tablet/mobile placement. No redundant floating sash or "placeholder art" copy remains on top of the scene.
+- Import/build scripts package the background and one alpha-verified transparent Stephen cutout; regression tests guard provenance, route isolation, subtitle pacing and Ending A completion.
+
+### Owner visual checkpoint
+
+Inspect the **actual playable browser preview**: does Stephen's size, centre position and seated posture align with the painted throne and steps? Check at desktop and tablet widths, subtitle contrast and whether all ending lines progress naturally. Treat this as a **placement proof**, not final sign-off for throne-room character proportions. Adjust CSS first if he is too large or too far forward. Do not generate/add David or Paul until this composition is approved.
+
+**No merge** of draft PR #34 or stacked PR #33 without the user's separate explicit approval.
