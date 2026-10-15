@@ -7,6 +7,9 @@
   <meta name="description" content="A completely fictional, deeply unnecessary rescue. A short comedy adventure starring Stephen Martin, David and Paul.">
   <title>Rescue Stephen Martin from China | GAME-SP1 Office Preview</title>
   <link rel="stylesheet" href="./src/styles.css">
+  <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/david-hotel-standing-investigator-v01.webp">
+  <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/paul-hotel-standing-puzzled-v01.webp">
+
   <script defer src="./src/office-data.js"></script>
   <script defer src="./src/reactions.js"></script>
   <script defer src="./src/china-data.js"></script>
@@ -335,6 +338,8 @@
         <div id="rescueHotelScene" class="rescue-hotel-scene" hidden>
           <div class="rescue-hotel-stage">
             <img class="rescue-hotel-bg" src="./public/assets/generated/locations/china-visitor-information-lobby-background-v01.webp" alt="An empty, warmly lit fictional hotel visitor-information lobby with a brochure rack and reception counter" loading="eager">
+            <img id="rescueHotelDavid" class="rescue-hotel-actor rescue-hotel-david" src="./public/assets/generated/characters/david-hotel-standing-investigator-v01.webp" alt="David, standing with his phone, conducting a deeply unnecessary investigation" loading="eager">
+            <img id="rescueHotelPaul" class="rescue-hotel-actor rescue-hotel-paul" src="./public/assets/generated/characters/paul-hotel-standing-puzzled-v01.webp" alt="Paul, shorter than David, standing nearby looking puzzled" loading="eager">
             <div class="wall-place-label"><span>CHAPTER THREE · THE WORLD'S WORST DETECTIVES</span><strong>VISITOR INFORMATION</strong></div>
             <div id="rescueHotelHotspots" class="rescue-hotel-hotspots" hidden role="group" aria-label="Inspect the hotel for clues">
               <button id="hotelPhoneButton" class="rescue-hotel-hotspot hotel-hotspot-phone" type="button"><span class="hub-symbol" aria-hidden="true">✉</span> Stephen's phone</button>

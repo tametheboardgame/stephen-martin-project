@@ -2182,6 +2182,18 @@ body:has(#menuScreen:not([hidden])) main {
 }
 #holidayScreen .rescue-route-intro-stage {display:grid;place-items:center;padding:5%;}
 #holidayScreen .rescue-hotel-bg {position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+
+/* Owner-approved independent character cutouts: both stand on the same
+   floor plane. Paul is shorter than David (58% vs 69% of stage height).
+   Clue buttons and subtitles remain separate, higher-z interactive layers. */
+#holidayScreen .rescue-hotel-actor {
+  position:absolute;bottom:0;width:auto;object-fit:contain;
+  object-position:center bottom;pointer-events:none;
+  filter:drop-shadow(4px 6px 4px rgba(8,22,34,.35));z-index:2;
+}
+#holidayScreen .rescue-hotel-david {height:69%;left:13%;max-width:36%;}
+#holidayScreen .rescue-hotel-paul {height:58%;left:36%;max-width:31%;}
+
 #holidayScreen .rescue-hotel-hotspots {position:absolute;inset:0;z-index:4;pointer-events:none;}
 #holidayScreen .rescue-hotel-hotspot {
   position:absolute;pointer-events:auto;z-index:5;display:flex;gap:8px;align-items:center;
@@ -2241,6 +2253,8 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen:has(#rescueRouteIntro:not([hidden])) .china-footer {top:2%;right:2%;left:auto;bottom:auto;}
 }
 @media (max-width:800px) {
+  #holidayScreen .rescue-hotel-david {height:62%;left:4%;max-width:45%;}
+  #holidayScreen .rescue-hotel-paul {height:52%;left:36%;max-width:42%;}
   #holidayScreen .rescue-hotel-stage,#holidayScreen .rescue-route-intro-stage {aspect-ratio:4/3;}
   #holidayScreen .hotel-route-grid {grid-template-columns:1fr;}
   #holidayScreen .rescue-hotel-hotspot {padding:7px 9px;min-width:0;min-height:44px;max-width:39%;}
@@ -2249,6 +2263,8 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen .hotel-hotspot-desk {left:42%;top:47%;}
 }
 @media (max-width:450px) {
+  #holidayScreen .rescue-hotel-david {height:51%;left:-5%;max-width:58%;}
+  #holidayScreen .rescue-hotel-paul {height:43%;left:39%;max-width:54%;}
   #holidayScreen .rescue-hotel-stage,#holidayScreen .rescue-route-intro-stage {aspect-ratio:3/4;}
   #holidayScreen .rescue-hotel-hotspot {font-size:11px;max-width:47%;}
   #holidayScreen .hotel-hotspot-phone {bottom:25%;}

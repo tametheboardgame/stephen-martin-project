@@ -941,8 +941,22 @@ test("SP2.4B approved background remains separate from actors, clickable clues a
   for(const id of ["rescueHotelScene","rescueHotelHotspots","hotelPhoneButton","hotelBrochureButton",
     "hotelDeskButton","hotelEvidencePanel","hotelDeductions","hotelHint","hotelResolved"])
     assert.ok(html.includes('id="'+id+'"'),id);
-  assert.ok(!html.includes("david-hotel-standing"),"No unapproved David standing sprite");
-  assert.ok(!html.includes("paul-hotel-standing"),"No unapproved Paul standing sprite");
+  for(const [name,id] of [
+    ["david-hotel-standing-investigator-v01.webp","rescueHotelDavid"],
+    ["paul-hotel-standing-puzzled-v01.webp","rescueHotelPaul"]
+  ]){
+    const asset=path.join(root,"public/assets/generated/characters",name);
+    const buff=fs.readFileSync(asset);
+    assert.equal(buff.toString("ascii",0,4),"RIFF",name);
+    assert.equal(buff.toString("ascii",12,16),"VP8X",name);
+    assert.ok((buff[20]&0x10)!==0,"Standing sprite must have alpha: "+name);
+    assert.ok(read("scripts/build.mjs").includes(name));
+    assert.ok(html.includes(name) && html.includes('id="'+id+'"'),name);
+  }
+  assert.match(css,/rescue-hotel-david \{height:69%;left:13%/);
+  assert.match(css,/rescue-hotel-paul \{height:58%;left:36%/);
+  assert.match(css,/\.rescue-hotel-actor \{[\s\S]*?pointer-events:none/,"Cutouts cannot block hotel clue buttons");
+  assert.match(css,/\.rescue-hotel-hotspots \{[^}]*z-index:4/,"Clues stay above independent actors");
 });
 test("SP2.4B phone, brochure and desk are independent clues in any order; reading none is not a soft lock",()=>{
   const p=toHotelInvestigation("reassemble");

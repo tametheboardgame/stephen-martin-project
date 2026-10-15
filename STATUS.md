@@ -1,6 +1,13 @@
 # Project status
 
-**Updated:** 14 October 2026
+**Updated:** 15 October 2026
+
+## GAME-SP2.4B — David and Paul hotel standing cast approved (15 October 2026)
+
+- **Owner-approved independent art:** David — bald, ginger beard, dark hoodie over green T-shirt, holding a phone; Paul — bald with glasses, white polo, both hands in pockets. Both 1024×1536 RGBA with transparent backgrounds, no combined scene/dialogue; original PNGs uploaded to the existing Google Drive staging folder (David file ID `1iiDtXpVcWE2mvFIhuC2MXejYWc0KEAU1`, Paul file ID `1RRMN0_nXsaHFlEkaqr4DVNabR2ceP59Z`).
+- Materialised via versioned `generated-assets/manifests/game-sp24b-{david,paul}-hotel-standing-v01.json` to independent WebP cutouts in `public/assets/generated/characters/`. Source PNGs remain on Drive, not Git.
+- Hotel integration: both rendered above the previously approved empty background and **below clickable clues/dialogue UI**. Paul is deliberately **shorter**: desktop height 58% versus David 69%, with independent responsive tablet/mobile staging. Build whitelist and WebP alpha validation updated. Existing route logic, clues, dialogue, 55 original office voices and non-gory fictional game contract unchanged.
+- Draft stacked atop PR #24; owner still needs to review the **combined** composition in the actual browser before merging. Do not treat approval of sprite source images as approval of every layout, and do not merge any stacked PR without explicit authorisation.
 
 ## GAME-SP2.4B — Playable visitor-information deduction puzzle (14 October 2026)
 

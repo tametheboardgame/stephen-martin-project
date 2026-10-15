@@ -32,3 +32,7 @@ Existing V3 local-save key is unchanged. Fields `hubIntroStep`, `hubActiveClue`,
 ## Human gate and next action
 
 Owner to check laptop 16:9 composition and mobile/tablet clue buttons and deduce panel, timing and copy, then separately approve transparent David/Paul standing sprites before any actor art integration. **Do not merge the stacked draft** without explicit qualification and owner permission. Next framework package `GAME-SP3.0` only after hotel loop works and artwork gate is addressed.
+
+## 15 October 2026 — owner-approved standing character resolution
+
+The previously outstanding character sprite gate is now **resolved at source-asset level**. Two separate transparent PNG originals were accepted by the owner and staged in the project Drive folder: `david-hotel-standing-investigator-locked-v01.png` and `paul-hotel-standing-puzzled-locked-v01.png`. They are materialised via two distinct versioned manifests and referenced in `index.html` as separate actors in the existing approved empty lobby. Desktop David height 69%, Paul 58%; mobile/tablet rules maintain the relationship. The new characters do not modify evidence logic or route. **Owner must still approve in-browser positioning/scale of the composite scene** before merge.
