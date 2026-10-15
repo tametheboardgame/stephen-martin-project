@@ -24,6 +24,7 @@
   const chinaFinal = window.SMP_CHINA_FINAL;
   const rescueAlarm = window.SMP_RESCUE_ALARM;
   const rescueHub = window.SMP_RESCUE_HUB;
+  const rescueFramework = window.SMP_RESCUE_FRAMEWORK;
   const rescuePortraits = {
     David: {
       serious: "./public/assets/generated/characters/david-office-seated-serious-v01.webp",
@@ -354,7 +355,21 @@
       if (!stored || !["office", "holiday"].includes(stored.scene)) return null;
       if (stored.version === 3) {
         if (!beatIndexById.has(stored.beatId)) return null;
-        return migrateHolidaySave(stored);
+        const migrated = migrateHolidaySave(stored);
+        if (migrated.scene === "holiday" &&
+            ["rescue-route-intro", "rescue-minigame", "rescue-ending-summary"].includes(migrated.holidayPhase)) {
+          // An old save is still valid: initialise the new narrow progress
+          // record. Never revive an uncommitted or mismatched route.
+          if (!rescueFramework.validRoute(migrated.route) || migrated.hubMatched !== true) {
+            migrated.holidayPhase = rescueFramework.validRoute(migrated.route) ? "rescue-hotel" : "wall";
+            delete migrated.rescueProgress;
+          } else {
+            migrated.rescueProgress = rescueFramework.normalise(migrated.rescueProgress, migrated.route);
+            if (migrated.holidayPhase === "rescue-ending-summary" &&
+                !migrated.rescueProgress.finished) migrated.holidayPhase = "rescue-minigame";
+          }
+        }
+        return migrated;
       }
       if (![1, 2].includes(stored.version)) return null;
       if (stored.scene === "holiday") {
@@ -571,9 +586,15 @@
     state.hubLastWrongRoute = null;
     state.hubMatched = false;
     state.hubCorrectStep = 0;
+    delete state.rescueProgress;
   }
   function renderHoliday() {
     reveal("holiday");
+    if (["rescue-route-intro", "rescue-minigame", "rescue-ending-summary"].includes(state.holidayPhase) &&
+        (!rescueFramework.validRoute(state.route) || state.hubMatched !== true)) {
+      state.holidayPhase = rescueFramework.validRoute(state.route) ? "rescue-hotel" : "wall";
+      delete state.rescueProgress;
+    }
     const phase = state.holidayPhase || "transition";
     const inWall = phase === "wall";
     const inPalace = phase === "palace";
@@ -586,6 +607,8 @@
     const inArrival = phase === "rescue-hub-arrival";
     const inHotel = phase === "rescue-hotel";
     const inRouteIntro = phase === "rescue-route-intro";
+    const inMiniGame = phase === "rescue-minigame";
+    const inSummary = phase === "rescue-ending-summary";
     $("chinaTransition").hidden = phase !== "transition";
     $("wallScene").hidden = !inWall;
     $("palaceScene").hidden = !inPalace;
@@ -598,6 +621,8 @@
     $("rescueHubArrival").hidden = !inArrival;
     $("rescueHotelScene").hidden = !inHotel;
     $("rescueRouteIntro").hidden = !inRouteIntro;
+    $("rescueMiniGameScene").hidden = !inMiniGame;
+    $("rescueEndingSummary").hidden = !inSummary;
     if (inWall) {
       const position = Number.isInteger(state.wallStep)
         ? Math.max(0, Math.min(state.wallStep, greatWall.lines.length)) : 0;
@@ -833,11 +858,41 @@
             ? "Finish deduction →" : "Head to " + choice.label + " →";
       }
     }
-    if (inRouteIntro) {
-      const route = validHolidayRoutes.includes(state.route) ? state.route : null;
-      const choice = rescueHub.destinations.find(item => item.route === route);
-      $("hotelRouteHeading").textContent = choice ? choice.label.toUpperCase() : "DESTINATION UNKNOWN";
-      $("hotelRouteDescription").textContent = route ? rescueHub.routeIntro[route] : "";
+    if (inRouteIntro || inMiniGame || inSummary) {
+      const route = state.route;
+      const config = rescueFramework.routes[route];
+      const progress = rescueFramework.normalise(state.rescueProgress, route);
+      state.rescueProgress = progress;
+      if (inRouteIntro) {
+        const choice = rescueHub.destinations.find(item => item.route === route);
+        $("hotelRouteHeading").textContent = choice ? choice.label.toUpperCase() : config.title;
+        $("hotelRouteDescription").textContent = rescueHub.routeIntro[route];
+        const duringDialogue = progress.introStep < config.intro.length;
+        const line = config.intro[Math.min(progress.introStep, config.intro.length - 1)];
+        $("routeIntroDialogue").hidden = !duringDialogue;
+        $("routeIntroSpeaker").textContent = duringDialogue ? line.speaker.toUpperCase() : "";
+        $("routeIntroLine").textContent = duringDialogue ? line.text : "";
+        $("routeIntroStatus").textContent = duringDialogue
+          ? "Rescue briefing · " + (progress.introStep + 1) + " of " + config.intro.length
+          : "Briefing complete. " + config.gameTitle + " is the next stage.";
+        $("routeIntroNextButton").textContent = duringDialogue
+          ? "Next line →" : "Continue to " + config.gameTitle + " →";
+      }
+      if (inMiniGame) {
+        $("rescueMiniGameTitle").textContent = config.gameTitle;
+        $("rescueMiniGameDescription").textContent = rescueHub.routeIntro[route];
+        $("rescueMiniGameStatus").textContent = config.workPackage
+          + " will supply the playable puzzle. No rounds or ending can be skipped in this preview.";
+      }
+      if (inSummary) {
+        if (!progress.finished) {
+          state.holidayPhase = "rescue-minigame";
+          return renderHoliday();
+        }
+        $("rescueSummaryHeading").textContent = config.endingTitle;
+        $("rescueSummaryMessage").textContent =
+          "Route completed: " + config.gameTitle + ". The matching ending scene is part of " + config.workPackage + ".";
+      }
     }
     state.holidayFlowVersion = 2;
     persist();
@@ -1106,7 +1161,26 @@
       state.hubCorrectStep++;
     } else {
       state.holidayPhase = "rescue-route-intro";
+      state.rescueProgress = rescueFramework.fresh(state.route);
     }
+    renderHoliday();
+  }
+
+  function nextRouteIntro() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-route-intro" ||
+        state.hubMatched !== true || !rescueFramework.validRoute(state.route)) return;
+    const config = rescueFramework.routes[state.route];
+    state.rescueProgress = rescueFramework.normalise(state.rescueProgress, state.route);
+    if (state.rescueProgress.introStep < config.intro.length) state.rescueProgress.introStep++;
+    else state.holidayPhase = "rescue-minigame";
+    renderHoliday();
+  }
+
+  function backToRescueBriefing() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+        !rescueFramework.validRoute(state.route)) return;
+    state.holidayPhase = "rescue-route-intro";
+    state.rescueProgress = rescueFramework.normalise(state.rescueProgress, state.route);
     renderHoliday();
   }
 
@@ -1114,7 +1188,9 @@
     if (screens.holiday.hidden ||
         !(state.holidayPhase === "final-message" && state.finalStep === 2 ||
           state.holidayPhase === "rescue-hub-arrival" ||
-          state.holidayPhase === "rescue-route-intro")) return;
+          state.holidayPhase === "rescue-route-intro" ||
+          state.holidayPhase === "rescue-minigame" ||
+          state.holidayPhase === "rescue-ending-summary")) return;
     // Rewind explicitly to the first route choice, preserving the voiced
     // office story and Great Wall dialogue but clearing all branch decisions.
     state.wallStep = greatWall.lines.length;
@@ -1185,6 +1261,12 @@
   $("hotelReassembleButton").addEventListener("click", () => makeHotelDeduction("reassemble"));
   $("hotelFinishButton").addEventListener("click", advanceHotelResolution);
   $("hotelRouteReplayButton").addEventListener("click", chooseAnotherEnding);
+  $("routeIntroNextButton").addEventListener("click", nextRouteIntro);
+  $("rescueMiniGameBackButton").addEventListener("click", backToRescueBriefing);
+  $("rescueMiniGameReplayButton").addEventListener("click", chooseAnotherEnding);
+  $("rescueSummaryReplayButton").addEventListener("click", chooseAnotherEnding);
+  $("rescueSummaryRestartButton").addEventListener("click", startOffice);
+  $("rescueSummaryMenuButton").addEventListener("click", showMenu);
   $("soundButton").addEventListener("click", () => setSound(!soundEnabled, true));
   $("sceneSoundButton").addEventListener("click", () => setSound(!soundEnabled, true));
   $("menuSoundButton").addEventListener("click", () => setSound(!soundEnabled, true));
