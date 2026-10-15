@@ -2,6 +2,11 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP2.4B — Hotel standing cast depth/layout revision (15 October 2026)
+
+- Owner screenshot review found David and Paul too close to the viewer, with feet overlapping the foreground coffee table. Re-stage existing approved transparent actors deeper in the lobby in front of the reception desk: desktop shared floor at 19% from base, David 56% height / left 21%, Paul 46% / left 40%; tablet shared floor 20%, heights 50%/41%; phone shared floor 22%, heights 42%/35%.
+- This is CSS-only visual repositioning, with targeted regression expectations in the existing hotel smoke test. No new artwork, scene composites, dialogue or route logic. Await actual Cloudflare preview and owner approval for laptop/mobile composition; PR #25 remains draft and unmerged.
+
 ## GAME-SP2.4B — David and Paul hotel standing cast approved (15 October 2026)
 
 - **Owner-approved independent art:** David — bald, ginger beard, dark hoodie over green T-shirt, holding a phone; Paul — bald with glasses, white polo, both hands in pockets. Both 1024×1536 RGBA with transparent backgrounds, no combined scene/dialogue; original PNGs uploaded to the existing Google Drive staging folder (David file ID `1iiDtXpVcWE2mvFIhuC2MXejYWc0KEAU1`, Paul file ID `1RRMN0_nXsaHFlEkaqr4DVNabR2ceP59Z`).
