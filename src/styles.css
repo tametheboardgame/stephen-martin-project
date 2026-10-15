@@ -2542,3 +2542,21 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen #holidayPauseButton,#holidayScreen #holidayNextButton,
   #holidayScreen #holidayRouteButton,#holidayScreen #homeButton {font-size:10px;min-height:34px;}
 }
+
+
+/* GAME-SP4.0A — Approved, Drive-sourced Summit exterior environment.
+ * Only the cult briefing and the admissions test share this outdoor setting.
+ * The Summit ending is indoors and deliberately retains its placeholder
+ * until its independently approved throne-room illustration arrives. */
+#holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-route-intro-stage,
+#holidayScreen #rescueMiniGameScene:has(#summitAdmissions:not([hidden])) .rescue-route-intro-stage {
+  background:
+    linear-gradient(to top,rgba(5,22,41,.52),rgba(4,20,37,.24) 64%,rgba(4,20,37,.32)),
+    url("../public/assets/generated/locations/summit-entrance-v01.webp") center/cover no-repeat;
+}
+/* Keep the original illustrated entrance visible without sacrificing legibility
+ * of editable HTML dialogue and the three accessible answer cards. */
+#holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-travel-panel {
+  background:rgba(5,25,47,.9);
+  box-shadow:0 12px 38px rgba(0,0,0,.35);
+}
