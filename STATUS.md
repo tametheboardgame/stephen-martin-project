@@ -2,10 +2,10 @@
 
 **Updated:** 15 October 2026
 
-## GAME-SP2.4B — Hotel standing cast depth/layout revision (15 October 2026)
+## GAME-SP2.4B — Hotel standing cast depth/layout revision v2 (15 October 2026)
 
-- Owner screenshot review found David and Paul too close to the viewer, with feet overlapping the foreground coffee table. Re-stage existing approved transparent actors deeper in the lobby in front of the reception desk: desktop shared floor at 19% from base, David 56% height / left 21%, Paul 46% / left 40%; tablet shared floor 20%, heights 50%/41%; phone shared floor 22%, heights 42%/35%.
-- This is CSS-only visual repositioning, with targeted regression expectations in the existing hotel smoke test. No new artwork, scene composites, dialogue or route logic. Await actual Cloudflare preview and owner approval for laptop/mobile composition; PR #25 remains draft and unmerged.
+- Owner review of the previous hotel preview found David's foot still visually crossing the foreground coffee table. Reposition the two approved, independently layered actors further back, slightly larger and towards the reception desk: desktop shared floor at 24% from the base, David 60% height / left 23%, Paul 50% / left 42%; tablet shared floor 24%, heights 54%/45%; phone shared floor 26%, heights 46%/38%.
+- CSS-only staging revision with updated responsive regression assertions. No new artwork, scene composites, dialogue, save state or route logic. GitHub smoke and current Cloudflare preview should be checked before owner visual approval; PR #25 remains draft and unmerged.
 
 ## GAME-SP2.4B — David and Paul hotel standing cast approved (15 October 2026)
 
