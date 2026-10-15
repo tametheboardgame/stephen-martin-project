@@ -13,6 +13,7 @@
   <script defer src="./src/office-data.js"></script>
   <script defer src="./src/reactions.js"></script>
   <script defer src="./src/china-data.js"></script>
+  <script defer src="./src/rescue-framework.js"></script>
   <script defer src="./src/game.js"></script>
   <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/david-office-seated-confident-v01.webp?v=4">
   <link rel="preload" as="image" type="image/webp" href="./public/assets/generated/characters/david-office-seated-systems-expert-v01.webp?v=1">
@@ -382,18 +383,55 @@
               <span>OPERATION: PROBABLY FINE</span>
               <h2 id="hotelRouteHeading">THE SUMMIT</h2>
               <p id="hotelRouteDescription"></p>
-              <small>The matching rescue mini-game is next (GAME-SP3.0/3.1–3.3). The location and ending cannot be changed by guessing another option.</small>
+              <small>Route confirmed by the investigation. No wrong guess can change Stephen's destination.</small>
+              <div id="routeIntroDialogue" class="rescue-intro-dialogue" role="group" aria-label="Route introduction">
+                <strong id="routeIntroSpeaker"></strong>
+                <p id="routeIntroLine" aria-live="polite"></p>
+              </div>
+              <p id="routeIntroStatus" class="rescue-framework-status"></p>
             </div>
           </div>
           <div class="wall-action-strip">
-            <div class="wall-story-progress">Investigation complete · Mini-game coming next</div>
+            <div class="wall-story-progress">Investigation complete · Rescue briefing</div>
+            <button id="routeIntroNextButton" class="btn btn-primary" type="button">Next line →</button>
             <button id="hotelRouteReplayButton" class="btn btn-secondary" type="button">Choose another ending ↺</button>
+          </div>
+        </div>
+        <div id="rescueMiniGameScene" class="rescue-route-intro" hidden>
+          <div class="rescue-route-intro-stage">
+            <div class="rescue-travel-panel">
+              <span>CHAPTER FOUR · THE UNNECESSARY RESCUE</span>
+              <h2 id="rescueMiniGameTitle">The rescue plan</h2>
+              <p id="rescueMiniGameDescription"></p>
+              <small id="rescueMiniGameStatus">The mini-game is not yet playable. This preview ends at the mission briefing.</small>
+            </div>
+          </div>
+          <div class="wall-action-strip">
+            <div class="wall-story-progress">Briefing complete · Mini-game forthcoming</div>
+            <button id="rescueMiniGameBackButton" class="btn btn-secondary" type="button">Back to briefing</button>
+            <button id="rescueMiniGameReplayButton" class="btn btn-secondary" type="button">Choose another ending ↺</button>
+          </div>
+        </div>
+        <div id="rescueEndingSummary" class="rescue-route-intro" hidden>
+          <div class="rescue-route-intro-stage">
+            <div class="rescue-travel-panel">
+              <span>THE WORLD'S WORST RESCUE · ENDING</span>
+              <h2 id="rescueSummaryHeading">ENDING</h2>
+              <p id="rescueSummaryMessage"></p>
+              <small>Finale cutscenes are delivered with the matching route mini-game, not this framework.</small>
+            </div>
+          </div>
+          <div class="wall-action-strip">
+            <div class="wall-story-progress">Rescue complete</div>
+            <button id="rescueSummaryReplayButton" class="btn btn-primary" type="button">Play another ending ↺</button>
+            <button id="rescueSummaryRestartButton" class="btn btn-secondary" type="button">Play from the start</button>
+            <button id="rescueSummaryMenuButton" class="btn btn-secondary" type="button">Main menu</button>
           </div>
         </div>
         <div class="china-footer">
           <button id="replayButton" type="button" class="mini-button">Replay office ↺</button>
           <button id="homeButton" type="button" class="mini-button">Main menu</button>
-          <span>GAME-SP2.4B · Visitor information investigation preview · Fictional comedy</span>
+          <span>GAME-SP3.0 · Shared rescue framework preview · Fictional comedy</span>
         </div>
       </section>
     </main>
