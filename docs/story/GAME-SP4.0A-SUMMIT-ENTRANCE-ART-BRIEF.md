@@ -3,7 +3,7 @@
 **Prepared:** 15 October 2026
 **Base:** SP3.4 merged main `8a6ed2555e27eca078ecb17e47209cdb4882ca15`
 **Branch:** `agent/game-sp40a-summit-visual-proof`
-**State:** PROPOSED, for owner composition approval. **No image is yet generated, approved, uploaded or committed.**
+**State:** Owner approved the first environment image for **Summit exterior scenes**, source staged in Drive, WebP materialised and integrated on this development branch. **In-engine visual sign-off is still pending.**
 
 ## Why this is the first art package
 
@@ -46,3 +46,12 @@ Only after approval: stage the approved original under the dedicated Stephen Mar
 Keep the 15–25-minute first-play target, existing three-route gameplay, V3 save semantics, 55 approved office MP3s, CSS positioning and interactive text/hit targets intact. No real employer/work identifiers, third-party identities or real governmental flags. See `docs/CREATIVE-BIBLE.md`, `docs/ART-DIRECTION.md`, `docs/GENERATED-ASSET-PIPELINE.md` and `docs/story/GAME-SP4.0-ARTWORK-PRESENTATION-PLAN.md`.
 
 **Next decision:** Owner approves or adjusts the entrance composition. Then produce precisely one visual candidate and iterate it before any throne-room/character set.
+
+## Actual first asset — source and approved use (15 October 2026)
+
+- Approved generated background: extravagant fictional mountain lodge entrance, ornamental blue-and-gold gates, open cobbled foreground, mountains in golden-hour light, with no characters/text/UI.
+- Drive-staged original: `summit-entrance-background-v01.png` (`1xg4uRcBbX9-R9Zodh4pn5G94aI71B8z2`) in the project's existing staging folder.
+- Provenance: `generated-assets/manifests/game-sp40a-summit-entrance-v01.json` rev 1.
+- Derived browser asset: `public/assets/generated/locations/summit-entrance-v01.webp`, 1672×941, 485,550 bytes, written to the development branch by GitHub Actions workflow #38752782184, status successful.
+- Rendered exclusively under `#rescueRouteIntro[data-route="cult"]` and the `#summitAdmissions` game stage. No separate generic travel/hotel/ending backgrounds changed.
+- The previously listed first acceptance gate for art was met by the owner's image approval. A second **actual in-engine** review is required to verify contrast, cover cropping and the persistent top-right toolbar.
