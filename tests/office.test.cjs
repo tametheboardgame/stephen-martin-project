@@ -2130,15 +2130,15 @@ test("SP4.0C four approved attendants are independent alpha-transparent decorati
   assert.equal(css.includes('[data-speaker="fan"]'),false,"Attendants do not become dialogue speakers");
 });
 
-test("SP4.0C attendants frame throne at desktop, tablet and narrow breakpoints",()=>{
+test("SP4.0C attendants are grounded at stair sides and aisles across responsive breakpoints",()=>{
   const stageCss=css.slice(css.indexOf("/* GAME-SP4.0C — Owner-approved Summit throne"));
   const desktop=stageCss.split("@media (max-width:800px)")[0];
   const tablet=stageCss.split("@media (max-width:800px)")[1].split("@media (max-width:450px)")[0];
   const mobile=stageCss.split("@media (max-width:450px)")[1];
   const expectations=[
-    {source:desktop,fan:"left:26%;bottom:51%;height:22%",tray:"left:8%;bottom:29%;height:33%",ewer:"right:26%;bottom:51%;height:22%",towel:"right:8%;bottom:29%;height:31%"},
-    {source:tablet,fan:"left:21%;bottom:52%;height:18%",tray:"left:1%;bottom:32%;height:26%",ewer:"right:21%;bottom:52%;height:18%",towel:"right:1%;bottom:32%;height:25%"},
-    {source:mobile,fan:"left:17%;bottom:53%;height:12%",tray:"left:-4%;bottom:34%;height:19%",ewer:"right:17%;bottom:53%;height:12%",towel:"right:-4%;bottom:34%;height:18%"}
+    {source:desktop,fan:"left:23%;bottom:42%;height:17%",tray:"left:6%;bottom:20%;height:24%",ewer:"right:23%;bottom:42%;height:17%",towel:"right:5%;bottom:18%;height:24%"},
+    {source:tablet,fan:"left:20%;bottom:43%;height:15%",tray:"left:2%;bottom:23%;height:21%",ewer:"right:20%;bottom:43%;height:15%",towel:"right:2%;bottom:22%;height:21%"},
+    {source:mobile,fan:"left:13%;bottom:45%;height:11%",tray:"left:-3%;bottom:26%;height:17%",ewer:"right:13%;bottom:45%;height:11%",towel:"right:-3%;bottom:25%;height:17%"}
   ];
   const rule=(text,name)=>{
     const key="#holidayScreen #summitEndingScene .summit-throne-attendant-"+name+" {";
