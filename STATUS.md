@@ -1,6 +1,118 @@
 # Project status
 
-**Updated:** 14 October 2026
+**Updated:** 15 October 2026
+
+## GAME-SP2.4B — Hotel scene accepted and stacked gameplay merged (15 October 2026)
+
+- Owner visually approved the hotel cast's final perspective: Paul remains at the accepted reception-floor position and David stands slightly farther back/smaller. The two independently materialised transparent figures remain over the approved empty visitor-information background, with clickable clues and subtitles layered above.
+- Completed merge of voice PR #16 and stacked gameplay PRs #18–#25. Latest gameplay integration into `main`: `dffc02d854f5784dd2a9faf7c9540259e0a14f7b`. Retained 55 approved office audio clips, exclusive Chapter Two route commitments, shared Office Alarm/travel sequence and route-immutable three-clue hotel investigation with hints and save/resume. Recorded final integration smoke success (GitHub run #38718798951).
+- **Next:** GAME-SP3.0, the minimal common route mini-game/save/hint/ending framework, then Summit, paperwork and cardboard-assembly routes one at a time. No SP3 mini-game or ending is currently playable. Production Cloudflare/owner playthrough should be verified separately from successful GitHub CI. Maintain 15–25-minute first-play budget and the project's privacy/release gates.
+
+## GAME-SP2.4B — David-only hotel perspective correction v3 (15 October 2026)
+
+- Owner review approved Paul's placement, but requested that David appear farther back in the hotel scene. David alone moves higher and becomes slightly smaller: desktop height 56%, left 22%, bottom 28%; tablet height 50%, left 16%, bottom 28%; phone height 42%, left 10%, bottom 30%.
+- Paul's existing geometry at all three breakpoints is unchanged. No revised character artwork, dialogue or puzzle behaviour. The targeted CSS regression expectations are updated.
+- Await refreshed Cloudflare preview and owner sign-off for the combined layout. PR #25 stays draft and nothing is merged into main.
+
+## GAME-SP2.4B — Hotel standing cast depth/layout revision v2 (15 October 2026)
+
+- Owner review of the previous hotel preview found David's foot still visually crossing the foreground coffee table. Reposition the two approved, independently layered actors further back, slightly larger and towards the reception desk: desktop shared floor at 24% from the base, David 60% height / left 23%, Paul 50% / left 42%; tablet shared floor 24%, heights 54%/45%; phone shared floor 26%, heights 46%/38%.
+- CSS-only staging revision with updated responsive regression assertions. No new artwork, scene composites, dialogue, save state or route logic. GitHub smoke and current Cloudflare preview should be checked before owner visual approval; PR #25 remains draft and unmerged.
+
+## GAME-SP2.4B — David and Paul hotel standing cast approved (15 October 2026)
+
+- **Owner-approved independent art:** David — bald, ginger beard, dark hoodie over green T-shirt, holding a phone; Paul — bald with glasses, white polo, both hands in pockets. Both 1024×1536 RGBA with transparent backgrounds, no combined scene/dialogue; original PNGs uploaded to the existing Google Drive staging folder (David file ID `1iiDtXpVcWE2mvFIhuC2MXejYWc0KEAU1`, Paul file ID `1RRMN0_nXsaHFlEkaqr4DVNabR2ceP59Z`).
+- Materialised via versioned `generated-assets/manifests/game-sp24b-{david,paul}-hotel-standing-v01.json` to independent WebP cutouts in `public/assets/generated/characters/`. Source PNGs remain on Drive, not Git.
+- Hotel integration: both rendered above the previously approved empty background and **below clickable clues/dialogue UI**. Paul is deliberately **shorter**: desktop height 58% versus David 69%, with independent responsive tablet/mobile staging. Build whitelist and WebP alpha validation updated. Existing route logic, clues, dialogue, 55 original office voices and non-gory fictional game contract unchanged.
+- Draft stacked atop PR #24; owner still needs to review the **combined** composition in the actual browser before merging. Do not treat approval of sprite source images as approval of every layout, and do not merge any stacked PR without explicit authorisation.
+
+## GAME-SP2.4B — Playable visitor-information deduction puzzle (14 October 2026)
+
+- Approved empty hotel background now integrated independently into a new stacked draft investigation branch. The prior, owner-approved SP2.4A alarm/travel gameplay remains intact.
+- Eight original hotel arrival lines, three clickable hotspots (route-specific phone, three-option brochures, circled desk receipt), destination deduction without rerouting, wrong-guess jokes, Paul hint after two failures and highlighted correct choice after four. Five canonical discovery lines lead to a route-specific **mini-game handoff**; mini-games remain future SP3 packages.
+- Continue saves clue inspection, wrong attempts, hint state, completed route deduction and dialogue cursor. Targeted cross-route tests added. Approved original PNG not committed; only Drive-materialised WebP used.
+- **Unresolved art gate:** repository has seated/baseline David and Paul but no approved independently cut-out **full-body standing hotel sprites**. Attempts to generate sprites resulted in unapproved whole-scene composites, which have been excluded from game and repo. Need separate full-body alpha cutouts, approved one at a time, before final combined scene visual sign-off.
+- Scope and human checks: `docs/story/GAME-SP2.4B-HOTEL-INVESTIGATION.md`. Production main unchanged and no merge authorised.
+
+## GAME-SP2.4B — Hotel lobby background approved and staged (14 October 2026)
+
+- The owner explicitly approved the **second, unoccupied** hotel lobby / visitor-information illustration (1672 × 941), rejecting the earlier character-containing composite as a background. Its original PNG is in the project's Google Drive staging folder with ID `1H29kITgnVArnOO427KSNbuF9Kqj-dhpd`.
+- Versioned manifest `generated-assets/manifests/game-sp24b-hotel-lobby-background-v01.json` will materialise `public/assets/generated/locations/china-visitor-information-lobby-background-v01.webp` on the dedicated stacked SP2.4B artwork branch. The owner has not yet approved any combined scene layout for this location.
+- **GAME-SP2.4B interactive evidence-puzzle implementation remains NOT started.** Approved source alone does not make the hotel hub playable; do not change the SP2.4A code or claim the interactive scene is complete. Next: three hotspots and David/Paul stage layout after verifying the materialised asset. See `docs/story/GAME-SP2.4B-HOTEL-ART-LOCK.md`.
+
+## GAME-SP2.4A — Office Alarm and travel montage draft (14 October 2026)
+
+- Created a separate stacked draft from approved-structure Chapter Two: the route-specific final phone and Back in England card continue into the **10 original OFFICE-ALARM lines**, played with approved David/Paul seated actors and reused office background. A four-card native-UI ridiculous travel montage follows, ending at a deliberately **non-playable Visitor Information handoff** for forthcoming SP2.4B.
+- Route and both progression cursors persist; Continue and Choose Another Ending work without destroying route-specific state or replaying the entire office. Previous 55 recorded opening lines remain unchanged and no new voice recordings are claimed.
+- Two hotel-lobby concepts generated for owner review: initial composite with characters **rejected**, second environment-only render **pending owner approval**. **Neither imported or committed as a game asset.** New art enters only through the Drive manifest pipeline after approval.
+- Scope, exclusion and review gate documented in `docs/story/GAME-SP2.4A-OFFICE-ALARM-IMPLEMENTATION.md`. Draft PR is dependent on PR #21 and production main remains untouched. Next approved work package is **SP2.4B, the shared hotel evidence puzzle**, after concept approval.
+
+## GAME-SP2.4–SP3.4 — Rescue and ending implementation plan approved (14 October 2026)
+
+- **Planning decision only; no new rescue gameplay or artwork has been made.** Detailed authoritative roadmap at `docs/story/GAME-SP2.4-SP3-RESCUE-IMPLEMENTATION-PLAN-V1.md`, using the existing approved `SP-WP1.2-GAME-TREATMENT.md` mini-games/endings and the newer `GAME-SP2.3C-BRANCHING-STORY-V2.md` invitation structure.
+- **Implementation order:** SP2.4A/B shared Back in England alarm, unnecessary-travel montage, and clickable fictional hotel/visitor-information evidence puzzle; SP3.0 small reusable mini-game and ending framework; SP3.1 Summit Admissions Test + Ending A (first full end-to-end route); SP3.2 Stamp Catastrophe + Ending B; SP3.3 six-piece cardboard Reassemble Stephen + Ending C; SP3.4 integration, touch/keyboard access, pacing and human tests.
+- **Immediate next delivery gate:** approve fictional hotel-lobby background and Office Alarm/shared hub scripting in a **new bounded draft work package**, after confirming the SP2.3C branch is ready. Existing stacked draft PR #21 remains unchanged in gameplay and still needs normal integration/owner approval before merge.
+- **Core invariants:** 15–25 minute first playthrough of one selected route, three distinct endings, original approved punchlines, no fail state, mid-puzzle Continue, three correct route handoffs, no rerouting in the evidence puzzle, and explicit owner permission before a production merge.
+
+## GAME-SP2.3C — Branching invitations and time intermissions (14 October 2026)
+
+- **Owner-approved structural change** replaces the prior three-consecutive-invitations design. Stephen now takes exactly **one** mutually exclusive route: accept The Summit at Great Wall → `cult` handoff; otherwise intermission **A few days later… Forbidden City** → accept the fictional banquet → `detention` handoff; otherwise intermission **The next evening… Night Market** → **mandatory** Total Renewal Spa → `reassemble` handoff. Both later sightseeing locations are skipped if an earlier invitation is accepted.
+- All approved location backgrounds, four distinct holiday actors and exact individual dialogue beats remain intact. Existing laptop-friendly 16:9 scene fit and two-column Great Wall/Palace decisions retained; the Night Market has **no choice buttons, no all-declined fallback and no replacement of a previously accepted booking**.
+- The route-specific incident handoff is an honest preview of future cult/detention/reassembly mini-games; no unavailable mini-game is falsely launched. Existing route-specific 1%-to-0% interrupted phone message and **Back in England** are retained. **Choose another ending** returns to the Great Wall decision checkpoint.
+- Both intermission screens reuse already approved backgrounds via CSS rather than inventing new artwork. Local V3 saves get `holidayFlowVersion=2` and legacy same-day multi-accept states are reconciled to the first accepted route.
+- Canonical story revision lives at `docs/story/GAME-SP2.3C-BRANCHING-STORY-V2.md`, explicitly superseding the progression in V1 while retaining unchanged dialogue.
+- Draft PR #21 is stacked on still-draft Night Market PR #20. Main and preceding PRs stay untouched; live desktop/laptop and phone/tablet owner review and test qualification required before any merge.
+
+## GAME-SP2.3B — Approved Night Market and final Stephen phone message (14 October 2026)
+
+- Owner-approved originals staged in project Google Drive: lantern-lit background (`1zahJ5gOvYddoZLn4A6uYQHmegsnKtqGt`), teal spa representative (`101rfrMgdkjnxvAMQN8s0AMuiUpV0zI7M`), and standing skewer-holding Stephen (`1SztUKG4dvx9uhCkuDP85jGh0Vab_SjnZ`). Three `generated-assets/manifests/game-sp23b-*.json` files materialise the independent approved WebPs; rejected whole-scene composite concept images are excluded.
+- Adds Night Market as the third 16:9 scene, with the locked six short dialogue beats and a text/UI-only fictional **TOTAL RENEWAL SPA — 90% OFF** advert. New full-body cutouts preserve their transparency and appear at the established 73% laptop height.
+- Spa acceptance sets provisional `pendingPlan = reassemble` over any earlier booking; declining preserves the active plan. All three declined prompts explicit choice among the three known invitations. The final route is committed **only when leaving the market**; a route-specific incomplete phone message then leads to a dead battery, Stephen's final reaction and **BACK IN ENGLAND…**. Save/Continue and an explicit **Choose another ending** checkpoint retain upstream decisions.
+- The David/Paul rescue hub is **not** implemented by this increment. Chapter Two ends with a clear 'rescue chapter coming next' marker to avoid misrepresenting work as complete.
+- Work remains on a new stacked draft branch `agent/game-sp23b-night-market` from PR #19; upstream PRs #16, #18 and #19 remain separate. All 55 office MP3s and the earlier chapters remain untouched. Owner in-browser visual review required before merge.
+
+## GAME-SP2.3A-F2 — Side-by-side invitation choices on laptops (14 October 2026)
+
+- Owner approved the smaller character composition and correct Forbidden City Stephen art, but the two invitation buttons still created an **internal scrollbar** on their laptop in both scenes.
+- At laptop widths **960px and above**, Great Wall and Forbidden City choices now use an editable two-column grid, with the existing heading and short explanation spanning both columns. Compact typography/padding and hiding the duplicated choice-progress caption keep the buttons within the cinematic lower strip.
+- At narrower widths, preserve stacked full-width touch choices; on unusually short screens the existing internal scroll fallback remains available rather than clipping actions. The Great Wall/Forbidden City backgrounds, independent character scale, menu placement, story text, sound and booking/save logic are unchanged.
+- Draft PR #19 remains for owner laptop visual review; no production merge before approval.
+
+## GAME-SP2.3A-F1 — laptop composition & correct Stephen pose (14 October 2026)
+
+- Owner reviewed both locations in a laptop browser and requested smaller characters, cleaner on-screen composition and the actual **Forbidden City-specific Stephen sprite** from the start, rather than the Great Wall sprite used for the opening lines.
+- The approved `stephen-holiday-forbidden-city-pleased-v01.webp` is now referenced directly in the initial scene HTML and consistently in runtime, irrespective of whether the banquet is accepted or declined. The honour-badge callout remains conditional on acceptance; all previously approved images are unchanged.
+- Desktop 16:9 framing remains unchanged; both Great Wall figures are reduced to **77%** height, both Forbidden City figures to **73%**. Relocate the Replay Office/Main Menu mini-toolbar to the top-right, narrow the booking card, relocate David's phone notification below that toolbar, and lift/tighten both dialogue panels to clear the bottom action strip. The bottom choice/result strip is more compact but retains internal scrolling as required.
+- All changes are responsive desktop CSS and the single Forbidden City source selection; no change to the original office, 55 MP3s, stage backgrounds, dialogue, choices, save state or final route logic. Add regression tests for the initial and declined Palace sprite and viewport layout. Await owner's updated **laptop** visual review before merging draft PR #19.
+
+## GAME-SP2.3A — Forbidden City playable scene (14 October 2026)
+
+- Owner explicitly approved and locked three Forbidden City assets: the clean 1672×941 historic courtyard backdrop, separately staged fictional red-jacketed banquet attendant, and Stephen's blue-quarter-zip *Guest of Honour* pose (both original sprites 1086×1448 RGBA). Source PNGs staged in dedicated Google Drive under IDs background `1_ZSzDWBOCQHTxXoIZvoUqbBeoPNL7Uzq`, attendant `1Itsnjm2blwhzhciRP94aBUIWxlL4N1Td`, Stephen variant `1FZXgrofuUNEIvD2y340KiieDXBH9AHYe`. Three versioned manifests materialise optimised WebPs on `agent/game-sp23-forbidden-city`.
+- New draft scene **stacks on PR #18** (`agent/game-sp22-wall-playable`) and preserves all 55 original MP3 files. Wall decision now continues into Forbidden City. Four canon opening lines, explicit accept/decline banquet choice, five short accepted-branch reaction lines and an optional bear-photo overlay. No extra route, fictional event is identified as **outside** the landmark.
+- Before acceptance, Stephen retains the original travel sprite; after acceptance he displays the approved pleased/badge variant. **Accept sets `pendingPlan=detention`**, overriding The Summit; **decline preserves `pendingPlan`**. Replay of Palace restores the Wall's booking without clearing the Wall decision. `route` remains unlocked until Night Market implementation.
+- Chapter Two's viewport-fit 16:9 composition remains in place on desktop; tablet/mobile retain responsive scene controls. Targeted tests cover scene transition, choices, loading/replay, sprite alpha/build and story script. **The owner must review real in-browser arrangement before merging.** Night Market remains unimplemented in this increment.
+
+## GAME-SP2.2-F2 — Approved Summit promoter added to Great Wall (14 October 2026)
+
+- Owner accepted the second **Summit promoter** design: young adult East Asian man in an olive casual overshirt, event lanyard and Summit brochure, white trainers and tan trousers, replacing the rejected formal blazer design.
+- Approved 1086×1448 transparent source PNG staged in project Drive as `great-wall-summit-promoter-standing-approved-v01.png`, Drive ID `1bCM8ZmigOlb3Ff_7XOYFkOfNroIGmVeJ`. Manifest `generated-assets/manifests/great-wall-summit-promoter-standing-v01.json` materialises `public/assets/generated/characters/great-wall-summit-promoter-standing-v01.webp`.
+- Great Wall stages Stephen alone on his first line and the phone notification from David; the promoter enters opposite Stephen on `china.wall.002`, retaining the same 91%-height standing sprite scale, while the phone notification clears. Continues to display through the Summit decision. Mobile/tablet maintain proportional relative sizing.
+- New targeted regressions verify entrance timing, phone layering, Back/Continue/Replay stability, alpha, matching source dimensions and build inclusion. **Owner in-game composition review required before merging PR #18.** No office voices, text or decision changes.
+
+## GAME-SP2.2-F1 — Chapter Two desktop viewport correction (14 October 2026)
+
+- Owner visually approved the Great Wall visuals and Chapter Two title card but reported a **desktop page scrollbar** and inconsistent fit compared with Chapter One. Root cause: Chapter Two's normal site header, 16:9 artwork and footer/choice strips stacked vertically outside the art.
+- Scoped **desktop-only CSS fix** on PR #18 uses the same full-height cinematic shell and 1672:941 ratio as the approved office scene, hides external site header/footer and places transition buttons, chapter navigation and Great Wall dialogue/choice panels **within** the art frame. Choices can scroll internally only if the display is unusually short. Narrow/touch layouts remain naturally scrollable for access to full-sized controls.
+- No artwork, dialogue, event flow, audio, saves or responsive Chapter One layout changed. Added targeted viewport CSS regression assertion to the existing smoke suite. **Owner must check the actual Cloudflare screen** on their desktop; tests do not substitute for pixel-level visual review.
+
+## GAME-SP2.2 — Locked art + playable Great Wall preview (14 October 2026)
+
+- Owner locked the first three China Chapter Two images after reviewing: **chapter transition card**, **illustrated Great Wall** and corrected **standing blond Stephen in a blue quarter-zip** that matches his approved office face. The originally rejected travel sprite is not included.
+- Approved source PNGs staged through the dedicated Google Drive folder (source IDs: card `1oUogOuJaEAVh62MMR-TDSoOW0tj_Nkiz`, wall `1xfcvAEhntjKzYRrYez3iOztCSicllv6H`, Stephen `1AtMPoSyOD9jogk6KX1gWikgHCZH7m1a2`). Assets materialise via three `generated-assets/manifests/game-sp22-*.json` files. Preserve travel sprite alpha and avoid copying original PNGs into Git.
+- Following the approved 67-beat voiced office scene, the existing holiday placeholder becomes an actual **TWO DAYS LATER… IN CHINA** transition card and first playable **Great Wall** scene. Short approved dialogue, original David notification, current evening booking, accept/decline choices, and replay controls use independently editable UI.
+- Saving remains V3-compatible: `holidayPhase`, `wallStep`, `wallDecision` and provisional `pendingPlan` restore after reload/Continue. Accept books `cult` provisionally, decline leaves it unset; there is **no final `route` lock** until all three destinations are built in GAME-SP2.3.
+- Branch `agent/game-sp22-wall-playable` is based on the *voiced* office PR #16 so owner can assess the full flow; make its PR target `agent/game-sp11d7-dialogue-voice` as a **stacked draft** to avoid accidentally merging incomplete Chapter Two code into main. Merge audio PR first after its own approval, then retarget/merge game work only when owner accepts the scene.
+- Acceptance: owner checks in-game Stephen scale/likeness and overall composition on a verified Cloudflare preview before merging. Forbidden City, market, finished branching and new voices are **not** part of SP2.2. Story canon is locked in main as GAME-SP2.1.
 
 ## GAME-SP2.1 — Stephen's holiday story V1 LOCKED (14 October 2026)
 
@@ -260,109 +372,3 @@
 - Do not turn this into another large/complex game; target 15–25 minutes with no unapproved scope creep.
 - Song may run in parallel; comic pilot is optional.
 - Production/public publishing requires separate owner permission.
-
-## GAME-SP2.4B — David-only hotel perspective correction v3 (15 October 2026)
-
-- Owner review approved Paul's placement, but requested that David appear farther back in the hotel scene. David alone moves higher and becomes slightly smaller: desktop height 56%, left 22%, bottom 28%; tablet height 50%, left 16%, bottom 28%; phone height 42%, left 10%, bottom 30%.
-- Paul's existing geometry at all three breakpoints is unchanged. No revised character artwork, dialogue or puzzle behaviour. The targeted CSS regression expectations are updated.
-- Await refreshed Cloudflare preview and owner sign-off for the combined layout. PR #25 stays draft and nothing is merged into main.
-
-## GAME-SP2.4B — Hotel standing cast depth/layout revision v2 (15 October 2026)
-
-- Owner review of the previous hotel preview found David's foot still visually crossing the foreground coffee table. Reposition the two approved, independently layered actors further back, slightly larger and towards the reception desk: desktop shared floor at 24% from the base, David 60% height / left 23%, Paul 50% / left 42%; tablet shared floor 24%, heights 54%/45%; phone shared floor 26%, heights 46%/38%.
-- CSS-only staging revision with updated responsive regression assertions. No new artwork, scene composites, dialogue, save state or route logic. GitHub smoke and current Cloudflare preview should be checked before owner visual approval; PR #25 remains draft and unmerged.
-
-## GAME-SP2.4B — David and Paul hotel standing cast approved (15 October 2026)
-
-- **Owner-approved independent art:** David — bald, ginger beard, dark hoodie over green T-shirt, holding a phone; Paul — bald with glasses, white polo, both hands in pockets. Both 1024×1536 RGBA with transparent backgrounds, no combined scene/dialogue; original PNGs uploaded to the existing Google Drive staging folder (David file ID `1iiDtXpVcWE2mvFIhuC2MXejYWc0KEAU1`, Paul file ID `1RRMN0_nXsaHFlEkaqr4DVNabR2ceP59Z`).
-- Materialised via versioned `generated-assets/manifests/game-sp24b-{david,paul}-hotel-standing-v01.json` to independent WebP cutouts in `public/assets/generated/characters/`. Source PNGs remain on Drive, not Git.
-- Hotel integration: both rendered above the previously approved empty background and **below clickable clues/dialogue UI**. Paul is deliberately **shorter**: desktop height 58% versus David 69%, with independent responsive tablet/mobile staging. Build whitelist and WebP alpha validation updated. Existing route logic, clues, dialogue, 55 original office voices and non-gory fictional game contract unchanged.
-- Draft stacked atop PR #24; owner still needs to review the **combined** composition in the actual browser before merging. Do not treat approval of sprite source images as approval of every layout, and do not merge any stacked PR without explicit authorisation.
-
-## GAME-SP2.4B — Playable visitor-information deduction puzzle (14 October 2026)
-
-- Approved empty hotel background now integrated independently into a new stacked draft investigation branch. The prior, owner-approved SP2.4A alarm/travel gameplay remains intact.
-- Eight original hotel arrival lines, three clickable hotspots (route-specific phone, three-option brochures, circled desk receipt), destination deduction without rerouting, wrong-guess jokes, Paul hint after two failures and highlighted correct choice after four. Five canonical discovery lines lead to a route-specific **mini-game handoff**; mini-games remain future SP3 packages.
-- Continue saves clue inspection, wrong attempts, hint state, completed route deduction and dialogue cursor. Targeted cross-route tests added. Approved original PNG not committed; only Drive-materialised WebP used.
-- **Unresolved art gate:** repository has seated/baseline David and Paul but no approved independently cut-out **full-body standing hotel sprites**. Attempts to generate sprites resulted in unapproved whole-scene composites, which have been excluded from game and repo. Need separate full-body alpha cutouts, approved one at a time, before final combined scene visual sign-off.
-- Scope and human checks: `docs/story/GAME-SP2.4B-HOTEL-INVESTIGATION.md`. Production main unchanged and no merge authorised.
-
-## GAME-SP2.4B — Hotel lobby background approved and staged (14 October 2026)
-
-- The owner explicitly approved the **second, unoccupied** hotel lobby / visitor-information illustration (1672 × 941), rejecting the earlier character-containing composite as a background. Its original PNG is in the project's Google Drive staging folder with ID `1H29kITgnVArnOO427KSNbuF9Kqj-dhpd`.
-- Versioned manifest `generated-assets/manifests/game-sp24b-hotel-lobby-background-v01.json` will materialise `public/assets/generated/locations/china-visitor-information-lobby-background-v01.webp` on the dedicated stacked SP2.4B artwork branch. The owner has not yet approved any combined scene layout for this location.
-- **GAME-SP2.4B interactive evidence-puzzle implementation remains NOT started.** Approved source alone does not make the hotel hub playable; do not change the SP2.4A code or claim the interactive scene is complete. Next: three hotspots and David/Paul stage layout after verifying the materialised asset. See `docs/story/GAME-SP2.4B-HOTEL-ART-LOCK.md`.
-
-## GAME-SP2.4A — Office Alarm and travel montage draft (14 October 2026)
-
-- Created a separate stacked draft from approved-structure Chapter Two: the route-specific final phone and Back in England card continue into the **10 original OFFICE-ALARM lines**, played with approved David/Paul seated actors and reused office background. A four-card native-UI ridiculous travel montage follows, ending at a deliberately **non-playable Visitor Information handoff** for forthcoming SP2.4B.
-- Route and both progression cursors persist; Continue and Choose Another Ending work without destroying route-specific state or replaying the entire office. Previous 55 recorded opening lines remain unchanged and no new voice recordings are claimed.
-- Two hotel-lobby concepts generated for owner review: initial composite with characters **rejected**, second environment-only render **pending owner approval**. **Neither imported or committed as a game asset.** New art enters only through the Drive manifest pipeline after approval.
-- Scope, exclusion and review gate documented in `docs/story/GAME-SP2.4A-OFFICE-ALARM-IMPLEMENTATION.md`. Draft PR is dependent on PR #21 and production main remains untouched. Next approved work package is **SP2.4B, the shared hotel evidence puzzle**, after concept approval.
-
-## GAME-SP2.4–SP3.4 — Rescue and ending implementation plan approved (14 October 2026)
-
-- **Planning decision only; no new rescue gameplay or artwork has been made.** Detailed authoritative roadmap at `docs/story/GAME-SP2.4-SP3-RESCUE-IMPLEMENTATION-PLAN-V1.md`, using the existing approved `SP-WP1.2-GAME-TREATMENT.md` mini-games/endings and the newer `GAME-SP2.3C-BRANCHING-STORY-V2.md` invitation structure.
-- **Implementation order:** SP2.4A/B shared Back in England alarm, unnecessary-travel montage, and clickable fictional hotel/visitor-information evidence puzzle; SP3.0 small reusable mini-game and ending framework; SP3.1 Summit Admissions Test + Ending A (first full end-to-end route); SP3.2 Stamp Catastrophe + Ending B; SP3.3 six-piece cardboard Reassemble Stephen + Ending C; SP3.4 integration, touch/keyboard access, pacing and human tests.
-- **Immediate next delivery gate:** approve fictional hotel-lobby background and Office Alarm/shared hub scripting in a **new bounded draft work package**, after confirming the SP2.3C branch is ready. Existing stacked draft PR #21 remains unchanged in gameplay and still needs normal integration/owner approval before merge.
-- **Core invariants:** 15–25 minute first playthrough of one selected route, three distinct endings, original approved punchlines, no fail state, mid-puzzle Continue, three correct route handoffs, no rerouting in the evidence puzzle, and explicit owner permission before a production merge.
-
-## GAME-SP2.3C — Branching invitations and time intermissions (14 October 2026)
-
-- **Owner-approved structural change** replaces the prior three-consecutive-invitations design. Stephen now takes exactly **one** mutually exclusive route: accept The Summit at Great Wall → `cult` handoff; otherwise intermission **A few days later… Forbidden City** → accept the fictional banquet → `detention` handoff; otherwise intermission **The next evening… Night Market** → **mandatory** Total Renewal Spa → `reassemble` handoff. Both later sightseeing locations are skipped if an earlier invitation is accepted.
-- All approved location backgrounds, four distinct holiday actors and exact individual dialogue beats remain intact. Existing laptop-friendly 16:9 scene fit and two-column Great Wall/Palace decisions retained; the Night Market has **no choice buttons, no all-declined fallback and no replacement of a previously accepted booking**.
-- The route-specific incident handoff is an honest preview of future cult/detention/reassembly mini-games; no unavailable mini-game is falsely launched. Existing route-specific 1%-to-0% interrupted phone message and **Back in England** are retained. **Choose another ending** returns to the Great Wall decision checkpoint.
-- Both intermission screens reuse already approved backgrounds via CSS rather than inventing new artwork. Local V3 saves get `holidayFlowVersion=2` and legacy same-day multi-accept states are reconciled to the first accepted route.
-- Canonical story revision lives at `docs/story/GAME-SP2.3C-BRANCHING-STORY-V2.md`, explicitly superseding the progression in V1 while retaining unchanged dialogue.
-- Draft PR #21 is stacked on still-draft Night Market PR #20. Main and preceding PRs stay untouched; live desktop/laptop and phone/tablet owner review and test qualification required before any merge.
-
-## GAME-SP2.3B — Approved Night Market and final Stephen phone message (14 October 2026)
-
-- Owner-approved originals staged in project Google Drive: lantern-lit background (`1zahJ5gOvYddoZLn4A6uYQHmegsnKtqGt`), teal spa representative (`101rfrMgdkjnxvAMQN8s0AMuiUpV0zI7M`), and standing skewer-holding Stephen (`1SztUKG4dvx9uhCkuDP85jGh0Vab_SjnZ`). Three `generated-assets/manifests/game-sp23b-*.json` files materialise the independent approved WebPs; rejected whole-scene composite concept images are excluded.
-- Adds Night Market as the third 16:9 scene, with the locked six short dialogue beats and a text/UI-only fictional **TOTAL RENEWAL SPA — 90% OFF** advert. New full-body cutouts preserve their transparency and appear at the established 73% laptop height.
-- Spa acceptance sets provisional `pendingPlan = reassemble` over any earlier booking; declining preserves the active plan. All three declined prompts explicit choice among the three known invitations. The final route is committed **only when leaving the market**; a route-specific incomplete phone message then leads to a dead battery, Stephen's final reaction and **BACK IN ENGLAND…**. Save/Continue and an explicit **Choose another ending** checkpoint retain upstream decisions.
-- The David/Paul rescue hub is **not** implemented by this increment. Chapter Two ends with a clear 'rescue chapter coming next' marker to avoid misrepresenting work as complete.
-- Work remains on a new stacked draft branch `agent/game-sp23b-night-market` from PR #19; upstream PRs #16, #18 and #19 remain separate. All 55 office MP3s and the earlier chapters remain untouched. Owner in-browser visual review required before merge.
-
-## GAME-SP2.3A-F2 — Side-by-side invitation choices on laptops (14 October 2026)
-
-- Owner approved the smaller character composition and correct Forbidden City Stephen art, but the two invitation buttons still created an **internal scrollbar** on their laptop in both scenes.
-- At laptop widths **960px and above**, Great Wall and Forbidden City choices now use an editable two-column grid, with the existing heading and short explanation spanning both columns. Compact typography/padding and hiding the duplicated choice-progress caption keep the buttons within the cinematic lower strip.
-- At narrower widths, preserve stacked full-width touch choices; on unusually short screens the existing internal scroll fallback remains available rather than clipping actions. The Great Wall/Forbidden City backgrounds, independent character scale, menu placement, story text, sound and booking/save logic are unchanged.
-- Draft PR #19 remains for owner laptop visual review; no production merge before approval.
-
-## GAME-SP2.3A-F1 — laptop composition & correct Stephen pose (14 October 2026)
-
-- Owner reviewed both locations in a laptop browser and requested smaller characters, cleaner on-screen composition and the actual **Forbidden City-specific Stephen sprite** from the start, rather than the Great Wall sprite used for the opening lines.
-- The approved `stephen-holiday-forbidden-city-pleased-v01.webp` is now referenced directly in the initial scene HTML and consistently in runtime, irrespective of whether the banquet is accepted or declined. The honour-badge callout remains conditional on acceptance; all previously approved images are unchanged.
-- Desktop 16:9 framing remains unchanged; both Great Wall figures are reduced to **77%** height, both Forbidden City figures to **73%**. Relocate the Replay Office/Main Menu mini-toolbar to the top-right, narrow the booking card, relocate David's phone notification below that toolbar, and lift/tighten both dialogue panels to clear the bottom action strip. The bottom choice/result strip is more compact but retains internal scrolling as required.
-- All changes are responsive desktop CSS and the single Forbidden City source selection; no change to the original office, 55 MP3s, stage backgrounds, dialogue, choices, save state or final route logic. Add regression tests for the initial and declined Palace sprite and viewport layout. Await owner's updated **laptop** visual review before merging draft PR #19.
-
-## GAME-SP2.3A — Forbidden City playable scene (14 October 2026)
-
-- Owner explicitly approved and locked three Forbidden City assets: the clean 1672×941 historic courtyard backdrop, separately staged fictional red-jacketed banquet attendant, and Stephen's blue-quarter-zip *Guest of Honour* pose (both original sprites 1086×1448 RGBA). Source PNGs staged in dedicated Google Drive under IDs background `1_ZSzDWBOCQHTxXoIZvoUqbBeoPNL7Uzq`, attendant `1Itsnjm2blwhzhciRP94aBUIWxlL4N1Td`, Stephen variant `1FZXgrofuUNEIvD2y340KiieDXBH9AHYe`. Three versioned manifests materialise optimised WebPs on `agent/game-sp23-forbidden-city`.
-- New draft scene **stacks on PR #18** (`agent/game-sp22-wall-playable`) and preserves all 55 original MP3 files. Wall decision now continues into Forbidden City. Four canon opening lines, explicit accept/decline banquet choice, five short accepted-branch reaction lines and an optional bear-photo overlay. No extra route, fictional event is identified as **outside** the landmark.
-- Before acceptance, Stephen retains the original travel sprite; after acceptance he displays the approved pleased/badge variant. **Accept sets `pendingPlan=detention`**, overriding The Summit; **decline preserves `pendingPlan`**. Replay of Palace restores the Wall's booking without clearing the Wall decision. `route` remains unlocked until Night Market implementation.
-- Chapter Two's viewport-fit 16:9 composition remains in place on desktop; tablet/mobile retain responsive scene controls. Targeted tests cover scene transition, choices, loading/replay, sprite alpha/build and story script. **The owner must review real in-browser arrangement before merging.** Night Market remains unimplemented in this increment.
-
-## GAME-SP2.2-F2 — Approved Summit promoter added to Great Wall (14 October 2026)
-
-- Owner accepted the second **Summit promoter** design: young adult East Asian man in an olive casual overshirt, event lanyard and Summit brochure, white trainers and tan trousers, replacing the rejected formal blazer design.
-- Approved 1086×1448 transparent source PNG staged in project Drive as `great-wall-summit-promoter-standing-approved-v01.png`, Drive ID `1bCM8ZmigOlb3Ff_7XOYFkOfNroIGmVeJ`. Manifest `generated-assets/manifests/great-wall-summit-promoter-standing-v01.json` materialises `public/assets/generated/characters/great-wall-summit-promoter-standing-v01.webp`.
-- Great Wall stages Stephen alone on his first line and the phone notification from David; the promoter enters opposite Stephen on `china.wall.002`, retaining the same 91%-height standing sprite scale, while the phone notification clears. Continues to display through the Summit decision. Mobile/tablet maintain proportional relative sizing.
-- New targeted regressions verify entrance timing, phone layering, Back/Continue/Replay stability, alpha, matching source dimensions and build inclusion. **Owner in-game composition review required before merging PR #18.** No office voices, text or decision changes.
-
-## GAME-SP2.2-F1 — Chapter Two desktop viewport correction (14 October 2026)
-
-- Owner visually approved the Great Wall visuals and Chapter Two title card but reported a **desktop page scrollbar** and inconsistent fit compared with Chapter One. Root cause: Chapter Two's normal site header, 16:9 artwork and footer/choice strips stacked vertically outside the art.
-- Scoped **desktop-only CSS fix** on PR #18 uses the same full-height cinematic shell and 1672:941 ratio as the approved office scene, hides external site header/footer and places transition buttons, chapter navigation and Great Wall dialogue/choice panels **within** the art frame. Choices can scroll internally only if the display is unusually short. Narrow/touch layouts remain naturally scrollable for access to full-sized controls.
-- No artwork, dialogue, event flow, audio, saves or responsive Chapter One layout changed. Added targeted viewport CSS regression assertion to the existing smoke suite. **Owner must check the actual Cloudflare screen** on their desktop; tests do not substitute for pixel-level visual review.
-
-## GAME-SP2.2 — Locked art + playable Great Wall preview (14 October 2026)
-
-- Owner locked the first three China Chapter Two images after reviewing: **chapter transition card**, **illustrated Great Wall** and corrected **standing blond Stephen in a blue quarter-zip** that matches his approved office face. The originally rejected travel sprite is not included.
-- Approved source PNGs staged through the dedicated Google Drive folder (source IDs: card `1oUogOuJaEAVh62MMR-TDSoOW0tj_Nkiz`, wall `1xfcvAEhntjKzYRrYez3iOztCSicllv6H`, Stephen `1AtMPoSyOD9jogk6KX1gWikgHCZH7m1a2`). Assets materialise via three `generated-assets/manifests/game-sp22-*.json` files. Preserve travel sprite alpha and avoid copying original PNGs into Git.
-- Following the approved 67-beat voiced office scene, the existing holiday placeholder becomes an actual **TWO DAYS LATER… IN CHINA** transition card and first playable **Great Wall** scene. Short approved dialogue, original David notification, current evening booking, accept/decline choices, and replay controls use independently editable UI.
-- Saving remains V3-compatible: `holidayPhase`, `wallStep`, `wallDecision` and provisional `pendingPlan` restore after reload/Continue. Accept books `cult` provisionally, decline leaves it unset; there is **no final `route` lock** until all three destinations are built in GAME-SP2.3.
-- Branch `agent/game-sp22-wall-playable` is based on the *voiced* office PR #16 so owner can assess the full flow; make its PR target `agent/game-sp11d7-dialogue-voice` as a **stacked draft** to avoid accidentally merging incomplete Chapter Two code into main. Merge audio PR first after its own approval, then retarget/merge game work only when owner accepts the scene.
-- Acceptance: owner checks in-game Stephen scale/likeness and overall composition on a verified Cloudflare preview before merging. Forbidden City, market, finished branching and new voices are **not** part of SP2.2. Story canon is locked in main as GAME-SP2.1.
