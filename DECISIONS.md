@@ -2,6 +2,10 @@
 
 Entries are concise, durable design decisions. Additional decisions are added only where they materially affect scope, design, delivery or implementation.
 
+## SP-D034, 15 October 2026: Start a minimal shared mini-game framework
+
+Following owner instruction to start GAME-SP3.0, implement the small reusable route introduction / quiz and assembly progress contract on a separate draft development branch. Retain the existing V3 save key and immutable committed route; add only a narrow versioned rescue progress object, no-fail two-error hints and idempotent step completion. Play approved route-intro dialogue and show an explicit unfinished mini-game gate until SP3.1–SP3.3 supply actual routes. Prepare an ending-summary shell but do not expose unearned endings or invent art/voice recordings. Keep all production merges gated by owner preview approval.
+
 ## SP-D033, 15 October 2026: Approve final hotel composition and integrate stacked game work
 
 Owner accepted the final GAME-SP2.4B in-browser hotel composition after David was moved slightly farther into the room than Paul; Paul's position remains unchanged. The owner explicitly authorised merging the connected approved development, including voiced office playback, Stephen's mutually exclusive holiday visits, the office alarm, travel montage, hotel evidence puzzle and standalone standing character assets. PRs #16 and #18–#25 were merged in dependency order into `main`, culminating in integration commit `dffc02d854f5784dd2a9faf7c9540259e0a14f7b`. This is **not** approval of unreleased mini-games or three finished endings. The next package is GAME-SP3.0, the small route-specific puzzle/ending framework; retain the 15–25-minute target and separate new-art/release gates.
