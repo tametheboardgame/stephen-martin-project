@@ -2,6 +2,10 @@
 
 Entries are concise, durable design decisions. Additional decisions are added only where they materially affect scope, design, delivery or implementation.
 
+## SP-D038, 15 October 2026: Merge complete mechanics, make the art pass first, polish last
+
+Owner approved merging all four functional rescue packages, and requested a dedicated visual/artwork phase **before** final tidying, minor expansion and game-wide polish. PRs #27–#30 were merged to `main` at `aa1ea5a2ed8df7b1db4bfb89028d9ac81f6b5605`, preserving the three distinct route endings. Keep the 15–25-minute narrative and privacy safeguards; visual output needs individual asset approval through the existing manifest/Drive pipeline. Record a short SP3.4 integration/visual inventory, deliver art as SP4.0, then assess small improvements, pacing and final QA as SP4.1. No fourth route, long campaign or ungated release.
+
 ## SP-D037, 15 October 2026: Build the third route as harmless labelled cardboard assembly
 
 GAME-SP3.3 completes the mechanical third ending with six idempotently placed foam/cardboard pieces, funny reject items and a separate explicit POWER ON interaction. Accept mouse drag but require equally capable select-piece and labelled-slot controls on keyboard and touch. Save progress in the existing route-locked V3 key; wrong pieces never disappear or soft-lock the scene. Deliver the complete approved spa dialogue and Ending C; keep all new illustration work queued until after all three functional routes and integration tests are accepted.

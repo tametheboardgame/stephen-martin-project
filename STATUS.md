@@ -2,6 +2,13 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP3.0–SP3.3 — All three rescue routes merged; artwork next (15 October 2026)
+
+- Owner authorised integrating the completed functional routes. Dependency PRs #30 → #29 → #28 → #27 were merged in that order, with successful combined smoke checks at each cumulative head. The final `main` integration commit is `aa1ea5a2ed8df7b1db4bfb89028d9ac81f6b5605`; Cloudflare Pages confirmed successful deployment at that exact commit.
+- All three rescue mini-games and ending sequences are now implemented, with the existing 55 approved office recordings retained. The final staged suite passed 71/71 tests. This is a **mechanical baseline**, not final visual or public-release sign-off; full manual timing, device interaction and artwork review are still required.
+- New owner-approved order: lightweight whole-game qualification / visual inventory (SP3.4), **dedicated three-route artwork and presentation (GAME-SP4.0)**, then **small, bounded improvements/polish and final QA (GAME-SP4.1)**. Do not pre-emptively expand the 15–25-minute game or add routes. Refer to `docs/story/GAME-SP4.0-ARTWORK-PRESENTATION-PLAN.md`.
+- Historical entries below retain their original in-progress state for traceability; they are superseded by this merged status.
+
 ## GAME-SP3.3 — Reassemble Stephen Martin and Ending C draft (15 October 2026)
 
 - Stacked branch `agent/game-sp33-reassemble-stephen` adds the third functional route: six labelled foam/cardboard pieces, seven comic extras, accessible select-piece/place-slot and optional mouse drag, a two-error Paul hint with matching-slot highlight, no consumed pieces or dead ends, saved progress and an explicit POWER ON STEPHEN gate.

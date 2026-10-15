@@ -576,3 +576,16 @@ Second gameplay-only route, stacked on GAME-SP3.1. The fictional Office of Cerem
 ## GAME-SP3.3 — Reassemble Stephen Martin (started 15 October 2026)
 
 Third and final route-specific functional puzzle, stacked on SP3.2. Assemble a clearly fictional foam/cardboard display using six labelled slots, touch/keyboard select-and-place and optional drag-and-drop, plus harmless comic extras, no-fail hints, checkpoints and POWER ON action. Completing it unlocks the complete approved spa Ending C and shared replay. Artwork remains deferred to the dedicated phase following SP3.4 full-game integration. Work package: `docs/story/GAME-SP3.3-REASSEMBLE.md`. Retain draft PR and owner review before any production merge.
+
+
+## GAME-SP3.4 — Combined gameplay baseline and visual inventory (begins after 15 October 2026 merge)
+
+All three functional rescue branches are integrated into `main` at `aa1ea5a2ed8df7b1db4bfb89028d9ac81f6b5605`. GitHub branch smoke qualified with 71/71 checks and Cloudflare deployed the resulting `main` build. Before the art push, do a **lightweight** whole-game browser run across Summit, fictional paperwork and spa: inspect saved/resumed scenes, replay and input modes, note pacing and identify any interface layers that would obstruct art. Catalogue bugs without broadening gameplay. This is a qualification/visual inventory, **not** a new mechanics stream.
+
+## GAME-SP4.0 — Unified artwork and presentation (next)
+
+Owner approved the sequence **all mechanics → merge → art → polish**. Build the missing environments, character poses, discrete puzzle props and final ending tableaux as a consistent comic game, using the approved Stephen/David/Paul likenesses and existing Drive → reviewed manifests → WebP pipeline. Reuse approved hotel/background sprites. No new art is implicitly approved by this plan; review each generated asset before integration. Keep foreground props separate from buttons and speech/UI overlays. Use `docs/story/GAME-SP4.0-ARTWORK-PRESENTATION-PLAN.md` as the bounded inventory and production-order specification. Small preview PRs with responsive screenshots, never ungated main merges.
+
+## GAME-SP4.1 — Final tidy, pacing and measured improvements (after art)
+
+Once the visual sets are assembled, do the end-to-end playtest and modest fixes: dialogue rhythm, captions/subtitles, keyboard and touch usability, saving, layering, responsiveness, music and sound accents, comedy timing, defects and coherent finale presentation. Owner may separately approve a **small** expansion or additional joke only after reviewing the art-complete game and total run time. Maintain the 15–25-minute first-play constraint, three outcomes and privacy review. No new campaign, fourth route, replacement framework or major scope increase without an explicit later decision.
