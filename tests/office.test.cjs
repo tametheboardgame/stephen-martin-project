@@ -9,6 +9,7 @@ const source = read("src/office-data.js");
 const reactions = read("src/reactions.js");
 const china = read("src/china-data.js");
 const rescueFrameworkSource = read("src/rescue-framework.js");
+const summitSource = read("src/summit-data.js");
 const engine = read("src/game.js");
 const html = read("index.html");
 const css = read("src/styles.css");
@@ -19,6 +20,7 @@ function story() {
   vm.runInNewContext(reactions, { window }, { timeout: 1000 });
   vm.runInNewContext(china, { window }, { timeout: 1000 });
   vm.runInNewContext(rescueFrameworkSource, { window }, { timeout: 1000 });
+  vm.runInNewContext(summitSource, { window }, { timeout: 1000 });
   return window;
 }
 const beats = () => Array.from(story().SMP_OFFICE_SHOTS, shot => Array.from(shot.lines)).flat();
@@ -56,6 +58,7 @@ function preview({audio=false}={}) {
   vm.runInNewContext(reactions,{window},{timeout:1000});
   vm.runInNewContext(china,{window},{timeout:1000});
   vm.runInNewContext(rescueFrameworkSource,{window},{timeout:1000});
+  vm.runInNewContext(summitSource,{window},{timeout:1000});
   let timer=0;
   const context={window,document,HTMLElement:Element,
     setTimeout(callback,delay){timeouts.set(++timer,{callback,delay});return timer;},
@@ -1143,7 +1146,7 @@ test("SP3.0 save normaliser rejects mismatched routes and bounds progress",()=>{
   assert.equal(assembly.miniGameStage,1);
   assert.equal(assembly.finished,false,"Incomplete assembly never resumes as completed");
 });
-test("SP3.0 all committed routes play canonical briefing then stop at honest mini-game gate",()=>{
+test("SP3.0 route briefings preserve progress, with Summit playable and other routes gated",()=>{
   const f=story().SMP_RESCUE_FRAMEWORK;
   for(const route of ["cult","detention","reassemble"]){
     const p=toHotelInvestigation(route);
@@ -1163,8 +1166,9 @@ test("SP3.0 all committed routes play canonical briefing then stop at honest min
     assert.equal(saved(p).rescueProgress.introStep,f.routes[route].intro.length);
     p.el("routeIntroNextButton").click();
     assert.equal(saved(p).holidayPhase,"rescue-minigame");
-    assert.match(p.el("rescueMiniGameStatus").textContent,/cannot be skipped|can be skipped/);
     assert.equal(p.el("rescueMiniGameTitle").textContent,f.routes[route].gameTitle);
+    assert.equal(p.el("summitAdmissions").hidden,route!=="cult");
+    if(route!=="cult")assert.match(p.el("rescueMiniGameStatus").textContent,/cannot be skipped|can be skipped/);
     assert.equal(p.el("rescueEndingSummary").hidden,true,"Do not present an unbuilt ending");
     p.el("homeButton").click();p.el("resumeButton").click();
     assert.equal(saved(p).holidayPhase,"rescue-minigame");
@@ -1205,4 +1209,131 @@ test("SP3.0 legacy V3 hotel handoff saves migrate without changing Stephen's rou
   assert.equal(saved(p).rescueProgress.route,"cult");
   assert.equal(saved(p).rescueProgress.finished,false);
   assert.equal(p.el("rescueEndingSummary").hidden,true);
+});
+
+function toSummitAdmissions(){
+  const p=toHotelInvestigation("cult");
+  completeHotelIntro(p);
+  p.el("hotelCultButton").click();
+  for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+  const intro=story().SMP_RESCUE_FRAMEWORK.routes.cult.intro;
+  for(let i=0;i<=intro.length;i++)p.el("routeIntroNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  assert.equal(p.el("summitAdmissions").hidden,false);
+  return p;
+}
+test("SP3.1 approved Summit script, correct cards, preview assets and responsive selectors",()=>{
+  const data=story().SMP_SUMMIT;
+  assert.equal(data.rounds.length,3);
+  assert.deepEqual(data.rounds.map(x=>x.options.find(o=>o.correct).id),["charger","legs","flight"]);
+  for(const round of data.rounds){
+    assert.equal(round.options.length,3);
+    assert.ok(round.hint.startsWith("Paul:"));
+    assert.equal(new Set(round.options.map(x=>x.id)).size,3);
+  }
+  assert.equal(story().SMP_RESCUE_FRAMEWORK.routes.cult.intro.length,7);
+  assert.match(story().SMP_RESCUE_FRAMEWORK.routes.cult.intro[6].text,/outside the gate/);
+  assert.equal(data.ending.length,14);
+  assert.match(data.ending[0].text,/what the hell/);
+  assert.match(data.ending.at(-1).text,/humility/);
+  assert.equal(data.endCard,"ENDING A: HEAVEN WAS A PLACE ON EARTH");
+  assert.ok(html.includes('id="summitEndingScene"'));
+  assert.ok(html.includes('id="summitChoice2"'));
+  assert.ok(html.indexOf('src="./src/summit-data.js"')<html.indexOf('src="./src/game.js"'));
+  assert.ok(read("scripts/build.mjs").includes('"src/summit-data.js"'));
+  assert.match(css,/\.summit-cards \{display:grid;grid-template-columns:repeat\(3/);
+  assert.match(css,/\.summit-card \{[\s\S]*?min-height:80px/);
+  assert.match(css,/@media \(max-width:800px\) \{[\s\S]*?\.summit-cards \{grid-template-columns:1fr/);
+});
+test("SP3.1 wrong answers persist, Paul hints after 2, correct answers require acknowledgement",()=>{
+  const p=toSummitAdmissions();
+  p.el("summitChoice0").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,0);
+  assert.equal(saved(p).rescueProgress.wrongAnswers,1);
+  assert.equal(p.el("summitHint").hidden,true);
+  assert.match(p.el("summitFeedback").textContent,/Can it charge/);
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.match(p.el("summitFeedback").textContent,/Can it charge/);
+  p.el("summitChoice1").click();
+  assert.equal(saved(p).rescueProgress.wrongAnswers,2);
+  assert.equal(p.el("summitHint").hidden,false);
+  assert.match(p.el("summitHint").textContent,/charges phones/);
+  p.el("summitChoice0").click();p.el("summitChoice1").click();p.el("summitChoice0").click();
+  assert.equal(saved(p).rescueProgress.wrongAnswers,4,"Wrong count capped");
+  p.el("summitNextButton").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,0,"Wrong option never advances");
+  p.el("summitChoice2").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,1);
+  assert.equal(saved(p).rescueProgress.wrongAnswers,0);
+  assert.equal(p.el("summitChoiceCards").hidden,true);
+  assert.match(p.el("summitFeedback").textContent,/sacred cable/);
+  p.el("summitChoice2").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,1,"Double tap cannot skip");
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.match(p.el("summitFeedback").textContent,/sacred cable/,"Acknowledgement resumes");
+  p.el("summitNextButton").click();
+  assert.equal(p.el("summitRoundTitle").textContent,"Recite the highest compliment");
+  assert.equal(saved(p).rescueProgress.miniGameStage,1);
+  assert.equal(p.el("summitHint").hidden,true,"Hint resets per round");
+});
+test("SP3.1 complete OFFICE-to-Summit path plays every approved ending line and summary",()=>{
+  const p=toSummitAdmissions();
+  for(const correctIndex of [2,1,2]){
+    const before=saved(p).rescueProgress.miniGameStage;
+    p.el("summitChoice"+correctIndex).click();
+    assert.equal(saved(p).rescueProgress.miniGameStage,before+1);
+    assert.equal(saved(p).route,"cult");
+    assert.equal(p.el("summitNextButton").hidden,false);
+    p.el("summitNextButton").click();
+  }
+  assert.equal(saved(p).rescueProgress.finished,true);
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+  assert.equal(p.el("summitEndingScene").hidden,false);
+  assert.match(p.el("summitEndingLine").textContent,/what the hell are you doing/);
+  for(let i=0;i<7;i++)p.el("summitEndingNextButton").click();
+  assert.equal(saved(p).rescueProgress.endingStep,7);
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+  assert.equal(saved(p).rescueProgress.endingStep,7);
+  assert.match(p.el("summitEndingLine").textContent,/Come home/);
+  const total=story().SMP_SUMMIT.ending.length;
+  for(let i=7;i<total;i++)p.el("summitEndingNextButton").click();
+  assert.equal(saved(p).rescueProgress.endingStep,total);
+  assert.match(p.el("summitEndingLine").textContent,/HEAVEN WAS A PLACE ON EARTH/);
+  p.el("summitEndingNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-ending-summary");
+  assert.match(p.el("rescueSummaryHeading").textContent,/HEAVEN WAS A PLACE ON EARTH/);
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-ending-summary");
+  p.el("rescueSummaryReplayButton").click();
+  assert.equal(saved(p).holidayPhase,"wall");
+  assert.equal(saved(p).wallDecision,null);
+  assert.equal(Object.hasOwn(saved(p),"route"),false);
+  assert.equal(Object.hasOwn(saved(p),"summitResponse"),false);
+  assert.equal(Object.hasOwn(saved(p),"rescueProgress"),false);
+});
+test("SP3.1 non-Summit routes remain unplayable, replay does not leak Summit progress",()=>{
+  const p=toSummitAdmissions();
+  p.el("summitChoice2").click();
+  assert.equal(saved(p).rescueProgress.miniGameStage,1);
+  p.el("rescueMiniGameReplayButton").click();
+  assert.equal(saved(p).holidayPhase,"wall");
+  assert.equal(Object.hasOwn(saved(p),"summitResponse"),false);
+  p.el("summitNextButton").click();
+  p.el("summitChoice2").click();
+  assert.equal(saved(p).holidayPhase,"wall","Stale event handlers cannot advance a different scene");
+  for(const route of ["detention","reassemble"]){
+    const q=toHotelInvestigation(route);
+    completeHotelIntro(q);
+    q.el("hotel"+route[0].toUpperCase()+route.slice(1)+"Button").click();
+    for(let i=0;i<6;i++)q.el("hotelFinishButton").click();
+    const count=story().SMP_RESCUE_FRAMEWORK.routes[route].intro.length;
+    for(let i=0;i<=count;i++)q.el("routeIntroNextButton").click();
+    assert.equal(q.el("summitAdmissions").hidden,true);
+    q.el("summitChoice2").click();
+    assert.equal(saved(q).rescueProgress.miniGameStage,0);
+    assert.equal(q.el("rescueEndingSummary").hidden,true);
+    assert.equal(saved(q).route,route);
+  }
 });
