@@ -2,11 +2,12 @@
 
 **Updated:** 16 October 2026
 
-## GAME-SP4.0D — Optional opening music, waiting for MP3 uploads (16 October 2026)
+## GAME-SP4.0D — Opening music uploaded, pending in-game approval (16 October 2026)
 
-- Stacked independent song-work branch on the accepted, still-draft throne-room PR #34. Added an optimistic 20-second audio preview to cutaway `office.v07` and a button to continue its full recording without restarting. At Stephen's `office.039` question, an optional pessimistic full-song button interrupts the voiced office scene, then resumes at the next beat.
-- Song player respects Pause/Play, manual Next/Back, tab visibility, Sound Off and scene changes. Missing or not-yet-uploaded files retain the previous timed silent cutaway and never block progression. Existing 55 spoken recordings and story dialogue are untouched.
-- Owner will upload `public/assets/audio/songs/optimistic.mp3` and `public/assets/audio/songs/pessimistic.mp3` to the song branch via GitHub. The build accepts/copies only those two files. Until those uploads are done, musical playback cannot be visually/aurally approved. Song branch and parent #34 must remain unmerged without explicit approval.
+- Song-work branch is stacked on the still-draft throne-room PR #34. The optimistic opening track previews for 20 seconds during cutaway `office.v07`, with an option to hear the complete recording; at Stephen's `office.039` question the pessimistic version can be played on request, then resumes the dialogue.
+- Owner uploaded both finished tracks to `public/assets/audio/songs/`: `optimistic.mp3` (1,433,152 bytes) and `pessimistic.mp3` (2,773,315 bytes). The upload commit `8e3761b` passed all 94 automated tests and packaged **both songs (2/2)** alongside all **55/55** spoken dialogue files. Cloudflare deployed that exact upload commit successfully.
+- Pause/Resume, Stop, Next/Back, Sound Off, background tabs and scene changes retain their existing safety guards. The remaining human gate is to inspect both full tracks and the optimistic 20-second preview, volume balance, and the transition back to dialogue on desktop/mobile.
+- This status reconciliation also triggers another build of the unchanged game/assets. PR #35 and its parent PR #34 remain draft and unmerged; no merge or public-release approval has been given.
 
 ## GAME-SP4.0C — Second attendant perspective rebalance (16 October 2026)
 
