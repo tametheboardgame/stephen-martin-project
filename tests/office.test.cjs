@@ -234,7 +234,10 @@ test("David's full approved six-state set is mapped to every scripted beat",()=>
   const expected={neutral:"neutral",confident:"confident",serious:"serious",frustrated:"frustrated",shocked:"shocked","systems-expert":"systems-expert"};
   const p=preview();p.start();
   for(let i=0;i<all.length;i++){
-    if(i)p.el("nextButton").click();
+    if(i) {
+      p.el("nextButton").click();
+      if(all[i-1].id==="office.041") p.el("nextButton").click(); // Explicit musical-choice beat.
+    }
     const cue=all[i].reactions.David;
     assert.equal(p.el("castDavid").dataset.expression,cue,all[i].id+" acting cue");
     assert.equal(p.el("castDavid").dataset.seatedSprite,expected[cue],all[i].id+" source");
@@ -317,7 +320,10 @@ test("Paul proof cycles Auto, Neutral, Confused and Pleased without affecting th
 test("Paul's scripted reactions select Confused/Pleased and Blank resolves to Neutral across the intro",()=>{
   const p=preview();p.start();
   for(let i=0;i<all.length;i++){
-    if(i)p.el("nextButton").click();
+    if(i) {
+      p.el("nextButton").click();
+      if(all[i-1].id==="office.041") p.el("nextButton").click();
+    }
     const cue=all[i].reactions.Paul;
     const sprite=cue==="confused" ? "confused" : cue==="pleased" ? "pleased" : "neutral";
     assert.equal(p.el("castPaul").dataset.expression,cue,all[i].id+" Paul cue");
@@ -361,7 +367,10 @@ test("pause, auto next, skip and resume work without restarting dialogue",()=>{
 
 test("the complete 67-beat intro can play through and replay",()=>{
   const p=preview();p.start();
-  for(let i=1;i<all.length;i++)p.el("nextButton").click();
+  for(let i=1;i<all.length;i++) {
+    p.el("nextButton").click();
+    if(all[i-1].id==="office.041") p.el("nextButton").click();
+  }
   assert.equal(saved(p).beatId,"office.v12");
   p.el("nextButton").click();
   assert.equal(p.el("holidayScreen").hidden,false);
@@ -2284,12 +2293,15 @@ test("SP4.0D full user-supplied lyrics scroll against real playback progress",as
   assert.match(panel.innerHTML,/favourite shoes/);
   const clip=p.voices.at(-1);
   await Promise.resolve();
-  clip.currentTime=60;clip.duration=120;
+  clip.currentTime=10;clip.duration=120;
   clip.ontimeupdate();
-  assert.equal(p.el("officeSongLyricsScroll").scrollTop,300,"Scroll tracks audio time");
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,50,"Preview scroll tracks audio time");
   p.el("songListenButton").click();
   assert.equal(p.el("officeSongOverlay").dataset.mode,"full");
   assert.equal(p.voices.at(-1),clip,"Full track continues without seeking back");
+  clip.currentTime=60;
+  clip.ontimeupdate();
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,300,"Full-song scrolling follows track progress");
   const q=preview({audio:true});q.start();q.at("office.041");
   q.el("nextButton").click();q.el("songListenButton").click();
   assert.match(q.el("officeSongLyrics").innerHTML,/tribute too!/);
