@@ -153,7 +153,8 @@
   const MIN_LINE_MS = 1800;
   const MAX_LINE_MS = 4700;
   const VOICE_PATH = "./public/assets/audio/dialogue/";
-  const VOICE_GAP_MS = 400;
+  const VOICE_GAP_MS = 260;
+  const VOICE_VISUAL_GAP_MS = 100;
   const VOICE_START_TIMEOUT_MS = 8000;
   let voice = null;
   let voiceBeatId = null;
@@ -282,8 +283,11 @@
     const duration = Number(clip.duration), time = Number(clip.currentTime);
     if (!Number.isFinite(duration) || duration <= 0 || !Number.isFinite(time)) return;
     const space = Number(viewport.scrollHeight) - Number(viewport.clientHeight);
+    const position = Math.min(1,Math.max(0,time/duration));
+    // Pessimistic lyrics lead gently at the start and align by the ending.
+    const visualProgress = songKind === "pessimistic" ? Math.pow(position,0.78) : position;
     if (Number.isFinite(space))
-      viewport.scrollTop = Math.round(Math.max(0,space)*Math.min(1,Math.max(0,time/duration)));
+      viewport.scrollTop = Math.round(Math.max(0,space)*visualProgress);
   }
   function offerPessimisticSong() {
     if (state.beatId !== "office.041" || screens.office.hidden || pessimisticOffer) return;
@@ -508,8 +512,13 @@
     // missing recordings retain the established script durations.
     if (song) return; // Music owns the timeline while loading/playing/paused.
     if (voice && (voicePhase === "loading" || voicePhase === "playing" || voicePhase === "paused")) return;
+    const nextBeat = beats[beatIndexById.get(state.beatId) + 1];
     const wait = pessimisticOffer && beat.id === "office.041"
-      ? PESSIMISTIC_OFFER_MS : voicePhase === "finished" ? VOICE_GAP_MS : lineDuration(beat);
+      ? PESSIMISTIC_OFFER_MS
+      : voicePhase === "finished"
+        ? beat.id === "office.041" ? 400
+          : nextBeat && nextBeat.type !== "dialogue" ? VOICE_VISUAL_GAP_MS : VOICE_GAP_MS
+        : lineDuration(beat);
     advanceTimer = setTimeout(() => {
       advanceTimer = null;
       if (!autoPlaying || screens.office.hidden || document.hidden) return;
