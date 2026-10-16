@@ -1,3 +1,9 @@
+## Left/right standing and kneeling balance (16 October 2026)
+
+The owner's next screenshot showed both standing attendants on the left and both kneeling attendants on the right, despite corrected grounding. The approved independent PNGs/WebPs are unchanged. CSS places **fan standing + ewer kneeling** on the left, and **tray standing + towel kneeling** on the right. The right-hand tray and towel are horizontally mirrored as individual sprites to face Stephen; the background, UI, main cast and left-hand sprites are not flipped.
+
+The upper standing attendants are anchored at the stair-flanking columns, with kneeling attendants farther out in the side aisles. Desktop/tablet/mobile sizing and foot anchors are covered by responsive regressions. The mirrored variant is a presentation transform, not a new generated file. Owner visual approval and an explicit merge instruction are still required.
+
 ## Attendant perspective correction after first live screenshot (15 October 2026)
 
 The owner reviewed the first live composition and rejected all four attendant positions as physically implausible, particularly the **floating fan/ewer near the back columns** and the detached tray/towel at the side edges. The source PNGs and alpha WebPs remain approved; the failure is **CSS perspective/foot grounding only**.
