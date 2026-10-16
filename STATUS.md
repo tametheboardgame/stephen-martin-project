@@ -2,6 +2,11 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP4.0C — Symmetric standing/kneeling attendants facing Stephen (16 October 2026)
+
+- Following the owner's visual review, balanced the four existing attendants so each side has **one standing and one kneeling figure** facing inward. **Left:** standing fan, kneeling ewer; **right:** standing tray, kneeling towel. The two right-side sprites are independently flipped with `scaleX(-1)`; the environment, dialogue and other sprites are not mirrored.
+- Desktop, tablet and mobile staging now uses individually grounded upper (standing) and lower (kneeling) positions on both sides. Updated regression assertions cover grouping, mirroring and retention of Stephen, David and Paul. No new art or manifests. Draft PR #34 remains unmerged and requires in-engine review.
+
 ## GAME-SP4.0C — Corrected attendant grounding (15 October 2026)
 
 - Owner's in-engine screenshot showed **all four ceremonial attendants floating or standing implausibly**, despite the correct transparent cutouts. Repositioned and reduced only the attendant CSS, across desktop/tablet/mobile: fan and ewer stand lower by the throne stairway's side columns, tray and towel frame the lower side aisles. No art regeneration or new manifests.
