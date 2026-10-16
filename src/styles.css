@@ -429,6 +429,22 @@ button:active:not(:disabled) { transform: translateY(1px); }
   background: #051d3d;
 }
 .dialogue-hint { color:#40cfff; font-size:11px; display:inline-block; }
+/* GAME-SP4.0D: opt-in song actions stay outside the illustrated cutaway,
+   so they remain accessible even when the dialogue panel is hidden. */
+#officeScreen .office-song-actions {display:flex;gap:8px;align-items:center;flex-wrap:wrap;max-width:100%;}
+#officeScreen .office-song-actions[hidden],
+#officeScreen .office-song-actions [hidden] {display:none;}
+#officeScreen .office-song-button {
+  border:1px solid #d7ab49;border-radius:8px;padding:7px 12px;
+  color:#ffedb9;background:#244369;font-weight:750;cursor:pointer;
+}
+#officeScreen .office-song-button:hover {background:#345986;}
+#officeScreen .office-song-status {font-size:11px;color:#a9ddf9;max-width:260px;}
+@media(max-width:800px) {
+  #officeScreen .office-song-actions {order:1;width:100%;}
+  #officeScreen .office-song-button {min-height:36px;}
+}
+
 .dialogue-buttons {display:flex; flex-wrap:wrap; gap:9px; align-items:center; }
 .dialogue-buttons .btn-small {
   font-size:13px;

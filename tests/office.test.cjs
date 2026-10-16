@@ -2188,3 +2188,88 @@ test("SP4.0C right standing and kneeling attendants face inward via sprite-only 
   assert.ok(desktop.includes('left:30%;bottom:33%;height:28%;max-width:23%;'),"David unchanged");
   assert.ok(desktop.includes('right:29%;bottom:33%;height:27%;max-width:23%;'),"Paul unchanged");
 });
+
+
+test("SP4.0D optimistic music cutaway plays up to 20 seconds and preserves full-track option",async()=>{
+  const p=preview({audio:true});p.start();p.at("office.v07");
+  assert.equal(p.el("officeSongActions").hidden,false);
+  assert.match(p.el("songListenButton").textContent,/full optimistic song/);
+  const clip=p.voices.at(-1);
+  assert.ok(clip.src.endsWith("/audio/songs/optimistic.mp3"));
+  await Promise.resolve();
+  assert.ok([...p.timeouts.values()].some(t=>t.delay===20000),"Preview has 20-second clock");
+  p.el("songListenButton").click();
+  assert.equal(p.voices.at(-1),clip,"Full optimistic play continues the same audio at its current position");
+  assert.equal(p.el("songStopButton").hidden,false);
+  assert.equal([...p.timeouts.values()].some(t=>t.delay===20000),false,"Full song is not cut off after 20 seconds");
+  clip.finish();
+  assert.equal(saved(p).beatId,"office.037","After the entire song, resume original story");
+});
+
+test("SP4.0D optimistic preview advances at twenty seconds, pause freezes it, and Next stops music",async()=>{
+  const p=preview({audio:true});p.start();p.at("office.v07");
+  const clip=p.voices.at(-1);
+  await Promise.resolve();
+  p.el("playPauseButton").click();
+  assert.equal(clip.paused,true);
+  assert.equal(p.timeouts.size,0);
+  p.el("playPauseButton").click();
+  await Promise.resolve();
+  assert.ok([...p.timeouts.values()].some(t=>t.delay===20000));
+  assert.equal(p.tick(),true);
+  assert.equal(saved(p).beatId,"office.037");
+  assert.equal(clip.paused,true);
+  p.at("office.v07");
+  p.el("nextButton").click();
+  assert.equal(p.voices.at(-1).paused,true,"Manual Next never leaves the song playing");
+});
+
+test("SP4.0D pessimistic song is an optional choice at the mention of a second version",async()=>{
+  const p=preview({audio:true});p.start();p.at("office.039");
+  assert.equal(p.el("officeSongActions").hidden,false);
+  assert.match(p.el("songListenButton").textContent,/pessimistic version/);
+  const speaking=p.voices.at(-1);
+  p.el("songListenButton").click();
+  const music=p.voices.at(-1);
+  assert.ok(music.src.endsWith("/audio/songs/pessimistic.mp3"));
+  assert.equal(speaking.paused,true,"Spoken dialogue yields to the requested song");
+  await Promise.resolve();
+  assert.equal(p.timeouts.size,0,"Full song holds progression until it ends");
+  music.finish();
+  assert.equal(saved(p).beatId,"office.040");
+  p.at("office.039");
+  p.el("songListenButton").click();
+  p.el("songStopButton").click();
+  assert.equal(saved(p).beatId,"office.040","Stopping the optional song also continues");
+});
+
+test("SP4.0D missing song files fail gracefully, and hide/pause never advance music",async()=>{
+  const p=preview({audio:true});p.start();p.at("office.v07");
+  const song=p.voices.at(-1);
+  song.fail();
+  assert.match(p.el("songStatus").textContent,/not uploaded/);
+  assert.equal([...p.timeouts.values()].some(t=>t.delay===6000),true,"Missing MP3 reverts to existing visual duration");
+  p.at("office.039");
+  p.el("songListenButton").click();
+  const full=p.voices.at(-1);
+  p.document.hidden=true;
+  p.listeners.get("visibilitychange")();
+  assert.equal(full.paused,true);
+  assert.equal(p.timeouts.size,0);
+  p.document.hidden=false;
+  p.el("playPauseButton").click();
+  await Promise.resolve();
+  assert.equal(full.paused,false);
+  p.el("sceneSoundButton").click();
+  assert.equal(full.paused,true,"Sound Off silences optional tracks too");
+});
+test("SP4.0D build automatically packages only the two approved optional song filenames",()=>{
+  const pack=read("scripts/build.mjs");
+  assert.match(pack,/const songSource = "public\/assets\/audio\/songs"/);
+  assert.match(pack,/new Set\(\["optimistic\.mp3", "pessimistic\.mp3"\]\)/);
+  assert.match(pack,/copyFile\(original, path\.join\(output, songSource, filename\)\)/);
+  assert.ok(fs.existsSync(path.join(root,"public/assets/audio/songs/README.md")));
+  for(const id of ["officeSongActions","songListenButton","songStopButton","songStatus"])
+    assert.ok(html.includes('id="'+id+'"'));
+});
+

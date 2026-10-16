@@ -2,6 +2,12 @@
 
 **Updated:** 16 October 2026
 
+## GAME-SP4.0D — Optional opening music, waiting for MP3 uploads (16 October 2026)
+
+- Stacked independent song-work branch on the accepted, still-draft throne-room PR #34. Added an optimistic 20-second audio preview to cutaway `office.v07` and a button to continue its full recording without restarting. At Stephen's `office.039` question, an optional pessimistic full-song button interrupts the voiced office scene, then resumes at the next beat.
+- Song player respects Pause/Play, manual Next/Back, tab visibility, Sound Off and scene changes. Missing or not-yet-uploaded files retain the previous timed silent cutaway and never block progression. Existing 55 spoken recordings and story dialogue are untouched.
+- Owner will upload `public/assets/audio/songs/optimistic.mp3` and `public/assets/audio/songs/pessimistic.mp3` to the song branch via GitHub. The build accepts/copies only those two files. Until those uploads are done, musical playback cannot be visually/aurally approved. Song branch and parent #34 must remain unmerged without explicit approval.
+
 ## GAME-SP4.0C — Second attendant perspective rebalance (16 October 2026)
 
 - Following a new in-game screenshot, reduced kneeling ewer/towel from 17% to 14% stage height while retaining rear feet at bottom 42%. Enlarged standing fan/tray from 23% to 27% and moved them back from bottom 24% to 29% on desktop; tablet/mobile receive equivalent changes.
