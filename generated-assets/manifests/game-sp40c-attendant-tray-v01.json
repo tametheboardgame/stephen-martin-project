@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1iA2GXZFCCjsuHf0uRdA2fLbveZenAT54"
+  },
+  "expectedSourceName": "summit-throne-attendant-tray-v01.png",
+  "destination": "public/assets/generated/characters/summit-throne-attendant-tray-v01.webp",
+  "transform": {
+    "maxWidth": 1024,
+    "maxHeight": 1536,
+    "quality": 86
+  },
+  "revision": 1
+}

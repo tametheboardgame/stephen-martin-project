@@ -2681,3 +2681,154 @@ body:has(#menuScreen:not([hidden])) main {
     font-size:clamp(14px,3.6vw,17px);
   }
 }
+
+
+/* GAME-SP4.0C — Owner-approved Summit throne and Stephen-only in-engine fit
+ * test. Keep the alpine throne-room background independent of the transparent
+ * seated Stephen sprite; no entrance actors or unapproved throne sprites. */
+#holidayScreen #summitEndingScene .summit-ending-stage {
+  display:block;position:relative;padding:0;isolation:isolate;
+  background:linear-gradient(to top,rgba(7,24,44,.2),transparent 52%),
+    url("../public/assets/generated/locations/summit-throne-room-v01.webp") center/cover no-repeat;
+}
+#holidayScreen #summitEndingScene .summit-throne-label {
+  position:absolute;z-index:4;top:3%;left:2.7%;
+  display:grid;gap:2px;max-width:43%;padding:9px 12px;
+  border:2px solid rgba(244,209,145,.9);border-radius:9px;
+  background:rgba(7,30,53,.85);color:#fff0c9;pointer-events:none;
+}
+#holidayScreen #summitEndingScene .summit-throne-label span {
+  font-size:clamp(10px,1vw,13px);letter-spacing:.1em;font-weight:850;color:#a5def7;
+}
+#holidayScreen #summitEndingScene .summit-throne-label strong {
+  font-size:clamp(15px,1.8vw,25px);letter-spacing:.05em;
+}
+/* Balanced Summit attendants: one standing and one kneeling on each side.
+ * Kneeling figures scale down on the rear stair-side floor plane. Standing
+ * figures grow but move back from the foreground edge. Only the right-hand
+ * sprites are mirrored to face Stephen. Keep the centre stairway clear. */
+#holidayScreen #summitEndingScene .summit-throne-attendant {
+  display:block;position:absolute;z-index:2;pointer-events:none;
+  width:auto;object-fit:contain;object-position:center bottom;
+  filter:drop-shadow(2px 4px 3px rgba(3,20,35,.42));
+}
+#holidayScreen #summitEndingScene .summit-throne-attendant-fan {
+  left:9%;bottom:29%;height:27%;max-width:21%;
+}
+#holidayScreen #summitEndingScene .summit-throne-attendant-tray {
+  left:auto;right:9%;bottom:29%;height:27%;max-width:21%;
+  transform:scaleX(-1);transform-origin:center bottom;
+}
+#holidayScreen #summitEndingScene .summit-throne-attendant-ewer {
+  left:23%;right:auto;bottom:42%;height:14%;max-width:13%;
+}
+#holidayScreen #summitEndingScene .summit-throne-attendant-towel {
+  right:23%;bottom:42%;height:14%;max-width:13%;
+  transform:scaleX(-1);transform-origin:center bottom;
+}
+#holidayScreen #summitEndingScene .summit-throne-stephen {
+  display:block;position:absolute;z-index:2;
+  /* Scale for the throne *behind* him, not a foreground full-size chair. */
+  left:50%;bottom:46%;height:17%;width:auto;max-width:18%;
+  transform:translateX(-50%);transform-origin:center bottom;
+  object-fit:contain;object-position:center bottom;pointer-events:none;
+  filter:drop-shadow(2px 4px 3px rgba(3,20,35,.42));
+  transition:filter 160ms ease;
+}
+#holidayScreen #summitEndingScene[data-speaker="stephen"] .summit-throne-stephen {
+  filter:drop-shadow(2px 4px 3px rgba(3,20,35,.42))
+    drop-shadow(0 0 7px rgba(255,215,143,.75));
+}
+/* David and Paul stand at the foot of the staircase, in the mid-ground,
+ * not on the front marble floor. Stephen remains unchanged on his throne. */
+#holidayScreen #summitEndingScene .summit-throne-actor {
+  display:block;position:absolute;z-index:3;pointer-events:none;
+  width:auto;object-fit:contain;object-position:center bottom;
+  filter:drop-shadow(3px 5px 4px rgba(3,20,35,.45));
+  transition:filter 160ms ease;
+}
+#holidayScreen #summitEndingScene .summit-throne-david {
+  left:30%;bottom:33%;height:28%;max-width:23%;
+}
+#holidayScreen #summitEndingScene .summit-throne-paul {
+  right:29%;bottom:33%;height:27%;max-width:23%;
+}
+#holidayScreen #summitEndingScene[data-speaker="david"] .summit-throne-david,
+#holidayScreen #summitEndingScene[data-speaker="paul"] .summit-throne-paul {
+  filter:drop-shadow(3px 5px 4px rgba(3,20,35,.45))
+    drop-shadow(0 0 7px rgba(255,215,143,.75));
+}
+#holidayScreen #summitEndingScene .summit-ending-content {
+  position:absolute;z-index:5;left:3%;right:3%;bottom:7%;width:94%;
+  max-width:none;max-height:28%;box-sizing:border-box;overflow-y:auto;
+  margin:0;padding:11px 18px;text-align:left;
+  background:rgba(5,25,48,.94);border:3px solid #f0cf89;
+  border-radius:11px;box-shadow:4px 5px 0 rgba(0,0,0,.4);
+}
+#holidayScreen #summitEndingScene .summit-ending-speaker {
+  color:#ffdb87;font-size:clamp(13px,1.25vw,18px);font-weight:900;
+}
+#holidayScreen #summitEndingScene .summit-ending-line {
+  margin:5px 0 3px;font-size:clamp(16px,1.8vw,25px);
+  line-height:1.35;font-weight:800;
+}
+#holidayScreen #summitEndingScene .summit-progress {
+  margin:2px 0 0;text-align:right;font-size:clamp(11px,1vw,13px);
+}
+@media (max-width:800px) {
+  #holidayScreen #summitEndingScene .summit-ending-stage {padding:0;}
+  #holidayScreen #summitEndingScene .summit-throne-label {
+    top:9%;left:2%;padding:6px 9px;
+  }
+  #holidayScreen #summitEndingScene .summit-throne-stephen {
+    height:16%;bottom:46%;max-width:20%;
+  }
+  #holidayScreen #summitEndingScene .summit-throne-attendant-fan {
+    left:7%;bottom:31%;height:25%;max-width:26%;
+  }
+  #holidayScreen #summitEndingScene .summit-throne-attendant-tray {
+    right:7%;bottom:31%;height:25%;max-width:26%;
+  }
+  #holidayScreen #summitEndingScene .summit-throne-attendant-ewer {
+    left:20%;bottom:43%;height:12%;max-width:16%;
+  }
+  #holidayScreen #summitEndingScene .summit-throne-attendant-towel {
+    right:20%;bottom:43%;height:12%;max-width:16%;
+  }
+  #holidayScreen #summitEndingScene .summit-throne-david {
+    left:24%;bottom:33%;height:26%;max-width:29%;
+  }
+  #holidayScreen #summitEndingScene .summit-throne-paul {
+    right:23%;bottom:33%;height:25%;max-width:29%;
+  }
+  #holidayScreen #summitEndingScene .summit-ending-content {
+    bottom:10%;max-height:30%;padding:10px 12px;
+  }
+}
+@media (max-width:450px) {
+  #holidayScreen #summitEndingScene .summit-throne-stephen {
+    height:14%;bottom:43%;max-width:28%;
+  }
+  #holidayScreen #summitEndingScene .summit-throne-attendant-fan {
+    left:-1%;bottom:33%;height:20%;max-width:33%;
+  }
+  #holidayScreen #summitEndingScene .summit-throne-attendant-tray {
+    right:-1%;bottom:33%;height:20%;max-width:33%;
+  }
+  #holidayScreen #summitEndingScene .summit-throne-attendant-ewer {
+    left:13%;bottom:45%;height:9%;max-width:19%;
+  }
+  #holidayScreen #summitEndingScene .summit-throne-attendant-towel {
+    right:13%;bottom:45%;height:9%;max-width:19%;
+  }
+  #holidayScreen #summitEndingScene .summit-throne-david {
+    left:12%;bottom:33%;height:22%;max-width:35%;
+  }
+  #holidayScreen #summitEndingScene .summit-throne-paul {
+    right:12%;bottom:33%;height:22%;max-width:35%;
+  }
+  #holidayScreen #summitEndingScene .summit-ending-content {
+    bottom:13%;max-height:33%;padding:8px 10px;border-width:2px;
+  }
+  #holidayScreen #summitEndingScene .summit-ending-line {font-size:clamp(14px,3.6vw,17px);}
+}

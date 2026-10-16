@@ -1,6 +1,56 @@
 # Project status
 
-**Updated:** 15 October 2026
+**Updated:** 16 October 2026
+
+## GAME-SP4.0C — Second attendant perspective rebalance (16 October 2026)
+
+- Following a new in-game screenshot, reduced kneeling ewer/towel from 17% to 14% stage height while retaining rear feet at bottom 42%. Enlarged standing fan/tray from 23% to 27% and moved them back from bottom 24% to 29% on desktop; tablet/mobile receive equivalent changes.
+- Mirroring, other actors, backgrounds, audio, UI and routing are untouched. Regression tests and art documentation updated. PR #34 remains an unmerged draft pending owner visual approval.
+
+## GAME-SP4.0C — Foreground standing / mid-ground kneeling swap (16 October 2026)
+
+- Following the owner's screenshot approval of the left/right symmetry, corrected depth and scale: the **kneeling ewer/towel pair moved into the previous standing pair's mid-ground positions** (desktop 23% in from each side, bottom 42%, 17% stage height); the **standing fan/tray pair moved outward and forward** (9% in, bottom 24%, 23% height) to maintain perspective.
+- The right-side tray and towel still face inwards via per-sprite CSS mirrors. Tablet and phone sizing/anchors updated and tests protect forward/nearer = larger and rear/farther = smaller. Stephen, David, Paul, background, subtitles, audio, autoplay and other routes remain untouched.
+- Draft PR #34 remains unmerged and requires another in-engine visual review before approval.
+
+## GAME-SP4.0C — Symmetric standing/kneeling attendants facing Stephen (16 October 2026)
+
+- Following the owner's visual review, balanced the four existing attendants so each side has **one standing and one kneeling figure** facing inward. **Left:** standing fan, kneeling ewer; **right:** standing tray, kneeling towel. The two right-side sprites are independently flipped with `scaleX(-1)`; the environment, dialogue and other sprites are not mirrored.
+- Desktop, tablet and mobile staging now uses individually grounded upper (standing) and lower (kneeling) positions on both sides. Updated regression assertions cover grouping, mirroring and retention of Stephen, David and Paul. No new art or manifests. Draft PR #34 remains unmerged and requires in-engine review.
+
+## GAME-SP4.0C — Corrected attendant grounding (15 October 2026)
+
+- Owner's in-engine screenshot showed **all four ceremonial attendants floating or standing implausibly**, despite the correct transparent cutouts. Repositioned and reduced only the attendant CSS, across desktop/tablet/mobile: fan and ewer stand lower by the throne stairway's side columns, tray and towel frame the lower side aisles. No art regeneration or new manifests.
+- Stephen, David, Paul, the approved room background, text strip, speaker highlighting, controls and timing remain untouched. Updated tests verify all responsive foot anchors and sizes. Await owner visual inspection of the newly deployed scene before merging draft PR #34 or parent #33.
+
+## GAME-SP4.0C — Four approved attendants integrated into Ending A (15 October 2026)
+
+- Owner approved four separate throne-room attendant sprites (fan, tray, ewer, towel) and explicitly directed integration. The transparent PNG originals are in the dedicated Google Drive staging folder. Each was materialised sequentially via a versioned manifest and the existing OIDC pipeline as an alpha-preserving WebP on draft PR #34.
+- The throne-room scene now includes four separately positioned, silent, decorative attendants: two flanking the raised platform and two in the side areas. Responsive layouts protect the throne, bottom dialogue and interactive controls. Stephen's approved size and seating, David/Paul's scaled positions at the base of the stairs, speaker glow and the three-route flow remain unchanged.
+- Build packaging and regression coverage now enforce each attendant's provenance and transparency. **Owner in-engine visual review still required** for sizing, overlap and perspective. Do not merge PR #34 or parent PR #33 without explicit approval. See `docs/story/GAME-SP4.0C-SUMMIT-THRONE-ART.md`.
+
+## GAME-SP4.0C — Stair-foot staging and attendant visual concept (15 October 2026)
+
+- In response to owner feedback, David and Paul were **shrunk and moved inward to the base of the throne stairs** at desktop/tablet/mobile breakpoints, retaining the approved Stephen scale and all existing ending logic/speaker glow.
+- A concept illustration explored four-to-six muscular adult East Asian ceremonial attendants around the room, but it came back as a **flattened screenshot**, not game-ready standalone sprites. The approved throne room and character art remain unchanged. The next art-only task is four **separate transparent attendant cutouts** (with fan/tray/jug/towel variants), followed by owner approval and then the normal Drive → manifest → WebP pipeline. See `docs/story/GAME-SP4.0C-SUMMIT-THRONE-ART.md`.
+- Draft PR #34 remains unmerged; revised stair-foot arrangement awaits actual playable visual sign-off.
+
+## GAME-SP4.0C — David and Paul integrated into the throne-room cast (15 October 2026)
+
+- Owner approved the separately regenerated David and Paul throne-room sprites and directed David **to the left of the throne** and Paul **to the right**, while retaining the approved smaller Stephen on the throne. Uploaded both original transparent PNGs to the dedicated project Drive folder; the standard materialisation workflow created their individual WebP assets from versioned `game-sp40c-throne-david-v01.json` and `game-sp40c-throne-paul-v01.json` manifests.
+- Ending A now has three independent actors, positioned in foreground/midground depth, and the established `data-speaker` cue highlights whichever of Stephen/David/Paul is speaking. Text/autoplay, responsive bottom captions, choices, Stephen scaling, existing throne background and all other routes remain unchanged.
+- PR #34 remains draft and stacked on PR #33. Automated test and deployed branch preview must be verified; **human sprite sizing/placement sign-off** required before any merge. See `docs/story/GAME-SP4.0C-SUMMIT-THRONE-ART.md`.
+
+## GAME-SP4.0C — Stephen-only throne-room integration preview (15 October 2026)
+
+- User approved the corrected original Steve likeness (blond side-parted hair, blue zip-neck top) and directed an in-engine Ending A check **with Stephen only**. The previously approved throne-room background is reused unchanged. His transparent seated sprite (ceremonial cape, gold goblet and SUPREME CHAIRMAN sash, with **no baked chair**) was uploaded to the project's Drive staging folder and materialised through its OIDC workflow.
+- The new Ending A stage layers **one** Stephen over the existing throne, changes the oversized centre placeholder into a bottom dialogue strip, and highlights Stephen on his spoken lines. Original 14 ending beats, autoplay, cards, saves and the other two routes are unchanged. No new David/Paul throne-room sprites were added.
+- Source and review plan: `docs/story/GAME-SP4.0C-SUMMIT-THRONE-ART.md`. Desktop/tablet alignment, CSS crop and end-card pacing still require owner visual review. PR #34 remains draft and stacked on entrance PR #33; no main merge authorised.
+
+## GAME-SP4.0C — Summit throne-room environment locked; sprite review next (15 October 2026)
+
+- Owner approved the original Summit throne-room background and requested Stephen, David and Paul in distinct new poses. The room is locked as `summit-throne-room-background-v01.png` in the dedicated Google Drive staging folder, derived via `generated-assets/manifests/game-sp40c-summit-throne-room-v01.json` into `public/assets/generated/locations/summit-throne-room-v01.webp` on stacked art branch `agent/game-sp40c-summit-throne-art`.
+- First Stephen/David/Paul transparent cutouts are produced as independent **candidates for owner review**, not approved or added to the game yet. Stephen's generated chair needs special consideration against the approved empty room throne. No gameplay or Ending A composition has been changed. See `docs/story/GAME-SP4.0C-SUMMIT-THRONE-ART.md`.
 
 ## GAME-SP4.0B — Summit perspective revision ready for review (15 October 2026)
 

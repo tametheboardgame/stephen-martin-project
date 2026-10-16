@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1IEruLeKIv-1HjO4eWUvADI4CzjM1fLw3"
+  },
+  "expectedSourceName": "summit-throne-attendant-towel-v01.png",
+  "destination": "public/assets/generated/characters/summit-throne-attendant-towel-v01.webp",
+  "transform": {
+    "maxWidth": 1024,
+    "maxHeight": 1536,
+    "quality": 86
+  },
+  "revision": 1
+}

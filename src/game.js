@@ -1179,6 +1179,9 @@
         const card = step === summit.ending.length;
         const line = summit.ending[Math.min(step, summit.ending.length - 1)];
         $("summitEndingSpeaker").textContent = card ? "ENDING A" : line.speaker.toUpperCase();
+        // All three approved throne-room sprites stay in place; speaker focus
+        // moves between Stephen, David and Paul without interrupting autoplay.
+        $("summitEndingScene").dataset.speaker = card ? "" : line.speaker.toLowerCase();
         $("summitEndingLine").textContent = card ? summit.endCard : line.text;
         $("summitEndingProgress").textContent = card
           ? "Stephen appears to be having the time of his life."

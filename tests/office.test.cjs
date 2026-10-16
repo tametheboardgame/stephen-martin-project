@@ -1940,3 +1940,251 @@ test("SP4.0B revised Summit arrangement uses mirrored small transparent sprites 
   assert.match(summitCss,/#routeIntroDialogue\[hidden\]/);
   assert.doesNotMatch(summitCss,/#summitAdmissions[^\n]*transform:scaleX/);
 });
+
+
+test("SP4.0C approved throne and Stephen sprite are separate, packaged and transparency-safe",()=>{
+  const background="summit-throne-room-v01.webp";
+  const sprite="summit-stephen-seated-chairman-v02.webp";
+  const room=fs.readFileSync(path.join(root,"public/assets/generated/locations",background));
+  const person=fs.readFileSync(path.join(root,"public/assets/generated/characters",sprite));
+  assert.ok(room.length>50000,"Approved illustrated room present");
+  assert.equal(room.toString("ascii",0,4),"RIFF");
+  assert.equal(room.toString("ascii",8,12),"WEBP");
+  assert.ok(person.length>30000,"Owner-approved Stephen present");
+  assert.equal(person.toString("ascii",0,4),"RIFF");
+  assert.equal(person.toString("ascii",12,16),"VP8X");
+  assert.ok((person[20]&0x10)!==0,"Seated Stephen must preserve transparency");
+  const bgManifest=JSON.parse(read("generated-assets/manifests/game-sp40c-summit-throne-room-v01.json"));
+  const stephenManifest=JSON.parse(read("generated-assets/manifests/game-sp40c-summit-stephen-chairman-v02.json"));
+  assert.equal(bgManifest.source.provider,"google-drive");
+  assert.equal(stephenManifest.source.provider,"google-drive");
+  assert.equal(bgManifest.destination,"public/assets/generated/locations/"+background);
+  assert.equal(stephenManifest.destination,"public/assets/generated/characters/"+sprite);
+  const build=read("scripts/build.mjs");
+  assert.ok(build.includes('"public/assets/generated/locations/'+background+'"'));
+  assert.ok(build.includes('"'+sprite+'"'));
+  assert.ok(build.includes("Approved seated Stephen must preserve WebP alpha transparency"));
+  assert.match(html,/id="summitThroneStephen"[^>]*summit-stephen-seated-chairman-v02\.webp/);
+  assert.match(css,/#summitEndingScene \.summit-ending-stage \{/);
+  assert.ok(css.includes('url("../public/assets/generated/locations/'+background+'")'));
+  assert.ok(css.includes('#summitEndingScene .summit-throne-stephen'));
+  assert.ok(css.includes('#summitEndingScene[data-speaker="stephen"] .summit-throne-stephen'));
+  const scene=html.split('id="summitEndingScene"')[1].split('id="detentionEndingScene"')[0];
+  assert.doesNotMatch(scene,/summitEntrance(?:David|Paul|Gatekeeper)/);
+  assert.doesNotMatch(scene,/summit-chairman-sash/,"Do not overlay redundant chairman sash");
+  assert.doesNotMatch(scene,/summit-art-note/,"No placeholder text in approved art scene");
+  assert.match(css,/@media \(max-width:450px\) \{[\s\S]*?#summitEndingScene \.summit-throne-stephen/);
+});
+
+test("SP4.0C throne cutscene keeps all Ending A lines, speaker glow, autoplay and replay",()=>{
+  const p=toSummitAdmissions();
+  for(const correct of [2,1,2]){
+    p.el("summitChoice"+correct).click();
+    p.el("summitNextButton").click();
+  }
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+  assert.equal(p.el("summitEndingScene").hidden,false);
+  assert.equal(p.el("summitEndingSpeaker").textContent,"STEPHEN");
+  assert.equal(p.el("summitEndingScene").dataset.speaker,"stephen");
+  assert.match(p.el("summitEndingLine").textContent,/what the hell/i);
+  assert.equal(p.el("summitThroneStephen").hidden,false);
+  p.el("summitEndingNextButton").click();
+  assert.equal(p.el("summitEndingSpeaker").textContent,"DAVID");
+  assert.equal(p.el("summitEndingScene").dataset.speaker,"david");
+  for(let i=1;i<story().SMP_SUMMIT.ending.length;i++)p.el("summitEndingNextButton").click();
+  assert.equal(p.el("summitEndingSpeaker").textContent,"ENDING A");
+  assert.equal(p.el("summitEndingScene").dataset.speaker,"");
+  assert.match(p.el("summitEndingLine").textContent,/HEAVEN WAS A PLACE ON EARTH/);
+  p.el("summitEndingNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-ending-summary");
+  assert.equal(p.el("summitEndingScene").hidden,true);
+  assert.equal(p.el("rescueSummaryHeading").textContent,"HEAVEN WAS A PLACE ON EARTH");
+});
+
+
+test("SP4.0C Stephen is sized for the background's raised throne at desktop/tablet/mobile widths",()=>{
+  const part=css.slice(css.indexOf("/* GAME-SP4.0C — Owner-approved Summit throne"));
+  const selector="#holidayScreen #summitEndingScene .summit-throne-stephen {";
+  const readPlacement=source=>{
+    const start=source.indexOf(selector);
+    assert.notEqual(start,-1,"Seated Stephen placement missing");
+    const block=source.slice(start,source.indexOf("}",start));
+    const height=Number(block.match(/height:(\d+)%/)[1]);
+    const bottom=Number(block.match(/bottom:(\d+)%/)[1]);
+    return {height,bottom};
+  };
+  const desktop=readPlacement(part.split("@media (max-width:800px)")[0]);
+  const tablet=readPlacement(part.split("@media (max-width:800px)")[1].split("@media (max-width:450px)")[0]);
+  const mobile=readPlacement(part.split("@media (max-width:450px)")[1]);
+  assert.deepEqual(desktop,{height:17,bottom:46});
+  assert.deepEqual(tablet,{height:16,bottom:46});
+  assert.deepEqual(mobile,{height:14,bottom:43});
+  assert.ok(desktop.height<23,"Stephen reduced further after second owner screenshot");
+  assert.ok(desktop.bottom>39,"Stephen raised onto chair rather than steps");
+  assert.match(part,/transform:translateX\(-50%\)/,"Sprite stays centred on original throne");
+  assert.match(part,/data-speaker="stephen"/,"Speaker highlight retained");
+});
+
+
+test("SP4.0C approved David-left and Paul-right actors are independently packaged and focused",()=>{
+  const scenes=[
+    {name:"david",asset:"summit-throne-david-confrontational-v01.webp",manifest:"game-sp40c-throne-david-v01.json",id:"summitThroneDavid"},
+    {name:"paul",asset:"summit-throne-paul-astonished-v01.webp",manifest:"game-sp40c-throne-paul-v01.json",id:"summitThronePaul"}
+  ];
+  const build=read("scripts/build.mjs");
+  for(const c of scenes){
+    const img=fs.readFileSync(path.join(root,"public/assets/generated/characters",c.asset));
+    assert.ok(img.length>10000,"Nonempty sprite "+c.name);
+    assert.equal(img.toString("ascii",0,4),"RIFF");
+    assert.equal(img.toString("ascii",12,16),"VP8X");
+    assert.ok((img[20]&0x10)!==0,"Transparency preserved "+c.name);
+    assert.ok(build.includes('"'+c.asset+'"'));
+    const manifest=JSON.parse(read("generated-assets/manifests/"+c.manifest));
+    assert.equal(manifest.source.provider,"google-drive");
+    assert.equal(manifest.destination,"public/assets/generated/characters/"+c.asset);
+    assert.ok(html.includes('id="'+c.id+'"'));
+    assert.ok(html.includes('public/assets/generated/characters/'+c.asset));
+    assert.ok(css.includes('.summit-throne-'+c.name+" {"));
+    assert.ok(css.includes('[data-speaker="'+c.name+'"] .summit-throne-'+c.name));
+  }
+  const throneMarkup=html.split('id="summitEndingScene"')[1].split('id="detentionEndingScene"')[0];
+  assert.ok(throneMarkup.indexOf("summitThroneDavid")<throneMarkup.indexOf("summit-ending-content"));
+  assert.ok(throneMarkup.indexOf("summitThronePaul")<throneMarkup.indexOf("summit-ending-content"));
+  const cssBlock=css.slice(css.indexOf("/* GAME-SP4.0C — Owner-approved Summit throne"));
+  assert.match(cssBlock,/\.summit-throne-david \{\s*left:30%;bottom:33%;height:28%/);
+  assert.match(cssBlock,/\.summit-throne-paul \{\s*right:29%;bottom:33%;height:27%/);
+  assert.match(cssBlock,/@media \(max-width:800px\)/);
+  assert.match(cssBlock,/@media \(max-width:450px\)/);
+  assert.ok(cssBlock.includes('height:17%;width:auto;max-width:18%;'),"Stephen's approved desktop scale is unchanged");
+  const p=toSummitAdmissions();
+  for(const correct of [2,1,2]){p.el("summitChoice"+correct).click();p.el("summitNextButton").click();}
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+  assert.equal(p.el("summitEndingScene").dataset.speaker,"stephen");
+  p.el("summitEndingNextButton").click();
+  assert.equal(p.el("summitEndingScene").dataset.speaker,"david");
+  p.el("summitEndingNextButton").click();
+  assert.equal(p.el("summitEndingScene").dataset.speaker,"stephen");
+  p.el("summitEndingNextButton").click();
+  assert.equal(p.el("summitEndingScene").dataset.speaker,"paul");
+});
+
+test("SP4.0C stair-foot placement keeps David and Paul near throne and Stephen unchanged at each breakpoint",()=>{
+ const stageCss=css.slice(css.indexOf("/* GAME-SP4.0C — Owner-approved Summit throne"));
+ const parts=[
+   {source:stageCss.split("@media (max-width:800px)")[0], left:30,right:29,bottom:33,davidH:28,paulH:27,stephenH:17},
+   {source:stageCss.split("@media (max-width:800px)")[1].split("@media (max-width:450px)")[0],left:24,right:23,bottom:33,davidH:26,paulH:25,stephenH:16},
+   {source:stageCss.split("@media (max-width:450px)")[1],left:12,right:12,bottom:33,davidH:22,paulH:22,stephenH:14}
+ ];
+ const rule=(source,name)=>{
+   const key="#holidayScreen #summitEndingScene .summit-throne-"+name+" {";
+   const start=source.indexOf(key);
+   assert.notEqual(start,-1,"Missing "+name+" positioning rule");
+   return source.slice(start,source.indexOf("}",start));
+ };
+ for(const p of parts){
+   const david=rule(p.source,"david"),paul=rule(p.source,"paul"),stephen=rule(p.source,"stephen");
+   assert.ok(david.includes("left:"+p.left+"%;bottom:"+p.bottom+"%;height:"+p.davidH+"%;"));
+   assert.ok(paul.includes("right:"+p.right+"%;bottom:"+p.bottom+"%;height:"+p.paulH+"%;"));
+   assert.ok(stephen.includes("height:"+p.stephenH+"%;"),"Approved Stephen scale unchanged");
+ }
+ assert.ok(stageCss.includes('[data-speaker="david"] .summit-throne-david'));
+ assert.ok(stageCss.includes('[data-speaker="paul"] .summit-throne-paul'));
+ assert.ok(stageCss.includes('[data-speaker="stephen"] .summit-throne-stephen'));
+});
+
+
+test("SP4.0C four approved attendants are independent alpha-transparent decorative actors",()=>{
+  const actors=[
+    ["fan","summitThroneAttendantFan"],
+    ["tray","summitThroneAttendantTray"],
+    ["ewer","summitThroneAttendantEwer"],
+    ["towel","summitThroneAttendantTowel"]
+  ];
+  const scene=html.split('id="summitEndingScene"')[1].split('id="detentionEndingScene"')[0];
+  const build=read("scripts/build.mjs");
+  for(const [name,id] of actors){
+    const basename="summit-throne-attendant-"+name+"-v01.webp";
+    const src="public/assets/generated/characters/"+basename;
+    const manifest=JSON.parse(read("generated-assets/manifests/game-sp40c-attendant-"+name+"-v01.json"));
+    assert.equal(manifest.source.provider,"google-drive");
+    assert.equal(manifest.destination,src);
+    assert.equal(manifest.expectedSourceName,"summit-throne-attendant-"+name+"-v01.png");
+    assert.ok(manifest.source.fileId,"Attendant provenance must be recorded");
+    const bytes=fs.readFileSync(path.join(root,src));
+    assert.ok(bytes.length>25000,"Approved attendant must be a full sprite "+name);
+    assert.equal(bytes.toString("ascii",0,4),"RIFF");
+    assert.equal(bytes.toString("ascii",12,16),"VP8X");
+    assert.ok((bytes[20]&0x10)!==0,"Attendant keeps transparency "+name);
+    assert.ok(build.includes('"'+basename+'"'),"Attendant is copied into deployed build "+name);
+    assert.ok(scene.includes('id="'+id+'"'),"Actor remains within Summit ending only");
+    assert.ok(scene.includes('src="./'+src+'"'));
+    assert.ok(scene.includes('class="summit-throne-attendant summit-throne-attendant-'+name+'"'));
+    assert.ok(css.includes('#holidayScreen #summitEndingScene .summit-throne-attendant-'+name+' {'));
+  }
+  assert.equal((scene.match(/class="summit-throne-attendant summit-throne-attendant-/g)||[]).length,4);
+  assert.ok(css.includes('z-index:2;pointer-events:none;'),"Attendants never intercept player actions");
+  assert.ok(css.includes('#holidayScreen #summitEndingScene .summit-ending-content {'),"Bottom captions remain separate");
+  assert.ok(css.includes('#holidayScreen #summitEndingScene[data-speaker="stephen"] .summit-throne-stephen'));
+  assert.ok(css.includes('#holidayScreen #summitEndingScene[data-speaker="david"] .summit-throne-david'));
+  assert.ok(css.includes('[data-speaker="paul"] .summit-throne-paul'));
+  assert.equal(css.includes('[data-speaker="fan"]'),false,"Attendants do not become dialogue speakers");
+});
+
+test("SP4.0C places larger standing pair forward and smaller kneeling pair at rear, at every breakpoint",()=>{
+  const stageCss=css.slice(css.indexOf("/* GAME-SP4.0C — Owner-approved Summit throne"));
+  const desktop=stageCss.split("@media (max-width:800px)")[0];
+  const tablet=stageCss.split("@media (max-width:800px)")[1].split("@media (max-width:450px)")[0];
+  const mobile=stageCss.split("@media (max-width:450px)")[1];
+  const expectations=[
+    {source:desktop,fan:"left:9%;bottom:29%;height:27%",tray:"left:auto;right:9%;bottom:29%;height:27%",ewer:"left:23%;right:auto;bottom:42%;height:14%",towel:"right:23%;bottom:42%;height:14%"},
+    {source:tablet,fan:"left:7%;bottom:31%;height:25%",tray:"right:7%;bottom:31%;height:25%",ewer:"left:20%;bottom:43%;height:12%",towel:"right:20%;bottom:43%;height:12%"},
+    {source:mobile,fan:"left:-1%;bottom:33%;height:20%",tray:"right:-1%;bottom:33%;height:20%",ewer:"left:13%;bottom:45%;height:9%",towel:"right:13%;bottom:45%;height:9%"}
+  ];
+  const rule=(text,name)=>{
+    const key="#holidayScreen #summitEndingScene .summit-throne-attendant-"+name+" {";
+    const index=text.indexOf(key);
+    assert.ok(index>=0,"Attendant positioned at this breakpoint: "+name);
+    return text.slice(index,text.indexOf("}",index));
+  };
+  for(const positions of expectations){
+    for(const name of ["fan","tray","ewer","towel"]){
+      assert.ok(rule(positions.source,name).includes(positions[name]),"Attendant placement: "+name);
+    }
+  }
+  // Standing figures are taller and nearer, but set back from the stage lip.
+  for(const pos of expectations){
+    const numeric=(name,prop)=>Number(pos[name].match(new RegExp(prop+":(-?\\d+)%"))[1]);
+    assert.ok(numeric("fan","height")>numeric("ewer","height"),"Standing left sprite is larger");
+    assert.ok(numeric("tray","height")>numeric("towel","height"),"Standing right sprite is larger");
+    assert.ok(numeric("fan","height")>=numeric("ewer","height")*1.8,"Near/far depth needs a clear standing-to-kneeling size ratio");
+    assert.ok(numeric("fan","bottom")<numeric("ewer","bottom"),"Standing left sprite is farther forward");
+    assert.ok(numeric("tray","bottom")<numeric("towel","bottom"),"Standing right sprite is farther forward");
+  }
+  assert.ok(desktop.includes("left:50%;bottom:46%;height:17%;width:auto;max-width:18%;"),"Stephen retains approved placement");
+  assert.ok(desktop.includes("left:30%;bottom:33%;height:28%;max-width:23%;"),"David retains foot-of-stairs placement");
+  assert.ok(desktop.includes("right:29%;bottom:33%;height:27%;max-width:23%;"),"Paul retains foot-of-stairs placement");
+});
+
+
+test("SP4.0C right standing and kneeling attendants face inward via sprite-only mirroring",()=>{
+  const stage=css.slice(css.indexOf("/* GAME-SP4.0C — Owner-approved Summit throne"));
+  const desktop=stage.split("@media (max-width:800px)")[0];
+  const block=name=>{
+    const start=desktop.indexOf('#holidayScreen #summitEndingScene .summit-throne-attendant-'+name+' {');
+    assert.ok(start>=0,"Expected independent attendant style "+name);
+    return desktop.slice(start,desktop.indexOf("}",start));
+  };
+  const fan=block("fan"),tray=block("tray"),ewer=block("ewer"),towel=block("towel");
+  assert.match(fan,/left:9%;bottom:29%;height:27%/,"Fan stands forward left");
+  assert.match(tray,/right:9%;bottom:29%;height:27%/,"Tray stands forward right");
+  assert.match(ewer,/left:23%;right:auto;bottom:42%;height:14%/,"Ewer kneels rear left");
+  assert.match(towel,/right:23%;bottom:42%;height:14%/,"Towel kneels rear right");
+  assert.doesNotMatch(fan,/scaleX\(-1\)/,"Left-standing fan faces centre without a flip");
+  assert.doesNotMatch(ewer,/scaleX\(-1\)/,"Left-kneeling ewer faces centre without a flip");
+  assert.match(tray,/transform:scaleX\(-1\);transform-origin:center bottom/,"Right-standing tray faces centre");
+  assert.match(towel,/transform:scaleX\(-1\);transform-origin:center bottom/,"Right-kneeling towel faces centre");
+  assert.doesNotMatch(block("fan"),/right:\d+%/,"Fan stays on left");
+  assert.ok(desktop.includes('left:50%;bottom:46%;height:17%;width:auto;max-width:18%;'),"Approved Stephen scale stays");
+  assert.ok(desktop.includes('left:30%;bottom:33%;height:28%;max-width:23%;'),"David unchanged");
+  assert.ok(desktop.includes('right:29%;bottom:33%;height:27%;max-width:23%;'),"Paul unchanged");
+});

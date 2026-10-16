@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1O9kfCOVn0OYDdbfEPS42ba4L4cpF0vpe"
+  },
+  "expectedSourceName": "summit-throne-attendant-fan-v01.png",
+  "destination": "public/assets/generated/characters/summit-throne-attendant-fan-v01.webp",
+  "transform": {
+    "maxWidth": 1024,
+    "maxHeight": 1536,
+    "quality": 86
+  },
+  "revision": 1
+}

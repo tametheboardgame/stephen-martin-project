@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1vlDRjDcHEux93sxTwG0EJa9s5cqez8LB"
+  },
+  "expectedSourceName": "summit-throne-room-background-v01.png",
+  "destination": "public/assets/generated/locations/summit-throne-room-v01.webp",
+  "transform": {
+    "maxWidth": 1672,
+    "maxHeight": 941,
+    "quality": 85
+  },
+  "revision": 1
+}

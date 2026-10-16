@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1rvVoWU8cXy0Ytc1-40d-KklDBlg8Snhs"
+  },
+  "expectedSourceName": "summit-throne-david-confrontational-v01.png",
+  "destination": "public/assets/generated/characters/summit-throne-david-confrontational-v01.webp",
+  "transform": {
+    "maxWidth": 1024,
+    "maxHeight": 1536,
+    "quality": 86
+  },
+  "revision": 1
+}
