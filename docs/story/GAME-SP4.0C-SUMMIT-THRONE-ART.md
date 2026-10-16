@@ -1,3 +1,11 @@
+## Foreground depth revision — kneeling rear, standing forward (16 October 2026)
+
+Owner reviewed the symmetric four-attendant scene and requested a depth swap without changing sprites: move the kneeling **ewer and towel** back into the previous standing positions **at their existing small size**, and bring the standing **fan and tray** outward, closer to the audience and proportionally larger.
+
+Current desktop target: kneeling ewer left 23%, towel right 23%, both bottom 42%, height 17%; standing fan left 9%, tray right 9%, both bottom 24%, height 23%. Tablet/mobile positions are independently scaled. Per-sprite flips on right-side tray and towel remain intact, so all four face inward. Stephen and the two protagonists, dialogue, UI and scene backdrop are unchanged.
+
+Stage CI and image packaging can validate the CSS positions and perspective inequalities, but owner in-engine visual review is still required for actual foot-to-floor alignment and optical scale. No PR merges are authorised.
+
 ## Left/right standing and kneeling balance (16 October 2026)
 
 The owner's next screenshot showed both standing attendants on the left and both kneeling attendants on the right, despite corrected grounding. The approved independent PNGs/WebPs are unchanged. CSS places **fan standing + ewer kneeling** on the left, and **tray standing + towel kneeling** on the right. The right-hand tray and towel are horizontally mirrored as individual sprites to face Stephen; the background, UI, main cast and left-hand sprites are not flipped.
