@@ -779,6 +779,10 @@
     $("rescueHubArrival").hidden = !inArrival;
     $("rescueHotelScene").hidden = !inHotel;
     $("rescueRouteIntro").hidden = !inRouteIntro;
+    // The approved Summit entrance appears only while approaching/entering
+    // the fictional club. Detention/spa keep their own staging, and the
+    // throne-room finale will receive a separate interior background.
+    $("rescueRouteIntro").dataset.route = state.route === "cult" ? "cult" : "other";
     $("rescueMiniGameScene").hidden = !inMiniGame;
     $("summitEndingScene").hidden = !inSummitEnding;
     $("detentionEndingScene").hidden = !inDetentionEnding;
@@ -1033,6 +1037,10 @@
         $("routeIntroDialogue").hidden = !duringDialogue;
         $("routeIntroSpeaker").textContent = duringDialogue ? line.speaker.toUpperCase() : "";
         $("routeIntroLine").textContent = duringDialogue ? line.text : "";
+        // The three separately approved Summit sprites remain fixed on the
+        // exterior stage; highlight whoever owns the current spoken line.
+        $("rescueRouteIntro").dataset.speaker = duringDialogue && route === "cult"
+          ? line.speaker.toLowerCase() : "";
         $("routeIntroStatus").textContent = duringDialogue
           ? "Rescue briefing · " + (progress.introStep + 1) + " of " + config.intro.length
           : "Briefing complete. " + config.gameTitle + " is the next stage.";

@@ -2,6 +2,25 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP4.0B — Summit perspective revision ready for review (15 October 2026)
+
+- Owner approved a revised Summit scene *composition*: gatekeeper on the left, Paul centre-right and David far right, all smaller and visually grounded farther back along the cobbled entrance path. Do not regenerate the approved transparent sprite artwork; independently mirror the three characters in CSS so they face one another. Preserve the approved exterior, bottom speech bar, current-speaker glow, persistent story controls and central Admissions Test panel.
+- The scene was restaged at desktop/tablet/mobile breakpoints on draft PR #33. Targeted regression now guards mirrored orientation, positions, smaller scale and preserved speaker glow. The owner still needs to inspect the new **actual in-engine** layout before merging; no changes to the throne-room ending, other routes, saved game or art pipeline.
+
+## GAME-SP4.0B — Approved Summit entrance cast and bottom dialogue (15 October 2026)
+
+- Owner approved the revised transparent **David (gesturing with phone)**, **Paul (wary, raised hand)** and **Asian Summit gatekeeper (ceremonial uniform)** cutouts and asked that the Summit approach use the same *character scene plus bottom dialogue* treatment as the hotel. Approved PNG originals are staged individually in Google Drive; three manifests materialised alpha-preserving WebPs into `public/assets/generated/characters/` without committing PNG sources.
+- `#rescueRouteIntro[data-route="cult"]` now layers all three sprites over the previously approved Summit exterior and moves the editable seven-line narrative caption to the bottom. The global SP3.4 autoplay/Next/Pause toolbar remains unchanged, and correct-speaker highlighting is visual only. The central blue panel is reserved for the **Admissions Test**; throne-room ending and non-Summit routes are unchanged.
+- Added build WebP-alpha checks and route/dialogue regression tests. The approved scene is playable on the SP4.0 development branch, pending final human desktop/tablet visual sign-off. Work package: `docs/story/GAME-SP4.0B-SUMMIT-ENTRANCE-CAST.md`. PR #33 remains draft; do not merge without owner approval.
+
+## GAME-SP4.0A — Summit exterior first visual proof brief (15 October 2026)
+
+- Owner asked to begin dedicated illustration production **one asset at a time**. Confirmed existing approved comic-poster visual direction, canonical Stephen/David/Paul references, and established Drive → manifest → optimised WebP pipeline.
+- Created branch `agent/game-sp40a-summit-visual-proof` and a proposed background-only Summit entrance composition in `docs/story/GAME-SP4.0A-SUMMIT-ENTRANCE-ART-BRIEF.md`.
+- Owner approved the first Summit entrance image and explicitly requested it be integrated into every applicable exterior scene. Original `summit-entrance-background-v01.png` is staged in the dedicated Drive folder (ID `1xg4uRcBbX9-R9Zodh4pn5G94aI71B8z2`); manifest `generated-assets/manifests/game-sp40a-summit-entrance-v01.json` materialised a 485,550-byte WebP through the existing OIDC workflow.
+- The Summit-specific route briefing and Admissions Test now use `summit-entrance-v01.webp` with readable HTML overlays. The throne-room ending and detention/spa routes are deliberately unchanged. Build packaging and tests were updated; draft Cloudflare preview and owner in-engine layout review remain required.
+- SP3.4 was approved, merged to `main` in `8a6ed2555e27eca078ecb17e47209cdb4882ca15`, and successfully deployed. The historical entry below predates the merge.
+
 ## GAME-SP3.4 — Story playback and unified navigation draft (15 October 2026)
 
 - Owner identified repeated per-line clicks throughout the finished three-route game and requested **automatic scene progression** and **one consistent replay/change-choice location**. Draft branch `agent/game-sp34-autoplay-unified-controls` preserves voiced office autoplay but introduces time-based holiday/rescue/ending autoplay with global Pause/Next and one Change route/Play another ending control in the same top-right toolbar.

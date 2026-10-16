@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1xg4uRcBbX9-R9Zodh4pn5G94aI71B8z2"
+  },
+  "expectedSourceName": "summit-entrance-background-v01.png",
+  "destination": "public/assets/generated/locations/summit-entrance-v01.webp",
+  "transform": {
+    "maxWidth": 1672,
+    "maxHeight": 941,
+    "quality": 85
+  },
+  "revision": 1
+}
