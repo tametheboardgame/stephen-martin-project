@@ -2,6 +2,13 @@
 
 **Updated:** 16 October 2026
 
+## GAME-SP4.0D — Opening pacing, lyric scroll and David sizing polish (16 October 2026)
+
+- Responding to visual/playback feedback: eased pessimistic lyric scrolling forward in early verses (progress exponent 0.78), while preserving the original full track and final lyrics; optimistic scrolling is unchanged.
+- Shortened old silent reaction beats (including the v03 reaction after "It was making a noise") and stale static cutaway/departure holds. Voice transitions are now 100 ms into non-dialogue cutaways and 260 ms between spoken lines. The printer animation retains a 2.4-second reveal; post-mortem choice still has its intentional pause and seven-second decision window.
+- Reviewed the six actual approved David WebPs. Five expressive poses render bottom-anchored at 0.92–0.96 of their previous scale relative to Neutral (1.00), correcting inconsistent crop/face size without regenerating any art.
+- New regressions cover pacing, the printer handoff, optical CSS scales and early lyric progression. All 55 spoken clips and both MP3s remain untouched. PR #35 remains draft, stacked on unmerged PR #34. Preview and owner visual sign-off are required before any merge.
+
 ## GAME-SP4.0D — In-scene musical pop-ups and scrolling lyrics (16 October 2026)
 
 - Owner approved functioning two-song playback and requested more visible pop-ups inside the actual office scene. The optimistic 20-second cutaway now uses an in-stage comic-book lyric panel and a full-track button. The full owner-supplied lyrics for both songs are stored in the game; scrolling follows audio currentTime/duration approximately rather than claiming exact karaoke timestamps.
