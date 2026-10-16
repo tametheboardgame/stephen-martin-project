@@ -2130,15 +2130,15 @@ test("SP4.0C four approved attendants are independent alpha-transparent decorati
   assert.equal(css.includes('[data-speaker="fan"]'),false,"Attendants do not become dialogue speakers");
 });
 
-test("SP4.0C balances one standing and one kneeling attendant on each side at every breakpoint",()=>{
+test("SP4.0C places larger standing pair forward and smaller kneeling pair at rear, at every breakpoint",()=>{
   const stageCss=css.slice(css.indexOf("/* GAME-SP4.0C — Owner-approved Summit throne"));
   const desktop=stageCss.split("@media (max-width:800px)")[0];
   const tablet=stageCss.split("@media (max-width:800px)")[1].split("@media (max-width:450px)")[0];
   const mobile=stageCss.split("@media (max-width:450px)")[1];
   const expectations=[
-    {source:desktop,fan:"left:23%;bottom:42%;height:17%",tray:"left:auto;right:23%;bottom:42%;height:17%",ewer:"left:6%;right:auto;bottom:20%;height:22%",towel:"right:5%;bottom:18%;height:22%"},
-    {source:tablet,fan:"left:20%;bottom:43%;height:15%",tray:"right:20%;bottom:43%;height:15%",ewer:"left:2%;bottom:23%;height:21%",towel:"right:2%;bottom:22%;height:21%"},
-    {source:mobile,fan:"left:13%;bottom:45%;height:11%",tray:"right:13%;bottom:45%;height:11%",ewer:"left:-3%;bottom:26%;height:17%",towel:"right:-3%;bottom:25%;height:17%"}
+    {source:desktop,fan:"left:9%;bottom:24%;height:23%",tray:"left:auto;right:9%;bottom:24%;height:23%",ewer:"left:23%;right:auto;bottom:42%;height:17%",towel:"right:23%;bottom:42%;height:17%"},
+    {source:tablet,fan:"left:7%;bottom:27%;height:21%",tray:"right:7%;bottom:27%;height:21%",ewer:"left:20%;bottom:43%;height:15%",towel:"right:20%;bottom:43%;height:15%"},
+    {source:mobile,fan:"left:-1%;bottom:30%;height:17%",tray:"right:-1%;bottom:30%;height:17%",ewer:"left:13%;bottom:45%;height:11%",towel:"right:13%;bottom:45%;height:11%"}
   ];
   const rule=(text,name)=>{
     const key="#holidayScreen #summitEndingScene .summit-throne-attendant-"+name+" {";
@@ -2150,6 +2150,14 @@ test("SP4.0C balances one standing and one kneeling attendant on each side at ev
     for(const name of ["fan","tray","ewer","towel"]){
       assert.ok(rule(positions.source,name).includes(positions[name]),"Attendant placement: "+name);
     }
+  }
+  // Larger characters sit closer to the foreground than the kneeling pair.
+  for(const pos of expectations){
+    const numeric=(name,prop)=>Number(pos[name].match(new RegExp(prop+":(-?\\d+)%"))[1]);
+    assert.ok(numeric("fan","height")>numeric("ewer","height"),"Standing left sprite is larger");
+    assert.ok(numeric("tray","height")>numeric("towel","height"),"Standing right sprite is larger");
+    assert.ok(numeric("fan","bottom")<numeric("ewer","bottom"),"Standing left sprite is farther forward");
+    assert.ok(numeric("tray","bottom")<numeric("towel","bottom"),"Standing right sprite is farther forward");
   }
   assert.ok(desktop.includes("left:50%;bottom:46%;height:17%;width:auto;max-width:18%;"),"Stephen retains approved placement");
   assert.ok(desktop.includes("left:30%;bottom:33%;height:28%;max-width:23%;"),"David retains foot-of-stairs placement");
@@ -2166,10 +2174,10 @@ test("SP4.0C right standing and kneeling attendants face inward via sprite-only 
     return desktop.slice(start,desktop.indexOf("}",start));
   };
   const fan=block("fan"),tray=block("tray"),ewer=block("ewer"),towel=block("towel");
-  assert.match(fan,/left:23%;bottom:42%;height:17%/,"Fan stands upper left");
-  assert.match(tray,/right:23%;bottom:42%;height:17%/,"Tray stands upper right");
-  assert.match(ewer,/left:6%;right:auto;bottom:20%;height:22%/,"Ewer kneels lower left");
-  assert.match(towel,/right:5%;bottom:18%;height:22%/,"Towel kneels lower right");
+  assert.match(fan,/left:9%;bottom:24%;height:23%/,"Fan stands forward left");
+  assert.match(tray,/right:9%;bottom:24%;height:23%/,"Tray stands forward right");
+  assert.match(ewer,/left:23%;right:auto;bottom:42%;height:17%/,"Ewer kneels rear left");
+  assert.match(towel,/right:23%;bottom:42%;height:17%/,"Towel kneels rear right");
   assert.doesNotMatch(fan,/scaleX\(-1\)/,"Left-standing fan faces centre without a flip");
   assert.doesNotMatch(ewer,/scaleX\(-1\)/,"Left-kneeling ewer faces centre without a flip");
   assert.match(tray,/transform:scaleX\(-1\);transform-origin:center bottom/,"Right-standing tray faces centre");
