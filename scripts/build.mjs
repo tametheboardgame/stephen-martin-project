@@ -186,6 +186,29 @@ for (const filename of await readdir(audioFolder)) {
   voiceCount++;
 }
 console.log("Approved dialogue MP3s packaged: " + voiceCount + "/55.");
+
+// Optional owner-supplied songs are uploaded directly to this exact folder
+// on the song PR branch. Builds work before upload; once present, the MP3s
+// are automatically copied to the public Cloudflare preview.
+const songSource = "public/assets/audio/songs";
+const songFolder = path.join(root, songSource);
+const allowedSongs = new Set(["optimistic.mp3", "pessimistic.mp3"]);
+await mkdir(path.join(output, songSource), { recursive: true });
+let songCount = 0;
+for (const filename of await readdir(songFolder).catch(error => {
+  if (error.code === "ENOENT") return [];
+  throw error;
+})) {
+  if (filename === "README.md") continue;
+  if (!allowedSongs.has(filename)) throw new Error("Unexpected song filename: " + filename);
+  const original = path.join(songFolder, filename);
+  const info = await stat(original);
+  if (!info.isFile() || info.size < 128 || info.size > 25 * 1024 * 1024)
+    throw new Error("Song MP3 must be 128 bytes to 25 MiB: " + filename);
+  await copyFile(original, path.join(output, songSource, filename));
+  songCount++;
+}
+console.log("Optional opening song MP3s packaged: " + songCount + "/2.");
 // No README, metadata or source docs are published in dist.
 
 console.log("Cloudflare Pages static output: dist/");

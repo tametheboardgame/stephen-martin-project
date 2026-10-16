@@ -153,7 +153,8 @@
   const MIN_LINE_MS = 1800;
   const MAX_LINE_MS = 4700;
   const VOICE_PATH = "./public/assets/audio/dialogue/";
-  const VOICE_GAP_MS = 400;
+  const VOICE_GAP_MS = 260;
+  const VOICE_VISUAL_GAP_MS = 100;
   const VOICE_START_TIMEOUT_MS = 8000;
   let voice = null;
   let voiceBeatId = null;
@@ -247,6 +248,232 @@
     }
   }
 
+
+  // GAME-SP4.0D: two independently uploaded, optional full-length songs.
+  // The optimistic cutaway previews only its first 20 audible seconds; either
+  // full track interrupts the normal timeline until it ends or is skipped.
+  const SONG_PATH = "./public/assets/audio/songs/";
+  const SONG_PREVIEW_SECONDS = 20;
+  const SONG_START_TIMEOUT_MS = 8000;
+  const SONG_FILES = { optimistic: "optimistic.mp3", pessimistic: "pessimistic.mp3" };
+  let song = null;
+  let songKind = null;
+  let songMode = null;
+  let songPhase = "off";
+  let songToken = 0;
+  let songPreviewTimer = null;
+  let songStartTimer = null;
+
+
+  const PESSIMISTIC_OFFER_MS = 7000;
+  let pessimisticOffer = false;
+  let songNotice = "";
+  // Full owner-approved lyrics, approximate smooth scroll against audio position.
+  const SONG_LYRICS = {"optimistic":["[Verse 1]","Stephen's off to China, he'll probably be fine!","Unless he gets kidnapped, then that's a bad sign!","He's packed his bags for romance, he's packed his favourite shoes,","And David's done a spreadsheet full of deeply troubling news!","[Chorus]","Have a lovely holiday! We hope you have a ball!","Don't forget to message us, or David's bound to call!","Paul has made a group chat, the rescue plan is done,","So Stephen, have a brilliant trip, get out there and have fun!","[Verse 2]","Enjoy the food and culture, the sights and all the men!","And if you disappear, we'll simply come and look again!","We've got a risk assessment, and Paul's packed extra pants,","There's absolutely nothing that could spoil your holiday romance!","[Final Chorus]","Have a lovely holiday! We know you'll be all right!","Just send a little message so we know you're safe at night!","The odds are looking positive, we're sure you'll be just fine!","[Cheerful spoken ending]","David: \"Ninety-seven per cent!\"","Paul: \"What happened to the other three?\"","David: \"...China!\""],"pessimistic":["[Verse 1, solemn piano]","Stephen's off to China, the outlook's rather grim!","David's run the numbers, and the odds don't favour him!","His phone will lose its signal, his luggage will be gone,","And Paul has printed missing posters before he's even flown!","[Chorus, dramatic strings]","Farewell, farewell, dear Stephen! We fear this is goodbye!","We've checked the risk assessment, and the numbers do not lie!","We'll bravely mount a rescue, though we've never left the ground,","And if we can't retrieve you, we'll at least report you found!","[Verse 2, increasingly theatrical]","David's got a flowchart, Paul's got forty bears,","Neither knows the language, but at least they've packed some flares!","The embassy won't answer, the printer's out of ink,","And Stephen's probably having fun, but that's not what we think!","[Chorus, full orchestra and choir]","Farewell, farewell, dear Stephen! We've prepared for the worst!","The crisis team's assembled, though the printer's nearly burst!","We've organised a search party with absolutely no clue,","And if the mission fails us, we'll arrange a tribute too!","[RIDICULOUS KEY CHANGE, UPWARDS]","The post-mortem's booked for Tuesday!","The minutes are prepared!","We've ordered commemorative mugs!","The budget's been declared!","[Music suddenly stops]","Paul, spoken: \"He's just sent a photo of his dinner.\"","David, gravely: \"Could be a hostage signal.\"","Paul: \"Looks like noodles.\"","[Massive final orchestral chord]"]};
+  function songLyricsMarkup(kind) {
+    const escape = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    return SONG_LYRICS[kind].map(line => line.startsWith("[")
+      ? '<h4 class="song-lyrics-heading">' + escape(line.slice(1,-1)) + '</h4>'
+      : '<p class="song-lyrics-line">' + escape(line) + '</p>').join("");
+  }
+  function scrollSongLyrics(clip) {
+    if (song !== clip || songPhase === "paused") return;
+    const viewport = $("officeSongLyricsScroll");
+    const duration = Number(clip.duration), time = Number(clip.currentTime);
+    if (!Number.isFinite(duration) || duration <= 0 || !Number.isFinite(time)) return;
+    const space = Number(viewport.scrollHeight) - Number(viewport.clientHeight);
+    const position = Math.min(1,Math.max(0,time/duration));
+    // Pessimistic lyrics lead gently at the start and align by the ending.
+    const visualProgress = songKind === "pessimistic" ? Math.pow(position,0.78) : position;
+    if (Number.isFinite(space))
+      viewport.scrollTop = Math.round(Math.max(0,space)*visualProgress);
+  }
+  function offerPessimisticSong() {
+    if (state.beatId !== "office.041" || screens.office.hidden || pessimisticOffer) return;
+    pessimisticOffer = true;
+    clearAdvanceTimer();
+    syncSongActions();
+    scheduleAdvance();
+  }
+  function declinePessimisticSong() {
+    if (state.beatId === "office.041" && pessimisticOffer && !song) next();
+  }
+
+  function clearSongTimers() {
+    if (songPreviewTimer !== null) clearTimeout(songPreviewTimer);
+    if (songStartTimer !== null) clearTimeout(songStartTimer);
+    songPreviewTimer = null;
+    songStartTimer = null;
+  }
+
+  function stopSong() {
+    songToken++;
+    clearSongTimers();
+    const previous = song;
+    song = null;
+    songKind = null;
+    songMode = null;
+    songPhase = "off";
+    if (previous) {
+      previous.onended = null;
+      previous.onerror = null;
+      previous.ontimeupdate = null;
+      try { previous.pause(); } catch (_) { /* Audio is optional. */ }
+    }
+  }
+
+  function syncSongActions() {
+    const optimistic = state.beatId === "office.v07";
+    const offer = state.beatId === "office.041" && pessimisticOffer;
+    const available = optimistic || offer;
+    const kind = optimistic ? "optimistic" : "pessimistic";
+    const overlay = $("officeSongOverlay");
+    overlay.hidden = !available;
+    overlay.dataset.kind = kind;
+    overlay.dataset.mode = songMode === "full" ? "full"
+      : songMode === "preview" ? "preview" : offer ? "offer" : "ready";
+    $("officeSongActions").hidden = !available;
+    $("songListenButton").hidden = !available || songMode === "full";
+    $("songStopButton").hidden = songMode !== "full";
+    $("songDeclineButton").hidden = !offer || Boolean(song);
+    $("songListenButton").textContent = optimistic
+      ? "♫ Listen to the whole song" : "♫ Play the pessimistic version";
+    $("officeSongTitle").textContent = optimistic
+      ? "THE OPTIMISTIC VERSION" : "THE PESSIMISTIC VERSION";
+    $("officeSongIntro").textContent = optimistic
+      ? songMode === "full" ? "The complete, suspiciously cheerful farewell."
+        : "20-second preview · Want the entire ridiculous song?"
+      : songMode === "full" ? "A completely unnecessary musical catastrophe."
+        : "David has a second version. Care to hear it? The story continues shortly.";
+    const showLyrics = optimistic || Boolean(song && songMode === "full");
+    $("officeSongLyricsScroll").hidden = !showLyrics;
+    if (showLyrics && $("officeSongLyrics").dataset.kind !== kind) {
+      $("officeSongLyrics").dataset.kind = kind;
+      $("officeSongLyrics").innerHTML = songLyricsMarkup(kind);
+      $("officeSongLyricsScroll").scrollTop = 0;
+    }
+    $("songStatus").textContent = songNotice || (songMode === "full"
+      ? "Full track playing · Pause or skip"
+      : songMode === "preview" ? "Playing first 20 seconds"
+        : offer ? "Optional · about seven seconds to decide" : "");
+  }
+
+  function completeSong(token, unavailable = false) {
+    if (!song || token !== songToken) return;
+    const wasPreview = songMode === "preview";
+    stopSong();
+    if (unavailable) {
+      songNotice = "Song unavailable; continuing the story.";
+      syncSongActions();
+      if (wasPreview) beep("song");
+      if (pessimisticOffer && state.beatId === "office.041") {
+        if (autoPlaying) next();
+      } else scheduleAdvance();
+      return;
+    }
+    syncSongActions();
+    if (autoPlaying && !document.hidden && !screens.office.hidden) next();
+    else scheduleAdvance();
+  }
+
+  function scheduleSongPreview(clip, token) {
+    if (song !== clip || token !== songToken || songMode !== "preview" || !autoPlaying) return;
+    if (songPreviewTimer !== null) clearTimeout(songPreviewTimer);
+    const elapsed = Number.isFinite(clip.currentTime) ? clip.currentTime : 0;
+    const remaining = Math.max(0, (SONG_PREVIEW_SECONDS - elapsed) * 1000);
+    songPreviewTimer = setTimeout(() => {
+      songPreviewTimer = null;
+      completeSong(token);
+    }, remaining);
+  }
+
+  function playSongAudio(clip, token) {
+    if (song !== clip || token !== songToken) return;
+    songPhase = "loading";
+    if (songStartTimer !== null) clearTimeout(songStartTimer);
+    songStartTimer = setTimeout(() => completeSong(token, true), SONG_START_TIMEOUT_MS);
+    try {
+      const playing = clip.play();
+      const started = () => {
+        if (song !== clip || token !== songToken || songPhase === "paused") return;
+        if (songStartTimer !== null) clearTimeout(songStartTimer);
+        songStartTimer = null;
+        songPhase = "playing";
+        scheduleSongPreview(clip, token);
+        syncPlaybackControls();
+      };
+      if (playing && typeof playing.then === "function")
+        playing.then(started).catch(() => completeSong(token, true));
+      else started();
+    } catch (_) {
+      completeSong(token, true);
+    }
+  }
+
+  function startSong(kind, mode) {
+    if (!Object.hasOwn(SONG_FILES, kind) || !["preview", "full"].includes(mode) ||
+        screens.office.hidden || document.hidden) return;
+    if (mode === "full" && kind === "optimistic" && song &&
+        songKind === kind && songMode === "preview") {
+      // Keep the current position, so choosing "full" during the preview
+      // does not abruptly restart the track.
+      songMode = "full";
+      if (songPreviewTimer !== null) clearTimeout(songPreviewTimer);
+      songPreviewTimer = null;
+      if (songPhase === "paused") playSongAudio(song, songToken);
+      syncSongActions();
+      syncPlaybackControls();
+      return;
+    }
+    stopSong();
+    songNotice = "";
+    if (!soundEnabled || typeof window.Audio !== "function") {
+      if (mode === "full") $("songStatus").textContent = "Turn on sound to listen to the song.";
+      else beep("song");
+      return;
+    }
+    clearAdvanceTimer();
+    if (mode === "full") stopVoice();
+    try {
+      const clip = new window.Audio();
+      song = clip;
+      songKind = kind;
+      songMode = mode;
+      const token = songToken;
+      clip.preload = "auto";
+      clip.src = SONG_PATH + SONG_FILES[kind];
+      clip.onended = () => completeSong(token);
+      clip.onerror = () => completeSong(token, true);
+      clip.ontimeupdate = () => {
+        scrollSongLyrics(clip);
+        if (song === clip && token === songToken && songMode === "preview" &&
+            Number.isFinite(clip.currentTime) && clip.currentTime >= SONG_PREVIEW_SECONDS)
+          completeSong(token);
+      };
+      syncSongActions();
+      playSongAudio(clip, token);
+    } catch (_) {
+      stopSong();
+      syncSongActions();
+      scheduleAdvance();
+    }
+  }
+
+  function listenToSong() {
+    if (screens.office.hidden) return;
+    const kind = state.beatId === "office.v07" ? "optimistic"
+      : state.beatId === "office.041" && pessimisticOffer ? "pessimistic" : null;
+    if (!kind) return;
+    if (!soundEnabled) setSound(true, true); // Direct "listen" click overrides mute.
+    startSong(kind, "full");
+  }
+
+  function skipFullSong() {
+    if (!song || songMode !== "full") return;
+    completeSong(songToken);
+  }
+
   function clearAdvanceTimer() {
     if (advanceTimer !== null) {
       clearTimeout(advanceTimer);
@@ -265,9 +492,13 @@
     button.textContent = autoPlaying ? "Ⅱ Pause" : "▶ Play";
     button.setAttribute("aria-pressed", String(autoPlaying));
     const voicing = voicePhase === "playing" || voicePhase === "loading";
-    $("playbackStatus").textContent = autoPlaying
-      ? voicing ? "AUTO PLAYING · VOICED DIALOGUE" : "AUTO PLAYING · TAP PAUSE TO READ"
-      : "PAUSED · USE NEXT / BACK";
+    $("playbackStatus").textContent = song && songMode === "full"
+      ? autoPlaying ? "PLAYING FULL SONG · STOP TO CONTINUE" : "SONG PAUSED · PRESS PLAY TO RESUME"
+      : song && songMode === "preview"
+        ? autoPlaying ? "PLAYING 20-SECOND SONG PREVIEW" : "SONG PAUSED · PRESS PLAY"
+        : autoPlaying
+          ? voicing ? "AUTO PLAYING · VOICED DIALOGUE" : "AUTO PLAYING · TAP PAUSE TO READ"
+          : "PAUSED · USE NEXT / BACK";
     $("officeScreen").dataset.voice = voicePhase;
     $("officeScreen").dataset.playback = autoPlaying ? "auto" : "paused";
   }
@@ -279,16 +510,32 @@
     const beat = beats[beatIndexById.get(state.beatId)];
     // A recording owns the timeline until it ends; silent visual beats and
     // missing recordings retain the established script durations.
+    if (song) return; // Music owns the timeline while loading/playing/paused.
     if (voice && (voicePhase === "loading" || voicePhase === "playing" || voicePhase === "paused")) return;
-    const wait = voicePhase === "finished" ? VOICE_GAP_MS : lineDuration(beat);
+    const nextBeat = beats[beatIndexById.get(state.beatId) + 1];
+    const wait = pessimisticOffer && beat.id === "office.041"
+      ? PESSIMISTIC_OFFER_MS
+      : voicePhase === "finished"
+        ? beat.id === "office.041" ? 400
+          : nextBeat && nextBeat.type !== "dialogue" ? VOICE_VISUAL_GAP_MS : VOICE_GAP_MS
+        : lineDuration(beat);
     advanceTimer = setTimeout(() => {
       advanceTimer = null;
-      if (autoPlaying && !screens.office.hidden && !document.hidden) next();
+      if (!autoPlaying || screens.office.hidden || document.hidden) return;
+      if (beat.id === "office.041" && !pessimisticOffer) offerPessimisticSong();
+      else next();
     }, wait);
   }
 
   function setAutoplay(enabled) {
     autoPlaying = Boolean(enabled);
+    if (!autoPlaying && song) {
+      clearSongTimers();
+      songPhase = "paused";
+      try { song.pause(); } catch (_) { /* Pause must remain safe. */ }
+    } else if (autoPlaying && song && songPhase === "paused") {
+      playSongAudio(song, songToken);
+    }
     if (!autoPlaying && voice && (voicePhase === "playing" || voicePhase === "loading")) {
       clearVoiceStartTimeout();
       voicePhase = "paused";
@@ -547,6 +794,8 @@
     if (screenName !== "office") {
       clearAdvanceTimer();
       stopVoice();
+      stopSong();
+      pessimisticOffer = false;
     }
     const entering = screens[screenName].hidden;
     for (const [name, screen] of Object.entries(screens)) screen.hidden = name !== screenName;
@@ -561,9 +810,15 @@
     soundEnabled = Boolean(enabled);
     if (!soundEnabled) {
       stopVoice();
-      if (!screens.office.hidden) scheduleAdvance();
+      stopSong();
+      if (!screens.office.hidden) {
+        syncSongActions();
+        scheduleAdvance();
+      }
     } else if (!screens.office.hidden && !document.hidden) {
-      startVoice(beats[beatIndexById.get(state.beatId)]);
+      const beat = beats[beatIndexById.get(state.beatId)];
+      if (!pessimisticOffer) startVoice(beat);
+      if (beat.id === "office.v07" && autoPlaying) startSong("optimistic", "preview");
       scheduleAdvance();
     }
     for (const id of ["soundButton", "sceneSoundButton", "menuSoundButton"]) {
@@ -625,6 +880,9 @@
   // Static sprite file paths live in index.html for immediate/offline rendering.
 
   function renderOffice() {
+    pessimisticOffer = false;
+    songNotice = "";
+    stopSong();
     stopVoice(); // Next/Back/Restart interrupt the previous line immediately.
     reveal("office");
     const beat = beats[beatIndexById.get(state.beatId)];
@@ -663,8 +921,10 @@
     }
     for (const name of Object.keys(cast)) applySeatedExpression(name);
     persist();
-    if (beat.sound) beep(beat.sound);
+    syncSongActions();
+    if (beat.sound && beat.visual !== "song") beep(beat.sound);
     startVoice(beat);
+    if (beat.id === "office.v07" && autoPlaying) startSong("optimistic", "preview");
     scheduleAdvance();
   }
 
@@ -678,6 +938,11 @@
 
   function next() {
     if (screens.office.hidden) return;
+    if (state.beatId === "office.041" && !pessimisticOffer) {
+      stopVoice();
+      offerPessimisticSong();
+      return;
+    }
     const position = beatIndexById.get(state.beatId);
     if (position === beats.length - 1) {
       showHoliday();
@@ -1852,6 +2117,9 @@
   $("sceneSoundButton").addEventListener("click", () => setSound(!soundEnabled, true));
   $("menuSoundButton").addEventListener("click", () => setSound(!soundEnabled, true));
   $("playPauseButton").addEventListener("click", () => setAutoplay(!autoPlaying));
+  $("songListenButton").addEventListener("click", listenToSong);
+  $("songStopButton").addEventListener("click", skipFullSong);
+  $("songDeclineButton").addEventListener("click", declinePessimisticSong);
   $("stephenProofButton").addEventListener("click", cycleStephenProof);
   $("davidProofButton").addEventListener("click", cycleDavidProof);
   $("paulProofButton").addEventListener("click", cyclePaulProof);
@@ -1868,6 +2136,11 @@
         clearVoiceStartTimeout();
         voicePhase = "paused";
         try { voice.pause(); } catch (_) { /* Tab remains paused. */ }
+      }
+      if (song) {
+        clearSongTimers();
+        songPhase = "paused";
+        try { song.pause(); } catch (_) { /* Tab remains paused. */ }
       }
       syncPlaybackControls();
     }

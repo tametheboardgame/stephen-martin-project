@@ -34,7 +34,7 @@ const ids = all.map(b => b.id);
 class Element {
   constructor(id) {
     this.id=id;this.hidden=false;this.disabled=false;this.textContent="";
-    this.innerHTML="";this.src="";this.style={};this.dataset={};
+    this.innerHTML="";this.src="";this.style={};this.dataset={};this.scrollTop=0;this.scrollHeight=900;this.clientHeight=300;
     this.attributes={};this.events={};this.classList={toggle() {}};
   }
   addEventListener(t,cb){this.events[t]=cb;}
@@ -52,7 +52,7 @@ function preview({audio=false}={}) {
     setItem:(key,value)=>stored.set(key,value)
   },scrollTo() {}};
   if(audio) window.Audio=class {
-    constructor(){this.src="";this.preload="";this.paused=true;this.pauseCount=0;this.playCount=0;voices.push(this);}
+    constructor(){this.src="";this.preload="";this.paused=true;this.pauseCount=0;this.playCount=0;this.currentTime=0;this.duration=120;voices.push(this);}
     play(){this.paused=false;this.playCount++;return Promise.resolve();}
     pause(){this.paused=true;this.pauseCount++;}
     finish(){this.onended?.();}
@@ -234,7 +234,10 @@ test("David's full approved six-state set is mapped to every scripted beat",()=>
   const expected={neutral:"neutral",confident:"confident",serious:"serious",frustrated:"frustrated",shocked:"shocked","systems-expert":"systems-expert"};
   const p=preview();p.start();
   for(let i=0;i<all.length;i++){
-    if(i)p.el("nextButton").click();
+    if(i) {
+      p.el("nextButton").click();
+      if(all[i-1].id==="office.041") p.el("nextButton").click(); // Explicit musical-choice beat.
+    }
     const cue=all[i].reactions.David;
     assert.equal(p.el("castDavid").dataset.expression,cue,all[i].id+" acting cue");
     assert.equal(p.el("castDavid").dataset.seatedSprite,expected[cue],all[i].id+" source");
@@ -317,7 +320,10 @@ test("Paul proof cycles Auto, Neutral, Confused and Pleased without affecting th
 test("Paul's scripted reactions select Confused/Pleased and Blank resolves to Neutral across the intro",()=>{
   const p=preview();p.start();
   for(let i=0;i<all.length;i++){
-    if(i)p.el("nextButton").click();
+    if(i) {
+      p.el("nextButton").click();
+      if(all[i-1].id==="office.041") p.el("nextButton").click();
+    }
     const cue=all[i].reactions.Paul;
     const sprite=cue==="confused" ? "confused" : cue==="pleased" ? "pleased" : "neutral";
     assert.equal(p.el("castPaul").dataset.expression,cue,all[i].id+" Paul cue");
@@ -361,7 +367,10 @@ test("pause, auto next, skip and resume work without restarting dialogue",()=>{
 
 test("the complete 67-beat intro can play through and replay",()=>{
   const p=preview();p.start();
-  for(let i=1;i<all.length;i++)p.el("nextButton").click();
+  for(let i=1;i<all.length;i++) {
+    p.el("nextButton").click();
+    if(all[i-1].id==="office.041") p.el("nextButton").click();
+  }
   assert.equal(saved(p).beatId,"office.v12");
   p.el("nextButton").click();
   assert.equal(p.el("holidayScreen").hidden,false);
@@ -438,7 +447,7 @@ test("Start voiced story plays narration and follows its natural end instead of 
   assert.equal(p.timeouts.size,0,"Voice owns timeline");
   p.voices[0].finish();
   assert.equal(p.timeouts.size,1,"Natural delay scheduled after clip ended");
-  assert.equal(Array.from(p.timeouts.values())[0].delay,400);
+  assert.equal(Array.from(p.timeouts.values())[0].delay,260);
   p.tick();
   assert.equal(saved(p).beatId,"office.001");
   assert.equal(p.voices[0].paused,true,"Previous clip is released");
@@ -2187,4 +2196,207 @@ test("SP4.0C right standing and kneeling attendants face inward via sprite-only 
   assert.ok(desktop.includes('left:50%;bottom:46%;height:17%;width:auto;max-width:18%;'),"Approved Stephen scale stays");
   assert.ok(desktop.includes('left:30%;bottom:33%;height:28%;max-width:23%;'),"David unchanged");
   assert.ok(desktop.includes('right:29%;bottom:33%;height:27%;max-width:23%;'),"Paul unchanged");
+});
+
+
+test("SP4.0D optimistic music cutaway plays up to 20 seconds and preserves full-track option",async()=>{
+  const p=preview({audio:true});p.start();p.at("office.v07");
+  assert.equal(p.el("officeSongActions").hidden,false);
+  assert.match(p.el("songListenButton").textContent,/whole song/);
+  const clip=p.voices.at(-1);
+  assert.ok(clip.src.endsWith("/audio/songs/optimistic.mp3"));
+  await Promise.resolve();
+  assert.ok([...p.timeouts.values()].some(t=>t.delay===20000),"Preview has 20-second clock");
+  p.el("songListenButton").click();
+  assert.equal(p.voices.at(-1),clip,"Full optimistic play continues the same audio at its current position");
+  assert.equal(p.el("songStopButton").hidden,false);
+  assert.equal([...p.timeouts.values()].some(t=>t.delay===20000),false,"Full song is not cut off after 20 seconds");
+  clip.finish();
+  assert.equal(saved(p).beatId,"office.037","After the entire song, resume original story");
+});
+
+test("SP4.0D optimistic preview advances at twenty seconds, pause freezes it, and Next stops music",async()=>{
+  const p=preview({audio:true});p.start();p.at("office.v07");
+  const clip=p.voices.at(-1);
+  await Promise.resolve();
+  p.el("playPauseButton").click();
+  assert.equal(clip.paused,true);
+  assert.equal(p.timeouts.size,0);
+  p.el("playPauseButton").click();
+  await Promise.resolve();
+  assert.ok([...p.timeouts.values()].some(t=>t.delay===20000));
+  assert.equal(p.tick(),true);
+  assert.equal(saved(p).beatId,"office.037");
+  assert.equal(clip.paused,true);
+  const q=preview({audio:true});q.start();q.at("office.v07");
+  const second=q.voices.at(-1);
+  q.el("nextButton").click();
+  assert.equal(second.paused,true,"Manual Next never leaves the song playing");
+});
+
+test("SP4.0D pessimistic choice appears after post-mortem line and plays full song",async()=>{
+  const p=preview({audio:true});p.start();p.at("office.039");
+  assert.equal(p.el("officeSongOverlay").hidden,true,"Not offered at Stephen's question");
+  p.at("office.041");
+  assert.equal(p.el("officeSongOverlay").hidden,true,"Not offered before David finishes");
+  const speaking=p.voices.at(-1);
+  p.el("nextButton").click(); // End the post-mortem line manually.
+  assert.equal(p.el("officeSongOverlay").hidden,false);
+  assert.equal(p.el("officeSongOverlay").dataset.mode,"offer");
+  assert.equal(p.el("officeSongLyricsScroll").hidden,true,"Don't display lyrics before opting in");
+  assert.match(p.el("songListenButton").textContent,/pessimistic version/);
+  assert.equal(speaking.paused,true);
+  p.el("songListenButton").click();
+  const music=p.voices.at(-1);
+  assert.ok(music.src.endsWith("/audio/songs/pessimistic.mp3"));
+  assert.equal(p.el("officeSongLyricsScroll").hidden,false);
+  assert.match(p.el("officeSongLyrics").innerHTML,/Massive final orchestral chord/i);
+  await Promise.resolve();
+  assert.equal(p.timeouts.size,0,"Full song holds story until it ends");
+  music.finish();
+  assert.equal(saved(p).beatId,"office.042","Post-mortem offer resumes after the next beat");
+  const q=preview({audio:true});q.start();q.at("office.041");
+  q.el("nextButton").click();
+  q.el("songListenButton").click();
+  q.el("songStopButton").click();
+  assert.equal(saved(q).beatId,"office.042","Stopping the song also continues");
+});
+
+test("SP4.0D narrated post-mortem finishes before the seven-second song choice",async()=>{
+  const p=preview({audio:true});p.start();p.at("office.041");
+  await Promise.resolve();
+  assert.equal(p.el("officeSongOverlay").hidden,true);
+  p.voices.at(-1).finish();
+  assert.equal(p.el("officeSongOverlay").hidden,true,"Voice finished but prompt waits for gap");
+  assert.ok([...p.timeouts.values()].some(t=>t.delay===400));
+  p.tick();
+  assert.equal(p.el("officeSongOverlay").hidden,false);
+  assert.equal(p.el("songDeclineButton").hidden,false);
+  assert.ok([...p.timeouts.values()].some(t=>t.delay===7000));
+  p.el("playPauseButton").click();
+  assert.equal(p.timeouts.size,0,"Offer can be paused");
+  p.el("playPauseButton").click();
+  assert.ok([...p.timeouts.values()].some(t=>t.delay===7000));
+  p.tick();
+  assert.equal(saved(p).beatId,"office.042","Non-selection automatically carries on");
+  const q=preview({audio:true});q.start();q.at("office.041");
+  q.el("nextButton").click();
+  q.el("songDeclineButton").click();
+  assert.equal(saved(q).beatId,"office.042","Decline button skips the choice immediately");
+});
+
+test("SP4.0D full user-supplied lyrics scroll against real playback progress",async()=>{
+  const p=preview({audio:true});p.start();p.at("office.v07");
+  assert.equal(p.el("officeSongOverlay").hidden,false);
+  const panel=p.el("officeSongLyrics");
+  assert.match(panel.innerHTML,/Ninety-seven per cent!/);
+  assert.match(panel.innerHTML,/favourite shoes/);
+  const clip=p.voices.at(-1);
+  await Promise.resolve();
+  clip.currentTime=10;clip.duration=120;
+  clip.ontimeupdate();
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,50,"Preview scroll tracks audio time");
+  p.el("songListenButton").click();
+  assert.equal(p.el("officeSongOverlay").dataset.mode,"full");
+  assert.equal(p.voices.at(-1),clip,"Full track continues without seeking back");
+  clip.currentTime=60;
+  clip.ontimeupdate();
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,300,"Full-song scrolling follows track progress");
+  const q=preview({audio:true});q.start();q.at("office.041");
+  q.el("nextButton").click();q.el("songListenButton").click();
+  assert.match(q.el("officeSongLyrics").innerHTML,/tribute too!/);
+  assert.match(q.el("officeSongLyrics").innerHTML,/Looks like noodles/);
+  assert.match(q.el("officeSongLyrics").innerHTML,/RIDICULOUS KEY CHANGE/);
+  assert.match(html,/id="officeSongOverlay"[\s\S]*id="songListenButton"/);
+  assert.ok(html.indexOf('id="officeSongOverlay"')<html.indexOf('id="storyProgress"'),"Player belongs in the scene, not under the timeline");
+});
+
+test("SP4.0D missing song files fail gracefully, and hide/pause never advance music",async()=>{
+  const p=preview({audio:true});p.start();p.at("office.v07");
+  const song=p.voices.at(-1);
+  song.fail();
+  assert.match(p.el("songStatus").textContent,/unavailable/);
+  assert.equal([...p.timeouts.values()].some(t=>t.delay===6000),true,"Missing MP3 reverts to existing visual duration");
+  p.at("office.041");
+  p.el("nextButton").click();
+  p.el("songListenButton").click();
+  const full=p.voices.at(-1);
+  p.document.hidden=true;
+  p.listeners.get("visibilitychange")();
+  assert.equal(full.paused,true);
+  assert.equal(p.timeouts.size,0);
+  p.document.hidden=false;
+  p.el("playPauseButton").click();
+  await Promise.resolve();
+  assert.equal(full.paused,false);
+  p.el("sceneSoundButton").click();
+  assert.equal(full.paused,true,"Sound Off silences optional tracks too");
+});
+test("SP4.0D build automatically packages only the two approved optional song filenames",()=>{
+  const pack=read("scripts/build.mjs");
+  assert.match(pack,/const songSource = "public\/assets\/audio\/songs"/);
+  assert.match(pack,/new Set\(\["optimistic\.mp3", "pessimistic\.mp3"\]\)/);
+  assert.match(pack,/copyFile\(original, path\.join\(output, songSource, filename\)\)/);
+  assert.ok(fs.existsSync(path.join(root,"public/assets/audio/songs/README.md")));
+  for(const id of ["officeSongOverlay","officeSongActions","songListenButton","songStopButton","songDeclineButton","officeSongLyrics","officeSongLyricsScroll","songStatus"])
+    assert.ok(html.includes('id="'+id+'"'));
+});
+
+
+test("SP4.0D keeps reactions brief and printer cutaway readable",()=>{
+  const durations={
+    "office.v01":450,"office.v02":2600,"office.v03":400,"office.v04":2400,
+    "office.v05":2300,"office.v06":450,"office.v08":1350,"office.v09":2000,
+    "office.v10":450,"office.v11":2200
+  };
+  for(const [id,duration] of Object.entries(durations))
+    assert.equal(all.find(beat=>beat.id===id).duration,duration,id+" timing");
+  assert.equal(ids[ids.indexOf("office.v03")+1],"office.v04");
+  assert.equal(all.find(beat=>beat.id==="office.v07").duration,6000,"Optimistic missing-song fallback unchanged");
+  assert.equal(all.find(beat=>beat.id==="office.v12").duration,4400,"Title card remains intentional");
+});
+
+test("SP4.0D voice-to-printer transition removes redundant two-second pause",async()=>{
+  const p=preview({audio:true});p.start();p.at("office.021");
+  await Promise.resolve();
+  p.voices.at(-1).finish();
+  assert.equal([...p.timeouts.values()].at(-1).delay,100,"Short handoff from voice to reaction");
+  p.tick();
+  assert.equal(saved(p).beatId,"office.v03");
+  assert.equal([...p.timeouts.values()].at(-1).delay,400,"Brief comic expression");
+  p.tick();
+  assert.equal(saved(p).beatId,"office.v04");
+  assert.equal([...p.timeouts.values()].at(-1).delay,2400,"Printer animation remains visible");
+  assert.match(p.el("cutawayContent").innerHTML,/OFFICE PRINTER/);
+});
+
+test("SP4.0D David expression scales are bottom-anchored to neutral",()=>{
+  const start=css.indexOf("GAME-SP4.0D: optically register David");
+  const chunk=css.slice(start,css.indexOf("#officeScreen .cast-seated .cast-actor.is-listening",start));
+  assert.ok(start>0);
+  assert.ok(chunk.includes("transform-origin: center bottom"));
+  const values={confident:".93",serious:".96",frustrated:".92",shocked:".94","systems-expert":".94"};
+  for(const [name,scale] of Object.entries(values)){
+    assert.ok(chunk.includes('data-seated-sprite="'+name+'"'),name+" has a distinct placement");
+    assert.ok(chunk.includes('transform: scale('+scale+') !important;'),name+" shrink factor");
+  }
+  assert.ok(!chunk.includes('data-seated-sprite="neutral"'),"Neutral sprite remains the visual baseline");
+});
+
+test("SP4.0D pessimistic lyrics lead early and still reach the last line",async()=>{
+  const p=preview({audio:true});p.start();p.at("office.041");
+  p.el("nextButton").click();
+  p.el("songListenButton").click();
+  const clip=p.voices.at(-1);
+  await Promise.resolve();
+  clip.duration=120;clip.currentTime=12;
+  clip.ontimeupdate();
+  const early=p.el("officeSongLyricsScroll").scrollTop;
+  assert.ok(early>60&&early<150,"Faster initial progression than the 60px linear baseline");
+  clip.currentTime=60;
+  clip.ontimeupdate();
+  assert.ok(p.el("officeSongLyricsScroll").scrollTop>300,"Still slightly ahead at half time");
+  clip.currentTime=120;
+  clip.ontimeupdate();
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,600,"No skipped end section");
 });

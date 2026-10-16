@@ -87,7 +87,7 @@
           "David": "frustrated",
           "Paul": "pleased"
         },
-        "duration": 1300
+        "duration": 450
       },
       {
         "id": "office.005",
@@ -177,7 +177,7 @@
           "Paul": "blank"
         },
         "visual": "risk",
-        "duration": 3600
+        "duration": 2600
       },
       {
         "id": "office.012",
@@ -299,7 +299,7 @@
           "David": "frustrated",
           "Paul": "blank"
         },
-        "duration": 1950
+        "duration": 400
       },
       {
         "id": "office.v04",
@@ -312,7 +312,7 @@
           "Paul": "blank"
         },
         "visual": "printer",
-        "duration": 2900
+        "duration": 2400
       },
       {
         "id": "office.022",
@@ -391,7 +391,7 @@
           "Paul": "pleased"
         },
         "visual": "chat",
-        "duration": 3300
+        "duration": 2300
       },
       {
         "id": "office.028",
@@ -469,7 +469,7 @@
           "David": "frustrated",
           "Paul": "pleased"
         },
-        "duration": 1500
+        "duration": 450
       },
       {
         "id": "office.034",
@@ -661,7 +661,7 @@
           "David": "serious",
           "Paul": "blank"
         },
-        "duration": 2100
+        "duration": 1350
       },
       {
         "id": "office.v09",
@@ -674,7 +674,7 @@
           "Paul": "blank"
         },
         "visual": "muted",
-        "duration": 2700
+        "duration": 2000
       },
       {
         "id": "office.049",
@@ -752,7 +752,7 @@
           "David": "serious",
           "Paul": "blank"
         },
-        "duration": 1600
+        "duration": 450
       },
       {
         "id": "office.v11",
@@ -765,7 +765,7 @@
           "Paul": "blank"
         },
         "visual": "folder",
-        "duration": 3100
+        "duration": 2200
       },
       {
         "id": "office.v12",

@@ -136,6 +136,20 @@
 
           </div>
         </div>
+          <aside id="officeSongOverlay" class="office-song-overlay" role="region" aria-label="Opening song player" hidden>
+            <span class="office-song-eyebrow">♪ UNNECESSARY MUSICAL INTERLUDE ♪</span>
+            <h3 id="officeSongTitle">THE OPTIMISTIC VERSION</h3>
+            <p id="officeSongIntro" class="office-song-intro"></p>
+            <div id="officeSongLyricsScroll" class="office-song-lyrics-scroll" role="region" aria-label="Full song lyrics" tabindex="0" hidden>
+              <div id="officeSongLyrics" class="office-song-lyrics"></div>
+            </div>
+            <div id="officeSongActions" class="office-song-actions" role="group" aria-label="Song choices">
+              <button id="songListenButton" class="office-song-button" type="button">♫ Listen to the whole song</button>
+              <button id="songStopButton" class="office-song-button office-song-secondary" type="button" hidden>■ Stop song and continue</button>
+              <button id="songDeclineButton" class="office-song-button office-song-secondary" type="button" hidden>No thanks, carry on →</button>
+            </div>
+            <p id="songStatus" class="office-song-status" role="status" aria-live="polite"></p>
+          </aside>
         </div>
 
         <div class="progress-track" role="progressbar" aria-label="Opening scene progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="storyProgress"><div class="progress-fill" id="progressFill"></div></div>

@@ -2,6 +2,26 @@
 
 **Updated:** 16 October 2026
 
+## GAME-SP4.0D — Opening pacing, lyric scroll and David sizing polish (16 October 2026)
+
+- Responding to visual/playback feedback: eased pessimistic lyric scrolling forward in early verses (progress exponent 0.78), while preserving the original full track and final lyrics; optimistic scrolling is unchanged.
+- Shortened old silent reaction beats (including the v03 reaction after "It was making a noise") and stale static cutaway/departure holds. Voice transitions are now 100 ms into non-dialogue cutaways and 260 ms between spoken lines. The printer animation retains a 2.4-second reveal; post-mortem choice still has its intentional pause and seven-second decision window.
+- Reviewed the six actual approved David WebPs. Five expressive poses render bottom-anchored at 0.92–0.96 of their previous scale relative to Neutral (1.00), correcting inconsistent crop/face size without regenerating any art.
+- New regressions cover pacing, the printer handoff, optical CSS scales and early lyric progression. All 55 spoken clips and both MP3s remain untouched. PR #35 remains draft, stacked on unmerged PR #34. Preview and owner visual sign-off are required before any merge.
+
+## GAME-SP4.0D — In-scene musical pop-ups and scrolling lyrics (16 October 2026)
+
+- Owner approved functioning two-song playback and requested more visible pop-ups inside the actual office scene. The optimistic 20-second cutaway now uses an in-stage comic-book lyric panel and a full-track button. The full owner-supplied lyrics for both songs are stored in the game; scrolling follows audio currentTime/duration approximately rather than claiming exact karaoke timestamps.
+- The pessimistic choice has moved from Stephen's question to **after** David's "And a post-mortem." line (`office.041`). A seven-second optional prompt appears only after the recording ends or a manually advanced line; it offers Play or No thanks before continuing. Pause freezes the offer timer. Song completion, manual skip, muting and tab changes retain their existing guards.
+- Changes are limited to opening-scene HTML, CSS, playback logic, tests and documentation. Song assets remain the uploaded originals. Draft PR #35 remains stacked on draft #34; owner's in-game visual/audio sign-off and explicit merge approval are still pending.
+
+## GAME-SP4.0D — Opening music uploaded, pending in-game approval (16 October 2026)
+
+- Song-work branch is stacked on the still-draft throne-room PR #34. The optimistic opening track previews for 20 seconds during cutaway `office.v07`, with an option to hear the complete recording; at Stephen's `office.039` question the pessimistic version can be played on request, then resumes the dialogue.
+- Owner uploaded both finished tracks to `public/assets/audio/songs/`: `optimistic.mp3` (1,433,152 bytes) and `pessimistic.mp3` (2,773,315 bytes). The upload commit `8e3761b` passed all 94 automated tests and packaged **both songs (2/2)** alongside all **55/55** spoken dialogue files. Cloudflare deployed that exact upload commit successfully.
+- Pause/Resume, Stop, Next/Back, Sound Off, background tabs and scene changes retain their existing safety guards. The remaining human gate is to inspect both full tracks and the optimistic 20-second preview, volume balance, and the transition back to dialogue on desktop/mobile.
+- This status reconciliation also triggers another build of the unchanged game/assets. PR #35 and its parent PR #34 remain draft and unmerged; no merge or public-release approval has been given.
+
 ## GAME-SP4.0C — Second attendant perspective rebalance (16 October 2026)
 
 - Following a new in-game screenshot, reduced kneeling ewer/towel from 17% to 14% stage height while retaining rear feet at bottom 42%. Enlarged standing fan/tray from 23% to 27% and moved them back from bottom 24% to 29% on desktop; tablet/mobile receive equivalent changes.
