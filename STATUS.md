@@ -2,6 +2,12 @@
 
 **Updated:** 15 October 2026
 
+## GAME-SP4.0C — Foreground standing / mid-ground kneeling swap (16 October 2026)
+
+- Following the owner's screenshot approval of the left/right symmetry, corrected depth and scale: the **kneeling ewer/towel pair moved into the previous standing pair's mid-ground positions** (desktop 23% in from each side, bottom 42%, 17% stage height); the **standing fan/tray pair moved outward and forward** (9% in, bottom 24%, 23% height) to maintain perspective.
+- The right-side tray and towel still face inwards via per-sprite CSS mirrors. Tablet and phone sizing/anchors updated and tests protect forward/nearer = larger and rear/farther = smaller. Stephen, David, Paul, background, subtitles, audio, autoplay and other routes remain untouched.
+- Draft PR #34 remains unmerged and requires another in-engine visual review before approval.
+
 ## GAME-SP4.0C — Symmetric standing/kneeling attendants facing Stephen (16 October 2026)
 
 - Following the owner's visual review, balanced the four existing attendants so each side has **one standing and one kneeling figure** facing inward. **Left:** standing fan, kneeling ewer; **right:** standing tray, kneeling towel. The two right-side sprites are independently flipped with `scaleX(-1)`; the environment, dialogue and other sprites are not mirrored.
