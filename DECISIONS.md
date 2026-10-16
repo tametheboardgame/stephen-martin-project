@@ -2,6 +2,10 @@
 
 Entries are concise, durable design decisions. Additional decisions are added only where they materially affect scope, design, delivery or implementation.
 
+## SP-D045, 16 October 2026: Balance Summit attendants symmetrically and face the throne
+
+Owner specified precisely one standing and one kneeling approved attendant **on each side**, all facing inward towards Stephen. Retain left fan standing and left ewer kneeling (unflipped); move standing tray to the right and mirror it, with right kneeling towel also mirrored. Keep the four independent transparent assets and original throne-room background, Stephen/David/Paul placements, UI, audio and saves unchanged. Use responsive CSS only; gate merge on owner in-engine layout approval.
+
 ## SP-D044, 15 October 2026: Layer four silent ceremonial attendants around the Summit throne
 
 Owner approved four individually generated, transparent adult ceremonial attendants (fan, tray, ewer, towel) and directed their addition to Ending A. Preserve the original approved throne-room background, Stephen's owner-approved size on the existing chair, and David/Paul near the base of the stairs. Keep four attendants as separate Drive-provenanced alpha WebPs, positioned in left/right pairs, behind principals and dialogue, without new dialogue or gameplay mechanics. Allow responsive repositioning and require owner in-engine visual approval prior to merging the two stacked draft artwork PRs.
