@@ -631,6 +631,29 @@ button:active:not(:disabled) { transform: translateY(1px); }
   transition: none !important;
 }
 #officeScreen .cast-seated .cast-actor figcaption { display: none; }
+
+/* GAME-SP4.0D: optically register David's five expression cutouts against
+ * the neutral seated image, using the same bottom-of-stage anchor. The
+ * original approved transparent artwork is retained unchanged. */
+#officeScreen .cast-seated #castDavid .actor-portrait img {
+  transform-origin: center bottom;
+}
+#officeScreen .cast-seated #castDavid[data-seated-sprite="confident"] .actor-portrait img {
+  transform: scale(.93) !important;
+}
+#officeScreen .cast-seated #castDavid[data-seated-sprite="serious"] .actor-portrait img {
+  transform: scale(.96) !important;
+}
+#officeScreen .cast-seated #castDavid[data-seated-sprite="frustrated"] .actor-portrait img {
+  transform: scale(.92) !important;
+}
+#officeScreen .cast-seated #castDavid[data-seated-sprite="shocked"] .actor-portrait img {
+  transform: scale(.94) !important;
+}
+#officeScreen .cast-seated #castDavid[data-seated-sprite="systems-expert"] .actor-portrait img {
+  transform: scale(.94) !important;
+}
+
 /* Listening actors retain the scene's colour treatment, but never fade
    their entire bodies: that made the bright office floor visible through them. */
 #officeScreen .cast-seated .cast-actor.is-listening {
