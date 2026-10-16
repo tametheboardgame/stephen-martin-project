@@ -1,6 +1,11 @@
 # Project status
 
-**Updated:** 15 October 2026
+**Updated:** 16 October 2026
+
+## GAME-SP4.0C — Second attendant perspective rebalance (16 October 2026)
+
+- Following a new in-game screenshot, reduced kneeling ewer/towel from 17% to 14% stage height while retaining rear feet at bottom 42%. Enlarged standing fan/tray from 23% to 27% and moved them back from bottom 24% to 29% on desktop; tablet/mobile receive equivalent changes.
+- Mirroring, other actors, backgrounds, audio, UI and routing are untouched. Regression tests and art documentation updated. PR #34 remains an unmerged draft pending owner visual approval.
 
 ## GAME-SP4.0C — Foreground standing / mid-ground kneeling swap (16 October 2026)
 

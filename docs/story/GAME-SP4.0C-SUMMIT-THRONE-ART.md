@@ -1,3 +1,12 @@
+## Rebalanced attendant perspective after second live review (16 October 2026)
+
+Owner's new screenshot showed kneeling attendants oversized in the rear and standing attendants undersized and too far forward. Retain the four approved transparent sprites, pairings and inward-facing directions. Adjust CSS only, not artwork or gameplay.
+
+- Desktop: standing fan/tray stay 9% in from the sides, grow from 23% to 27% height and move back from bottom 24% to 29%. Kneeling ewer/towel stay 23% in from the sides, bottom 42%, reducing from 17% to 14% height.
+- Tablet: standing 25% height, bottom 31%; kneeling 12% height, bottom 43%. Mobile: standing 20% height, bottom 33%; kneeling 9% height, bottom 45%. Their existing responsive horizontal positions are retained.
+- Stephen, David, Paul, background, captions, speaker glow, recordings, routes, and sprite provenance remain unchanged. Responsive regression covers the stronger near/far size difference and all new anchors.
+- PR #34 stays draft and stacked on #33. Owner in-game review and an explicit merge instruction are still required.
+
 ## Foreground depth revision — kneeling rear, standing forward (16 October 2026)
 
 Owner reviewed the symmetric four-attendant scene and requested a depth swap without changing sprites: move the kneeling **ewer and towel** back into the previous standing positions **at their existing small size**, and bring the standing **fan and tray** outward, closer to the audience and proportionally larger.

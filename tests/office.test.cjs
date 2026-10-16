@@ -2136,9 +2136,9 @@ test("SP4.0C places larger standing pair forward and smaller kneeling pair at re
   const tablet=stageCss.split("@media (max-width:800px)")[1].split("@media (max-width:450px)")[0];
   const mobile=stageCss.split("@media (max-width:450px)")[1];
   const expectations=[
-    {source:desktop,fan:"left:9%;bottom:24%;height:23%",tray:"left:auto;right:9%;bottom:24%;height:23%",ewer:"left:23%;right:auto;bottom:42%;height:17%",towel:"right:23%;bottom:42%;height:17%"},
-    {source:tablet,fan:"left:7%;bottom:27%;height:21%",tray:"right:7%;bottom:27%;height:21%",ewer:"left:20%;bottom:43%;height:15%",towel:"right:20%;bottom:43%;height:15%"},
-    {source:mobile,fan:"left:-1%;bottom:30%;height:17%",tray:"right:-1%;bottom:30%;height:17%",ewer:"left:13%;bottom:45%;height:11%",towel:"right:13%;bottom:45%;height:11%"}
+    {source:desktop,fan:"left:9%;bottom:29%;height:27%",tray:"left:auto;right:9%;bottom:29%;height:27%",ewer:"left:23%;right:auto;bottom:42%;height:14%",towel:"right:23%;bottom:42%;height:14%"},
+    {source:tablet,fan:"left:7%;bottom:31%;height:25%",tray:"right:7%;bottom:31%;height:25%",ewer:"left:20%;bottom:43%;height:12%",towel:"right:20%;bottom:43%;height:12%"},
+    {source:mobile,fan:"left:-1%;bottom:33%;height:20%",tray:"right:-1%;bottom:33%;height:20%",ewer:"left:13%;bottom:45%;height:9%",towel:"right:13%;bottom:45%;height:9%"}
   ];
   const rule=(text,name)=>{
     const key="#holidayScreen #summitEndingScene .summit-throne-attendant-"+name+" {";
@@ -2151,11 +2151,12 @@ test("SP4.0C places larger standing pair forward and smaller kneeling pair at re
       assert.ok(rule(positions.source,name).includes(positions[name]),"Attendant placement: "+name);
     }
   }
-  // Larger characters sit closer to the foreground than the kneeling pair.
+  // Standing figures are taller and nearer, but set back from the stage lip.
   for(const pos of expectations){
     const numeric=(name,prop)=>Number(pos[name].match(new RegExp(prop+":(-?\\d+)%"))[1]);
     assert.ok(numeric("fan","height")>numeric("ewer","height"),"Standing left sprite is larger");
     assert.ok(numeric("tray","height")>numeric("towel","height"),"Standing right sprite is larger");
+    assert.ok(numeric("fan","height")>=numeric("ewer","height")*1.8,"Near/far depth needs a clear standing-to-kneeling size ratio");
     assert.ok(numeric("fan","bottom")<numeric("ewer","bottom"),"Standing left sprite is farther forward");
     assert.ok(numeric("tray","bottom")<numeric("towel","bottom"),"Standing right sprite is farther forward");
   }
@@ -2174,10 +2175,10 @@ test("SP4.0C right standing and kneeling attendants face inward via sprite-only 
     return desktop.slice(start,desktop.indexOf("}",start));
   };
   const fan=block("fan"),tray=block("tray"),ewer=block("ewer"),towel=block("towel");
-  assert.match(fan,/left:9%;bottom:24%;height:23%/,"Fan stands forward left");
-  assert.match(tray,/right:9%;bottom:24%;height:23%/,"Tray stands forward right");
-  assert.match(ewer,/left:23%;right:auto;bottom:42%;height:17%/,"Ewer kneels rear left");
-  assert.match(towel,/right:23%;bottom:42%;height:17%/,"Towel kneels rear right");
+  assert.match(fan,/left:9%;bottom:29%;height:27%/,"Fan stands forward left");
+  assert.match(tray,/right:9%;bottom:29%;height:27%/,"Tray stands forward right");
+  assert.match(ewer,/left:23%;right:auto;bottom:42%;height:14%/,"Ewer kneels rear left");
+  assert.match(towel,/right:23%;bottom:42%;height:14%/,"Towel kneels rear right");
   assert.doesNotMatch(fan,/scaleX\(-1\)/,"Left-standing fan faces centre without a flip");
   assert.doesNotMatch(ewer,/scaleX\(-1\)/,"Left-kneeling ewer faces centre without a flip");
   assert.match(tray,/transform:scaleX\(-1\);transform-origin:center bottom/,"Right-standing tray faces centre");
