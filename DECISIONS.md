@@ -2,6 +2,10 @@
 
 Entries are concise, durable design decisions. Additional decisions are added only where they materially affect scope, design, delivery or implementation.
 
+## SP-D046, 16 October 2026: Standers forward and larger, kneelers back and smaller
+
+Owner retained the balanced one-standing/one-kneeling-per-side arrangement but requested a correction to scene depth. Place the kneeling ewer/towel at the previous rear standing locations **without increasing their size**, and reposition the standing fan/tray outward towards the viewer with proportionally larger sprites. Preserve right-side inward-facing horizontal mirrors, all approved assets, principal-character positioning, dialogue and behaviour. Verify staging at desktop/tablet/mobile and require an owner visual gate before merging the stacked draft PRs.
+
 ## SP-D045, 16 October 2026: Balance Summit attendants symmetrically and face the throne
 
 Owner specified precisely one standing and one kneeling approved attendant **on each side**, all facing inward towards Stephen. Retain left fan standing and left ewer kneeling (unflipped); move standing tray to the right and mirror it, with right kneeling towel also mirrored. Keep the four independent transparent assets and original throne-room background, Stephen/David/Paul placements, UI, audio and saves unchanged. Use responsive CSS only; gate merge on owner in-engine layout approval.
