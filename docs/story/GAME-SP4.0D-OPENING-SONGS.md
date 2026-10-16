@@ -1,3 +1,10 @@
+## In-scene pop-ups and lyric panel revision (16 October 2026)
+
+- Song prompts are now prominent and interactive *within the office stage*, not in the footer. Optimistic cutaway v07 shows a comic panel with full scrollable lyric text and the "Listen to the whole song" button while its first 20 seconds play automatically.
+- No pessimistic song prompt appears during office.039 or office.040. After David's **office.041, "And a post-mortem."**, the dialogue ends naturally, followed by a seven-second decision window. The player can start the pessimistic full recording or decline; if neither is pressed and autoplay is running, the dialogue continues to office.042.
+- Both complete lyric texts are embedded as user-supplied words, grouped by verse/chorus/cues. The lyric panel follows the MP3's current playback position/duration using proportional scrolling, with user scrolling also available; line-level karaoke timing is not claimed.
+- Music remains interruptible with Pause/Play, Next/Back and an in-scene Stop button. Visual sign-off is still pending. Keep PR #35 draft and unmerged.
+
 # GAME-SP4.0D — Opening songs hand-off
 
 Two complete, already-produced MP3s are to be uploaded by the owner, not generated in the game pipeline.

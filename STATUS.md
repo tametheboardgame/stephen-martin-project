@@ -2,6 +2,12 @@
 
 **Updated:** 16 October 2026
 
+## GAME-SP4.0D — In-scene musical pop-ups and scrolling lyrics (16 October 2026)
+
+- Owner approved functioning two-song playback and requested more visible pop-ups inside the actual office scene. The optimistic 20-second cutaway now uses an in-stage comic-book lyric panel and a full-track button. The full owner-supplied lyrics for both songs are stored in the game; scrolling follows audio currentTime/duration approximately rather than claiming exact karaoke timestamps.
+- The pessimistic choice has moved from Stephen's question to **after** David's "And a post-mortem." line (`office.041`). A seven-second optional prompt appears only after the recording ends or a manually advanced line; it offers Play or No thanks before continuing. Pause freezes the offer timer. Song completion, manual skip, muting and tab changes retain their existing guards.
+- Changes are limited to opening-scene HTML, CSS, playback logic, tests and documentation. Song assets remain the uploaded originals. Draft PR #35 remains stacked on draft #34; owner's in-game visual/audio sign-off and explicit merge approval are still pending.
+
 ## GAME-SP4.0D — Opening music uploaded, pending in-game approval (16 October 2026)
 
 - Song-work branch is stacked on the still-draft throne-room PR #34. The optimistic opening track previews for 20 seconds during cutaway `office.v07`, with an option to hear the complete recording; at Stephen's `office.039` question the pessimistic version can be played on request, then resumes the dialogue.
