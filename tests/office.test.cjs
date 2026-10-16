@@ -2219,9 +2219,10 @@ test("SP4.0D optimistic preview advances at twenty seconds, pause freezes it, an
   assert.equal(p.tick(),true);
   assert.equal(saved(p).beatId,"office.037");
   assert.equal(clip.paused,true);
-  p.at("office.v07");
-  p.el("nextButton").click();
-  assert.equal(p.voices.at(-1).paused,true,"Manual Next never leaves the song playing");
+  const q=preview({audio:true});q.start();q.at("office.v07");
+  const second=q.voices.at(-1);
+  q.el("nextButton").click();
+  assert.equal(second.paused,true,"Manual Next never leaves the song playing");
 });
 
 test("SP4.0D pessimistic song is an optional choice at the mention of a second version",async()=>{
@@ -2237,10 +2238,10 @@ test("SP4.0D pessimistic song is an optional choice at the mention of a second v
   assert.equal(p.timeouts.size,0,"Full song holds progression until it ends");
   music.finish();
   assert.equal(saved(p).beatId,"office.040");
-  p.at("office.039");
-  p.el("songListenButton").click();
-  p.el("songStopButton").click();
-  assert.equal(saved(p).beatId,"office.040","Stopping the optional song also continues");
+  const q=preview({audio:true});q.start();q.at("office.039");
+  q.el("songListenButton").click();
+  q.el("songStopButton").click();
+  assert.equal(saved(q).beatId,"office.040","Stopping the optional song also continues");
 });
 
 test("SP4.0D missing song files fail gracefully, and hide/pause never advance music",async()=>{
