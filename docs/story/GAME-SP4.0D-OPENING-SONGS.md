@@ -1,3 +1,11 @@
+## Opening pacing and portrait-scale refinement (16 October 2026)
+
+The owner identified a long silent hold between Paul's "It was making a noise" and the animated office printer, together with several other leftover non-spoken cutaway pauses. Reaction beats v01/v03/v06/v10 now last only 400–450 ms; other stationary cutaways and Stephen's departure have shorter timings, while the printer gets 2.4 seconds to finish its paper animation. Speech-to-speech is 260 ms, speech-to-silent-visual 100 ms, but the deliberately timed 400 ms post-mortem cue and seven-second song-choice window remain.
+
+The pessimistic full-song lyric panel is now gently front-loaded (`playbackProgress ** 0.78`), so words scroll sooner during the dense opening verses and still reach the bottom at track end. Optimistic scrolling remains linear.
+
+Direct inspection of the six canonical David WebP cutouts found mismatched head top margins. Without regenerating assets, the five non-neutral poses are bottom-anchored and scaled relative to neutral (confident .93, serious .96, frustrated .92, shocked .94, systems expert .94). This is an optical correction, still requiring an in-game visual check.
+
 ## In-scene pop-ups and lyric panel revision (16 October 2026)
 
 - Song prompts are now prominent and interactive *within the office stage*, not in the footer. Optimistic cutaway v07 shows a comic panel with full scrollable lyric text and the "Listen to the whole song" button while its first 20 seconds play automatically.
