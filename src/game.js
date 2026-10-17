@@ -595,7 +595,9 @@
 
   function holidayVoiceUnavailable(clip, token, missingFile = false) {
     if (holidayVoice !== clip || token !== holidayVoiceToken) return;
-    if (missingFile) missingHolidayVoices.add(holidayVoiceId);
+    // Do not retry the same failed clip on every reschedule. The current
+    // beat falls back to its text duration while later clips still work.
+    missingHolidayVoices.add(holidayVoiceId);
     stopHolidayVoice();
     holidayVoiceStatus = "missing";
     scheduleHolidayAdvance();
@@ -653,7 +655,13 @@
       if (holidayVoiceStatus === "paused") playHolidayVoice(holidayVoice, holidayVoiceToken);
       return;
     }
-    const clip = new window.Audio();
+    let clip;
+    try { clip = new window.Audio(); }
+    catch (_) {
+      missingHolidayVoices.add(id);
+      holidayVoiceStatus = "missing";
+      return;
+    }
     const token = holidayVoiceToken;
     holidayVoice = clip;
     holidayVoiceId = id;
