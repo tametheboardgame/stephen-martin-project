@@ -383,7 +383,7 @@
       {
         "id": "office.v05",
         "speaker": "",
-        "text": "Paul's phone shows STEPHEN RESCUE GROUP (PRE-EMPTIVE), with Stephen, David and Paul as members, Paul as administrator and a bear icon.",
+        "text": "Paul's phone shows a new group named Operation: Save Stephen. Its picture is a honey-loving cartoon bear, and the only notice says: Paul added David and Stephen to the group. There are no chat messages.",
         "type": "cutaway",
         "reactions": {
           "Stephen": "exasperated",
