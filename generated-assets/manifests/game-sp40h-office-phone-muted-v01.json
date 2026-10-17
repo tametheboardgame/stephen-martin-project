@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1k5O7pP4YqXaRiQdM_zObFu8uS0uoHPGU"
+  },
+  "expectedSourceName": "office-phone-group-muted-cutaway-v01.png",
+  "destination": "public/assets/generated/game/office-phone-group-muted-cutaway-v01.webp",
+  "transform": {
+    "maxWidth": 1672,
+    "maxHeight": 940,
+    "quality": 88
+  },
+  "revision": 1
+}
