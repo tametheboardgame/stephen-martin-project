@@ -2,6 +2,14 @@
 
 **Updated:** 17 October 2026
 
+## GAME-SP4.0 — Ending B art foundation (17 October 2026)
+
+- The owner locked the empty Office of Ceremonial Misunderstandings background, the puzzle-desk concept close-up and the standalone Bear Classification Assessment (three original PNGs staged privately in the project's approved Google Drive folder).
+- All three source filenames, Drive provenance, image dimensions and the ordered remaining asset list are recorded in `docs/story/GAME-SP4.0-END-B-ASSET-PRODUCTION.md`.
+- Next individual asset for owner review: **Stephen's ceremonial release permit**. Keep source concepts unmodified; small proposed bear-document text refinements are documented but not silently applied. No game integration or `main` merge authorised.
+
+
+
 ## GAME-SP4.0G–H — Approved phone cutaways (17 October 2026)
 
 - The two approved phone cartoon artworks, staged in the project Google Drive folder and materialised as WebP, are now implemented in the game.
