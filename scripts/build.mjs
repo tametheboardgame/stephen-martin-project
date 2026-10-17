@@ -114,6 +114,19 @@ if (chatBytes.length < 50000 || chatBytes.length > 2 * 1024 * 1024 ||
 await mkdir(path.dirname(path.join(output, approvedPhoneChatCutaway)), { recursive: true });
 await copyFile(chatSource, path.join(output, approvedPhoneChatCutaway));
 
+// The matched later phone shot is another approved static image. The original
+// remains on Drive; require and bundle only its generated WebP here.
+const approvedMutedChatCutaway = "public/assets/generated/game/office-phone-group-muted-cutaway-v01.webp";
+const mutedSource = path.join(root, approvedMutedChatCutaway);
+const mutedBytes = await readFile(mutedSource);
+if (mutedBytes.length < 50000 || mutedBytes.length > 2 * 1024 * 1024 ||
+    mutedBytes.toString("ascii", 0, 4) !== "RIFF" ||
+    mutedBytes.toString("ascii", 8, 12) !== "WEBP") {
+  throw new Error("Approved muted group cutaway missing or invalid: " + approvedMutedChatCutaway);
+}
+await mkdir(path.dirname(path.join(output, approvedMutedChatCutaway)), { recursive: true });
+await copyFile(mutedSource, path.join(output, approvedMutedChatCutaway));
+
 // The Chapter Two background and sprite remain independently approved WebP
 // assets. Refuse accidental opaque travel sprites or incorrectly sized art.
 const holidaySprite = await readFile(path.join(root, imageSource, "stephen-holiday-standing-neutral-v01.webp"));
