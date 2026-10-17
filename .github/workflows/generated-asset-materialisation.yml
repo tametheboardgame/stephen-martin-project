@@ -165,7 +165,7 @@ jobs:
         run: |
           if grep -qx 'generated-assets/manifests/game-sp40j-release-permit-layout-proof-v01.json' "$MANIFEST_LIST"; then
             python scripts/ending-b/compose_permit_portrait.py
-            printf '%s\\n' 'public/assets/generated/game/ending-b-release-permit-canonical-portrait-proof-v01.webp' >> "$RUNNER_TEMP/generated-asset-outputs.txt"
+            printf '%s\n' 'public/assets/generated/game/ending-b-release-permit-canonical-portrait-proof-v01.webp' >> "$RUNNER_TEMP/generated-asset-outputs.txt"
           fi
 
       - name: Commit materialised assets
