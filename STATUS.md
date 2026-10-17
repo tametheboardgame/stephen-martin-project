@@ -2,6 +2,15 @@
 
 **Updated:** 17 October 2026
 
+## GAME-SP4.0G–H — Approved phone cutaways (17 October 2026)
+
+- The two approved phone cartoon artworks, staged in the project Google Drive folder and materialised as WebP, are now implemented in the game.
+- `office.v05` shows the bear-avatar Operation: Save Stephen group with only “Paul added David and Stephen to the group”; duration 2300 ms.
+- `office.v09` continues the same view with “Stephen Martin has muted the group” and a crossed-out bell; duration 2000 ms.
+- Holiday dialogue voices and all other cutaways remain unchanged. See `docs/story/GAME-SP4.0G-OFFICE-PHONE-GROUP-CHAT.md` and `GAME-SP4.0H-OFFICE-PHONE-MUTED.md`.
+
+
+
 ## GAME-SP4: Stephen's three-scene dialogue audio import (17 October 2026)
 
 - Draft PR #39 on `agent/game-sp4-stephen-holiday-voice` adds optional MP3-driven dialogue for the Great Wall, Forbidden City, Night Market, and Stephen's shared final spoken line. Existing office voices, song playback, dialogue copy and branching choices remain unchanged.
