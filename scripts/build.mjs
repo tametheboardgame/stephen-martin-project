@@ -250,7 +250,28 @@ if (alarmIds.length !== 10 || new Set(alarmIds).size !== 10 ||
   throw new Error("Back in England script changed: expected ten stable alarm voice IDs.");
 }
 alarmIds.forEach(id => permitted.add(id + ".mp3"));
-if (permitted.size !== 90) throw new Error("Duplicate approved dialogue voice ID.");
+// The Visitor Information scene has eight shared arrival lines, three route
+// dependent two-line wrong guesses, three Paul hints and five final deductions.
+// Evidence props and the travel montage remain unspoken.
+const hub = holidaySandbox.window.SMP_RESCUE_HUB;
+const hubRoutes = ["cult", "detention", "reassemble"];
+const hubVoiceIds = [
+  ...hub.opening.map(beat => beat.id),
+  ...hubRoutes.flatMap(route => hub.wrong[route].map(beat => beat.id)),
+  ...hubRoutes.map(route => "rescue.hub.hint." + route),
+  ...hub.correct.map(beat => beat.id)
+];
+if (hubVoiceIds.length !== 22 || new Set(hubVoiceIds).size !== 22 ||
+    hub.opening.some((beat,i) => beat.id !== "rescue.hub." + String(i+1).padStart(3,"0")) ||
+    hubRoutes.some(route => hub.wrong[route].length !== 2 ||
+      hub.wrong[route].some((beat,i) => beat.id !== "rescue.hub.wrong."+route+"."+String(i+1).padStart(3,"0")) ||
+      !hub.hint[route]?.startsWith("Paul: ")) ||
+    hub.correct.length !== 5 ||
+    hub.correct.some((beat,i) => beat.id !== "rescue.hub.correct."+String(i+1).padStart(3,"0"))) {
+  throw new Error("Visitor Information audio script changed: expected 22 unique approved IDs.");
+}
+hubVoiceIds.forEach(id => permitted.add(id + ".mp3"));
+if (permitted.size !== 112) throw new Error("Duplicate approved dialogue voice ID.");
 await mkdir(path.join(output, audioSource), { recursive: true });
 let voiceCount = 0;
 for (const filename of await readdir(audioFolder)) {
@@ -266,7 +287,7 @@ for (const filename of await readdir(audioFolder)) {
   await copyFile(original, path.join(output, audioSource, filename));
   voiceCount++;
 }
-console.log("Approved dialogue MP3s packaged: " + voiceCount + "/90 (55 office + 25 holiday + 10 rescue alarm).");
+console.log("Approved dialogue MP3s packaged: " + voiceCount + "/112 (55 office + 25 holiday + 10 rescue alarm + 22 visitor information).");
 
 // Optional owner-supplied songs are uploaded directly to this exact folder
 // on the song PR branch. Builds work before upload; once present, the MP3s
