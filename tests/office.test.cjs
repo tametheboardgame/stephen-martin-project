@@ -2552,6 +2552,9 @@ test("SP4.0H approved later phone still shows Stephen muting the group",()=>{
   const beat=all.find(b=>b.id==="office.v09");
   assert.equal(beat.visual,"muted");
   assert.equal(beat.duration,2000,"Existing 2.0s phone notification hold unchanged");
+  const firstChat=all.find(b=>b.id==="office.v05");
+  assert.equal(firstChat.visual,"chat","Group creation still keeps its original cutaway");
+  assert.equal(firstChat.duration,2300,"Original chat hold remains 2.3 seconds");
   assert.equal(ids[ids.indexOf("office.v09")-1],"office.v08");
   assert.equal(ids[ids.indexOf("office.v09")+1],"office.049");
   assert.ok(beat.text.includes("Stephen Martin has muted the group"));
