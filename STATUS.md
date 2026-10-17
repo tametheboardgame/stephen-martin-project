@@ -5,7 +5,7 @@
 ## GAME-SP4.0H — Muted-group follow-on still (17 October 2026)
 
 - The owner approved a companion 1672×940 cartoon phone still continuing the same office composition, bear group avatar and exact chat UI as GAME-SP4.0G. It displays the original group-addition system notice followed by the new muted-bell notice `Stephen Martin has muted the group`; no personal chat messages.
-- Original `office-phone-group-muted-cutaway-v01.png` staged in project Drive (file ID `1k5O7pP4YqXaRiQdM_zObFu8uS0uoHPGU`), with manifest `generated-assets/manifests/game-sp40h-office-phone-muted-v01.json` and generated `public/assets/generated/game/office-phone-group-muted-cutaway-v01.webp`.
+- Original `office-phone-group-muted-cutaway-v01.png` staged in project Drive (file ID `1k5O7pP4YqXaRiQdM_zObFu8uS0uoHPGU`), with manifest `generated-assets/manifests/game-sp40h-office-phone-muted-v01.json`; OIDC materialisation succeeded and committed a 196,444-byte WebP at `public/assets/generated/game/office-phone-group-muted-cutaway-v01.webp`.
 - Swapped only `office.v09` from the old text notification to the approved still. Preserved the 2-second hold, previous `office.v05` group-creation shot, scene timing/order and all dialogue. Tests/build packaging and documentation added (`docs/story/GAME-SP4.0H-OFFICE-PHONE-MUTED.md`).
 - Both approved phone stills are on existing **draft PR #38**, awaiting owner preview and explicit merge approval; `main` remains unchanged.
 
