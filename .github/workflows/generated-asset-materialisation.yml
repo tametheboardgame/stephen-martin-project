@@ -156,6 +156,18 @@ jobs:
               encoding="utf-8",
           )
 
+      # One-off, opt-in Ending B portrait composition proof on agent branches.
+      # Never change canonical Stephen artwork or silently merge the result.
+      - name: Compose exact approved Stephen sprite into permit proof
+        shell: bash
+        env:
+          MANIFEST_LIST: ${{ steps.manifests.outputs.path }}
+        run: |
+          if grep -qx 'generated-assets/manifests/game-sp40j-release-permit-layout-proof-v01.json' "$MANIFEST_LIST"; then
+            python scripts/ending-b/compose_permit_portrait.py
+            printf '%s\n' 'public/assets/generated/game/ending-b-release-permit-canonical-portrait-proof-v01.webp' >> "$RUNNER_TEMP/generated-asset-outputs.txt"
+          fi
+
       - name: Commit materialised assets
         shell: python
         env:
