@@ -1765,6 +1765,8 @@ test("SP3.4 pause, hidden-tab and route choice guard do not advance puzzle",()=>
   p.document.hidden=false;
   assert.equal(p.timeouts.size,0,"Return from hidden tab never skips a line");
   p.el("holidayNextButton").click();
+  assert.equal(saved(p).summitVoiceStep,null,"Second spoken response can be skipped while paused");
+  p.el("holidayNextButton").click();
   assert.equal(saved(p).rescueProgress.miniGameStage,1);
   assert.equal(p.el("summitRoundTitle").textContent,"Recite the highest compliment");
   assert.equal(p.timeouts.size,0,"Remains paused until Play is explicitly pressed");
@@ -1779,7 +1781,8 @@ test("SP3.4 all three fully-earned finales autoplay their lines but stop at summ
       const p=toSummitAdmissions();
       for(const index of [2,1,2]){
         p.el("summitChoice"+index).click();
-        assert.equal(p.tick(),true,"Correct answer acknowledgment advances automatically");
+        for(let line=0;line<3;line++)
+          assert.equal(p.tick(),true,"Each correct answer speaks two actors, then advances");
       }
       return p;
     },lines:story().SMP_SUMMIT.ending.length},
