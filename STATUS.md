@@ -2,6 +2,14 @@
 
 **Updated:** 17 October 2026
 
+## GAME-SP4B — Ending B approved-art playable preview (17 October 2026)
+
+- Staged, materialised and committed all locked Ending B background, puzzle-desk, bear classification, takeaway-cup, physical stamp and matching red impression artwork. Reused the **exact office Stephen sprite** from the already owner-approved release-permit composite, rather than inventing another portrait. The transformed cup has its own alpha-preserving WebP; original source remains in Drive.
+- Replaced Ending B's provisional paperwork backdrop with the approved Office of Ceremonial Misunderstandings. In the existing three-step gameplay: the bear document appears during classification, Paul's separate cup appears before stamp discovery, the transparent stamp becomes a selected/draggable prop, and its red ink impression overlays Stephen's permit only after approval. Existing voice/dialogue/choices/save/touch/keyboard controls remain unchanged. Ending uses approved office background and existing cast sprites until a dedicated official sprite is reviewed.
+- Build checks eight required WebP images (including alpha on cup, stamp and ink), plus two focused state/asset regression tests. The development branch `agent/game-sp4-ending-b-art-integration` is owner-review-only; **do not merge without explicit request**. Production log: `docs/story/GAME-SP4.0-END-B-ASSET-PRODUCTION.md`.
+
+
+
 ## GAME-SP4 — Back in England voice enablement (17 October 2026)
 
 - Bounded audio integration for the existing 10-line David/Paul `rescue-alarm` opening. The canonical screenplay, office expressions, phone prop, existing holiday dialogue recordings and silent four-card travel montage are unchanged.
