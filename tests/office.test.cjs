@@ -2763,3 +2763,71 @@ test("All ten alarm files map in order; travel montage stays silent and retains 
   p.el("rescueTravelNextButton").click();
   assert.equal(p.voices.length,total,"Do not generate narration for travel title cards");
 });
+
+
+test("GAME-SP4B: approved independent Ending B images are present in build and script",()=>{
+  const images=[
+    "public/assets/generated/locations/ending-b-bureau-office-v01.webp",
+    "public/assets/generated/game/ending-b-puzzle-desk-v01.webp",
+    "public/assets/generated/game/ending-b-bear-classification-v01.webp",
+    "public/assets/generated/game/ending-b-pauls-takeaway-cup-master-v01.webp",
+    "public/assets/generated/game/ending-b-pauls-takeaway-cup-alpha-v01.webp",
+    "public/assets/generated/game/ending-b-approved-stamp-v01.webp",
+    "public/assets/generated/game/ending-b-approved-ink-impression-v01.webp",
+    "public/assets/generated/game/ending-b-release-permit-canonical-portrait-proof-v01.webp"
+  ];
+  const build=read("scripts/build.mjs");
+  assert.ok(build.includes("const endingBImages = ["));
+  for(const file of images){
+    const data=fs.readFileSync(path.join(root,file));
+    assert.ok(data.length>20000 && data.length<3*1024*1024,file);
+    assert.equal(data.toString("ascii",0,4),"RIFF",file);
+    assert.equal(data.toString("ascii",8,12),"WEBP",file);
+    assert.ok(build.includes('"'+file+'"'),"Build needs "+file);
+  }
+  for(const file of images.filter(x=>/cup-alpha|approved-stamp|approved-ink-impression/.test(x))){
+    const data=fs.readFileSync(path.join(root,file));
+    assert.equal(data.toString("ascii",12,16),"VP8X",file);
+    assert.ok((data[20]&0x10)!==0,"Independent prop must have genuine alpha: "+file);
+  }
+  assert.match(css,/rescueMiniGameScene\[data-route="detention"\]/);
+  assert.match(css,/ending-b-bureau-office-v01\.webp/);
+  assert.match(html,/id="detentionBearArtLink"/);
+  assert.match(html,/id="detentionCupPreview"/);
+  assert.match(html,/id="detentionApprovedPreview"/);
+  assert.match(html,/id="detentionInkOnPermit"/);
+  assert.match(html,/id="detentionStampButton"[^>]*draggable="true"/);
+  assert.match(html,/ending-b-release-permit-canonical-portrait-proof-v01\.webp/);
+  assert.match(html,/ending-b-approved-ink-impression-v01\.webp/);
+  assert.match(html,/class="detention-ending-actor detention-ending-stephen"/);
+});
+
+test("GAME-SP4B: artwork follows stage and saved stamp state without changing answers",()=>{
+  const p=toDetentionPaperwork();
+  assert.equal(p.el("rescueMiniGameScene").dataset.route,"detention");
+  assert.equal(p.el("detentionBearArtLink").hidden,true,"Not yet on bear classification");
+  assert.equal(p.el("detentionCupPreview").hidden,true,"Cup is revealed in final form stage");
+  p.el("detentionChoice1").click();p.el("detentionNextButton").click();
+  assert.equal(p.el("detentionBearArtLink").hidden,false,"Show locked bear form only in stage two");
+  assert.equal(p.el("detentionCupPreview").hidden,true);
+  p.el("detentionChoice2").click();p.el("detentionNextButton").click();
+  assert.equal(p.el("detentionBearArtLink").hidden,true);
+  assert.equal(p.el("detentionCupPreview").hidden,false,"Show Paul's cup before discovery");
+  p.el("detentionChoice2").click();
+  assert.equal(saved(p).detentionStampFound,true);
+  assert.equal(p.el("detentionCupPreview").hidden,true,"Cup moves once hidden stamp found");
+  assert.equal(p.el("detentionStampPanel").hidden,false);
+  assert.equal(p.el("detentionApprovedPreview").hidden,true);
+  p.el("detentionStampButton").click();
+  assert.equal(saved(p).detentionStampSelected,true);
+  assert.equal(p.el("detentionStampButton").dataset.selected,"true");
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(p.el("detentionStampPanel").hidden,false,"Image interaction survives Continue");
+  p.el("detentionPermitButton").click();
+  assert.equal(saved(p).rescueProgress.finished,true);
+  assert.equal(p.el("detentionApprovedPreview").hidden,false,"Impression appears on permit after success");
+  assert.match(p.el("detentionPermitLabel").textContent,/ALL OF YOU PLEASE LEAVE/);
+  p.el("detentionNextButton").click();
+  assert.equal(p.el("detentionEndingScene").hidden,false);
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+});
