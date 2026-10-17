@@ -547,8 +547,8 @@
   }
 
 
-  // GAME-SP4: optional, ID-addressed voice clips for Stephen's three
-  // sightseeing scenes. Absence/404 retains the existing text timer.
+  // GAME-SP4: optional, ID-addressed dialogue for sightseeing and the shared
+  // Back in England rescue opening. Absence/404 retains text timing.
   let holidayVoice = null;
   let holidayVoiceId = null;
   let holidayVoiceStatus = "off";
@@ -575,6 +575,10 @@
     }
     if (state.holidayPhase === "final-message" && state.finalStep === 1)
       return {id:chinaFinal.stephenLastLineId, text:chinaFinal.stephenLastLine};
+    // Shared rescue opening: reuse Chapter Two's audio-completion, Pause/Play,
+    // Next and missing-file fallback contract without changing its screenplay.
+    if (state.holidayPhase === "rescue-alarm" && state.rescueAlarmStep < rescueAlarm.lines.length)
+      return rescueAlarm.lines[state.rescueAlarmStep];
     return null;
   }
 
