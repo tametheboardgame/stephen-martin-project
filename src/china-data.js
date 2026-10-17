@@ -14,7 +14,9 @@
     ],
     acceptLabel: "A mountain full of handsome men? Sign me up.",
     declineLabel: "Tempting, but I've got more sightseeing to do.",
+    acceptReactionId: "china.wall.accept-reaction",
     acceptReaction: "Right. So, is it a social club or an actual cult? Actually, don't answer that.",
+    declineReactionId: "china.wall.decline-reaction",
     declineReaction: "I'll regret this, won't I? Usually do.",
     eveningPlan: "The Summit",
     nextScene: "The Forbidden City"
@@ -38,12 +40,13 @@
     acceptLabel: "Free dinner AND I get to feel important? Absolutely.",
     declineLabel: "No thanks. This sounds suspiciously like a work event.",
     acceptReply: [
-      { speaker: "Stephen", text: "Do I need to prepare a speech?" },
-      { speaker: "Attendant", text: "No, sir. We have already prepared one in your name." },
-      { speaker: "Stephen", text: "Outstanding." },
-      { speaker: "Attendant", text: "Could we use a photo of you for the promotional slideshow?" },
-      { speaker: "Stephen", text: "Sure, just use the first one on my phone." }
+      { id: "china.palace.accept.001", speaker: "Stephen", text: "Do I need to prepare a speech?" },
+      { id: "china.palace.accept.002", speaker: "Attendant", text: "No, sir. We have already prepared one in your name." },
+      { id: "china.palace.accept.003", speaker: "Stephen", text: "Outstanding." },
+      { id: "china.palace.accept.004", speaker: "Attendant", text: "Could we use a photo of you for the promotional slideshow?" },
+      { id: "china.palace.accept.005", speaker: "Stephen", text: "Sure, just use the first one on my phone." }
     ],
+    declineReplyId: "china.palace.decline-reaction",
     declineReply: "I've come thousands of miles to get away from meetings. Absolutely not."
   });
 })();
@@ -69,6 +72,7 @@
     ],
     acceptLabel: "Ninety per cent off? I'd be an idiot not to.",
     declineLabel: "I think I'll stick with my existing plans.",
+    acceptReactionId: "china.market.accept-reaction",
     acceptReaction: "If this goes wrong, at least I've saved a fortune.",
     declineReaction: "Actually, no. I've already got somewhere to be."
   });
@@ -78,6 +82,7 @@
       detention: "I've just been introduced as the official...",
       reassemble: "This spa is incredible. They're taking my entire..."
     },
+    stephenLastLineId: "china.final.001",
     stephenLastLine: "Oh, for fuck's sake.",
     title: "BACK IN ENGLAND…",
     subtitle: "Two idiots are about to make this considerably worse."

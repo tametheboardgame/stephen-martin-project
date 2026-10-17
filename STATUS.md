@@ -2,18 +2,21 @@
 
 **Updated:** 17 October 2026
 
-## GAME-SP4.0H — Muted-group follow-on still (17 October 2026)
+## GAME-SP4.0G–H — Approved phone cutaways (17 October 2026)
 
-- The owner approved a companion 1672×940 cartoon phone still continuing the same office composition, bear group avatar and exact chat UI as GAME-SP4.0G. It displays the original group-addition system notice followed by the new muted-bell notice `Stephen Martin has muted the group`; no personal chat messages.
-- Original `office-phone-group-muted-cutaway-v01.png` staged in project Drive (file ID `1k5O7pP4YqXaRiQdM_zObFu8uS0uoHPGU`), with manifest `generated-assets/manifests/game-sp40h-office-phone-muted-v01.json`; OIDC materialisation succeeded and committed a 196,444-byte WebP at `public/assets/generated/game/office-phone-group-muted-cutaway-v01.webp`.
-- Swapped only `office.v09` from the old text notification to the approved still. Preserved the 2-second hold, previous `office.v05` group-creation shot, scene timing/order and all dialogue. Tests/build packaging and documentation added (`docs/story/GAME-SP4.0H-OFFICE-PHONE-MUTED.md`).
-- Both approved phone stills are on existing **draft PR #38**, awaiting owner preview and explicit merge approval; `main` remains unchanged.
+- The two approved phone cartoon artworks, staged in the project Google Drive folder and materialised as WebP, are now implemented in the game.
+- `office.v05` shows the bear-avatar Operation: Save Stephen group with only “Paul added David and Stephen to the group”; duration 2300 ms.
+- `office.v09` continues the same view with “Stephen Martin has muted the group” and a crossed-out bell; duration 2000 ms.
+- Holiday dialogue voices and all other cutaways remain unchanged. See `docs/story/GAME-SP4.0G-OFFICE-PHONE-GROUP-CHAT.md` and `GAME-SP4.0H-OFFICE-PHONE-MUTED.md`.
 
-## GAME-SP4.0G — Approved static phone chat (17 October 2026)
 
-- Owner approved an illustrated phone in the same office style, with green messaging-app interface, honey-loving bear avatar, group name `Operation: Save Stephen` and a single system notice: `Paul added David and Stephen to the group`. No individual chat messages. Source 1672×940 PNG staged in project Drive (`office-phone-group-chat-cutaway-v01.png`, ID `1UxMU2r1fI5R56iWft-cjYN4Jg35ZPzaX`). The existing OIDC asset workflow materialises its WebP using `generated-assets/manifests/game-sp40g-office-phone-chat-v01.json`.
-- Replaced only the existing static `office.v05` cutaway content, preserving 2300ms duration and adjoining dialogue. Updated silent cutaway description to match the approved image; added build packaging and regression tests. Documentation: `docs/story/GAME-SP4.0G-OFFICE-PHONE-GROUP-CHAT.md`.
-- Draft PR awaiting owner visual confirmation and explicit merge instruction; do not merge automatically.
+
+## GAME-SP4: Stephen's three-scene dialogue audio import (17 October 2026)
+
+- Draft PR #39 on `agent/game-sp4-stephen-holiday-voice` adds optional MP3-driven dialogue for the Great Wall, Forbidden City, Night Market, and Stephen's shared final spoken line. Existing office voices, song playback, dialogue copy and branching choices remain unchanged.
+- The existing `public/assets/audio/dialogue/` folder now accepts an exact, build-validated 80-ID whitelist (55 office + 25 holiday). Owner may upload completed ElevenLabs MP3s using the stable IDs, without any audio manifest or source patch. Full line/filename guide: `docs/CHINA-VOICE-IMPORT.md`.
+- The three scenes preserve natural audio completion before advancing, with Pause/Play, Next, Sound Off, interrupted navigation, visibility protection and per-line missing-recording fallback. Alternative accept/decline lines are only heard on the chosen route.
+- Test coverage added for audio IDs, natural-duration timing, controls, missing files and each route. **Owner gate:** Upload and listen to actual synthetic MP3s in the draft Cloudflare preview; keep PR #39 draft and do not merge until explicit acceptance.
 
 ## GAME-SP4.0F — Static printer-and-bear cutaway, animation deferred (17 October 2026)
 
