@@ -195,7 +195,7 @@ test("six scripted cutaways are visible, readable and return to the same office"
   const p=preview();p.start();
   for(const [beat,fragment] of [
     ["office.v02","office-david-risk-cutaway-v01.webp"],
-    ["office.v04","OFFICE PRINTER"],
+    ["office.v04","office-printer-bear-cutaway-v01.webp"],
     ["office.v05","STEPHEN RESCUE GROUP"],
     ["office.v07","STEPHEN’S GOODBYE SONG"],
     ["office.v09","has muted the group"],
@@ -2366,8 +2366,8 @@ test("SP4.0D voice-to-printer transition removes redundant two-second pause",asy
   assert.equal([...p.timeouts.values()].at(-1).delay,400,"Brief comic expression");
   p.tick();
   assert.equal(saved(p).beatId,"office.v04");
-  assert.equal([...p.timeouts.values()].at(-1).delay,2400,"Printer animation remains visible");
-  assert.match(p.el("cutawayContent").innerHTML,/OFFICE PRINTER/);
+  assert.equal([...p.timeouts.values()].at(-1).delay,2400,"Static printer image retains the existing screen hold");
+  assert.match(p.el("cutawayContent").innerHTML,/office-printer-bear-cutaway-v01\.webp/);
 });
 
 test("SP4.0D David expression scales are bottom-anchored to neutral",()=>{
@@ -2461,4 +2461,38 @@ test("SP4.0E David laptop appears immediately after risk-assessment introduction
   assert.equal(saved(voiced).beatId,"office.v02");
   assert.ok([...voiced.timeouts.values()].some(t=>t.delay===2600),
     "Full risk cutaway plays before Stephen answers");
+});
+
+
+test("SP4.0F approved office printer still is materialised, shown and isolated to the existing beat",()=>{
+  const file="public/assets/generated/game/office-printer-bear-cutaway-v01.webp";
+  const manifest=JSON.parse(read("generated-assets/manifests/game-sp40f-office-printer-bear-v01.json"));
+  assert.equal(manifest.schemaVersion,1);
+  assert.equal(manifest.source.provider,"google-drive");
+  assert.equal(manifest.expectedSourceName,"office-printer-bear-cutaway-v01.png");
+  assert.equal(manifest.destination,file);
+  assert.equal(manifest.transform.maxWidth,1672);
+  assert.equal(manifest.transform.maxHeight,941);
+  assert.equal(manifest.revision,1);
+  const bytes=fs.readFileSync(path.join(root,file));
+  assert.ok(bytes.length>50000&&bytes.length<2*1024*1024);
+  assert.equal(bytes.toString("ascii",0,4),"RIFF");
+  assert.equal(bytes.toString("ascii",8,12),"WEBP");
+  assert.ok(read("scripts/build.mjs").includes('const approvedPrinterCutaway = "'+file+'"'));
+  const beat=all.find(x=>x.id==="office.v04");
+  assert.equal(beat.type,"cutaway");
+  assert.equal(beat.visual,"printer");
+  assert.equal(beat.duration,2400,"Timing unchanged; animation comes later");
+  assert.equal(ids[ids.indexOf("office.v04")-1],"office.v03");
+  assert.equal(ids[ids.indexOf("office.v04")+1],"office.022");
+  assert.match(engine,/printer: '<img class="cutaway-approved-art cutaway-approved-printer"/);
+  assert.ok(engine.includes(file));
+  assert.match(css,/#officeScreen \.stage\[data-cutaway="printer"\] \.cutaway-approved-printer/);
+  assert.match(css,/aspect-ratio: 1672 \/ 941/);
+  const p=preview();p.start();p.at("office.v04");
+  assert.match(p.el("cutawayContent").innerHTML,/office-printer-bear-cutaway-v01\.webp/);
+  assert.doesNotMatch(p.el("cutawayContent").innerHTML,/cutaway-output-sheet|cutaway-printer-body/);
+  p.el("nextButton").click();
+  assert.equal(saved(p).beatId,"office.022");
+  assert.equal(p.el("cutawayPanel").hidden,true);
 });
