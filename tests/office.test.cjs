@@ -2695,7 +2695,7 @@ test("Back in England has ten unique whitelisted voice IDs and no spoken travel 
   assert.equal(new Set(ids).size,10);
   assert.ok(alarm.montage.every(card=>card.id.startsWith("rescue.travel.")));
   assert.ok(read("scripts/build.mjs").includes('alarmIds.forEach(id => permitted.add(id + ".mp3"))'));
-  assert.ok(read("scripts/build.mjs").includes('permitted.size !== 90'));
+  assert.ok(read("scripts/build.mjs").includes('permitted.size !== 112'),"Original ten alarm IDs remain included in expanded voice whitelist");
   assert.ok(fs.existsSync(path.join(root,"docs/RESCUE-ALARM-VOICE-IMPORT.md")));
 });
 
@@ -2762,4 +2762,132 @@ test("All ten alarm files map in order; travel montage stays silent and retains 
   assert.equal(saved(p).holidayPhase,"rescue-travel");
   p.el("rescueTravelNextButton").click();
   assert.equal(p.voices.length,total,"Do not generate narration for travel title cards");
+});
+
+
+// GAME-SP4 — full optional voiced Visitor Information dialogue, including
+// incorrect deduction reactions and Paul's one-time route-specific clue.
+function voicedHotel(route="cult") {
+  const p=preview({audio:true});
+  p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
+  for(let i=0;i<5;i++)p.el("wallNextButton").click();
+  if(route==="cult"){
+    p.el("wallAcceptButton").click();p.el("wallGoIncidentButton").click();
+  }else if(route==="detention"){
+    p.el("wallDeclineButton").click();p.el("wallGoPalaceButton").click();p.el("intermissionContinueButton").click();
+    for(let i=0;i<4;i++)p.el("palaceNextButton").click();
+    p.el("palaceAcceptButton").click();
+    for(let i=0;i<5;i++)p.el("palaceNextButton").click();
+    p.el("palaceGoIncidentButton").click();
+  }else{
+    p.el("wallDeclineButton").click();p.el("wallGoPalaceButton").click();p.el("intermissionContinueButton").click();
+    for(let i=0;i<4;i++)p.el("palaceNextButton").click();
+    p.el("palaceDeclineButton").click();p.el("palaceGoMarketButton").click();p.el("intermissionContinueButton").click();
+    for(let i=0;i<6;i++)p.el("marketNextButton").click();
+    p.el("marketGoIncidentButton").click();
+  }
+  p.el("handoffContinueButton").click();
+  for(let i=0;i<3;i++)p.el("chinaFinalNextButton").click();
+  for(let i=0;i<10;i++)p.el("rescueAlarmNextButton").click();
+  p.el("rescueAlarmTravelButton").click();
+  for(let i=0;i<4;i++)p.el("rescueTravelNextButton").click();
+  p.el("rescueHubStartButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-hotel");
+  return p;
+}
+
+test("Visitor Information 22 voice IDs match screenplay and automatic file whitelist",()=>{
+  const h=story().SMP_RESCUE_HUB;
+  const routes=["cult","detention","reassemble"];
+  const ids=[
+    ...Array.from(h.opening,l=>l.id),
+    ...routes.flatMap(route=>Array.from(h.wrong[route],l=>l.id)),
+    ...routes.map(route=>"rescue.hub.hint."+route),
+    ...Array.from(h.correct,l=>l.id)
+  ];
+  assert.equal(ids.length,22);
+  assert.equal(new Set(ids).size,22);
+  assert.ok(ids.every(id=>/^rescue\.hub\.[a-z0-9.]+$/.test(id)));
+  assert.equal(h.correct[4].id,"rescue.hub.correct.005");
+  assert.ok(read("scripts/build.mjs").includes("hubVoiceIds.forEach(id => permitted.add(id +"));
+  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 112"));
+  assert.ok(fs.existsSync(path.join(root,"docs/VISITOR-INFORMATION-VOICE-IMPORT.md")));
+});
+
+test("Visitor Information opens with David/Paul voices in order; evidence stays silent",async()=>{
+  const p=voicedHotel("cult");
+  const first=p.voices.at(-1);
+  assert.ok(first.src.endsWith("rescue.hub.001.mp3"));
+  await Promise.resolve();
+  assert.equal(p.timeouts.size,0,"Actual MP3 duration owns timing");
+  p.el("holidayPauseButton").click();
+  assert.equal(first.paused,true);
+  p.el("holidayPauseButton").click();
+  await Promise.resolve();
+  assert.equal(first.playCount,2);
+  first.finish();p.tick();
+  assert.equal(saved(p).hubIntroStep,1);
+  assert.ok(p.voices.at(-1).src.endsWith("rescue.hub.002.mp3"));
+  for(let i=1;i<8;i++)p.el("hotelNextButton").click();
+  assert.equal(saved(p).hubIntroStep,8);
+  const voices=p.voices.length;
+  assert.equal(p.el("holidayNextButton").hidden,true);
+  p.el("hotelPhoneButton").click();
+  p.el("hotelEvidenceCloseButton").click();
+  p.el("hotelBrochureButton").click();
+  p.el("hotelEvidenceCloseButton").click();
+  assert.equal(p.voices.length,voices,"Evidence is silent");
+});
+
+test("Wrong destination replies sequence, second wrong guess speaks actual-route hint once",()=>{
+  const p=voicedHotel("cult");
+  for(let i=0;i<8;i++)p.el("hotelNextButton").click();
+  p.el("hotelDetentionButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("rescue.hub.wrong.detention.001.mp3"));
+  p.el("holidayNextButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("rescue.hub.wrong.detention.002.mp3"));
+  p.el("holidayNextButton").click();
+  assert.equal(p.el("holidayNextButton").hidden,true);
+  p.el("hotelReassembleButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("rescue.hub.wrong.reassemble.001.mp3"));
+  p.el("holidayNextButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("rescue.hub.wrong.reassemble.002.mp3"));
+  p.el("holidayNextButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("rescue.hub.hint.cult.mp3"));
+  p.el("holidayNextButton").click();
+  assert.equal(saved(p).hubVoiceHintHeard,true);
+  assert.equal(p.el("holidayNextButton").hidden,true);
+  p.el("hotelDetentionButton").click();
+  p.el("holidayNextButton").click();p.el("holidayNextButton").click();
+  assert.equal(p.el("holidayNextButton").hidden,true,"Hint only recorded once per investigation");
+});
+
+test("Correct Visitor Information deduction cuts off a wrong recording then plays all five",()=>{
+  const p=voicedHotel("detention");
+  for(let i=0;i<8;i++)p.el("hotelNextButton").click();
+  p.el("hotelCultButton").click();
+  const old=p.voices.at(-1);
+  p.el("hotelDetentionButton").click();
+  assert.equal(old.paused,true);
+  assert.ok(p.voices.at(-1).src.endsWith("rescue.hub.correct.001.mp3"));
+  for(let i=0;i<5;i++){
+    assert.ok(p.voices.at(-1).src.endsWith("rescue.hub.correct."+String(i+1).padStart(3,"0")+".mp3"));
+    p.el("hotelFinishButton").click();
+  }
+  assert.equal(saved(p).hubCorrectStep,5);
+  assert.equal(p.voices.at(-1).paused,true);
+  p.el("hotelFinishButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+});
+
+test("Visitor Information missing MP3 falls back to subtitles and next line still speaks",async()=>{
+  const p=voicedHotel("reassemble");
+  const first=p.voices.at(-1);
+  await Promise.resolve();
+  first.fail();
+  assert.equal(p.timeouts.size,1);
+  assert.ok(Array.from(p.timeouts.values())[0].delay>=2600);
+  p.tick();
+  assert.equal(saved(p).hubIntroStep,1);
+  assert.ok(p.voices.at(-1).src.endsWith("rescue.hub.002.mp3"));
 });
