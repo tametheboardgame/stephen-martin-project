@@ -196,7 +196,7 @@ test("six scripted cutaways are visible, readable and return to the same office"
   for(const [beat,fragment] of [
     ["office.v02","office-david-risk-cutaway-v01.webp"],
     ["office.v04","office-printer-bear-cutaway-v01.webp"],
-    ["office.v05","STEPHEN RESCUE GROUP"],
+    ["office.v05","office-phone-group-chat-cutaway-v01.webp"],
     ["office.v07","STEPHEN’S GOODBYE SONG"],
     ["office.v09","has muted the group"],
     ["office.v11","RESCUE PLAN - FINAL - FINAL 2"]
@@ -2494,5 +2494,41 @@ test("SP4.0F approved office printer still is materialised, shown and isolated t
   assert.doesNotMatch(p.el("cutawayContent").innerHTML,/cutaway-output-sheet|cutaway-printer-body/);
   p.el("nextButton").click();
   assert.equal(saved(p).beatId,"office.022");
+  assert.equal(p.el("cutawayPanel").hidden,true);
+});
+
+
+test("SP4.0G approved phone cutaway shows group creation without messages",()=>{
+  const file="public/assets/generated/game/office-phone-group-chat-cutaway-v01.webp";
+  const manifest=JSON.parse(read("generated-assets/manifests/game-sp40g-office-phone-chat-v01.json"));
+  assert.equal(manifest.schemaVersion,1);
+  assert.equal(manifest.source.provider,"google-drive");
+  assert.equal(manifest.expectedSourceName,"office-phone-group-chat-cutaway-v01.png");
+  assert.equal(manifest.destination,file);
+  assert.equal(manifest.transform.maxWidth,1672);
+  assert.equal(manifest.transform.maxHeight,940);
+  assert.equal(manifest.revision,1);
+  const bytes=fs.readFileSync(path.join(root,file));
+  assert.ok(bytes.length>50000&&bytes.length<2*1024*1024);
+  assert.equal(bytes.toString("ascii",0,4),"RIFF");
+  assert.equal(bytes.toString("ascii",8,12),"WEBP");
+  assert.ok(read("scripts/build.mjs").includes('const approvedPhoneChatCutaway = "'+file+'"'));
+  const beat=all.find(b=>b.id==="office.v05");
+  assert.equal(beat.type,"cutaway");
+  assert.equal(beat.visual,"chat");
+  assert.equal(beat.duration,2300,"Existing 2.3s hold unchanged");
+  assert.equal(ids[ids.indexOf("office.v05")-1],"office.027");
+  assert.equal(ids[ids.indexOf("office.v05")+1],"office.028");
+  assert.ok(beat.text.includes("Paul added David and Stephen to the group"));
+  assert.ok(beat.text.includes("There are no chat messages"));
+  assert.match(engine,/chat: '<img class="cutaway-approved-art cutaway-approved-chat"/);
+  assert.ok(engine.includes(file));
+  assert.match(css,/#officeScreen \.stage\[data-cutaway="chat"\] \.cutaway-approved-chat/);
+  assert.match(css,/aspect-ratio: 1672 \/ 940/);
+  const p=preview();p.start();p.at("office.v05");
+  assert.match(p.el("cutawayContent").innerHTML,/office-phone-group-chat-cutaway-v01\.webp/);
+  assert.doesNotMatch(p.el("cutawayContent").innerHTML,/phone-message|phone-avatars|cutaway-heading/);
+  p.el("nextButton").click();
+  assert.equal(saved(p).beatId,"office.028");
   assert.equal(p.el("cutawayPanel").hidden,true);
 });
