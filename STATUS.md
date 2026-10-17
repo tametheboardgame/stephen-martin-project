@@ -2,6 +2,12 @@
 
 **Updated:** 17 October 2026
 
+## GAME-SP4.0G — Approved static phone chat (17 October 2026)
+
+- Owner approved an illustrated phone in the same office style, with green messaging-app interface, honey-loving bear avatar, group name `Operation: Save Stephen` and a single system notice: `Paul added David and Stephen to the group`. No individual chat messages. Source 1672×940 PNG staged in project Drive (`office-phone-group-chat-cutaway-v01.png`, ID `1UxMU2r1fI5R56iWft-cjYN4Jg35ZPzaX`). The existing OIDC asset workflow materialises its WebP using `generated-assets/manifests/game-sp40g-office-phone-chat-v01.json`.
+- Replaced only the existing static `office.v05` cutaway content, preserving 2300ms duration and adjoining dialogue. Updated silent cutaway description to match the approved image; added build packaging and regression tests. Documentation: `docs/story/GAME-SP4.0G-OFFICE-PHONE-GROUP-CHAT.md`.
+- Draft PR awaiting owner visual confirmation and explicit merge instruction; do not merge automatically.
+
 ## GAME-SP4.0F — Static printer-and-bear cutaway, animation deferred (17 October 2026)
 
 - The owner approved a wide 1672×941 cartoon office MFD with a prominent printed picture of a Chinese leader and a honey-loving bear, without the previous intelligence dossier text. Uploaded original PNG to the project's dedicated Google Drive staging folder (`office-printer-bear-cutaway-v01.png`, file ID `1admO_cJkvHgQMDbWmodSTcl-kYQXDVPS`); the standard GitHub OIDC materialisation workflow succeeded, adding `public/assets/generated/game/office-printer-bear-cutaway-v01.webp`.
