@@ -17,7 +17,7 @@ on the currently reviewed development branch, never directly to `main`.
 - Holiday's last spoken reaction: `china.final.001.mp3`.
 
 There are 55 original office IDs and 25 Chapter Two IDs. All 25 new filenames
-and their exact dialogue are indexed at [Chapter Two recording guide](../../../docs/CHINA-VOICE-IMPORT.md).
+and their exact dialogue are indexed at [Chapter Two recording guide](../../../../docs/CHINA-VOICE-IMPORT.md).
 
 The Cloudflare build discovers valid files automatically. Uploading an accepted
 clip requires **no manifest or additional code change** on this branch. The
