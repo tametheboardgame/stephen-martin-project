@@ -57,7 +57,7 @@ Each clip contains only the words in **Spoken line**; the speaker labels and gam
 
 ## Performance
 
-- **Gatekeeper:** ceremonious, unreasonably sincere and intensely reverent about his newly appointed chairman. Eight gatekeeper opportunities including prompts and choice replies.
+- **Gatekeeper:** ceremonious, unreasonably sincere and intensely reverent about his newly appointed chairman. The gatekeeper should remain consistent across the arrival, question prompts and choice replies.
 - **David:** confident, procedural, increasingly alarmed by the perfectly happy chairman. Deadpan self-importance works better than shouting.
 - **Paul:** dry, practical and repeatedly correct; genuinely interested in whether this is worth the trouble.
 - **Stephen:** genuinely delighted with the mountain social club. Irritated to find David and Paul have arrived.
