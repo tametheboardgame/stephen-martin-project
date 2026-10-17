@@ -242,7 +242,15 @@ if (holidaySpokenIds.length !== 25 ||
   throw new Error("Chapter Two dialogue IDs changed unexpectedly; expected 25 unique safe audio IDs.");
 }
 holidaySpokenIds.forEach(id => permitted.add(id + ".mp3"));
-if (permitted.size !== 80) throw new Error("Duplicate office / Chapter Two voice ID.");
+// The David/Paul office alarm immediately after Back in England contains
+// ten approved spoken beats; the silent four-card travel montage is excluded.
+const alarmIds = holidaySandbox.window.SMP_RESCUE_ALARM.lines.map(line => line.id);
+if (alarmIds.length !== 10 || new Set(alarmIds).size !== 10 ||
+    alarmIds.some((id, i) => id !== "rescue.alarm." + String(i + 1).padStart(3, "0"))) {
+  throw new Error("Back in England script changed: expected ten stable alarm voice IDs.");
+}
+alarmIds.forEach(id => permitted.add(id + ".mp3"));
+if (permitted.size !== 90) throw new Error("Duplicate approved dialogue voice ID.");
 await mkdir(path.join(output, audioSource), { recursive: true });
 let voiceCount = 0;
 for (const filename of await readdir(audioFolder)) {
@@ -258,7 +266,7 @@ for (const filename of await readdir(audioFolder)) {
   await copyFile(original, path.join(output, audioSource, filename));
   voiceCount++;
 }
-console.log("Approved dialogue MP3s packaged: " + voiceCount + "/80 (55 office + 25 holiday).");
+console.log("Approved dialogue MP3s packaged: " + voiceCount + "/90 (55 office + 25 holiday + 10 rescue alarm).");
 
 // Optional owner-supplied songs are uploaded directly to this exact folder
 // on the song PR branch. Builds work before upload; once present, the MP3s

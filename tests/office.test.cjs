@@ -2673,3 +2673,93 @@ test("SP4.0H approved later phone still shows Stephen muting the group",()=>{
   assert.equal(saved(p).beatId,"office.049");
   assert.equal(p.el("cutawayPanel").hidden,true);
 });
+
+
+// GAME-SP4 — natural-duration optional voice clips for the shared office alarm.
+// Drive the shortest (Summit) route into the real Back in England scene.
+function voicedRescueAlarm() {
+  const p=preview({audio:true});
+  p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
+  for(let i=0;i<5;i++)p.el("wallNextButton").click();
+  p.el("wallAcceptButton").click();p.el("wallGoIncidentButton").click();
+  p.el("handoffContinueButton").click();
+  for(let i=0;i<3;i++)p.el("chinaFinalNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-alarm");
+  return p;
+}
+
+test("Back in England has ten unique whitelisted voice IDs and no spoken travel cards",()=>{
+  const alarm=story().SMP_RESCUE_ALARM;
+  const ids=Array.from(alarm.lines,l=>l.id);
+  assert.deepEqual(ids,Array.from({length:10},(_,i)=>"rescue.alarm."+String(i+1).padStart(3,"0")));
+  assert.equal(new Set(ids).size,10);
+  assert.ok(alarm.montage.every(card=>card.id.startsWith("rescue.travel.")));
+  assert.ok(read("scripts/build.mjs").includes('alarmIds.forEach(id => permitted.add(id + ".mp3"))'));
+  assert.ok(read("scripts/build.mjs").includes('permitted.size !== 90'));
+  assert.ok(fs.existsSync(path.join(root,"docs/RESCUE-ALARM-VOICE-IMPORT.md")));
+});
+
+test("Back in England automatically plays David then Paul, advancing only after each recording ends",async()=>{
+  const p=voicedRescueAlarm();
+  const david=p.voices.at(-1);
+  assert.ok(david.src.endsWith("rescue.alarm.001.mp3"));
+  await Promise.resolve();
+  assert.equal(p.timeouts.size,0,"Voice duration controls autoplay, not subtitle timing");
+  david.finish();
+  assert.equal(p.timeouts.size,1);
+  assert.equal(Array.from(p.timeouts.values())[0].delay,260);
+  p.tick();
+  assert.equal(saved(p).rescueAlarmStep,1);
+  assert.equal(david.paused,true);
+  assert.ok(p.voices.at(-1).src.endsWith("rescue.alarm.002.mp3"));
+  assert.equal(p.el("rescueAlarmSpeaker").textContent,"PAUL");
+});
+
+test("Back in England Pause/Play resumes the same clip and Next cancels stale sound",async()=>{
+  const p=voicedRescueAlarm();
+  const first=p.voices.at(-1);
+  await Promise.resolve();
+  p.el("holidayPauseButton").click();
+  assert.equal(first.paused,true);
+  assert.equal(p.timeouts.size,0);
+  p.el("holidayPauseButton").click();
+  await Promise.resolve();
+  assert.equal(first.playCount,2);
+  p.el("holidayNextButton").click();
+  assert.equal(saved(p).rescueAlarmStep,1);
+  assert.equal(first.paused,true);
+  first.finish();
+  assert.equal(saved(p).rescueAlarmStep,1,"Old clip cannot advance a later line");
+});
+
+test("Back in England missing MP3 falls back to timed subtitles; other recordings still play",async()=>{
+  const p=voicedRescueAlarm();
+  await Promise.resolve();
+  const first=p.voices.at(-1);
+  first.fail();
+  assert.equal(p.timeouts.size,1);
+  assert.ok(Array.from(p.timeouts.values())[0].delay>=2600);
+  p.tick();
+  assert.equal(saved(p).rescueAlarmStep,1);
+  assert.ok(p.voices.at(-1).src.endsWith("rescue.alarm.002.mp3"));
+  p.el("sceneSoundButton").click();
+  assert.equal(p.voices.at(-1).paused,true);
+  assert.equal(p.timeouts.size,1,"Muted audio restores the old text timer");
+});
+
+test("All ten alarm files map in order; travel montage stays silent and retains scene props",()=>{
+  const p=voicedRescueAlarm();
+  for(let i=0;i<10;i++){
+    assert.ok(p.voices.at(-1).src.endsWith("rescue.alarm."+String(i+1).padStart(3,"0")+".mp3"));
+    if(i===5)assert.equal(p.el("rescueAlarmPhone").hidden,false);
+    p.el("rescueAlarmNextButton").click();
+  }
+  assert.equal(saved(p).rescueAlarmStep,10);
+  const last=p.voices.at(-1);
+  assert.equal(last.paused,true);
+  const total=p.voices.length;
+  p.el("rescueAlarmTravelButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-travel");
+  p.el("rescueTravelNextButton").click();
+  assert.equal(p.voices.length,total,"Do not generate narration for travel title cards");
+});
