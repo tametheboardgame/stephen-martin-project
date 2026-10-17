@@ -2,7 +2,7 @@
 
 ## Authorised scope (17 October 2026)
 
-The owner approved a bespoke **David's risk assessment** still for the opening. This belongs to screenplay beat `office.v02`, when David turns his laptop towards Stephen and Paul *before Stephen leaves for China*. It replaces only the previous CSS-drawn mock laptop. The pre-holiday context, 2.6-second silent cutaway, dialogue and cast remain unchanged.
+The owner approved a bespoke **David's risk assessment** still for the opening. This belongs to screenplay beat `office.v02`, when David turns his laptop towards Stephen and Paul *before Stephen leaves for China*. It replaces only the previous CSS-drawn mock laptop. Following owner review, the same `office.v02` cutaway now plays **immediately after `office.005`** (David: “I've conducted a preliminary risk assessment.”), then Stephen responds with `office.006` (“You've done what?”). Previously the laptop appeared after Paul's `office.011` meal-deal exchange. The pre-holiday context, 2.6-second silent cutaway, dialogue, stable beat IDs, historical save mapping and cast remain unchanged.
 
 The art is 1672 × 941 pixels and depicts a large, readable laptop with David's exaggerated pre-trip risk model (97% likely to be fine), surrounded by ordinary office jokes. The background is consistent with the approved modern, sunlit open-plan office; there is no later-trip, kidnapping or rescue event in the surrounding environment.
 
