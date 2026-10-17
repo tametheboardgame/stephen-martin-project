@@ -1436,6 +1436,9 @@
       const progress = rescueFramework.normalise(state.rescueProgress, route);
       state.rescueProgress = progress;
       if (inRouteIntro) {
+        // Keep the newly approved fictional bureaucracy setting separate from
+        // Summit artwork; both routes share the same interaction framework.
+        $("rescueRouteIntro").dataset.route = route;
         const choice = rescueHub.destinations.find(item => item.route === route);
         $("hotelRouteHeading").textContent = choice ? choice.label.toUpperCase() : config.title;
         $("hotelRouteDescription").textContent = rescueHub.routeIntro[route];
@@ -1455,6 +1458,7 @@
           ? "Next line →" : "Continue to " + config.gameTitle + " →";
       }
       if (inMiniGame) {
+        $("rescueMiniGameScene").dataset.route = route;
         const playableSummit = route === "cult";
         const playableDetention = route === "detention";
         const playableAssembly = route === "reassemble";
@@ -1515,6 +1519,13 @@
             + " of " + detention.rounds.length;
           $("detentionRoundPrompt").textContent = round.prompt;
           $("detentionRoundClue").textContent = round.clue;
+          // Art direction only: the three approved source compositions do not
+          // alter answers, hint counting, save keys or touch/keyboard controls.
+          $("detentionBearArtLink").hidden = roundIndex !== 1;
+          $("detentionCupPreview").hidden = roundIndex !== 2 ||
+            state.detentionStampFound === true || acknowledging;
+          $("detentionApprovedPreview").hidden = !(acknowledging && roundIndex === 2);
+          $("detentionInkOnPermit").hidden = !(acknowledging && roundIndex === 2);
           $("detentionChoiceCards").hidden = acknowledging ||
             (roundIndex === 2 && state.detentionStampFound === true);
           for (let i = 0; i < round.options.length; i++) {
@@ -1523,12 +1534,14 @@
           const inStampSearch = roundIndex === 2 && state.detentionStampFound === true && !acknowledging;
           $("detentionStampPanel").hidden = !inStampSearch;
           $("detentionStampButton").dataset.selected = inStampSearch && state.detentionStampSelected === true ? "true" : "false";
+          $("detentionStampButton").setAttribute("aria-pressed",
+            inStampSearch && state.detentionStampSelected === true ? "true" : "false");
           const stampMessage = state.detentionStampSelected === true
             ? "Stamp selected. Tap the permit or drag the stamp onto it."
             : "The APPROVED stamp was under Paul's takeaway drink. Select it and then tap the permit, or drag it onto the permit.";
           $("detentionStampInstructions").textContent = stampMessage;
-          $("detentionPermitButton").textContent = acknowledging
-            ? detention.permitText : "VISITOR RELEASE AUTHORISATION · APPLY STAMP HERE";
+          $("detentionPermitLabel").textContent = acknowledging
+            ? detention.permitText : "Apply stamp to Stephen's release permit";
           const feedback = acknowledging && roundIndex === 2
             ? round.approvedResponse
             : state.detentionStampSelected === true && inStampSearch
