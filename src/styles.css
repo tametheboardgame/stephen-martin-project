@@ -2979,3 +2979,26 @@ body:has(#menuScreen:not([hidden])) main {
   aspect-ratio: 1672 / 941;
   object-fit: contain;
 }
+
+
+/* GAME-SP4.0G — owner-approved static phone group chat at office.v05.
+ * The image is 1672 × 940; do not animate or recompose the screen here. */
+#officeScreen .stage[data-cutaway="chat"] .cutaway-panel {
+  padding: 0;
+  border: 0;
+  background: #bedbe4;
+}
+#officeScreen .stage[data-cutaway="chat"] .cutaway-panel::after { display: none; }
+#officeScreen .stage[data-cutaway="chat"] .cutaway-inner {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none;
+}
+#officeScreen .stage[data-cutaway="chat"] .cutaway-approved-chat {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1672 / 940;
+  object-fit: contain;
+}
