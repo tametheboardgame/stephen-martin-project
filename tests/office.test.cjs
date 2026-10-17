@@ -194,7 +194,7 @@ test("silent reactions hide captions and do not generate fake narration",()=>{
 test("six scripted cutaways are visible, readable and return to the same office",()=>{
   const p=preview();p.start();
   for(const [beat,fragment] of [
-    ["office.v02","PROBABLY FINE"],
+    ["office.v02","office-david-risk-cutaway-v01.webp"],
     ["office.v04","OFFICE PRINTER"],
     ["office.v05","STEPHEN RESCUE GROUP"],
     ["office.v07","STEPHEN’S GOODBYE SONG"],
@@ -2399,4 +2399,36 @@ test("SP4.0D pessimistic lyrics lead early and still reach the last line",async(
   clip.currentTime=120;
   clip.ontimeupdate();
   assert.equal(p.el("officeSongLyricsScroll").scrollTop,600,"No skipped end section");
+});
+
+
+test("SP4.0E owner-approved David laptop cutaway is wide, packaged and isolated to v02",()=>{
+  const file="public/assets/generated/game/office-david-risk-cutaway-v01.webp";
+  const manifest=JSON.parse(read("generated-assets/manifests/game-sp40e-office-david-risk-v01.json"));
+  assert.equal(manifest.schemaVersion,1);
+  assert.equal(manifest.source.provider,"google-drive");
+  assert.equal(manifest.expectedSourceName,"office-david-risk-cutaway-v01.png");
+  assert.equal(manifest.destination,file);
+  assert.equal(manifest.transform.maxWidth,1672);
+  assert.equal(manifest.transform.maxHeight,941);
+  assert.equal(manifest.revision,1);
+  const image=fs.readFileSync(path.join(root,file));
+  assert.ok(image.length>50000&&image.length<2*1024*1024);
+  assert.equal(image.toString("ascii",0,4),"RIFF");
+  assert.equal(image.toString("ascii",8,12),"WEBP");
+  assert.ok(read("scripts/build.mjs").includes('const approvedRiskCutaway = "'+file+'"'));
+  const beat=all.find(b=>b.id==="office.v02");
+  assert.equal(beat.visual,"risk");
+  assert.equal(beat.duration,2600,"Existing scene pacing preserved");
+  assert.ok(beat.text.includes("David turns his laptop towards them"));
+  assert.match(engine,/risk: '<img class="cutaway-approved-art cutaway-approved-risk"/);
+  assert.ok(engine.includes(file));
+  assert.match(css,/#officeScreen \.stage\[data-cutaway="risk"\] \.cutaway-approved-risk/);
+  assert.match(css,/aspect-ratio: 1672 \/ 941/);
+  const p=preview();p.start();p.at("office.v02");
+  assert.match(p.el("cutawayContent").innerHTML,/office-david-risk-cutaway-v01\.webp/);
+  assert.match(p.el("cutawayContent").innerHTML,/alt="David’s laptop showing/);
+  p.el("nextButton").click();
+  assert.equal(saved(p).beatId,"office.012");
+  assert.equal(p.el("cutawayPanel").hidden,true);
 });
