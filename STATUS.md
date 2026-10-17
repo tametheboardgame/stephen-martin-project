@@ -6,7 +6,7 @@
 
 - The owner locked the empty Office of Ceremonial Misunderstandings background, the puzzle-desk concept close-up and the standalone Bear Classification Assessment (three original PNGs staged privately in the project's approved Google Drive folder).
 - All three source filenames, Drive provenance, image dimensions and the ordered remaining asset list are recorded in `docs/story/GAME-SP4.0-END-B-ASSET-PRODUCTION.md`.
-- Next individual asset for owner review: **Stephen's ceremonial release permit**. Keep source concepts unmodified; small proposed bear-document text refinements are documented but not silently applied. No game integration or `main` merge authorised.
+- **Stephen's ceremonial release permit** is approved in exact-sprite composited review form on separate stacked draft PR #42; do not merge without qualification. **Paul's takeaway cup** (`PROP_EndingB_PaulsTakeawayCup_v01`) is locked and source-staged in Drive as `ending-b-pauls-takeaway-cup-v01.png` (file ID `16DgdTHrmMXErCr9-JGzYHpe_pmHo7IsG`). The current cup artwork is opaque, with transparent sprite isolation deferred to integration. Next: generate the independently interactive `PROP_EndingB_ApprovedStamp_v01`, without placing it in the office background or under the cup prematurely. No change to gameplay or `main`.
 
 
 
