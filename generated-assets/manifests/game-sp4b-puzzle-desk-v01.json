@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1cd8j6Un_Ggq6M3oI9_TamNm6wIUrgTyA"
+  },
+  "expectedSourceName": "ending-b-puzzle-desk-cutaway-v01.png",
+  "destination": "public/assets/generated/game/ending-b-puzzle-desk-v01.webp",
+  "transform": {
+    "maxWidth": 1536,
+    "maxHeight": 1024,
+    "quality": 88
+  },
+  "revision": 1
+}

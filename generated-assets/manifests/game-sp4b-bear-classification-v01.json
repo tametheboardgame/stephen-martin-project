@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1nDEyJfQ4L_Ldfy7DwalmqayDJ8TVlxa3"
+  },
+  "expectedSourceName": "ending-b-bear-classification-v01.png",
+  "destination": "public/assets/generated/game/ending-b-bear-classification-v01.webp",
+  "transform": {
+    "maxWidth": 1122,
+    "maxHeight": 1402,
+    "quality": 88
+  },
+  "revision": 1
+}

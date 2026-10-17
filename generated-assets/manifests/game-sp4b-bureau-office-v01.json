@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "142qxOZXD2rKCcxGJ3dn-EA7977AKEubP"
+  },
+  "expectedSourceName": "ending-b-bureau-office-background-v01.png",
+  "destination": "public/assets/generated/locations/ending-b-bureau-office-v01.webp",
+  "transform": {
+    "maxWidth": 1672,
+    "maxHeight": 941,
+    "quality": 88
+  },
+  "revision": 1
+}
