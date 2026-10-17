@@ -1,31 +1,51 @@
-# Office dialogue recordings (GAME-SP1.1-D7)
+# Recorded dialogue: office and Chapter Two
 
-**Upload on the development branch:** `agent/game-sp11d7-dialogue-voice`. **Do not upload to `main`.**
+This folder is the exact GitHub upload destination for optional, owner-approved
+ElevenLabs MP3 voice clips. Upload through GitHub's **Upload files** interface
+on the currently reviewed development branch, never directly to `main`.
 
-This folder is the direct GitHub drop-off location for the 55 pre-recorded ElevenLabs **MP3** clips. The web player selects a clip automatically using the approved screenplay beat ID. No code changes, audio manifest edits or extra conversion pipeline are needed when new files arrive.
+## Supported audio (80 possible clips)
 
-## Filenames
+- Opening office: `intro.exterior.mp3` and `office.001.mp3` through `office.054.mp3`.
+- Great Wall: `china.wall.001.mp3` to `china.wall.005.mp3`, plus
+  `china.wall.accept-reaction.mp3` and `china.wall.decline-reaction.mp3`.
+- Forbidden City: `china.palace.001.mp3` to `china.palace.004.mp3`,
+  `china.palace.accept.001.mp3` to `china.palace.accept.005.mp3`,
+  and `china.palace.decline-reaction.mp3`.
+- Night Market: `china.market.001.mp3` to `china.market.006.mp3`
+  plus `china.market.accept-reaction.mp3`.
+- Holiday's last spoken reaction: `china.final.001.mp3`.
 
-- Narrator (1): `intro.exterior.mp3`
-- Stephen (16), David (18), Paul (20): `office.001.mp3` through `office.054.mp3` (all 54 numbers appear exactly once).
-- Names **must** have the three-digit beat number and lower-case `.mp3`. No extra character prefixes, spaces, versions, suffixes, ZIP folders, or `.wav` files.
-- Silent reaction/insert beats such as `office.v01` do not have dialogue recordings.
+There are 55 original office IDs and 25 Chapter Two IDs. All 25 new filenames
+and their exact dialogue are indexed at [Chapter Two recording guide](../../../docs/CHINA-VOICE-IMPORT.md).
 
-These assets correspond to the exact lines in `src/office-data.js`; the repository build validates their filenames against the screenplay and includes every valid MP3 automatically.
+The Cloudflare build discovers valid files automatically. Uploading an accepted
+clip requires **no manifest or additional code change** on this branch. The
+player uses each script ID to select its MP3. Missing recordings fall back to
+the existing text duration without stopping the scene.
 
-## Upload through GitHub
+## How to upload
 
-1. Open this folder on branch `agent/game-sp11d7-dialogue-voice` on github.com. Check the branch selector **before** uploading.
-2. Click **Add file → Upload files**, drag all 55 MP3s into the upload area and commit **directly to this development branch**, not to `main`.
-3. Watch the existing draft voice PR's checks and Cloudflare Pages branch preview. All clips may be uploaded together or in several batches; lines that have not been uploaded continue to play using the old text-based timing.
-4. In the updated preview, click **Start voiced story** (it enables sound on that user gesture), and listen through. Use Sound: Off if you prefer silence. Autoplay advances after each file **finishes**, not after the old short text timer. Pause/Next/Back/Skip, Sound Off and switching tabs work as expected.
+1. Switch to `agent/game-sp4-stephen-holiday-voice` while it is under review.
+2. Open `public/assets/audio/dialogue/`, click **Add file → Upload files**.
+3. Upload the MP3s with *exactly* the names above, commit to this branch.
+4. Wait for the branch Cloudflare preview; listen to the Great Wall and both
+   later route decisions, Pause/Play and Sound Off, before requesting merge.
 
-## Restrictions
+Use lower-case `.mp3`, matching punctuation and three-digit IDs. Do not
+upload `.wav`, additional suffixes, ZIP folders, or other file formats.
+Files must be between 128 bytes and 25 MiB; the build rejects unexpected
+filenames or invalid sizes. The MP3 must actually be MP3-encoded.
 
-- **Public repository:** both the recordings and their dialogue will be publicly retrievable when pushed. Upload only finished, authorised synthetic clips. Do not upload a real person's recordings, private conversations, audio-generation API keys or unrelated source material.
-- GitHub's web uploader limits individual files to **25 MiB**; this project's build enforces the same maximum and rejects empty files and unsupported filenames.
-- MP3 only. If ElevenLabs exports WAV or another format, export or convert to MP3 first; renaming a WAV extension will not convert its encoding.
-- The original synthetic UI chimes and the visible song lyrics are separate; the 55 files contain only the listed spoken dialogue. Use future separate approval for a full recorded goodbye song.
-- The opening's script IDs and spoken text are canon. Do not rename, renumber or revise screenplay beats to make a filename fit.
+All source recordings are **publicly accessible once committed** to this
+public repository. Never upload recordings of real people without permission,
+private conversations, passwords, API tokens, or unapproved recordings.
 
-Expected result when complete: 55/55 MP3s in this folder; no extra files other than this README.
+## What the player does
+
+The office and Stephen's holiday scenes now have independent playback state.
+With sound enabled, the current line's recording controls automatic advance,
+and the next line follows after a short gap. Pause holds its position, Play
+resumes, Next skips the current recording, and a 404 or playback failure
+falls back to the timed subtitle. Silent titles, phone messages and choices
+are not narrated. Branch-specific recordings play only on their chosen route.
