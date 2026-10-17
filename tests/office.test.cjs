@@ -2507,7 +2507,7 @@ test("SP4.0G approved phone cutaway shows group creation without messages",()=>{
   assert.equal(manifest.destination,file);
   assert.equal(manifest.transform.maxWidth,1672);
   assert.equal(manifest.transform.maxHeight,940);
-  assert.equal(manifest.revision,1);
+  assert.equal(manifest.revision,2);
   const bytes=fs.readFileSync(path.join(root,file));
   assert.ok(bytes.length>50000&&bytes.length<2*1024*1024);
   assert.equal(bytes.toString("ascii",0,4),"RIFF");
