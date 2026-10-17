@@ -1438,7 +1438,7 @@
       if (inRouteIntro) {
         // Keep the newly approved fictional bureaucracy setting separate from
         // Summit artwork; both routes share the same interaction framework.
-        $("rescueRouteIntro").dataset.route = route;
+        $("rescueRouteIntro").dataset.endingB = route === "detention" ? "true" : "false";
         const choice = rescueHub.destinations.find(item => item.route === route);
         $("hotelRouteHeading").textContent = choice ? choice.label.toUpperCase() : config.title;
         $("hotelRouteDescription").textContent = rescueHub.routeIntro[route];
@@ -1523,7 +1523,7 @@
           // alter answers, hint counting, save keys or touch/keyboard controls.
           $("detentionBearArtLink").hidden = roundIndex !== 1;
           $("detentionCupPreview").hidden = roundIndex !== 2 ||
-            state.detentionStampFound === true || acknowledging;
+            state.detentionStampFound === true || Boolean(acknowledging);
           $("detentionApprovedPreview").hidden = !(acknowledging && roundIndex === 2);
           $("detentionInkOnPermit").hidden = !(acknowledging && roundIndex === 2);
           $("detentionChoiceCards").hidden = acknowledging ||
