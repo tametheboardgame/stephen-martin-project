@@ -2958,3 +2958,33 @@ test("GAME-SP4B: artwork follows stage and saved stamp state without changing an
   assert.equal(p.el("detentionEndingScene").hidden,false);
   assert.equal(saved(p).holidayPhase,"rescue-route-ending");
 });
+
+
+test("GAME-SP4B.1 Ending B briefing uses accessible bottom-of-stage subtitles, not old modal",()=>{
+  assert.match(html,/class="detention-office-label" aria-hidden="true"/);
+  const introSelector='#rescueRouteIntro[data-ending-b="true"]';
+  assert.ok(css.includes(introSelector+' .rescue-route-intro-stage'));
+  assert.ok(css.includes(introSelector+' .rescue-travel-panel'));
+  assert.ok(css.includes(introSelector+' .rescue-travel-panel > h2'));
+  assert.ok(css.includes(introSelector+' #routeIntroDialogue[hidden]'));
+  assert.ok(css.includes(introSelector+':has(#routeIntroDialogue:not([hidden])) #routeIntroStatus'));
+  const introRules=css.slice(css.indexOf("/* GAME-SP4B.1"));
+  assert.match(introRules,/#rescueRouteIntro\[data-ending-b="true"\] \.rescue-travel-panel \{[\s\S]*?position:absolute;[\s\S]*?bottom:10%;/);
+  assert.match(introRules,/#detentionEndingScene \.detention-ending-content \{[\s\S]*?position:absolute;[\s\S]*?bottom:8%;/);
+  // The existing Summit route treatment must remain separate, with its own
+  // bottom subtitles; Ending B's labels must not appear in the Summit.
+  assert.match(css,/#rescueRouteIntro\[data-route="cult"\] \.rescue-travel-panel/);
+  const p=toHotelInvestigation("detention");
+  completeHotelIntro(p);
+  p.el("hotelDetentionButton").click();
+  for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+  assert.equal(p.el("rescueRouteIntro").dataset.route,"other","Keep canonical Summit route scope");
+  assert.equal(p.el("rescueRouteIntro").dataset.endingB,"true");
+  assert.equal(p.el("routeIntroDialogue").hidden,false);
+  assert.match(p.el("routeIntroLine").textContent,/./);
+  assert.ok(p.el("routeIntroStatus").textContent.length>0,"Progress remains available after dialogue");
+  p.el("routeIntroNextButton").click();
+  assert.equal(p.el("rescueRouteIntro").dataset.endingB,"true");
+  assert.equal(p.el("routeIntroDialogue").hidden,false);
+});
