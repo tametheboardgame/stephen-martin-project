@@ -3002,3 +3002,26 @@ body:has(#menuScreen:not([hidden])) main {
   aspect-ratio: 1672 / 940;
   object-fit: contain;
 }
+
+
+/* GAME-SP4.0H — second approved phone still at office.v09.
+ * Match the original group-chat framing and preserve the 2.0-second hold. */
+#officeScreen .stage[data-cutaway="muted"] .cutaway-panel {
+  padding: 0;
+  border: 0;
+  background: #bedbe4;
+}
+#officeScreen .stage[data-cutaway="muted"] .cutaway-panel::after { display: none; }
+#officeScreen .stage[data-cutaway="muted"] .cutaway-inner {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none;
+}
+#officeScreen .stage[data-cutaway="muted"] .cutaway-approved-muted {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1672 / 940;
+  object-fit: contain;
+}
