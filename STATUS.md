@@ -2,6 +2,13 @@
 
 **Updated:** 17 October 2026
 
+## GAME-SP4 — Back in England voice enablement (17 October 2026)
+
+- Bounded audio integration for the existing 10-line David/Paul `rescue-alarm` opening. The canonical screenplay, office expressions, phone prop, existing holiday dialogue recordings and silent four-card travel montage are unchanged.
+- Extends the same natural-duration holiday playback controller to the alarm, including Pause/Play, Next, Sound Off and text-timed missing-file fallback. Automatic build whitelist now allows 90 recordings: 55 opening, 25 Stephen holiday and 10 rescue alarm.
+- Exact approved ElevenLabs recording filenames and dialogue: `docs/RESCUE-ALARM-VOICE-IMPORT.md`; upload destination `public/assets/audio/dialogue/` on `agent/game-sp4-back-england-voice`. Five focused regression tests added.
+- **Owner gate:** Upload and audition the ten David/Paul recordings on the draft PR preview before merging into `main`. No new artwork or unapproved dialogue.
+
 ## GAME-SP4.0G–H — Approved phone cutaways (17 October 2026)
 
 - The two approved phone cartoon artworks, staged in the project Google Drive folder and materialised as WebP, are now implemented in the game.
