@@ -3025,3 +3025,139 @@ body:has(#menuScreen:not([hidden])) main {
   aspect-ratio: 1672 / 940;
   object-fit: contain;
 }
+
+
+/* GAME-SP4B approved bureaucratic scene; all objects remain independently layered. */
+#holidayScreen #rescueRouteIntro[data-route="detention"] .rescue-route-intro-stage,
+#holidayScreen #rescueMiniGameScene[data-route="detention"] .rescue-route-intro-stage,
+#holidayScreen .detention-ending-stage {
+  background:linear-gradient(90deg,rgba(10,22,35,.24),rgba(10,22,35,.13)),
+    url("../public/assets/generated/locations/ending-b-bureau-office-v01.webp") center/cover no-repeat;
+}
+#holidayScreen #rescueRouteIntro[data-route="detention"] .summit-entrance-label,
+#holidayScreen #rescueRouteIntro[data-route="detention"] .summit-entrance-actor {
+  display:none !important;
+}
+#holidayScreen .detention-intro-actor {display:none;pointer-events:none;position:absolute;z-index:1;bottom:5%;width:auto;height:62%;object-fit:contain;filter:drop-shadow(3px 7px 6px rgba(20,17,13,.5));}
+#holidayScreen #rescueRouteIntro[data-route="detention"] .detention-intro-actor {display:block;}
+#holidayScreen .detention-intro-david {left:8%;}
+#holidayScreen .detention-intro-paul {right:8%;height:56%;bottom:6%;}
+#holidayScreen #rescueRouteIntro[data-route="detention"] .rescue-travel-panel {
+  position:relative;z-index:3;max-width:650px;background:rgba(12,28,47,.91);
+}
+#holidayScreen #rescueMiniGameScene[data-route="detention"] .rescue-route-intro-stage {padding:2.6% 3% 10%;}
+#holidayScreen .detention-paperwork {
+  position:relative;z-index:3;
+  width:min(93%,1060px);max-height:100%;overflow-y:auto;
+  background:rgba(253,245,225,.97);border:3px solid #b99653;
+  color:#263b48;box-shadow:0 16px 36px #071f31b8;
+  padding:clamp(11px,1.6vw,20px);border-radius:12px;
+}
+#holidayScreen .detention-eyebrow {color:#7e5129;}
+#holidayScreen .detention-paperwork h2 {color:#173f66;}
+#holidayScreen .detention-progress {color:#2f5d81;}
+#holidayScreen .detention-clue {color:#4a5056;}
+#holidayScreen .detention-art-display {
+  width:100%;height:clamp(120px,20vh,190px);position:relative;overflow:hidden;
+  margin:7px auto 10px;border:2px solid #b5925e;border-radius:9px;
+  background:#d9b98c;box-shadow:inset 0 0 8px #51331960;
+}
+#holidayScreen .detention-desk-art {display:block;width:100%;height:100%;object-fit:cover;object-position:center 57%;}
+#holidayScreen .detention-art-bear {
+  position:absolute;right:4%;top:5%;width:clamp(80px,15%,156px);height:90%;
+  display:flex;align-items:center;justify-content:center;border:2px solid #ad823e;
+  background:#f8edcd;box-shadow:0 5px 10px #19100fa6;transform:rotate(3deg);
+}
+#holidayScreen .detention-art-bear img {height:100%;max-width:100%;object-fit:contain;}
+#holidayScreen .detention-cup-preview {
+  position:absolute;right:6%;top:2%;width:min(25%,175px);height:96%;
+  display:grid;place-items:center;pointer-events:none;
+}
+#holidayScreen .detention-cup-preview img {height:87%;max-width:100%;object-fit:contain;filter:drop-shadow(1px 4px 3px #21191485);}
+#holidayScreen .detention-cup-preview span {
+  position:absolute;bottom:0;right:0;padding:4px 7px;background:#112e4eea;
+  border-radius:5px;color:#ffe8af;font-size:clamp(10px,.8vw,13px);font-weight:800;
+  white-space:nowrap;
+}
+#holidayScreen #detentionBearArtLink[hidden],
+#holidayScreen #detentionCupPreview[hidden],
+#holidayScreen #detentionInkOnPermit[hidden],
+#holidayScreen #detentionApprovedPreview[hidden] {display:none !important;}
+#holidayScreen .detention-stamp-panel {
+  margin:8px auto;gap:7px;padding:9px;border-radius:10px;
+  border:2px solid #d0b379;background:#efe0ba;
+}
+#holidayScreen .detention-art-interaction {
+  display:grid;grid-template-columns:minmax(74px,.6fr) minmax(115px,1fr) minmax(145px,1.1fr);
+  align-items:center;gap:clamp(5px,1.1vw,14px);max-width:740px;margin:auto;
+}
+#holidayScreen .detention-moved-cup {max-width:100%;height:min(25vh,205px);object-fit:contain;filter:drop-shadow(1px 5px 3px #25140866);}
+#holidayScreen .detention-stamp,#holidayScreen .detention-permit {
+  width:100%;height:100%;min-width:0;margin:0;padding:8px;display:flex;
+  flex-direction:column;justify-content:center;align-items:center;gap:5px;
+  border:2px solid #bc9d62;background:#fff9eb;color:#233e59;
+  border-radius:9px;transform:none;touch-action:manipulation;
+}
+#holidayScreen .detention-stamp img {display:block;max-width:100%;height:clamp(65px,13vh,125px);object-fit:contain;filter:drop-shadow(2px 4px 3px #261b1866);}
+#holidayScreen .detention-stamp span,#holidayScreen .detention-permit span:last-child {
+  font-size:clamp(10px,.94vw,14px);font-weight:900;line-height:1.2;
+}
+#holidayScreen .detention-stamp[data-selected="true"] {
+  background:#fff0cb;outline:4px solid #bd882e;outline-offset:0;
+}
+#holidayScreen .detention-permit-image,#holidayScreen .detention-approved-preview-frame {
+  position:relative;display:block;max-width:100%;
+}
+#holidayScreen .detention-permit-image {height:clamp(110px,21vh,200px);}
+#holidayScreen .detention-permit-image > img:first-child,
+#holidayScreen .detention-approved-preview-frame > img:first-child {
+  display:block;height:100%;width:100%;object-fit:contain;
+}
+#holidayScreen .detention-ink-overlay {
+  position:absolute;left:56%;top:66%;width:42%;height:22%;object-fit:contain;
+  transform:rotate(-4deg);pointer-events:none;filter:contrast(1.1);
+}
+#holidayScreen .detention-approved-preview {padding:9px;background:#e3d1a5;border-radius:8px;}
+#holidayScreen .detention-approved-preview-frame {height:clamp(160px,33vh,270px);width:max-content;margin:0 auto;}
+#holidayScreen .detention-ending-stage {box-sizing:border-box;padding:0 3% 0;}
+#holidayScreen .detention-ending-actor {
+  position:absolute;z-index:1;height:60%;width:auto;bottom:25%;
+  object-fit:contain;pointer-events:none;filter:drop-shadow(3px 5px 3px #122b3899);
+}
+#holidayScreen .detention-ending-stephen {left:9%;height:58%;}
+#holidayScreen .detention-ending-david {left:38%;height:58%;}
+#holidayScreen .detention-ending-paul {right:9%;height:55%;}
+#holidayScreen .detention-ending-permit {
+  position:absolute;z-index:2;top:2%;right:2%;height:36%;width:max-content;
+  max-width:23%;transform:rotate(5deg);filter:drop-shadow(2px 4px 3px #102030bb);
+}
+#holidayScreen .detention-ending-permit > img:first-child {height:100%;max-width:100%;object-fit:contain;}
+#holidayScreen .detention-ending-permit .detention-ending-ink {
+  position:absolute;left:56%;top:66%;width:42%;height:22%;object-fit:contain;transform:rotate(-4deg);
+}
+#holidayScreen .detention-ending-content {
+  position:relative;z-index:4;align-self:end;margin:0 auto 3%;
+  width:min(93%,1000px);height:auto;max-height:43%;
+  padding:10px 18px;overflow-y:auto;border-color:#b99653;
+  background:rgba(255,248,232,.96);box-shadow:0 8px 24px #152033bb;
+}
+#holidayScreen .detention-ending-content .detention-certificate {margin:5px auto;padding:5px;font-size:clamp(11px,1.35vw,17px);max-width:78%;}
+#holidayScreen .detention-ending-content .detention-ending-line {margin:6px 0;font-size:clamp(15px,1.9vw,24px);}
+#holidayScreen .detention-ending-content .detention-ending-speaker {margin:5px 0 0;}
+@media (max-width:800px) {
+  #holidayScreen .detention-intro-actor {height:45%;bottom:13%;}
+  #holidayScreen .detention-intro-paul {height:41%;}
+  #holidayScreen #rescueMiniGameScene[data-route="detention"] .rescue-route-intro-stage {padding:2% 1% 12%;}
+  #holidayScreen .detention-paperwork {width:98%;max-height:100%;padding:8px;}
+  #holidayScreen .detention-art-display {height:110px;}
+  #holidayScreen .detention-art-interaction {grid-template-columns:.55fr 1fr 1.15fr;}
+  #holidayScreen .detention-moved-cup {height:110px;}
+  #holidayScreen .detention-stamp img {height:75px;}
+  #holidayScreen .detention-permit-image {height:118px;}
+  #holidayScreen .detention-ending-actor {height:50%;bottom:34%;}
+  #holidayScreen .detention-ending-stephen {height:49%;left:3%;}
+  #holidayScreen .detention-ending-david {height:47%;left:30%;}
+  #holidayScreen .detention-ending-paul {height:43%;right:2%;}
+  #holidayScreen .detention-ending-permit {height:28%;top:2%;right:2%;}
+  #holidayScreen .detention-ending-content {max-height:48%;width:99%;margin-bottom:2%;padding:8px;}
+}
