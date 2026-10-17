@@ -579,6 +579,21 @@
     // Next and missing-file fallback contract without changing its screenplay.
     if (state.holidayPhase === "rescue-alarm" && state.rescueAlarmStep < rescueAlarm.lines.length)
       return rescueAlarm.lines[state.rescueAlarmStep];
+    if (state.holidayPhase === "rescue-hotel") {
+      if (state.hubIntroStep < rescueHub.opening.length)
+        return rescueHub.opening[state.hubIntroStep];
+      if (state.hubMatched)
+        return state.hubCorrectStep < rescueHub.correct.length
+          ? rescueHub.correct[state.hubCorrectStep] : null;
+      if (!state.hubActiveClue && Number.isInteger(state.hubVoiceFeedbackStep)) {
+        const replies = rescueHub.wrong[state.hubLastWrongRoute];
+        if (replies && state.hubVoiceFeedbackStep < replies.length)
+          return replies[state.hubVoiceFeedbackStep];
+        if (state.hubVoiceFeedbackStep === 2 && state.hubWrongGuesses >= 2 && !state.hubVoiceHintHeard)
+          return {id:"rescue.hub.hint."+state.route,
+            text:rescueHub.hint[state.route].replace(/^Paul:\s*/, "")};
+      }
+    }
     return null;
   }
 
@@ -748,6 +763,15 @@
       if (state.hubMatched === true) {
         const line = rescueHub.correct[Math.min(state.hubCorrectStep || 0,rescueHub.correct.length - 1)];
         return step(advanceHotelResolution, line?.text);
+      }
+      // Wrong-guess dialogue and Paul's first hint speak while deduction
+      // buttons remain active. Clue props themselves remain silent.
+      if (!state.hubActiveClue && Number.isInteger(state.hubVoiceFeedbackStep)) {
+        const line = rescueHub.wrong[state.hubLastWrongRoute]?.[state.hubVoiceFeedbackStep];
+        if (line) return step(nextHotelFeedback, line.text);
+        if (state.hubVoiceFeedbackStep === 2 && state.hubWrongGuesses >= 2 &&
+            !state.hubVoiceHintHeard)
+          return step(nextHotelFeedback, rescueHub.hint[state.route].replace(/^Paul:\s*/, ""));
       }
       return null; // Stop while clues or destination options are active.
     }
@@ -1140,6 +1164,8 @@
     state.hubLastWrongRoute = null;
     state.hubMatched = false;
     state.hubCorrectStep = 0;
+    state.hubVoiceFeedbackStep = null;
+    state.hubVoiceHintHeard = false;
     delete state.rescueProgress;
     delete state.summitResponse;
     delete state.detentionResponse;
@@ -1436,8 +1462,6 @@
       const progress = rescueFramework.normalise(state.rescueProgress, route);
       state.rescueProgress = progress;
       if (inRouteIntro) {
-        // Keep the newly approved fictional bureaucracy setting separate from
-        // Summit artwork; both routes share the same interaction framework.
         $("rescueRouteIntro").dataset.endingB = route === "detention" ? "true" : "false";
         const choice = rescueHub.destinations.find(item => item.route === route);
         $("hotelRouteHeading").textContent = choice ? choice.label.toUpperCase() : config.title;
@@ -1884,6 +1908,24 @@
     state.hubLastWrongRoute = null;
     state.hubMatched = false;
     state.hubCorrectStep = 0;
+    state.hubVoiceFeedbackStep = null;
+    state.hubVoiceHintHeard = false;
+    renderHoliday();
+  }
+
+  function nextHotelFeedback() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-hotel" ||
+        state.hubMatched || state.hubActiveClue ||
+        !Number.isInteger(state.hubVoiceFeedbackStep)) return;
+    if (state.hubVoiceFeedbackStep < 2) {
+      state.hubVoiceFeedbackStep++;
+      if (state.hubVoiceFeedbackStep === 2 &&
+          (state.hubWrongGuesses < 2 || state.hubVoiceHintHeard))
+        state.hubVoiceFeedbackStep = null;
+    } else {
+      state.hubVoiceHintHeard = true;
+      state.hubVoiceFeedbackStep = null;
+    }
     renderHoliday();
   }
 
@@ -1916,13 +1958,17 @@
         state.hubIntroStep < rescueHub.opening.length || state.hubMatched ||
         state.hubActiveClue || !validHolidayRoutes.includes(route) ||
         !validHolidayRoutes.includes(state.route)) return;
+    // A repeated incorrect selection must restart the same voice ID afresh.
+    stopHolidayVoice();
     if (route === state.route) {
       state.hubMatched = true;
       state.hubCorrectStep = 0;
+      state.hubVoiceFeedbackStep = null;
       state.hubLastWrongRoute = null;
     } else {
       state.hubWrongGuesses = Math.min(4,Math.max(0,state.hubWrongGuesses || 0) + 1);
       state.hubLastWrongRoute = route;
+      state.hubVoiceFeedbackStep = 0;
     }
     // This is a deduction puzzle, never a second route choice.
     renderHoliday();

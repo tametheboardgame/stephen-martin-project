@@ -10,6 +10,14 @@
 
 
 
+
+## GAME-SP4 — Visitor Information dialogue voice preparation (17 October 2026)
+
+- Draft integration for all 22 recordable lines in the approved hotel evidence investigation: 8 opening, 6 wrong-response lines, 3 route-specific Paul hints and 5 correct deduction lines. Silent clues/phone and travel cards remain unvoiced; no changes to route logic, jokes, artwork or puzzles.
+- Existing holiday dialogue controller now plays hotel lines to completion, advances wrong-response pairs, speaks Paul's hint after the second wrong answer only once, and resumes the interactive puzzle. It preserves Pause/Play, Sound Off, Next and MP3-missing text fallback; choosing another destination cancels stale audio.
+- Auto-package whitelist expands from 90 to 112 recordings. Recording guide: `docs/VISITOR-INFORMATION-VOICE-IMPORT.md`. MP3s must be uploaded to `public/assets/audio/dialogue/` on branch `agent/game-sp4-visitor-information-voice`, not directly to `main`.
+- **Owner gate:** Upload, check audio timing / all route choices in the Cloudflare draft preview and approve before merging.
+
 ## GAME-SP4 — Back in England voice enablement (17 October 2026)
 
 - Bounded audio integration for the existing 10-line David/Paul `rescue-alarm` opening. The canonical screenplay, office expressions, phone prop, existing holiday dialogue recordings and silent four-card travel montage are unchanged.
