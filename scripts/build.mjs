@@ -196,6 +196,27 @@ const permitted = new Set(spokenBeats.map(beat => beat.id + ".mp3"));
 if (spokenBeats.length !== 55 || permitted.size !== 55) {
   throw new Error("Approved voice script changed: expected 55 uniquely identified spoken beats.");
 }
+// Chapter Two uses the same ID-to-file convention, including outcome-specific
+// spoken reactions. Do not ship arbitrary MP3s or unapproved dialogue.
+const holidaySandbox = { window: {} };
+vm.runInNewContext(await readFile(path.join(root, "src/china-data.js"), "utf8"), holidaySandbox);
+const wall = holidaySandbox.window.SMP_CHINA_WALL;
+const palace = holidaySandbox.window.SMP_CHINA_PALACE;
+const market = holidaySandbox.window.SMP_CHINA_MARKET;
+const chinaFinal = holidaySandbox.window.SMP_CHINA_FINAL;
+const holidaySpokenIds = [
+  ...wall.lines, ...palace.lines, ...palace.acceptReply, ...market.lines
+].map(line => line.id).concat([
+  wall.acceptReactionId, wall.declineReactionId, palace.declineReplyId,
+  market.acceptReactionId, chinaFinal.stephenLastLineId
+]);
+if (holidaySpokenIds.length !== 25 ||
+    new Set(holidaySpokenIds).size !== 25 ||
+    holidaySpokenIds.some(id => typeof id !== "string" || !/^china\.[a-z]+\.[a-z0-9.-]+$/.test(id))) {
+  throw new Error("Chapter Two dialogue IDs changed unexpectedly; expected 25 unique safe audio IDs.");
+}
+holidaySpokenIds.forEach(id => permitted.add(id + ".mp3"));
+if (permitted.size !== 80) throw new Error("Duplicate office / Chapter Two voice ID.");
 await mkdir(path.join(output, audioSource), { recursive: true });
 let voiceCount = 0;
 for (const filename of await readdir(audioFolder)) {
@@ -211,7 +232,7 @@ for (const filename of await readdir(audioFolder)) {
   await copyFile(original, path.join(output, audioSource, filename));
   voiceCount++;
 }
-console.log("Approved dialogue MP3s packaged: " + voiceCount + "/55.");
+console.log("Approved dialogue MP3s packaged: " + voiceCount + "/80 (55 office + 25 holiday).");
 
 // Optional owner-supplied songs are uploaded directly to this exact folder
 // on the song PR branch. Builds work before upload; once present, the MP3s

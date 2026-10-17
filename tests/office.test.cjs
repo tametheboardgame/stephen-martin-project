@@ -2496,3 +2496,108 @@ test("SP4.0F approved office printer still is materialised, shown and isolated t
   assert.equal(saved(p).beatId,"office.022");
   assert.equal(p.el("cutawayPanel").hidden,true);
 });
+
+
+test("Chapter Two has exactly 25 unique stable MP3 IDs, including all branch replies",()=>{
+  const c=story();
+  const ids=[
+    ...c.SMP_CHINA_WALL.lines, ...c.SMP_CHINA_PALACE.lines,
+    ...c.SMP_CHINA_PALACE.acceptReply, ...c.SMP_CHINA_MARKET.lines
+  ].map(b=>b.id).concat([
+    c.SMP_CHINA_WALL.acceptReactionId,c.SMP_CHINA_WALL.declineReactionId,
+    c.SMP_CHINA_PALACE.declineReplyId,c.SMP_CHINA_MARKET.acceptReactionId,
+    c.SMP_CHINA_FINAL.stephenLastLineId
+  ]);
+  assert.equal(ids.length,25);
+  assert.equal(new Set(ids).size,25);
+  assert.ok(ids.every(id=>/^china\.[a-z]+\.[a-z0-9.-]+$/.test(id)));
+  assert.ok(ids.includes("china.wall.accept-reaction"));
+  assert.ok(ids.includes("china.wall.decline-reaction"));
+  assert.ok(ids.includes("china.palace.accept.005"));
+  assert.ok(ids.includes("china.palace.decline-reaction"));
+  assert.ok(ids.includes("china.market.accept-reaction"));
+  assert.ok(ids.includes("china.final.001"));
+  assert.ok(read("scripts/build.mjs").includes("holidaySpokenIds.forEach(id => permitted.add(id +"));
+  assert.ok(fs.existsSync(path.join(root,"docs/CHINA-VOICE-IMPORT.md")));
+});
+
+test("Great Wall recording owns scene timing and Play/Pause resumes the same MP3",async()=>{
+  const p=preview({audio:true});p.start();
+  p.el("skipButton").click();p.el("chinaStartButton").click();
+  const first=p.voices.at(-1);
+  assert.ok(first.src.endsWith("china.wall.001.mp3"));
+  await Promise.resolve();
+  assert.equal(p.timeouts.size,0,"No timed advance while holiday voice plays");
+  p.el("holidayPauseButton").click();
+  assert.equal(first.paused,true);
+  assert.equal(p.timeouts.size,0);
+  p.el("holidayPauseButton").click();
+  await Promise.resolve();
+  assert.equal(first.playCount,2,"Play resumes the existing MP3");
+  first.finish();
+  assert.equal(p.timeouts.size,1);
+  assert.equal(Array.from(p.timeouts.values())[0].delay,260);
+  p.tick();
+  assert.equal(saved(p).wallStep,1);
+  assert.equal(first.paused,true,"Next line releases prior voice");
+  assert.ok(p.voices.at(-1).src.endsWith("china.wall.002.mp3"));
+});
+
+test("Missing holiday clip retains text timing; next clip still plays",async()=>{
+  const p=preview({audio:true});p.start();p.el("skipButton").click();
+  p.el("chinaStartButton").click();
+  const first=p.voices.at(-1);
+  await Promise.resolve();
+  first.fail();
+  assert.equal(p.timeouts.size,1,"Missing file gets text-timed fallback");
+  assert.ok(Array.from(p.timeouts.values())[0].delay>260);
+  p.tick();
+  assert.equal(saved(p).wallStep,1);
+  assert.ok(p.voices.at(-1).src.endsWith("china.wall.002.mp3"));
+  p.el("sceneSoundButton").click();
+  assert.equal(p.el("sceneSoundButton").textContent,"Sound: Off");
+  assert.equal(p.voices.at(-1).paused,true);
+  assert.equal(p.timeouts.size,1,"Muted holiday uses text timer");
+});
+
+test("Great Wall branches each resolve to separately named Stephen recordings",()=>{
+  for(const [decision,expected] of [
+    ["wallAcceptButton","china.wall.accept-reaction.mp3"],
+    ["wallDeclineButton","china.wall.decline-reaction.mp3"]
+  ]){
+    const p=preview({audio:true});p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
+    for(let i=0;i<5;i++)p.el("wallNextButton").click();
+    p.el(decision).click();
+    assert.ok(p.voices.at(-1).src.endsWith(expected));
+    assert.equal(saved(p).wallStep,5);
+  }
+});
+
+test("Forbidden City branch recordings and Night Market files follow actual routes",()=>{
+  const p=preview({audio:true});p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
+  for(let i=0;i<5;i++)p.el("wallNextButton").click();
+  p.el("wallDeclineButton").click();p.el("wallGoPalaceButton").click();
+  p.el("intermissionContinueButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("china.palace.001.mp3"));
+  for(let i=0;i<4;i++)p.el("palaceNextButton").click();
+  p.el("palaceAcceptButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("china.palace.accept.001.mp3"));
+  for(let i=0;i<4;i++)p.el("palaceNextButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("china.palace.accept.005.mp3"));
+  // Independently verify the decline path reaches market and its own voices.
+  const p2=preview({audio:true});p2.start();p2.el("skipButton").click();p2.el("chinaStartButton").click();
+  for(let i=0;i<5;i++)p2.el("wallNextButton").click();
+  p2.el("wallDeclineButton").click();p2.el("wallGoPalaceButton").click();p2.el("intermissionContinueButton").click();
+  for(let i=0;i<4;i++)p2.el("palaceNextButton").click();
+  p2.el("palaceDeclineButton").click();
+  assert.ok(p2.voices.at(-1).src.endsWith("china.palace.decline-reaction.mp3"));
+  p2.el("palaceGoMarketButton").click();p2.el("intermissionContinueButton").click();
+  assert.ok(p2.voices.at(-1).src.endsWith("china.market.001.mp3"));
+  for(let i=0;i<6;i++)p2.el("marketNextButton").click();
+  assert.ok(p2.voices.at(-1).src.endsWith("china.market.accept-reaction.mp3"));
+  p2.el("marketGoIncidentButton").click();p2.el("handoffContinueButton").click();
+  p2.el("chinaFinalNextButton").click();
+  assert.ok(p2.voices.at(-1).src.endsWith("china.final.001.mp3"));
+  p2.el("chinaFinalNextButton").click();
+  assert.equal(p2.voices.at(-1).paused,true,"Leaving the phone scene cancels its voice");
+});

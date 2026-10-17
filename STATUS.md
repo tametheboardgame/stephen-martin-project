@@ -2,6 +2,13 @@
 
 **Updated:** 17 October 2026
 
+## GAME-SP4: Stephen's three-scene dialogue audio import (17 October 2026)
+
+- Draft PR #39 on `agent/game-sp4-stephen-holiday-voice` adds optional MP3-driven dialogue for the Great Wall, Forbidden City, Night Market, and Stephen's shared final spoken line. Existing office voices, song playback, dialogue copy and branching choices remain unchanged.
+- The existing `public/assets/audio/dialogue/` folder now accepts an exact, build-validated 80-ID whitelist (55 office + 25 holiday). Owner may upload completed ElevenLabs MP3s using the stable IDs, without any audio manifest or source patch. Full line/filename guide: `docs/CHINA-VOICE-IMPORT.md`.
+- The three scenes preserve natural audio completion before advancing, with Pause/Play, Next, Sound Off, interrupted navigation, visibility protection and per-line missing-recording fallback. Alternative accept/decline lines are only heard on the chosen route.
+- Test coverage added for audio IDs, natural-duration timing, controls, missing files and each route. **Owner gate:** Upload and listen to actual synthetic MP3s in the draft Cloudflare preview; keep PR #39 draft and do not merge until explicit acceptance.
+
 ## GAME-SP4.0F — Static printer-and-bear cutaway, animation deferred (17 October 2026)
 
 - The owner approved a wide 1672×941 cartoon office MFD with a prominent printed picture of a Chinese leader and a honey-loving bear, without the previous intelligence dossier text. Uploaded original PNG to the project's dedicated Google Drive staging folder (`office-printer-bear-cutaway-v01.png`, file ID `1admO_cJkvHgQMDbWmodSTcl-kYQXDVPS`); the standard GitHub OIDC materialisation workflow succeeded, adding `public/assets/generated/game/office-printer-bear-cutaway-v01.webp`.

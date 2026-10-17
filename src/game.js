@@ -546,9 +546,140 @@
     scheduleAdvance();
   }
 
-  // GAME-SP3.4: The office owns its voiced timeline. Holiday scenes are
-  // text-timed, pauseable cinematic dialogue; choices and puzzle inputs never
-  // advance by themselves. One shared toolbar owns Pause / Next / Change route.
+
+  // GAME-SP4: optional, ID-addressed voice clips for Stephen's three
+  // sightseeing scenes. Absence/404 retains the existing text timer.
+  let holidayVoice = null;
+  let holidayVoiceId = null;
+  let holidayVoiceStatus = "off";
+  let holidayVoiceToken = 0;
+  let holidayVoiceStartTimer = null;
+  const missingHolidayVoices = new Set();
+
+  function holidayVoiceBeat() {
+    if (state.scene !== "holiday") return null;
+    if (state.holidayPhase === "wall") {
+      if (state.wallStep < greatWall.lines.length) return greatWall.lines[state.wallStep];
+      if (state.wallDecision === "accept") return {id:greatWall.acceptReactionId, text:greatWall.acceptReaction};
+      if (state.wallDecision === "decline") return {id:greatWall.declineReactionId, text:greatWall.declineReaction};
+    }
+    if (state.holidayPhase === "palace") {
+      if (state.palaceStep < palace.lines.length) return palace.lines[state.palaceStep];
+      if (state.palaceDecision === "accept" && state.palaceReplyStep < palace.acceptReply.length)
+        return palace.acceptReply[state.palaceReplyStep];
+      if (state.palaceDecision === "decline") return {id:palace.declineReplyId, text:palace.declineReply};
+    }
+    if (state.holidayPhase === "market") {
+      if (state.marketStep < market.lines.length) return market.lines[state.marketStep];
+      if (state.marketDecision === "accept") return {id:market.acceptReactionId, text:market.acceptReaction};
+    }
+    if (state.holidayPhase === "final-message" && state.finalStep === 1)
+      return {id:chinaFinal.stephenLastLineId, text:chinaFinal.stephenLastLine};
+    return null;
+  }
+
+  function stopHolidayVoice() {
+    holidayVoiceToken++;
+    if (holidayVoiceStartTimer !== null) clearTimeout(holidayVoiceStartTimer);
+    holidayVoiceStartTimer = null;
+    const old = holidayVoice;
+    holidayVoice = null;
+    holidayVoiceId = null;
+    holidayVoiceStatus = "off";
+    if (old) {
+      old.onended = null;
+      old.onerror = null;
+      try { old.pause(); } catch (_) { /* Optional audio. */ }
+    }
+  }
+
+  function holidayVoiceUnavailable(clip, token, missingFile = false) {
+    if (holidayVoice !== clip || token !== holidayVoiceToken) return;
+    // Do not retry the same failed clip on every reschedule. The current
+    // beat falls back to its text duration while later clips still work.
+    missingHolidayVoices.add(holidayVoiceId);
+    stopHolidayVoice();
+    holidayVoiceStatus = "missing";
+    scheduleHolidayAdvance();
+  }
+
+  function playHolidayVoice(clip, token) {
+    if (holidayVoice !== clip || holidayVoiceToken !== token) return;
+    holidayVoiceStatus = "loading";
+    if (holidayVoiceStartTimer !== null) clearTimeout(holidayVoiceStartTimer);
+    holidayVoiceStartTimer = setTimeout(() => {
+      if (holidayVoice === clip && holidayVoiceStatus === "loading")
+        holidayVoiceUnavailable(clip, token);
+    }, VOICE_START_TIMEOUT_MS);
+    try {
+      const playing = clip.play();
+      if (playing && typeof playing.then === "function") {
+        playing.then(() => {
+          if (holidayVoice !== clip || holidayVoiceToken !== token) return;
+          if (holidayVoiceStartTimer !== null) clearTimeout(holidayVoiceStartTimer);
+          holidayVoiceStartTimer = null;
+          if (holidayVoiceStatus !== "paused") holidayVoiceStatus = "playing";
+          scheduleHolidayAdvance();
+        }).catch(() => holidayVoiceUnavailable(clip, token));
+      } else {
+        if (holidayVoiceStartTimer !== null) clearTimeout(holidayVoiceStartTimer);
+        holidayVoiceStartTimer = null;
+        holidayVoiceStatus = "playing";
+      }
+    } catch (_) {
+      holidayVoiceUnavailable(clip, token);
+    }
+  }
+
+  function syncHolidayVoice() {
+    const beat = holidayVoiceBeat();
+    const id = beat?.id || null;
+    const enabled = soundEnabled && !screens.holiday.hidden && !document.hidden &&
+      typeof window.Audio === "function";
+    if (!id || !enabled || missingHolidayVoices.has(id)) {
+      if (holidayVoice) stopHolidayVoice();
+      holidayVoiceStatus = id && missingHolidayVoices.has(id) ? "missing" : "off";
+      return;
+    }
+    if (holidayVoice && holidayVoiceId !== id) stopHolidayVoice();
+    if (!holidayAutoPlaying) {
+      if (holidayVoice && ["loading","playing"].includes(holidayVoiceStatus)) {
+        if (holidayVoiceStartTimer !== null) clearTimeout(holidayVoiceStartTimer);
+        holidayVoiceStartTimer = null;
+        holidayVoiceStatus = "paused";
+        try { holidayVoice.pause(); } catch (_) { /* Keep manual navigation. */ }
+      }
+      return;
+    }
+    if (holidayVoice) {
+      if (holidayVoiceStatus === "paused") playHolidayVoice(holidayVoice, holidayVoiceToken);
+      return;
+    }
+    let clip;
+    try { clip = new window.Audio(); }
+    catch (_) {
+      missingHolidayVoices.add(id);
+      holidayVoiceStatus = "missing";
+      return;
+    }
+    const token = holidayVoiceToken;
+    holidayVoice = clip;
+    holidayVoiceId = id;
+    clip.preload = "auto";
+    clip.src = VOICE_PATH + id + ".mp3";
+    clip.onended = () => {
+      if (holidayVoice !== clip || holidayVoiceToken !== token) return;
+      if (holidayVoiceStartTimer !== null) clearTimeout(holidayVoiceStartTimer);
+      holidayVoiceStartTimer = null;
+      holidayVoiceStatus = "finished";
+      scheduleHolidayAdvance();
+    };
+    clip.onerror = () => holidayVoiceUnavailable(clip, token, true);
+    playHolidayVoice(clip, token);
+  }
+
+  // GAME-SP3.4: Holiday scenes share the pauseable, cinematic playback bar.
+  // Optional recordings own timing for their scene; choices remain manual.
   let holidayAutoPlaying = true;
   let holidayAdvanceTimer = null;
   let holidayAdvanceAction = null;
@@ -663,14 +794,16 @@
     $("holidayPlaybackStatus").textContent = !playing ? "Paused · Next advances one line"
       : next ? "Playing · choices and puzzles pause automatically"
         : "Waiting for your choice";
-    if (!playing || !next) return;
+    syncHolidayVoice();
+    if (!playing || !next || ["loading","playing","paused"].includes(holidayVoiceStatus)) return;
     const token = holidayAdvanceToken;
+    const wait = holidayVoiceStatus === "finished" ? VOICE_GAP_MS : next.wait;
     holidayAdvanceTimer = setTimeout(() => {
       holidayAdvanceTimer = null;
       if (token !== holidayAdvanceToken || !holidayAutoPlaying ||
           screens.holiday.hidden || document.hidden) return;
       next.run();
-    },next.wait);
+    },wait);
   }
 
   function setHolidayAutoplay(enabled) {
@@ -790,7 +923,10 @@
   }
 
   function reveal(screenName) {
-    if (screenName !== "holiday") clearHolidayAdvanceTimer();
+    if (screenName !== "holiday") {
+      clearHolidayAdvanceTimer();
+      stopHolidayVoice();
+    }
     if (screenName !== "office") {
       clearAdvanceTimer();
       stopVoice();
@@ -811,6 +947,7 @@
     if (!soundEnabled) {
       stopVoice();
       stopSong();
+      stopHolidayVoice();
       if (!screens.office.hidden) {
         syncSongActions();
         scheduleAdvance();
@@ -821,6 +958,7 @@
       if (beat.id === "office.v07" && autoPlaying) startSong("optimistic", "preview");
       scheduleAdvance();
     }
+    if (!screens.holiday.hidden) scheduleHolidayAdvance();
     for (const id of ["soundButton", "sceneSoundButton", "menuSoundButton"]) {
       const button = $(id);
       button.textContent = enabled ? "Sound: On" : "Sound: Off";
