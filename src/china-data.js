@@ -160,16 +160,16 @@
     ],
     wrong: {
       cult: [
-        {speaker:"Paul",text:"That's a hill, David."},
-        {speaker:"David",text:"Topographic deception."}
+        {id:"rescue.hub.wrong.cult.001",speaker:"Paul",text:"That's a hill, David."},
+        {id:"rescue.hub.wrong.cult.002",speaker:"David",text:"Topographic deception."}
       ],
       detention: [
-        {speaker:"Paul",text:"Do we have to dress up?"},
-        {speaker:"David",text:"This is covert."}
+        {id:"rescue.hub.wrong.detention.001",speaker:"Paul",text:"Do we have to dress up?"},
+        {id:"rescue.hub.wrong.detention.002",speaker:"David",text:"This is covert."}
       ],
       reassemble: [
-        {speaker:"Paul",text:"I wouldn't mind a massage."},
-        {speaker:"David",text:"Then you are an operational liability."}
+        {id:"rescue.hub.wrong.reassemble.001",speaker:"Paul",text:"I wouldn't mind a massage."},
+        {id:"rescue.hub.wrong.reassemble.002",speaker:"David",text:"Then you are an operational liability."}
       ]
     },
     hint: {
@@ -178,11 +178,11 @@
       reassemble:"Paul: He said 'spa'. It probably means the spa, David."
     },
     correct: [
-      {speaker:"David",text:"We have our location."},
-      {speaker:"Paul",text:"The brochure has a map."},
-      {speaker:"David",text:"Exactly. My deduction has been confirmed."},
-      {speaker:"Paul",text:"By the brochure?"},
-      {speaker:"David",text:"Don't undermine the operation."}
+      {id:"rescue.hub.correct.001",speaker:"David",text:"We have our location."},
+      {id:"rescue.hub.correct.002",speaker:"Paul",text:"The brochure has a map."},
+      {id:"rescue.hub.correct.003",speaker:"David",text:"Exactly. My deduction has been confirmed."},
+      {id:"rescue.hub.correct.004",speaker:"Paul",text:"By the brochure?"},
+      {id:"rescue.hub.correct.005",speaker:"David",text:"Don't undermine the operation."}
     ],
     routeIntro: {
       cult:"The Summit — Stephen's exclusive mountain social club.",
