@@ -45,7 +45,7 @@ scale = min((w * 1.16) / cw, (h * 1.06) / ch)
 cutout = crop.resize((round(cw * scale), round(ch * scale)), Image.Resampling.LANCZOS)
 x = (w - cutout.width) // 2
 y = h - cutout.height + 20
-inner.alpha_composite(cutout, (x, y))
+inner.paste(cutout, (x, y), cutout.getchannel("A"))
 
 # Clip cleanly inside the existing slightly skewed photograph mount.
 mask = Image.new("L", (w, h), 0)
