@@ -1765,6 +1765,8 @@ test("SP3.4 pause, hidden-tab and route choice guard do not advance puzzle",()=>
   p.document.hidden=false;
   assert.equal(p.timeouts.size,0,"Return from hidden tab never skips a line");
   p.el("holidayNextButton").click();
+  assert.equal(saved(p).summitVoiceStep,1,"Paused Next moves to the second speaker");
+  p.el("holidayNextButton").click();
   assert.equal(saved(p).summitVoiceStep,null,"Second spoken response can be skipped while paused");
   p.el("holidayNextButton").click();
   assert.equal(saved(p).rescueProgress.miniGameStage,1);
