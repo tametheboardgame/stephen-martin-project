@@ -2429,7 +2429,7 @@ test("SP4.0E owner-approved David laptop cutaway is wide, packaged and isolated 
   assert.match(p.el("cutawayContent").innerHTML,/office-david-risk-cutaway-v01\.webp/);
   assert.match(p.el("cutawayContent").innerHTML,/alt="David’s laptop showing/);
   p.el("nextButton").click();
-  assert.equal(saved(p).beatId,"office.012");
+  assert.equal(saved(p).beatId,"office.006");
   assert.equal(p.el("cutawayPanel").hidden,true);
 });
 
