@@ -2432,3 +2432,33 @@ test("SP4.0E owner-approved David laptop cutaway is wide, packaged and isolated 
   assert.equal(saved(p).beatId,"office.012");
   assert.equal(p.el("cutawayPanel").hidden,true);
 });
+
+
+test("SP4.0E David laptop appears immediately after risk-assessment introduction",async()=>{
+  const riskAt=ids.indexOf("office.v02");
+  assert.equal(ids[riskAt-1],"office.005","David introduces the risk assessment immediately beforehand");
+  assert.equal(ids[riskAt+1],"office.006","Stephen's 'You've done what?' follows the visual gag");
+  assert.equal(ids[ids.indexOf("office.011")+1],"office.012",
+    "The original delayed laptop placement is gone after Paul's meal-deal request");
+  assert.equal(all[riskAt].duration,2600,"Approved hold time is unchanged");
+  assert.equal(all.filter(beat=>beat.id==="office.v02").length,1,"Risk cutaway occurs exactly once");
+
+  const manual=preview();manual.start();manual.at("office.005");
+  manual.el("nextButton").click();
+  assert.equal(saved(manual).beatId,"office.v02");
+  assert.match(manual.el("cutawayContent").innerHTML,/office-david-risk-cutaway-v01.webp/);
+  manual.el("nextButton").click();
+  assert.equal(saved(manual).beatId,"office.006");
+  manual.el("backButton").click();
+  assert.equal(saved(manual).beatId,"office.v02","Back returns to the new cutaway position");
+
+  const voiced=preview({audio:true});voiced.start();voiced.at("office.005");
+  await Promise.resolve();
+  voiced.voices.at(-1).finish();
+  assert.ok([...voiced.timeouts.values()].some(t=>t.delay===100),
+    "After David finishes, cut to the risk assessment without a long silent hold");
+  voiced.tick();
+  assert.equal(saved(voiced).beatId,"office.v02");
+  assert.ok([...voiced.timeouts.values()].some(t=>t.delay===2600),
+    "Full risk cutaway plays before Stephen answers");
+});
