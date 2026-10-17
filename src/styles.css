@@ -3161,3 +3161,149 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen .detention-ending-permit {height:28%;top:2%;right:2%;}
   #holidayScreen .detention-ending-content {max-height:48%;width:99%;margin-bottom:2%;padding:8px;}
 }
+
+
+/* GAME-SP4B.1 — cinematic Ending B dialogue layout.
+ * Mirror Ending A's bottom subtitle presentation. The earlier generic route
+ * briefing modal must never obscure approved hall art or actors. Keep the
+ * interactive three-question paperwork form separately usable and untouched. */
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-route-intro-stage {
+  display:block;
+  padding:0;
+}
+#holidayScreen #rescueRouteIntro .detention-office-label {display:none;}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-office-label {
+  position:absolute;z-index:4;top:3%;left:2.7%;width:max-content;max-width:43%;
+  display:grid;gap:3px;padding:9px 12px;
+  border:2px solid rgba(244,209,145,.9);border-radius:9px;
+  background:rgba(7,30,53,.85);color:#fff0c9;pointer-events:none;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-office-label span {
+  font-size:clamp(10px,.95vw,13px);letter-spacing:.075em;font-weight:850;color:#a5def7;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-office-label strong {
+  font-size:clamp(13px,1.4vw,20px);line-height:1.2;letter-spacing:.02em;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-intro-david {
+  height:56%;bottom:22%;left:9%;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-intro-paul {
+  height:51%;bottom:22%;right:9%;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-travel-panel {
+  position:absolute;z-index:6;left:3%;right:3%;bottom:10%;
+  width:94%;max-width:none;max-height:27%;height:auto;
+  box-sizing:border-box;display:block;overflow:visible;
+  margin:0;padding:0;text-align:left;
+  border:0;border-radius:0;box-shadow:none;background:transparent;
+  color:#fff4df;
+}
+/* Reuse the actual dialogue/status nodes for accessible, scripted captions;
+ * only the obsolete hero heading and explanation are hidden in this route. */
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-travel-panel > span,
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-travel-panel > h2,
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-travel-panel > p:not(#routeIntroStatus),
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-travel-panel > small {
+  display:none;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-intro-dialogue,
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] #routeIntroStatus {
+  box-sizing:border-box;display:block;width:100%;max-width:none;
+  margin:0;padding:12px 18px;
+  text-align:left;color:#fff5dd;
+  background:rgba(5,25,48,.94);
+  border:3px solid #f0cf89;border-radius:11px;
+  box-shadow:4px 5px 0 rgba(0,0,0,.4);
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] #routeIntroDialogue[hidden] {
+  display:none !important;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-intro-dialogue strong {
+  color:#ffdb87;font-size:clamp(13px,1.25vw,18px);font-weight:900;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-intro-dialogue p {
+  margin:5px 0 0;font-size:clamp(16px,1.8vw,25px);
+  line-height:1.35;font-weight:800;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] #routeIntroStatus {
+  font-size:clamp(14px,1.5vw,20px);font-weight:800;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"]:has(#routeIntroDialogue:not([hidden])) #routeIntroStatus {
+  display:none;
+}
+/* The resolution dialogue follows the same bottom-of-stage convention. */
+#holidayScreen #detentionEndingScene .detention-ending-stage {
+  display:block;position:relative;padding:0;
+}
+#holidayScreen #detentionEndingScene .detention-ending-content {
+  position:absolute;z-index:5;left:3%;right:3%;bottom:8%;
+  width:94%;max-width:none;max-height:29%;height:auto;
+  box-sizing:border-box;overflow-y:auto;margin:0;padding:10px 18px;
+  text-align:left;color:#fff5df;
+  background:rgba(5,25,48,.94);
+  border:3px solid #f0cf89;border-radius:11px;
+  box-shadow:4px 5px 0 rgba(0,0,0,.4);
+}
+#holidayScreen #detentionEndingScene .detention-ending-content .detention-certificate {
+  display:none; /* The actual approved permit prop carries the stamped image. */
+}
+#holidayScreen #detentionEndingScene .detention-ending-speaker {
+  display:block;margin:0;color:#ffdb87;
+  font-size:clamp(13px,1.25vw,18px);font-weight:900;
+}
+#holidayScreen #detentionEndingScene .detention-ending-line {
+  margin:5px 0 3px;color:#fff9e9;
+  font-size:clamp(16px,1.8vw,25px);line-height:1.35;font-weight:800;
+}
+#holidayScreen #detentionEndingScene .detention-progress {
+  margin:2px 0 0;text-align:right;color:#bce9ff;
+  font-size:clamp(11px,1vw,13px);
+}
+@media (max-width:800px) {
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-office-label {
+    top:9%;left:2%;padding:6px 9px;max-width:53%;
+  }
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-office-label span {
+    font-size:clamp(9px,1.6vw,11px);
+  }
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-office-label strong {
+    font-size:clamp(11px,2vw,16px);
+  }
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-intro-david {
+    height:44%;bottom:30%;left:4%;
+  }
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-intro-paul {
+    height:41%;bottom:30%;right:4%;
+  }
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-travel-panel {
+    left:3%;right:3%;bottom:13%;width:94%;max-height:31%;
+  }
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-intro-dialogue,
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] #routeIntroStatus {
+    padding:8px 10px;border-width:2px;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-content {
+    bottom:10%;max-height:32%;padding:8px 11px;border-width:2px;
+  }
+}
+@media (max-width:450px) {
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-office-label {max-width:58%;}
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-intro-david {
+    height:34%;bottom:34%;left:0;
+  }
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-intro-paul {
+    height:31%;bottom:34%;right:0;
+  }
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-travel-panel {
+    bottom:15%;max-height:35%;
+  }
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-intro-dialogue p {
+    font-size:clamp(14px,3.6vw,17px);
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-content {
+    bottom:13%;max-height:36%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-line {
+    font-size:clamp(14px,3.6vw,17px);
+  }
+}
