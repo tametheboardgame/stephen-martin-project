@@ -3028,21 +3028,21 @@ body:has(#menuScreen:not([hidden])) main {
 
 
 /* GAME-SP4B approved bureaucratic scene; all objects remain independently layered. */
-#holidayScreen #rescueRouteIntro[data-route="detention"] .rescue-route-intro-stage,
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-route-intro-stage,
 #holidayScreen #rescueMiniGameScene[data-route="detention"] .rescue-route-intro-stage,
 #holidayScreen .detention-ending-stage {
   background:linear-gradient(90deg,rgba(10,22,35,.24),rgba(10,22,35,.13)),
     url("../public/assets/generated/locations/ending-b-bureau-office-v01.webp") center/cover no-repeat;
 }
-#holidayScreen #rescueRouteIntro[data-route="detention"] .summit-entrance-label,
-#holidayScreen #rescueRouteIntro[data-route="detention"] .summit-entrance-actor {
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .summit-entrance-label,
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .summit-entrance-actor {
   display:none !important;
 }
 #holidayScreen .detention-intro-actor {display:none;pointer-events:none;position:absolute;z-index:1;bottom:5%;width:auto;height:62%;object-fit:contain;filter:drop-shadow(3px 7px 6px rgba(20,17,13,.5));}
-#holidayScreen #rescueRouteIntro[data-route="detention"] .detention-intro-actor {display:block;}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-intro-actor {display:block;}
 #holidayScreen .detention-intro-david {left:8%;}
 #holidayScreen .detention-intro-paul {right:8%;height:56%;bottom:6%;}
-#holidayScreen #rescueRouteIntro[data-route="detention"] .rescue-travel-panel {
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-travel-panel {
   position:relative;z-index:3;max-width:650px;background:rgba(12,28,47,.91);
 }
 #holidayScreen #rescueMiniGameScene[data-route="detention"] .rescue-route-intro-stage {padding:2.6% 3% 10%;}
