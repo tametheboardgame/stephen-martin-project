@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1admO_cJkvHgQMDbWmodSTcl-kYQXDVPS"
+  },
+  "expectedSourceName": "office-printer-bear-cutaway-v01.png",
+  "destination": "public/assets/generated/game/office-printer-bear-cutaway-v01.webp",
+  "transform": {
+    "maxWidth": 1672,
+    "maxHeight": 941,
+    "quality": 88
+  },
+  "revision": 1
+}

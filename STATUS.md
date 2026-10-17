@@ -2,6 +2,12 @@
 
 **Updated:** 17 October 2026
 
+## GAME-SP4.0F — Static printer-and-bear cutaway, animation deferred (17 October 2026)
+
+- The owner approved a wide 1672×941 cartoon office MFD with a prominent printed picture of a Chinese leader and a honey-loving bear, without the previous intelligence dossier text. Uploaded original PNG to the project's dedicated Google Drive staging folder (`office-printer-bear-cutaway-v01.png`, file ID `1admO_cJkvHgQMDbWmodSTcl-kYQXDVPS`); the standard GitHub OIDC materialisation workflow succeeded, adding `public/assets/generated/game/office-printer-bear-cutaway-v01.webp`.
+- Replaced the old CSS printer mock-up only at `office.v04` with the approved static full-stage cutaway. Kept its 2.4-second duration, original dialogue, preceding reaction, and all other scenes unchanged. Build packaging and coverage added; see `docs/story/GAME-SP4.0F-OFFICE-PRINTER-CUTAWAY.md`.
+- **Separate future work:** split printer foreground/back halves and add independently moving printed-paper sprites. No animation in this change. Await draft PR preview and owner approval; do not merge until authorised.
+
 ## GAME-SP4.0E — Corrected David laptop cutaway placement (17 October 2026)
 
 - Owner requested that the already-approved risk assessment artwork appear immediately after David says “I've conducted a preliminary risk assessment.” In the single continuous opening scene, the same `office.v02` beat now sits between `office.005` and Stephen's “You've done what?” (`office.006`) rather than after Paul's meal-deal exchange (`office.011`).

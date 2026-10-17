@@ -2955,3 +2955,27 @@ body:has(#menuScreen:not([hidden])) main {
   aspect-ratio: 1672 / 941;
   object-fit: contain;
 }
+
+
+/* GAME-SP4.0F — owner-approved static office MFD and bear printout.
+ * Same 1672 × 941 full-stage framing as the laptop cutaway; intentionally
+ * no sliding paper layers or animation in this revision. */
+#officeScreen .stage[data-cutaway="printer"] .cutaway-panel {
+  padding: 0;
+  border: 0;
+  background: #bedbe4;
+}
+#officeScreen .stage[data-cutaway="printer"] .cutaway-panel::after { display: none; }
+#officeScreen .stage[data-cutaway="printer"] .cutaway-inner {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none;
+}
+#officeScreen .stage[data-cutaway="printer"] .cutaway-approved-printer {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1672 / 941;
+  object-fit: contain;
+}
