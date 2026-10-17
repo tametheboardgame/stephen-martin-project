@@ -2,6 +2,13 @@
 
 **Updated:** 17 October 2026
 
+## GAME-SP4 — The Summit route audio set-up (17 October 2026)
+
+- Draft preparation of 44 canonical Summit MP3 clips: 7 entry gate lines, 3 ceremonial gatekeeper prompts, 17 split per-speaker responses to all 9 answer cards, 3 optional Paul hints, and 14 throne-room lines (including the existing narrator stinger).
+- Reuses the established natural-duration player for intro, mini-game prompts, response exchanges and ending. Correct answers advance once their response recordings finish; incorrect responses leave choices open and only speak Paul's hint once per round after two mistakes. Previous art, choice meanings and 15–25-minute scope remain unchanged.
+- Audio whitelist extended from 112 to 156 approved filenames; `docs/SUMMIT-VOICE-IMPORT.md` is the exact ElevenLabs guide. Upload to `public/assets/audio/dialogue/` on `agent/game-sp4-summit-voice`.
+- **Owner gate:** Upload the 44 recordings, review all applicable route choices, hint lines, 14-line ending and controls in Cloudflare preview, then authorise merge. Keep the PR draft until approval.
+
 ## GAME-SP4 — Visitor Information dialogue voice preparation (17 October 2026)
 
 - Draft integration for all 22 recordable lines in the approved hotel evidence investigation: 8 opening, 6 wrong-response lines, 3 route-specific Paul hints and 5 correct deduction lines. Silent clues/phone and travel cards remain unvoiced; no changes to route logic, jokes, artwork or puzzles.
