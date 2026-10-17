@@ -594,6 +594,34 @@
             text:rescueHub.hint[state.route].replace(/^Paul:\s*/, "")};
       }
     }
+    if (state.route === "cult" && state.holidayPhase === "rescue-route-intro") {
+      const line = rescueFramework.routes.cult.intro[state.rescueProgress?.introStep];
+      return line || null;
+    }
+    if (state.route === "cult" && state.holidayPhase === "rescue-minigame") {
+      const p = rescueFramework.normalise(state.rescueProgress,"cult");
+      const reply = state.summitResponse;
+      const roundIndex = reply?.correct && reply.round === p.miniGameStage - 1
+        ? reply.round : p.miniGameStage;
+      const round = summit.rounds[roundIndex];
+      if (!round) return null;
+      if (reply && reply.round === roundIndex) {
+        const selected = round.options.find(option => option.id === reply.choice);
+        if (!selected) return null;
+        const index = state.summitVoiceStep;
+        if (Number.isInteger(index) && index >= 0 && index < selected.voices.length)
+          return selected.voices[index];
+        if (!reply.correct && index === selected.voices.length &&
+            p.hintVisible && !state.summitHintHeard)
+          return {id:round.hintId, text:round.hint.replace(/^Paul:\s*/, "")};
+        return null; // Feedback finished; player chooses again or correct choice continues.
+      }
+      return {id:round.promptId, text:round.prompt.replace(/^GATEKEEPER:\s*/, "")};
+    }
+    if (state.route === "cult" && state.holidayPhase === "rescue-route-ending") {
+      const p = rescueFramework.normalise(state.rescueProgress,"cult");
+      return summit.ending[p.endingStep] || null; // End card remains silent.
+    }
     return null;
   }
 
@@ -784,9 +812,22 @@
     if (phase === "rescue-minigame") {
       const p = rescueFramework.normalise(state.rescueProgress,state.route);
       if (!p) return null;
-      if (state.route === "cult" && state.summitResponse?.correct === true &&
-          state.summitResponse.round === p.miniGameStage - 1)
-        return step(continueSummit, summit.rounds[state.summitResponse.round]?.options.find(o=>o.id===state.summitResponse.choice)?.response);
+      if (state.route === "cult") {
+        const reply = state.summitResponse;
+        const roundIndex = reply?.correct && reply.round === p.miniGameStage - 1
+          ? reply.round : p.miniGameStage;
+        const round = summit.rounds[roundIndex];
+        const choice = reply && round?.options.find(o=>o.id===reply.choice);
+        if (choice && Number.isInteger(state.summitVoiceStep)) {
+          if (state.summitVoiceStep < choice.voices.length)
+            return step(advanceSummitVoice, choice.voices[state.summitVoiceStep]?.text);
+          if (!reply.correct && state.summitVoiceStep === choice.voices.length &&
+              p.hintVisible && !state.summitHintHeard)
+            return step(advanceSummitVoice, round.hint);
+        }
+        if (reply?.correct && reply.round === p.miniGameStage - 1)
+          return {run:continueSummit,wait:VOICE_GAP_MS};
+      }
       if (state.route === "detention" && state.detentionResponse?.correct === true &&
           state.detentionResponse.round === p.miniGameStage - 1)
         return step(continueDetention, detention.rounds[state.detentionResponse.round]?.approvedResponse || "Form accepted.");
@@ -1168,6 +1209,8 @@
     state.hubVoiceHintHeard = false;
     delete state.rescueProgress;
     delete state.summitResponse;
+    delete state.summitVoiceStep;
+    delete state.summitHintHeard;
     delete state.detentionResponse;
     delete state.detentionStampFound;
     delete state.detentionStampSelected;
@@ -1993,6 +2036,25 @@
     renderHoliday();
   }
 
+  function advanceSummitVoice() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+        state.route !== "cult" || !Number.isInteger(state.summitVoiceStep)) return;
+    const reply = state.summitResponse;
+    const selected = summit.rounds[reply?.round]?.options.find(o=>o.id===reply.choice);
+    if (!selected) return;
+    const len = selected.voices.length;
+    if (state.summitVoiceStep < len - 1) state.summitVoiceStep++;
+    else if (state.summitVoiceStep === len - 1) {
+      const progress = rescueFramework.normalise(state.rescueProgress,"cult");
+      state.summitVoiceStep = !reply.correct && progress.hintVisible &&
+        !state.summitHintHeard ? len : null;
+    } else if (state.summitVoiceStep === len) {
+      state.summitHintHeard = true;
+      state.summitVoiceStep = null;
+    }
+    renderHoliday();
+  }
+
   function answerSummit(which) {
     if (screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
         state.route !== "cult" || state.hubMatched !== true) return;
@@ -2003,6 +2065,8 @@
     if (!round || !Number.isInteger(which) || which < 0 || which >= round.options.length) return;
     const choice = round.options[which];
     const at = progress.miniGameStage;
+    stopHolidayVoice(); // Even the same wrong answer must replay from the start.
+    state.summitVoiceStep = 0;
     state.rescueProgress = choice.correct
       ? rescueFramework.completeStep(progress, "cult", at)
       : rescueFramework.wrong(progress, "cult");
@@ -2018,6 +2082,8 @@
     if (!response || response.correct !== true ||
         response.round !== progress.miniGameStage - 1) return;
     delete state.summitResponse;
+    state.summitVoiceStep = null;
+    state.summitHintHeard = false;
     if (progress.finished) {
       state.holidayPhase = "rescue-route-ending";
       progress.endingStep = 0;
