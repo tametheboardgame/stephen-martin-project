@@ -75,6 +75,19 @@ for (const relative of officeImages) {
   await copyFile(officeSource, path.join(output, relative));
 }
 
+// This owner-approved full-stage cutaway is materialised from Drive, not from
+// a committed original PNG. Include it in Cloudflare preview output explicitly.
+const approvedRiskCutaway = "public/assets/generated/game/office-david-risk-cutaway-v01.webp";
+const riskSource = path.join(root, approvedRiskCutaway);
+const riskBytes = await readFile(riskSource);
+if (riskBytes.length < 50000 || riskBytes.length > 2 * 1024 * 1024 ||
+    riskBytes.toString("ascii", 0, 4) !== "RIFF" ||
+    riskBytes.toString("ascii", 8, 12) !== "WEBP") {
+  throw new Error("Approved David risk cutaway missing or invalid: " + approvedRiskCutaway);
+}
+await mkdir(path.dirname(path.join(output, approvedRiskCutaway)), { recursive: true });
+await copyFile(riskSource, path.join(output, approvedRiskCutaway));
+
 // The Chapter Two background and sprite remain independently approved WebP
 // assets. Refuse accidental opaque travel sprites or incorrectly sized art.
 const holidaySprite = await readFile(path.join(root, imageSource, "stephen-holiday-standing-neutral-v01.webp"));
