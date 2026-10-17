@@ -101,6 +101,19 @@
         }
       },
       {
+        "id": "office.v02",
+        "speaker": "",
+        "text": "David turns his laptop towards them. OPERATION: PROBABLY FINE lists international travel and romance as high risk, and David's confidence as unreasonably high.",
+        "type": "cutaway",
+        "reactions": {
+          "Stephen": "exasperated",
+          "David": "confident",
+          "Paul": "blank"
+        },
+        "visual": "risk",
+        "duration": 2600
+      },
+      {
         "id": "office.006",
         "speaker": "Stephen",
         "text": "You've done what?",
@@ -165,19 +178,6 @@
           "David": "frustrated",
           "Paul": "pleased"
         }
-      },
-      {
-        "id": "office.v02",
-        "speaker": "",
-        "text": "David turns his laptop towards them. OPERATION: PROBABLY FINE lists international travel and romance as high risk, and David's confidence as unreasonably high.",
-        "type": "cutaway",
-        "reactions": {
-          "Stephen": "exasperated",
-          "David": "confident",
-          "Paul": "blank"
-        },
-        "visual": "risk",
-        "duration": 2600
       },
       {
         "id": "office.012",

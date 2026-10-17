@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1FdH4l5-svusCl87yLllWD1recInxkLwf"
+  },
+  "expectedSourceName": "office-david-risk-cutaway-v01.png",
+  "destination": "public/assets/generated/game/office-david-risk-cutaway-v01.webp",
+  "transform": {
+    "maxWidth": 1672,
+    "maxHeight": 941,
+    "quality": 88
+  },
+  "revision": 1
+}

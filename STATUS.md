@@ -1,6 +1,17 @@
 # Project status
 
-**Updated:** 16 October 2026
+**Updated:** 17 October 2026
+
+## GAME-SP4.0E — Corrected David laptop cutaway placement (17 October 2026)
+
+- Owner requested that the already-approved risk assessment artwork appear immediately after David says “I've conducted a preliminary risk assessment.” In the single continuous opening scene, the same `office.v02` beat now sits between `office.005` and Stephen's “You've done what?” (`office.006`) rather than after Paul's meal-deal exchange (`office.011`).
+- No image, dialogue, duration, music, reactions, cutaway assets or other scenes changed. Stable beat IDs and legacy save mapping retained; regression coverage now checks dialogue-to-cutaway autoplay, Back/Next and absence of the old position. The draft PR #36 remains unmerged pending owner confirmation of a refreshed playable build.
+
+## GAME-SP4.0E — Approved David laptop cutaway (17 October 2026)
+
+- Owner approved a bespoke 1672 × 941 office laptop illustration for David's exaggerated pre-holiday risk assessment at `office.v02`. The original PNG is safely staged in the dedicated Stephen Martin Drive folder (file ID `1FdH4l5-svusCl87yLllWD1recInxkLwf`); GitHub's standard OIDC materialisation pipeline produced the 225,556-byte WebP at `public/assets/generated/game/office-david-risk-cutaway-v01.webp` on the new `agent/game-sp40e-office-laptop-cutaway` branch.
+- The previous small CSS mock laptop is replaced only for the risk cutaway by the full-stage approved art. The script, timings, printer, group-chat phone, songs, gameplay, saved state and other scenes remain unchanged. Production packaging and test coverage updated. Provenance and hand-off: `docs/story/GAME-SP4.0E-OPENING-CUTAWAYS.md`.
+- Next gate: qualified Cloudflare preview and owner visual approval of the in-game cutaway. Keep the new PR draft; **do not merge** without the owner's explicit instruction. Prior PRs #33, #34 and #35 are already merged into `main`.
 
 ## GAME-SP4.0D — Opening pacing, lyric scroll and David sizing polish (16 October 2026)
 
