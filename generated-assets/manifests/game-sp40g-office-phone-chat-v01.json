@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1UxMU2r1fI5R56iWft-cjYN4Jg35ZPzaX"
+  },
+  "expectedSourceName": "office-phone-group-chat-cutaway-v01.png",
+  "destination": "public/assets/generated/game/office-phone-group-chat-cutaway-v01.webp",
+  "transform": {
+    "maxWidth": 1672,
+    "maxHeight": 940,
+    "quality": 88
+  },
+  "revision": 1
+}
