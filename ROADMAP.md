@@ -1,7 +1,7 @@
 # The Stephen Martin Project: Master Roadmap
 
 **Version:** 1.0 (approved 12 October 2026)  
-**Status:** Approved for development  
+**Status:** Three-ending first-version baseline merged 18 October 2026; GAME-SP4.1 refinement planning in progress  
 **Primary deliverable:** Rescue Stephen Martin from China, a **15–25 minute comedy adventure**  
 **Companion deliverables:** One comedy song; optional illustrated comic pilot  
 **Audience:** Adults  
@@ -590,6 +590,27 @@ Owner approved the sequence **all mechanics → merge → art → polish**. Buil
 
 Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the third route: the fictional Total Renewal Spa and **Reassemble Stephen Martin**. The existing 13 selectable pieces, six matching slots, two-error hint, saved cardboard build and POWER ON/end dialogue are already playable and must not be reimplemented. Plan the visual work as **SP4C.1** empty spa lounge and display workshop backgrounds, **SP4C.2** coherent cardboard Stephen mounting board and six transparent compatible pieces, **SP4C.3** seven harmless decoy props plus laptop-safe tray/board controls, **SP4C.4** actual Stephen-in-robe reveal, David/Paul and cardboard counterpart sprites with short LED flourish, and **SP4C.5** QA, Cloudflare preview and explicit owner merge gate. Full asset inventory and art-specific acceptance rules: `docs/story/GAME-SP4C-ENDING-C-ART-PRODUCTION.md`. Begin with one empty spa lounge image proposal and obtain visual approval before source materialisation. This work starts on short-lived draft branch `agent/game-sp4c-ending-c-art-foundation` from merged main commit `584b4c7`. Maintain the 15–25-minute, three-outcome story guardrail.
 
-## GAME-SP4.1 — Final tidy, pacing and measured improvements (after art)
+## GAME-SP4.1 — Final tidy, pacing and measured improvements (after art) 
+
+**Updated 18 October 2026:** Ending B PR #44 and Ending C PR #46 are both merged into `main`; the latter at `d3d7534415c75d029072a31ede9fdde7de5130b4` following **132/132** automated checks and packaging all 20 Ending C images. The current finished narrative and all three route-specific mini-games are the **refinement baseline**. The extensive, evidence-backed first-version audit and acceptance gates are in `docs/story/GAME-SP4.1-FIRST-VERSION-REFINEMENT-AUDIT.md`, reviewed from the actual merged source. This is planning, not the first complete timed visual playthrough.
+
 
 Once the visual sets are assembled, do the end-to-end playtest and modest fixes: dialogue rhythm, captions/subtitles, keyboard and touch usability, saving, layering, responsiveness, music and sound accents, comedy timing, defects and coherent finale presentation. Owner may separately approve a **small** expansion or additional joke only after reviewing the art-complete game and total run time. Maintain the 15–25-minute first-play constraint, three outcomes and privacy review. No new campaign, fourth route, replacement framework or major scope increase without an explicit later decision.
+
+
+### SP4.1 approved planning scope and priority queue (18 October 2026)
+
+The owner identified progressive image drawing at launch, inconsistent David expression scale in Back in England, dark Summit entrance presentation, speech bubbles changing to blue footer text after choices, missing speaker glow in most scenes, weak illustration on travel/time transitions, and optional extra expressions/movement. These are **not yet fixed** by the audit or the PR #46 merge.
+
+1. **GAME-SP4.1A, P0:** scene-aware preload/decode and honest, accessible opening loading overlay, removing unnecessary speculative eager downloads.
+2. **GAME-SP4.1B, P0:** align all Back-in-England David approved seated expression silhouettes to one stable eyeline/scale/desk baseline.
+3. **GAME-SP4.1C, P0:** reduce Summit entrance scene-wide darkness; preserve localized text contrast and approved background.
+4. **GAME-SP4.1D, P0:** standardise named character speech cards, including reaction lines after decisions, separate from interactive controls and blue footer.
+5. **GAME-SP4.1E, P1:** shared active-speaker glow/backlight across every playable dialogue scene, including cardboard Stephen's independent speaker state.
+6. **GAME-SP4.1F, P1:** individually approved transition illustration set (time skips, Britain-to-China travel, destination handoff), with concise live titles and no new narrative branches.
+7. **GAME-SP4.1G, P2:** selective approved expression/gesture states and gentle one-off movements; keep registrations fixed and prefer reduced-motion.
+8. **GAME-SP4.1H, P1 parallel:** owner-supplied remaining route-intro/puzzle/finale voice recordings, line ID inventory, clip timing/volume and reliable fallback. Existing 112/112 *currently whitelisted* dialogue clips already exist; this does **not** mean the entire game is voiced.
+9. **GAME-SP4.1I, P0 final:** one complete human timing and accessibility/responsive/save/replay/audio test per ending, release-candidate freeze and privacy review.
+10. **GAME-SP4.1J, P2 deferred:** final cardboard Stephen silhouette mount/slot-shape alignment, explicitly deferred at owner request.
+
+**Sequence:** A → B/C independently → D → E; F and H can proceed in parallel where assets/audio are actually approved; G after pose and focus stabilise; I after each merged packet; J only when prioritised. Keep these small, draft-PR-gated, and respect the 15–25 minute first-play constraint. This plan supersedes stale phase references in older planning entries, but does not rewrite historical decisions or imply public release authorisation.
