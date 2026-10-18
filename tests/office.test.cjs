@@ -3167,7 +3167,7 @@ test("GAME-SP4C.3A fitted parts are opaque and labelled slots do not obscure the
 
 
 test("GAME-SP4C.3B anatomically oriented cardboard arms and legs retain natural proportions",()=>{
-  const rules=css.slice(css.lastIndexOf("/* GAME-SP4C.3B: anatomically correct"));
+  const rules=css.slice(css.lastIndexOf("/* GAME-SP4C.3B: anatomical limb placement"));
   assert.ok(rules.length>500,"Dedicated fit-and-placement stage should exist");
   function rule(name) {
     const i=rules.indexOf("#holidayScreen .assembly-workshop ."+name+" {");
