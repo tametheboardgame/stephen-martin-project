@@ -733,8 +733,10 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 #### GAME-SP4.1F — Dedicated illustrated transitions
 
-**Priority:** P1; **status:** New asset approval required; **dependencies:** can be scoped/planned alongside other work, but final style follows stable D layout and asset readiness conventions from A.  
-**Owner observation:** Several scene changes feel like plain text cards rather than part of the illustrated adventure.
+**Priority:** P1; **status:** F0 transition-storyboard and voiced-narrator script drafted 18 October 2026 on `agent/game-sp41f0-transition-storyboard-narration`, pending **owner approval of assets and words**; **dependencies:** D layout and asset readiness conventions from A.  
+**Owner observation:** Several scene changes feel like plain text cards rather than part of the illustrated adventure. Owner additionally requests **spoken narrator passages** paired with the new illustrated transitions, using one consistent off-screen voice.
+
+**F0 owner approval foundation (current PR):** `docs/story/GAME-SP4.1F0-TRANSITION-ART-NARRATION.md` documents a scene-by-scene code audit, **four core images to generate** (one reusable sightseeing time-lapse, two Operation: Probably Fine travel compositions, one reusable three-route handoff), **12 proposed short narrator lines and exact MP3 names**, existing approved images to reuse, mobile text/crop constraints and remaining human gates. No art/voice files are auto-generated in F0. Each image and narration script requires approval before materialisation/integration.
 
 **Proposed bounded artwork packets, each individually approved**
 1. **F1, passage of time:** One reusable illustrated frame for time passing during Stephen’s China sightseeing, retaining editable place/time titles.
@@ -744,8 +746,15 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 **Implementation tasks:** Create concept using established approved visual bible and canonical actor references, obtain owner approval before upload, stage original PNG in Drive, manifest/convert/version WebP, combine with accessible live headings and small one-off dissolve if suitable. Do not change choices or outcome routing.
 
-**Acceptance and proof:** Major previously bare transitions now share coherent art direction, remain legible and responsive, respect mute/play/pause/skip and do not materially increase total runtime. Every image has an approved origin and real branch build preview.
-**Non-goals:** New cutscenes, travel levels, extended cinematics or baked-in interactive text.
+**Execution stages after F0 owner approval:**
+- **F1 — Time-passing postcard (one asset, two uses):** Stephen sightseeing between Wall → Forbidden City and Forbidden City → Night Market; retain live daypart and location titles.
+- **F2A/F2B — Rescue travel (two assets, four uses):** David/Paul airport and baggage mishaps, followed by upside-down map and absurd expenses; reuse artwork across consecutive montage beats, no added game steps.
+- **F3 — Shared route handoff (one asset, three uses):** one route-neutral approved illustration with live Summit / banquet / spa labels, not three independent artwork bills.
+- **F-NARR — Spoken off-screen narrator (12 proposed cues):** chapter transition, both sightseeing jumps, three possible route handoffs, England return, four travel beats and hotel arrival. After script/voice approval, use the existing optional MP3-ID audio plumbing, synchronised subtitle and missing-audio fallback; never alter canonical character speech, auto-answer choices or require narrator artwork.
+- **F4 — Optional gap-check only:** consider an extra Back in England connector or hotel arrival picture if the four approved assets still leave obvious visual holes; separate approval before generation.
+
+**Acceptance and proof:** Major previously bare transitions now share coherent art direction and a consistent optional narrator, remain legible and responsive, respect mute/play/pause/skip and do not materially increase total runtime. Every image has an approved origin and real branch build preview. Missing narration MP3 must never stall progress; current game saves and all route checkpoints remain intact.
+**Non-goals:** New cutscenes, travel levels, extended cinematics, embedded artwork text, an additional speaking character sprite, or edits to approved dialogue.
 
 #### GAME-SP4.1G — Limited extra expressions, reactions and movement
 
