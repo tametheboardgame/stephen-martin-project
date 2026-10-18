@@ -3799,3 +3799,31 @@ test("GAME-SP4.1E actor selectors stay tied to the approved art, no extra sprite
   assert.match(engine,/function clearSpeakerFocus\(\)/);
   assert.match(engine,/"cardboard stephen":"assemblyEndingCardboardActor"/);
 });
+
+test("GAME-SP4.1C2 Ending B uses approved original colours at briefing, puzzle and finale",()=>{
+  const header=css.slice(css.indexOf("GAME-SP4B / GAME-SP4.1C2 — Ending B daylight"));
+  assert.ok(header.length>0,"Daylight contract must exist");
+  const selectors=[
+    '#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-route-intro-stage',
+    '#holidayScreen #rescueMiniGameScene[data-route="detention"] .rescue-route-intro-stage',
+    '#holidayScreen #detentionEndingScene .detention-ending-stage'
+  ];
+  const block=header.slice(0,header.indexOf("}",header.indexOf("background:"))+1);
+  for(const selector of selectors)assert.ok(block.includes(selector),"Background shared by "+selector);
+  assert.match(block,/background:url\("\.\.\/public\/assets\/generated\/locations\/ending-b-bureau-office-v01\.webp"\) center\/cover no-repeat;/);
+  assert.doesNotMatch(block,/linear-gradient|brightness\(|opacity:/,
+    "No full-scene gradient, dimming or desaturation may be introduced");
+  // Approved artwork is unchanged, and the independent foreground actors
+  // retain their precisely staged positions.
+  for(const file of [
+    "ending-b-bureau-office-v01.webp",
+    "ending-b-ceremonial-official-neutral-v01.webp",
+    "ending-b-release-permit-canonical-portrait-proof-v01.webp"
+  ])assert.ok(html.includes(file),file+" remains in the build");
+  assert.match(css,/#holidayScreen #rescueRouteIntro\[data-ending-b="true"\] \.detention-office-label/);
+  assert.match(css,/#holidayScreen #rescueRouteIntro\[data-ending-b="true"\] \.rescue-intro-dialogue/);
+  assert.match(css,/#holidayScreen #rescueMiniGameScene\[data-route="detention"\] \.detention-paperwork/);
+  assert.match(css,/#holidayScreen #detentionEndingScene \.detention-ending-content/);
+  assert.ok(!css.slice(css.indexOf("GAME-SP4B / GAME-SP4.1C2 — Ending B daylight")).includes("filter:brightness(.5)"),
+    "No full-scene dimming reintroduced");
+});
