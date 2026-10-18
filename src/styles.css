@@ -3383,3 +3383,134 @@ body:has(#menuScreen:not([hidden])) main {
     right:0;height:32%;
   }
 }
+
+
+/* GAME-SP4B.5: laptop-friendly paperwork. The instruction/illustration and
+ * the answer controls sit side-by-side so no answer is hidden below a tall
+ * scrollable sheet. Keep the HTML controls and the three puzzle states intact. */
+#holidayScreen #rescueMiniGameScene[data-route="detention"] .rescue-route-intro-stage {
+  padding:12px 2% 72px;
+}
+#holidayScreen #rescueMiniGameScene[data-route="detention"] .detention-paperwork {
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+  width:min(96%,1150px);
+  max-height:100%;
+  padding:12px 16px;
+  overflow-y:auto; /* fallback only for unusually short windows/large text */
+  box-sizing:border-box;
+}
+#holidayScreen .detention-form-header {
+  display:grid;
+  gap:5px;
+}
+#holidayScreen .detention-title-row {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:center;
+  column-gap:22px;
+  row-gap:3px;
+}
+#holidayScreen .detention-paperwork .detention-title-row h2 {
+  margin:0;
+  line-height:1.12;
+  font-size:clamp(22px,2.15vw,30px);
+}
+#holidayScreen .detention-paperwork .detention-progress {
+  margin:0;
+  font-size:clamp(12px,1vw,14px);
+}
+#holidayScreen .detention-form-columns {
+  display:grid;
+  grid-template-columns:minmax(0,.98fr) minmax(0,1.02fr);
+  align-items:start;
+  gap:18px;
+  min-height:0;
+}
+#holidayScreen .detention-reading-column,
+#holidayScreen .detention-answer-column {
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  min-width:0;
+}
+#holidayScreen .detention-paperwork .detention-prompt {
+  margin:0;
+  font-size:clamp(15px,1.45vw,19px);
+  line-height:1.3;
+}
+#holidayScreen .detention-paperwork .detention-clue {
+  margin:0;
+  font-size:clamp(13px,1.1vw,15px);
+  line-height:1.3;
+}
+#holidayScreen .detention-paperwork .detention-art-display {
+  flex:0 0 auto;
+  width:100%;
+  height:clamp(125px,22vh,190px);
+  margin:2px 0 0;
+}
+#holidayScreen .detention-paperwork .detention-cards {
+  grid-template-columns:1fr;
+  gap:8px;
+  margin:0;
+}
+#holidayScreen .detention-paperwork .detention-card {
+  min-height:52px;
+  padding:8px 12px;
+  font-size:clamp(13px,1.15vw,16px);
+  line-height:1.25;
+}
+#holidayScreen .detention-paperwork .detention-feedback,
+#holidayScreen .detention-paperwork .detention-hint {
+  margin:0;
+  padding:8px 11px;
+  font-size:clamp(13px,1.1vw,15px);
+  line-height:1.3;
+}
+#holidayScreen .detention-paperwork .detention-stamp-panel {
+  margin:0;
+  padding:8px;
+  gap:7px;
+}
+#holidayScreen .detention-paperwork #detentionStampInstructions {
+  margin:0;
+  font-size:clamp(12px,1.05vw,14px);
+  line-height:1.3;
+}
+#holidayScreen .detention-paperwork .detention-moved-cup {height:clamp(80px,16vh,125px);}
+#holidayScreen .detention-paperwork .detention-stamp img {height:clamp(65px,12vh,96px);}
+#holidayScreen .detention-paperwork .detention-permit-image {height:clamp(90px,17vh,135px);}
+#holidayScreen .detention-paperwork .detention-approved-preview-frame {height:clamp(125px,25vh,185px);}
+#holidayScreen .detention-paperwork #detentionNextButton {
+  margin:0 auto;
+  min-height:44px;
+  width:min(100%,340px);
+}
+@media (max-height:700px) and (min-width:801px) {
+  #holidayScreen #rescueMiniGameScene[data-route="detention"] .rescue-route-intro-stage {
+    padding:8px 2% 65px;
+  }
+  #holidayScreen .detention-paperwork .detention-art-display {height:clamp(105px,17vh,140px);}
+  #holidayScreen .detention-paperwork .detention-card {min-height:46px;padding:6px 10px;}
+  #holidayScreen .detention-paperwork .detention-moved-cup {height:90px;}
+  #holidayScreen .detention-paperwork .detention-permit-image {height:95px;}
+}
+@media (max-width:800px) {
+  #holidayScreen #rescueMiniGameScene[data-route="detention"] .rescue-route-intro-stage {
+    padding:12px 2%;
+  }
+  #holidayScreen #rescueMiniGameScene[data-route="detention"] .detention-paperwork {
+    width:98%;
+    padding:12px;
+    gap:9px;
+  }
+  #holidayScreen .detention-form-columns {
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+  #holidayScreen .detention-paperwork .detention-art-display {height:clamp(125px,20vh,190px);}
+  #holidayScreen .detention-paperwork .detention-card {min-height:48px;}
+}
