@@ -3217,7 +3217,7 @@ test("GAME-SP4C.4A approved cardboard Stephen is an extra final-scene actor",()=
   assert.equal(image.toString("ascii",0,4),"RIFF");
   assert.equal(image.toString("ascii",8,16),"WEBPVP8X");
   assert.ok((image[20]&0x10)!==0,"The cardboard standee must have transparent background");
-  const code=css.slice(css.lastIndexOf("/* GAME-SP4C.4A: badly assembled Stephen"));
+  const code=css.slice(css.lastIndexOf("/* GAME-SP4C.4A: badly assembled cardboard Stephen"));
   assert.ok(code.includes('.spa-ending-cardboard-stephen'));
   assert.ok(code.includes('[data-speaker="cardboard stephen"] .spa-ending-cardboard-stephen'));
   assert.ok(code.includes('@media (max-width:800px)'));
