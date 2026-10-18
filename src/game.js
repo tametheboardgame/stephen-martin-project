@@ -1462,6 +1462,7 @@
       const progress = rescueFramework.normalise(state.rescueProgress, route);
       state.rescueProgress = progress;
       if (inRouteIntro) {
+        $("rescueRouteIntro").dataset.endingB = route === "detention" ? "true" : "false";
         const choice = rescueHub.destinations.find(item => item.route === route);
         $("hotelRouteHeading").textContent = choice ? choice.label.toUpperCase() : config.title;
         $("hotelRouteDescription").textContent = rescueHub.routeIntro[route];
@@ -1472,7 +1473,7 @@
         $("routeIntroLine").textContent = duringDialogue ? line.text : "";
         // The three separately approved Summit sprites remain fixed on the
         // exterior stage; highlight whoever owns the current spoken line.
-        $("rescueRouteIntro").dataset.speaker = duringDialogue && route === "cult"
+        $("rescueRouteIntro").dataset.speaker = duringDialogue && (route === "cult" || route === "detention")
           ? line.speaker.toLowerCase() : "";
         $("routeIntroStatus").textContent = duringDialogue
           ? "Rescue briefing · " + (progress.introStep + 1) + " of " + config.intro.length
@@ -1481,6 +1482,7 @@
           ? "Next line →" : "Continue to " + config.gameTitle + " →";
       }
       if (inMiniGame) {
+        $("rescueMiniGameScene").dataset.route = route;
         const playableSummit = route === "cult";
         const playableDetention = route === "detention";
         const playableAssembly = route === "reassemble";
@@ -1541,6 +1543,13 @@
             + " of " + detention.rounds.length;
           $("detentionRoundPrompt").textContent = round.prompt;
           $("detentionRoundClue").textContent = round.clue;
+          // Art direction only: the three approved source compositions do not
+          // alter answers, hint counting, save keys or touch/keyboard controls.
+          $("detentionBearArtLink").hidden = roundIndex !== 1;
+          $("detentionCupPreview").hidden = roundIndex !== 2 ||
+            state.detentionStampFound === true || Boolean(acknowledging);
+          $("detentionApprovedPreview").hidden = !(acknowledging && roundIndex === 2);
+          $("detentionInkOnPermit").hidden = !(acknowledging && roundIndex === 2);
           $("detentionChoiceCards").hidden = acknowledging ||
             (roundIndex === 2 && state.detentionStampFound === true);
           for (let i = 0; i < round.options.length; i++) {
@@ -1549,12 +1558,14 @@
           const inStampSearch = roundIndex === 2 && state.detentionStampFound === true && !acknowledging;
           $("detentionStampPanel").hidden = !inStampSearch;
           $("detentionStampButton").dataset.selected = inStampSearch && state.detentionStampSelected === true ? "true" : "false";
+          $("detentionStampButton").setAttribute("aria-pressed",
+            inStampSearch && state.detentionStampSelected === true ? "true" : "false");
           const stampMessage = state.detentionStampSelected === true
             ? "Stamp selected. Tap the permit or drag the stamp onto it."
             : "The APPROVED stamp was under Paul's takeaway drink. Select it and then tap the permit, or drag it onto the permit.";
           $("detentionStampInstructions").textContent = stampMessage;
-          $("detentionPermitButton").textContent = acknowledging
-            ? detention.permitText : "VISITOR RELEASE AUTHORISATION · APPLY STAMP HERE";
+          $("detentionPermitLabel").textContent = acknowledging
+            ? detention.permitText : "Apply stamp to Stephen's release permit";
           const feedback = acknowledging && roundIndex === 2
             ? round.approvedResponse
             : state.detentionStampSelected === true && inStampSearch
@@ -1632,6 +1643,7 @@
         state.rescueProgress.endingStep = step;
         const showCard = step === detention.ending.length;
         const line = detention.ending[Math.min(step, detention.ending.length - 1)];
+        $("detentionEndingScene").dataset.speaker = showCard ? "" : line.speaker.toLowerCase();
         $("detentionEndingSpeaker").textContent = showCard ? "ENDING B" : line.speaker.toUpperCase();
         $("detentionEndingLine").textContent = showCard ? detention.endCard : line.text;
         $("detentionEndingProgress").textContent = showCard

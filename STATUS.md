@@ -1,6 +1,40 @@
 # Project status
 
-**Updated:** 17 October 2026
+**Updated:** 18 October 2026
+
+## GAME-SP4B.5 — Laptop paperwork layout correction (18 October 2026)
+
+- Owner's laptop screenshot showed the Ending B mini-game form scrolling internally, hiding the three answer choices. Restructured only the paperwork form into a compact title/progress row and two responsive columns: prompt, clue and original desk illustration left; answer choices, stamp interaction, feedback/hint and Continue right.
+- Retains all three puzzle stages, source images, gameplay/save/touch/keyboard controls and approved standing-official introduction/finale. Up to 800px width, content stacks with a normal accessible scroll fallback rather than being squeezed unreadably.
+- Cloudflare preview and GitHub smoke passed at `196d622`: **126/126 tests, 9/9 Ending B art assets**. Owner laptop visual review outstanding; development PR #44 remains draft and unmerged.
+
+## GAME-SP4B.4 — Restore standing official on the visitors' floor (18 October 2026)
+
+- Owner rejected the behind-desk visual after two layout iterations and explicitly requested the **original, uncut full-length approved official**, standing between David and Paul in the Ending B briefing. The same source WebP and manifest are reused, with no regenerated artwork or changes to the bureau background.
+- Removed the entire official clipping mask and moved his feet to the same baseline as David and Paul at desktop/tablet/mobile widths. Rebalanced the four characters in the Ending B resolution (Stephen, David, official, Paul) to avoid foreground overlap. Existing speaker emphasis is retained.
+- Updated layout assertions and static build. GitHub smoke **125/125 passed** at `509d7a3`; Cloudflare visual approval of the final composition remains outstanding. PR #44 stays draft and must not be merged without authorisation.
+
+## GAME-SP4B.3 — Bureau official depth correction (18 October 2026)
+
+- Owner's Cloudflare screenshot showed the official disproportionately large and cut off across the **front** of the reception counter, making him look detached from the desk.
+- Adjusted only the shared intro/ending official CSS: desktop from `top:32%; height:70%; clip-bottom:63%` to `top:37%; height:49%; clip-bottom:68%`, plus proportionate tablet/mobile refinements. This places a smaller official further back at the central desk and conceals the lower body at the countertop. Original transparent sprite and room art are unchanged.
+- Added focused breakpoint/geometry regression. Automated checks passed on development PR #44; Cloudflare visual confirmation is still the owner's gate. Do not merge until approved.
+
+## GAME-SP4B.2 — Chinese official sprite integrated (18 October 2026)
+
+- Owner-approved fictional official PNG staged in the project Drive folder, with manifest and transparent optimised WebP on branch `agent/game-sp4-ending-b-art-integration`, draft PR #44.
+- Official is an independent actor behind the bureau's counter in the Ending B introduction and finale, with speaking glow for Official lines and mobile/tablet offsets. No replacement of the locked office backdrop, no new dialogue, no changes to stamp mechanics or other endings.
+- Added asset alpha/build and visual-placement regression checks. **Next gate:** confirm passing GitHub CI and Cloudflare preview, then obtain owner in-engine approval before merging PR #44.
+
+## GAME-SP4B — Ending B approved-art playable preview (17 October 2026)
+
+- Staged, materialised and committed all locked Ending B background, puzzle-desk, bear classification, takeaway-cup, physical stamp and matching red impression artwork. Reused the **exact office Stephen sprite** from the already owner-approved release-permit composite, rather than inventing another portrait. The transformed cup has its own alpha-preserving WebP; original source remains in Drive.
+- Replaced Ending B's provisional paperwork backdrop with the approved Office of Ceremonial Misunderstandings. In the existing three-step gameplay: the bear document appears during classification, Paul's separate cup appears before stamp discovery, the transparent stamp becomes a selected/draggable prop, and its red ink impression overlays Stephen's permit only after approval. Existing voice/dialogue/choices/save/touch/keyboard controls remain unchanged. Ending uses approved office background and existing cast sprites until a dedicated official sprite is reviewed.
+- Build checks eight required WebP images (including alpha on cup, stamp and ink), plus two focused state/asset regression tests. The development branch `agent/game-sp4-ending-b-art-integration` is owner-review-only; **do not merge without explicit request**. Production log: `docs/story/GAME-SP4.0-END-B-ASSET-PRODUCTION.md`.
+- **GAME-SP4B.1 visual correction:** replaced the large central Ending B route-briefing overlay with Ending A-style bottom-of-stage speaker/dialogue and a compact upper-left location label; applied matching bottom subtitles to the resolution. The interactive form stays central. Regression test and responsive mobile/tablet CSS added, with all 123 tests passing and 112/112 voice clips packaged; owner preview still required.
+
+
+
 
 ## GAME-SP4 — Visitor Information dialogue voice preparation (17 October 2026)
 

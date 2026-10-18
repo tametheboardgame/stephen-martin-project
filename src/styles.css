@@ -3025,3 +3025,492 @@ body:has(#menuScreen:not([hidden])) main {
   aspect-ratio: 1672 / 940;
   object-fit: contain;
 }
+
+
+/* GAME-SP4B approved bureaucratic scene; all objects remain independently layered. */
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-route-intro-stage,
+#holidayScreen #rescueMiniGameScene[data-route="detention"] .rescue-route-intro-stage,
+#holidayScreen .detention-ending-stage {
+  background:linear-gradient(90deg,rgba(10,22,35,.24),rgba(10,22,35,.13)),
+    url("../public/assets/generated/locations/ending-b-bureau-office-v01.webp") center/cover no-repeat;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .summit-entrance-label,
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .summit-entrance-actor {
+  display:none !important;
+}
+#holidayScreen .detention-intro-actor {display:none;pointer-events:none;position:absolute;z-index:1;bottom:5%;width:auto;height:62%;object-fit:contain;filter:drop-shadow(3px 7px 6px rgba(20,17,13,.5));}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-intro-actor {display:block;}
+#holidayScreen .detention-intro-david {left:8%;}
+#holidayScreen .detention-intro-paul {right:8%;height:56%;bottom:6%;}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-travel-panel {
+  position:relative;z-index:3;max-width:650px;background:rgba(12,28,47,.91);
+}
+#holidayScreen #rescueMiniGameScene[data-route="detention"] .rescue-route-intro-stage {padding:2.6% 3% 10%;}
+#holidayScreen .detention-paperwork {
+  position:relative;z-index:3;
+  width:min(93%,1060px);max-height:100%;overflow-y:auto;
+  background:rgba(253,245,225,.97);border:3px solid #b99653;
+  color:#263b48;box-shadow:0 16px 36px #071f31b8;
+  padding:clamp(11px,1.6vw,20px);border-radius:12px;
+}
+#holidayScreen .detention-eyebrow {color:#7e5129;}
+#holidayScreen .detention-paperwork h2 {color:#173f66;}
+#holidayScreen .detention-progress {color:#2f5d81;}
+#holidayScreen .detention-clue {color:#4a5056;}
+#holidayScreen .detention-art-display {
+  width:100%;height:clamp(120px,20vh,190px);position:relative;overflow:hidden;
+  margin:7px auto 10px;border:2px solid #b5925e;border-radius:9px;
+  background:#d9b98c;box-shadow:inset 0 0 8px #51331960;
+}
+#holidayScreen .detention-desk-art {display:block;width:100%;height:100%;object-fit:cover;object-position:center 57%;}
+#holidayScreen .detention-art-bear {
+  position:absolute;right:4%;top:5%;width:clamp(80px,15%,156px);height:90%;
+  display:flex;align-items:center;justify-content:center;border:2px solid #ad823e;
+  background:#f8edcd;box-shadow:0 5px 10px #19100fa6;transform:rotate(3deg);
+}
+#holidayScreen .detention-art-bear img {height:100%;max-width:100%;object-fit:contain;}
+#holidayScreen .detention-cup-preview {
+  position:absolute;right:6%;top:2%;width:min(25%,175px);height:96%;
+  display:grid;place-items:center;pointer-events:none;
+}
+#holidayScreen .detention-cup-preview img {height:87%;max-width:100%;object-fit:contain;filter:drop-shadow(1px 4px 3px #21191485);}
+#holidayScreen .detention-cup-preview span {
+  position:absolute;bottom:0;right:0;padding:4px 7px;background:#112e4eea;
+  border-radius:5px;color:#ffe8af;font-size:clamp(10px,.8vw,13px);font-weight:800;
+  white-space:nowrap;
+}
+#holidayScreen #detentionBearArtLink[hidden],
+#holidayScreen #detentionCupPreview[hidden],
+#holidayScreen #detentionInkOnPermit[hidden],
+#holidayScreen #detentionApprovedPreview[hidden] {display:none !important;}
+#holidayScreen .detention-stamp-panel {
+  margin:8px auto;gap:7px;padding:9px;border-radius:10px;
+  border:2px solid #d0b379;background:#efe0ba;
+}
+#holidayScreen .detention-art-interaction {
+  display:grid;grid-template-columns:minmax(74px,.6fr) minmax(115px,1fr) minmax(145px,1.1fr);
+  align-items:center;gap:clamp(5px,1.1vw,14px);max-width:740px;margin:auto;
+}
+#holidayScreen .detention-moved-cup {max-width:100%;height:min(25vh,205px);object-fit:contain;filter:drop-shadow(1px 5px 3px #25140866);}
+#holidayScreen .detention-stamp,#holidayScreen .detention-permit {
+  width:100%;height:100%;min-width:0;margin:0;padding:8px;display:flex;
+  flex-direction:column;justify-content:center;align-items:center;gap:5px;
+  border:2px solid #bc9d62;background:#fff9eb;color:#233e59;
+  border-radius:9px;transform:none;touch-action:manipulation;
+}
+#holidayScreen .detention-stamp img {display:block;max-width:100%;height:clamp(65px,13vh,125px);object-fit:contain;filter:drop-shadow(2px 4px 3px #261b1866);}
+#holidayScreen .detention-stamp span,#holidayScreen .detention-permit span:last-child {
+  font-size:clamp(10px,.94vw,14px);font-weight:900;line-height:1.2;
+}
+#holidayScreen .detention-stamp[data-selected="true"] {
+  background:#fff0cb;outline:4px solid #bd882e;outline-offset:0;
+}
+#holidayScreen .detention-permit-image,#holidayScreen .detention-approved-preview-frame {
+  position:relative;display:block;max-width:100%;
+}
+#holidayScreen .detention-permit-image {height:clamp(110px,21vh,200px);}
+#holidayScreen .detention-permit-image > img:first-child,
+#holidayScreen .detention-approved-preview-frame > img:first-child {
+  display:block;height:100%;width:100%;object-fit:contain;
+}
+#holidayScreen .detention-ink-overlay {
+  position:absolute;left:56%;top:66%;width:42%;height:22%;object-fit:contain;
+  transform:rotate(-4deg);pointer-events:none;filter:contrast(1.1);
+}
+#holidayScreen .detention-approved-preview {padding:9px;background:#e3d1a5;border-radius:8px;}
+#holidayScreen .detention-approved-preview-frame {height:clamp(160px,33vh,270px);width:max-content;margin:0 auto;}
+#holidayScreen .detention-ending-stage {box-sizing:border-box;padding:0 3% 0;}
+#holidayScreen .detention-ending-actor {
+  position:absolute;z-index:1;height:60%;width:auto;bottom:25%;
+  object-fit:contain;pointer-events:none;filter:drop-shadow(3px 5px 3px #122b3899);
+}
+#holidayScreen .detention-ending-stephen {left:9%;height:58%;}
+#holidayScreen .detention-ending-david {left:38%;height:58%;}
+#holidayScreen .detention-ending-paul {right:9%;height:55%;}
+#holidayScreen .detention-ending-permit {
+  position:absolute;z-index:2;top:2%;right:2%;height:36%;width:max-content;
+  max-width:23%;transform:rotate(5deg);filter:drop-shadow(2px 4px 3px #102030bb);
+}
+#holidayScreen .detention-ending-permit > img:first-child {height:100%;max-width:100%;object-fit:contain;}
+#holidayScreen .detention-ending-permit .detention-ending-ink {
+  position:absolute;left:56%;top:66%;width:42%;height:22%;object-fit:contain;transform:rotate(-4deg);
+}
+#holidayScreen .detention-ending-content {
+  position:relative;z-index:4;align-self:end;margin:0 auto 3%;
+  width:min(93%,1000px);height:auto;max-height:43%;
+  padding:10px 18px;overflow-y:auto;border-color:#b99653;
+  background:rgba(255,248,232,.96);box-shadow:0 8px 24px #152033bb;
+}
+#holidayScreen .detention-ending-content .detention-certificate {margin:5px auto;padding:5px;font-size:clamp(11px,1.35vw,17px);max-width:78%;}
+#holidayScreen .detention-ending-content .detention-ending-line {margin:6px 0;font-size:clamp(15px,1.9vw,24px);}
+#holidayScreen .detention-ending-content .detention-ending-speaker {margin:5px 0 0;}
+@media (max-width:800px) {
+  #holidayScreen .detention-intro-actor {height:45%;bottom:13%;}
+  #holidayScreen .detention-intro-paul {height:41%;}
+  #holidayScreen #rescueMiniGameScene[data-route="detention"] .rescue-route-intro-stage {padding:2% 1% 12%;}
+  #holidayScreen .detention-paperwork {width:98%;max-height:100%;padding:8px;}
+  #holidayScreen .detention-art-display {height:110px;}
+  #holidayScreen .detention-art-interaction {grid-template-columns:.55fr 1fr 1.15fr;}
+  #holidayScreen .detention-moved-cup {height:110px;}
+  #holidayScreen .detention-stamp img {height:75px;}
+  #holidayScreen .detention-permit-image {height:118px;}
+  #holidayScreen .detention-ending-actor {height:50%;bottom:34%;}
+  #holidayScreen .detention-ending-stephen {height:49%;left:3%;}
+  #holidayScreen .detention-ending-david {height:47%;left:30%;}
+  #holidayScreen .detention-ending-paul {height:43%;right:2%;}
+  #holidayScreen .detention-ending-permit {height:28%;top:2%;right:2%;}
+  #holidayScreen .detention-ending-content {max-height:48%;width:99%;margin-bottom:2%;padding:8px;}
+}
+
+
+/* GAME-SP4B.1 — cinematic Ending B dialogue layout.
+ * Mirror Ending A's bottom subtitle presentation. The earlier generic route
+ * briefing modal must never obscure approved hall art or actors. Keep the
+ * interactive three-question paperwork form separately usable and untouched. */
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-route-intro-stage {
+  display:block;
+  padding:0;
+}
+#holidayScreen #rescueRouteIntro .detention-office-label {display:none;}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-office-label {
+  position:absolute;z-index:4;top:3%;left:2.7%;width:max-content;max-width:43%;
+  display:grid;gap:3px;padding:9px 12px;
+  border:2px solid rgba(244,209,145,.9);border-radius:9px;
+  background:rgba(7,30,53,.85);color:#fff0c9;pointer-events:none;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-office-label span {
+  font-size:clamp(10px,.95vw,13px);letter-spacing:.075em;font-weight:850;color:#a5def7;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-office-label strong {
+  font-size:clamp(13px,1.4vw,20px);line-height:1.2;letter-spacing:.02em;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-intro-david {
+  height:56%;bottom:22%;left:9%;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-intro-paul {
+  height:51%;bottom:22%;right:9%;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-travel-panel {
+  position:absolute;z-index:6;left:3%;right:3%;bottom:10%;
+  width:94%;max-width:none;max-height:27%;height:auto;
+  box-sizing:border-box;display:block;overflow:visible;
+  margin:0;padding:0;text-align:left;
+  border:0;border-radius:0;box-shadow:none;background:transparent;
+  color:#fff4df;
+}
+/* Reuse the actual dialogue/status nodes for accessible, scripted captions;
+ * only the obsolete hero heading and explanation are hidden in this route. */
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-travel-panel > span,
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-travel-panel > h2,
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-travel-panel > p:not(#routeIntroStatus),
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-travel-panel > small {
+  display:none;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-intro-dialogue,
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] #routeIntroStatus {
+  box-sizing:border-box;display:block;width:100%;max-width:none;
+  margin:0;padding:12px 18px;
+  text-align:left;color:#fff5dd;
+  background:rgba(5,25,48,.94);
+  border:3px solid #f0cf89;border-radius:11px;
+  box-shadow:4px 5px 0 rgba(0,0,0,.4);
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] #routeIntroDialogue[hidden] {
+  display:none !important;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-intro-dialogue strong {
+  color:#ffdb87;font-size:clamp(13px,1.25vw,18px);font-weight:900;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-intro-dialogue p {
+  margin:5px 0 0;font-size:clamp(16px,1.8vw,25px);
+  line-height:1.35;font-weight:800;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] #routeIntroStatus {
+  font-size:clamp(14px,1.5vw,20px);font-weight:800;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"]:has(#routeIntroDialogue:not([hidden])) #routeIntroStatus {
+  display:none;
+}
+/* The resolution dialogue follows the same bottom-of-stage convention. */
+#holidayScreen #detentionEndingScene .detention-ending-stage {
+  display:block;position:relative;padding:0;
+}
+#holidayScreen #detentionEndingScene .detention-ending-content {
+  position:absolute;z-index:5;left:3%;right:3%;bottom:8%;
+  width:94%;max-width:none;max-height:29%;height:auto;
+  box-sizing:border-box;overflow-y:auto;margin:0;padding:10px 18px;
+  text-align:left;color:#fff5df;
+  background:rgba(5,25,48,.94);
+  border:3px solid #f0cf89;border-radius:11px;
+  box-shadow:4px 5px 0 rgba(0,0,0,.4);
+}
+#holidayScreen #detentionEndingScene .detention-ending-content .detention-certificate {
+  display:none; /* The actual approved permit prop carries the stamped image. */
+}
+#holidayScreen #detentionEndingScene .detention-ending-speaker {
+  display:block;margin:0;color:#ffdb87;
+  font-size:clamp(13px,1.25vw,18px);font-weight:900;
+}
+#holidayScreen #detentionEndingScene .detention-ending-line {
+  margin:5px 0 3px;color:#fff9e9;
+  font-size:clamp(16px,1.8vw,25px);line-height:1.35;font-weight:800;
+}
+#holidayScreen #detentionEndingScene .detention-progress {
+  margin:2px 0 0;text-align:right;color:#bce9ff;
+  font-size:clamp(11px,1vw,13px);
+}
+@media (max-width:800px) {
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-office-label {
+    top:9%;left:2%;padding:6px 9px;max-width:53%;
+  }
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-office-label span {
+    font-size:clamp(9px,1.6vw,11px);
+  }
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-office-label strong {
+    font-size:clamp(11px,2vw,16px);
+  }
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-intro-david {
+    height:44%;bottom:30%;left:4%;
+  }
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-intro-paul {
+    height:41%;bottom:30%;right:4%;
+  }
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-travel-panel {
+    left:3%;right:3%;bottom:13%;width:94%;max-height:31%;
+  }
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-intro-dialogue,
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] #routeIntroStatus {
+    padding:8px 10px;border-width:2px;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-content {
+    bottom:10%;max-height:32%;padding:8px 11px;border-width:2px;
+  }
+}
+@media (max-width:450px) {
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-office-label {max-width:58%;}
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-intro-david {
+    height:34%;bottom:34%;left:0;
+  }
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-intro-paul {
+    height:31%;bottom:34%;right:0;
+  }
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-travel-panel {
+    bottom:15%;max-height:35%;
+  }
+  #holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-intro-dialogue p {
+    font-size:clamp(14px,3.6vw,17px);
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-content {
+    bottom:13%;max-height:36%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-line {
+    font-size:clamp(14px,3.6vw,17px);
+  }
+}
+
+
+/* GAME-SP4B.4: the ORIGINAL complete alpha sprite stands with David and Paul.
+ * Ground his shoes on the same floor plane as the other actors. Do not mask
+ * his lower body or position him behind the built-in reception counter. */
+#holidayScreen .detention-intro-official,
+#holidayScreen .detention-ending-official {
+  position:absolute;
+  z-index:2;
+  top:auto;
+  bottom:22%;
+  left:52%;
+  height:54%;
+  width:auto;
+  transform:translateX(-50%);
+  object-fit:contain;
+  pointer-events:none;
+  clip-path:none;
+  filter:drop-shadow(3px 6px 5px rgba(12,21,35,.58));
+}
+#holidayScreen .detention-intro-official {display:none;}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-intro-official {
+  display:block;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"][data-speaker="official"] .detention-intro-official,
+#holidayScreen #detentionEndingScene[data-speaker="official"] .detention-ending-official {
+  filter:drop-shadow(0 0 9px rgba(255,225,158,.82)) brightness(1.12);
+}
+/* Ending B has four people, not the three of the briefing: keep Stephen
+ * at far left, David beside him, the official in the central gap and Paul right. */
+#holidayScreen #detentionEndingScene .detention-ending-official {
+  bottom:25%;left:57%;height:52%;
+}
+#holidayScreen #detentionEndingScene .detention-ending-stephen {
+  left:5%;height:52%;
+}
+#holidayScreen #detentionEndingScene .detention-ending-david {
+  left:27%;height:52%;
+}
+#holidayScreen #detentionEndingScene .detention-ending-paul {
+  right:5%;height:50%;
+}
+@media (max-width:800px) {
+  #holidayScreen .detention-intro-official {
+    bottom:30%;left:52%;height:43%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-official {
+    bottom:34%;left:57%;height:43%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-stephen {
+    left:1%;height:43%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-david {
+    left:26%;height:43%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-paul {
+    right:1%;height:41%;
+  }
+}
+@media (max-width:450px) {
+  #holidayScreen .detention-intro-official {
+    bottom:34%;left:52%;height:33%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-official {
+    bottom:34%;left:56%;height:34%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-stephen {
+    left:0;height:34%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-david {
+    left:22%;height:34%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-paul {
+    right:0;height:32%;
+  }
+}
+
+
+/* GAME-SP4B.5: laptop-friendly paperwork. The instruction/illustration and
+ * the answer controls sit side-by-side so no answer is hidden below a tall
+ * scrollable sheet. Keep the HTML controls and the three puzzle states intact. */
+#holidayScreen #rescueMiniGameScene[data-route="detention"] .rescue-route-intro-stage {
+  padding:12px 2% 72px;
+}
+#holidayScreen #rescueMiniGameScene[data-route="detention"] .detention-paperwork {
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+  width:min(96%,1150px);
+  max-height:100%;
+  padding:12px 16px;
+  overflow-y:auto; /* fallback only for unusually short windows/large text */
+  box-sizing:border-box;
+}
+#holidayScreen .detention-form-header {
+  display:grid;
+  gap:5px;
+}
+#holidayScreen .detention-title-row {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:center;
+  column-gap:22px;
+  row-gap:3px;
+}
+#holidayScreen .detention-paperwork .detention-title-row h2 {
+  margin:0;
+  line-height:1.12;
+  font-size:clamp(22px,2.15vw,30px);
+}
+#holidayScreen .detention-paperwork .detention-progress {
+  margin:0;
+  font-size:clamp(12px,1vw,14px);
+}
+#holidayScreen .detention-form-columns {
+  display:grid;
+  grid-template-columns:minmax(0,.98fr) minmax(0,1.02fr);
+  align-items:start;
+  gap:18px;
+  min-height:0;
+}
+#holidayScreen .detention-reading-column,
+#holidayScreen .detention-answer-column {
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  min-width:0;
+}
+#holidayScreen .detention-paperwork .detention-prompt {
+  margin:0;
+  font-size:clamp(15px,1.45vw,19px);
+  line-height:1.3;
+}
+#holidayScreen .detention-paperwork .detention-clue {
+  margin:0;
+  font-size:clamp(13px,1.1vw,15px);
+  line-height:1.3;
+}
+#holidayScreen .detention-paperwork .detention-art-display {
+  flex:0 0 auto;
+  width:100%;
+  height:clamp(125px,22vh,190px);
+  margin:2px 0 0;
+}
+#holidayScreen .detention-paperwork .detention-cards {
+  grid-template-columns:1fr;
+  gap:8px;
+  margin:0;
+}
+#holidayScreen .detention-paperwork .detention-card {
+  min-height:52px;
+  padding:8px 12px;
+  font-size:clamp(13px,1.15vw,16px);
+  line-height:1.25;
+}
+#holidayScreen .detention-paperwork .detention-feedback,
+#holidayScreen .detention-paperwork .detention-hint {
+  margin:0;
+  padding:8px 11px;
+  font-size:clamp(13px,1.1vw,15px);
+  line-height:1.3;
+}
+#holidayScreen .detention-paperwork .detention-stamp-panel {
+  margin:0;
+  padding:8px;
+  gap:7px;
+}
+#holidayScreen .detention-paperwork #detentionStampInstructions {
+  margin:0;
+  font-size:clamp(12px,1.05vw,14px);
+  line-height:1.3;
+}
+#holidayScreen .detention-paperwork .detention-moved-cup {height:clamp(80px,16vh,125px);}
+#holidayScreen .detention-paperwork .detention-stamp img {height:clamp(65px,12vh,96px);}
+#holidayScreen .detention-paperwork .detention-permit-image {height:clamp(90px,17vh,135px);}
+#holidayScreen .detention-paperwork .detention-approved-preview-frame {height:clamp(125px,25vh,185px);}
+#holidayScreen .detention-paperwork #detentionNextButton {
+  margin:0 auto;
+  min-height:44px;
+  width:min(100%,340px);
+}
+@media (max-height:700px) and (min-width:801px) {
+  #holidayScreen #rescueMiniGameScene[data-route="detention"] .rescue-route-intro-stage {
+    padding:8px 2% 65px;
+  }
+  #holidayScreen .detention-paperwork .detention-art-display {height:clamp(105px,17vh,140px);}
+  #holidayScreen .detention-paperwork .detention-card {min-height:46px;padding:6px 10px;}
+  #holidayScreen .detention-paperwork .detention-moved-cup {height:90px;}
+  #holidayScreen .detention-paperwork .detention-permit-image {height:95px;}
+}
+@media (max-width:800px) {
+  #holidayScreen #rescueMiniGameScene[data-route="detention"] .rescue-route-intro-stage {
+    padding:12px 2%;
+  }
+  #holidayScreen #rescueMiniGameScene[data-route="detention"] .detention-paperwork {
+    width:98%;
+    padding:12px;
+    gap:9px;
+  }
+  #holidayScreen .detention-form-columns {
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+  #holidayScreen .detention-paperwork .detention-art-display {height:clamp(125px,20vh,190px);}
+  #holidayScreen .detention-paperwork .detention-card {min-height:48px;}
+}

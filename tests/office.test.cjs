@@ -1909,7 +1909,8 @@ test("SP4.0B Summit foreground cast remains hidden on detention and spa briefing
     for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
     assert.equal(saved(p).holidayPhase,"rescue-route-intro");
     assert.equal(p.el("rescueRouteIntro").dataset.route,"other");
-    assert.equal(p.el("rescueRouteIntro").dataset.speaker,"");
+    assert.equal(p.el("rescueRouteIntro").dataset.speaker,route === "detention" ? "official" : "", 
+      "Ending B has its own official actor; only the Summit gatekeeper is hidden");
     assert.equal(p.el("routeIntroDialogue").hidden,false);
   }
 });
@@ -2890,4 +2891,169 @@ test("Visitor Information missing MP3 falls back to subtitles and next line stil
   p.tick();
   assert.equal(saved(p).hubIntroStep,1);
   assert.ok(p.voices.at(-1).src.endsWith("rescue.hub.002.mp3"));
+});
+
+test("GAME-SP4B: approved independent Ending B images are present in build and script",()=>{
+  const images=[
+    "public/assets/generated/locations/ending-b-bureau-office-v01.webp",
+    "public/assets/generated/game/ending-b-puzzle-desk-v01.webp",
+    "public/assets/generated/game/ending-b-bear-classification-v01.webp",
+    "public/assets/generated/game/ending-b-pauls-takeaway-cup-master-v01.webp",
+    "public/assets/generated/game/ending-b-pauls-takeaway-cup-alpha-v01.webp",
+    "public/assets/generated/game/ending-b-approved-stamp-v01.webp",
+    "public/assets/generated/game/ending-b-approved-ink-impression-v01.webp",
+    "public/assets/generated/game/ending-b-release-permit-canonical-portrait-proof-v01.webp"
+  ];
+  const build=read("scripts/build.mjs");
+  assert.ok(build.includes("const endingBImages = ["));
+  for(const file of images){
+    const data=fs.readFileSync(path.join(root,file));
+    assert.ok(data.length>20000 && data.length<3*1024*1024,file);
+    assert.equal(data.toString("ascii",0,4),"RIFF",file);
+    assert.equal(data.toString("ascii",8,12),"WEBP",file);
+    assert.ok(build.includes('"'+file+'"'),"Build needs "+file);
+  }
+  for(const file of images.filter(x=>/cup-alpha|approved-stamp|approved-ink-impression/.test(x))){
+    const data=fs.readFileSync(path.join(root,file));
+    assert.equal(data.toString("ascii",12,16),"VP8X",file);
+    assert.ok((data[20]&0x10)!==0,"Independent prop must have genuine alpha: "+file);
+  }
+  assert.match(css,/rescueMiniGameScene\[data-route="detention"\]/);
+  assert.match(css,/ending-b-bureau-office-v01\.webp/);
+  assert.match(html,/id="detentionBearArtLink"/);
+  assert.match(html,/id="detentionCupPreview"/);
+  assert.match(html,/id="detentionApprovedPreview"/);
+  assert.match(html,/id="detentionInkOnPermit"/);
+  assert.match(html,/id="detentionStampButton"[^>]*draggable="true"/);
+  assert.match(html,/ending-b-release-permit-canonical-portrait-proof-v01\.webp/);
+  assert.match(html,/ending-b-approved-ink-impression-v01\.webp/);
+  assert.match(html,/class="detention-ending-actor detention-ending-stephen"/);
+});
+
+test("GAME-SP4B: artwork follows stage and saved stamp state without changing answers",()=>{
+  const p=toDetentionPaperwork();
+  assert.equal(p.el("rescueMiniGameScene").dataset.route,"detention");
+  assert.equal(p.el("detentionBearArtLink").hidden,true,"Not yet on bear classification");
+  assert.equal(p.el("detentionCupPreview").hidden,true,"Cup is revealed in final form stage");
+  p.el("detentionChoice1").click();p.el("detentionNextButton").click();
+  assert.equal(p.el("detentionBearArtLink").hidden,false,"Show locked bear form only in stage two");
+  assert.equal(p.el("detentionCupPreview").hidden,true);
+  p.el("detentionChoice2").click();p.el("detentionNextButton").click();
+  assert.equal(p.el("detentionBearArtLink").hidden,true);
+  assert.equal(p.el("detentionCupPreview").hidden,false,"Show Paul's cup before discovery");
+  p.el("detentionChoice2").click();
+  assert.equal(saved(p).detentionStampFound,true);
+  assert.equal(p.el("detentionCupPreview").hidden,true,"Cup moves once hidden stamp found");
+  assert.equal(p.el("detentionStampPanel").hidden,false);
+  assert.equal(p.el("detentionApprovedPreview").hidden,true);
+  p.el("detentionStampButton").click();
+  assert.equal(saved(p).detentionStampSelected,true);
+  assert.equal(p.el("detentionStampButton").dataset.selected,"true");
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(p.el("detentionStampPanel").hidden,false,"Image interaction survives Continue");
+  p.el("detentionPermitButton").click();
+  assert.equal(saved(p).rescueProgress.finished,true);
+  assert.equal(p.el("detentionApprovedPreview").hidden,false,"Impression appears on permit after success");
+  assert.match(p.el("detentionPermitLabel").textContent,/ALL OF YOU PLEASE LEAVE/);
+  p.el("detentionNextButton").click();
+  assert.equal(p.el("detentionEndingScene").hidden,false);
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+});
+
+
+test("GAME-SP4B.1 Ending B briefing uses accessible bottom-of-stage subtitles, not old modal",()=>{
+  assert.match(html,/class="detention-office-label" aria-hidden="true"/);
+  const introSelector='#rescueRouteIntro[data-ending-b="true"]';
+  assert.ok(css.includes(introSelector+' .rescue-route-intro-stage'));
+  assert.ok(css.includes(introSelector+' .rescue-travel-panel'));
+  assert.ok(css.includes(introSelector+' .rescue-travel-panel > h2'));
+  assert.ok(css.includes(introSelector+' #routeIntroDialogue[hidden]'));
+  assert.ok(css.includes(introSelector+':has(#routeIntroDialogue:not([hidden])) #routeIntroStatus'));
+  const introRules=css.slice(css.indexOf("/* GAME-SP4B.1"));
+  assert.match(introRules,/#rescueRouteIntro\[data-ending-b="true"\] \.rescue-travel-panel \{[\s\S]*?position:absolute;[\s\S]*?bottom:10%;/);
+  assert.match(introRules,/#detentionEndingScene \.detention-ending-content \{[\s\S]*?position:absolute;[\s\S]*?bottom:8%;/);
+  // The existing Summit route treatment must remain separate, with its own
+  // bottom subtitles; Ending B's labels must not appear in the Summit.
+  assert.match(css,/#rescueRouteIntro\[data-route="cult"\] \.rescue-travel-panel/);
+  const p=toHotelInvestigation("detention");
+  completeHotelIntro(p);
+  p.el("hotelDetentionButton").click();
+  for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+  assert.equal(p.el("rescueRouteIntro").dataset.route,"other","Keep canonical Summit route scope");
+  assert.equal(p.el("rescueRouteIntro").dataset.endingB,"true");
+  assert.equal(p.el("routeIntroDialogue").hidden,false);
+  assert.match(p.el("routeIntroLine").textContent,/./);
+  assert.ok(p.el("routeIntroStatus").textContent.length>0,"Progress remains available after dialogue");
+  p.el("routeIntroNextButton").click();
+  assert.equal(p.el("rescueRouteIntro").dataset.endingB,"true");
+  assert.equal(p.el("routeIntroDialogue").hidden,false);
+});
+
+
+test("GAME-SP4B.2 approved official is the original transparent full-body sprite",()=>{
+  const sprite="public/assets/generated/characters/ending-b-ceremonial-official-neutral-v01.webp";
+  const data=fs.readFileSync(path.join(root,sprite));
+  assert.equal(data.toString("ascii",0,4),"RIFF");
+  assert.equal(data.toString("ascii",8,12),"WEBP");
+  assert.equal(data.toString("ascii",12,16),"VP8X");
+  assert.ok((data[20]&0x10)!==0,"The official must preserve alpha transparency");
+  assert.match(html,/class="detention-intro-official"[^>]*ending-b-ceremonial-official-neutral-v01\.webp/);
+  assert.match(html,/class="detention-ending-official"[^>]*ending-b-ceremonial-official-neutral-v01\.webp/);
+  assert.match(css,/\.detention-intro-official,\s*\n#holidayScreen \.detention-ending-official \{[\s\S]*?clip-path:none/);
+  assert.match(css,/data-speaker="official"\] \.detention-intro-official/);
+  assert.match(css,/data-speaker="official"\] \.detention-ending-official/);
+  assert.match(read("src/game.js"),/detentionEndingScene"\)\.dataset\.speaker = showCard/);
+  assert.match(read("scripts/build.mjs"),/ending-b-ceremonial-official-neutral-v01\.webp/);
+});
+
+
+test("GAME-SP4B.4 official stands full length between David and Paul on matching floor level",()=>{
+  const rules=css.slice(css.lastIndexOf("/* GAME-SP4B.4:"));
+  const standing=rules.match(/#holidayScreen \.detention-intro-official,\s*#holidayScreen \.detention-ending-official \{([^}]+)\}/);
+  assert.ok(standing,"Briefing and ending reuse one unmasked, full-height sprite");
+  assert.match(standing[1],/top:auto;/);
+  assert.match(standing[1],/bottom:22%;/);
+  assert.match(standing[1],/left:52%;/);
+  assert.match(standing[1],/height:54%;/);
+  assert.match(standing[1],/clip-path:none;/,"The original full-length sprite must not be cut at a desk");
+  assert.doesNotMatch(rules,/clip-path:inset/,"No legacy reception counter cropping");
+  assert.match(rules,/#detentionEndingScene \.detention-ending-official \{\s*bottom:25%;left:57%;height:52%;/);
+  assert.match(rules,/#detentionEndingScene \.detention-ending-david \{\s*left:27%;height:52%;/);
+  assert.match(rules,/#detentionEndingScene \.detention-ending-paul \{\s*right:5%;height:50%;/);
+  assert.match(rules,/@media \(max-width:800px\) \{[\s\S]*?\.detention-intro-official \{\s*bottom:30%;left:52%;height:43%;/);
+  assert.match(rules,/@media \(max-width:450px\) \{[\s\S]*?\.detention-intro-official \{\s*bottom:34%;left:52%;height:33%;/);
+  // The three separate actors remain in the approved left/centre/right configuration.
+  assert.match(css,/#rescueRouteIntro\[data-ending-b="true"\] \.detention-intro-david \{\s*height:56%;bottom:22%;left:9%;/);
+  assert.match(css,/#rescueRouteIntro\[data-ending-b="true"\] \.detention-intro-paul \{\s*height:51%;bottom:22%;right:9%;/);
+});
+
+test("GAME-SP4B.5 paperwork places illustration and all selection states side-by-side on laptops",()=>{
+  const paper=html.slice(html.indexOf('<section id="detentionPaperwork"'),html.indexOf('<section id="reassembleWorkshop"'));
+  const head=paper.indexOf('class="detention-form-header"');
+  const cols=paper.indexOf('class="detention-form-columns"');
+  const reading=paper.indexOf('class="detention-reading-column"');
+  const answers=paper.indexOf('class="detention-answer-column"');
+  assert.ok(head>=0 && cols>head && reading>cols && answers>reading,
+    "Form header precedes distinct image and answer columns");
+  for(const id of ["detentionRoundPrompt","detentionRoundClue","detentionArtDisplay","detentionChoiceCards",
+    "detentionStampPanel","detentionApprovedPreview","detentionFeedback","detentionHint","detentionNextButton"]){
+    if(id==="detentionArtDisplay") {
+      assert.match(paper,/class="detention-art-display"/);
+    } else {
+      assert.match(paper,new RegExp('id="'+id+'"'),"Preserve existing puzzle element "+id);
+    }
+  }
+  assert.ok(paper.indexOf('id="detentionChoiceCards"')>answers);
+  assert.ok(paper.indexOf('id="detentionStampPanel"')>answers);
+  assert.ok(paper.indexOf('id="detentionApprovedPreview"')>answers);
+  assert.ok(paper.indexOf('id="detentionNextButton"')>answers);
+  const styles=css.slice(css.lastIndexOf("/* GAME-SP4B.5:"));
+  assert.match(styles,/\.detention-form-columns \{[\s\S]*?grid-template-columns:minmax\(0,\.98fr\) minmax\(0,1\.02fr\)/);
+  assert.match(styles,/\.detention-paperwork \.detention-cards \{[\s\S]*?grid-template-columns:1fr/);
+  assert.match(styles,/\.detention-paperwork \.detention-card \{[\s\S]*?min-height:52px/);
+  assert.match(styles,/@media \(max-width:800px\) \{[\s\S]*?\.detention-form-columns \{[\s\S]*?grid-template-columns:1fr/);
+  assert.match(styles,/overflow-y:auto; \/\* fallback only for unusually short windows/);
+  // Layout only. The full selectable/acknowledgement/stamp and save/resume logic is
+  // tested by GAME-SP4B's existing three-stage route tests.
 });

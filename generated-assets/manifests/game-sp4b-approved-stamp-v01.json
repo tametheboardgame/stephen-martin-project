@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1_RMP3382atWoPxz4L-seESM4rF7yeM3Z"
+  },
+  "expectedSourceName": "ending-b-approved-stamp-v01.png",
+  "destination": "public/assets/generated/game/ending-b-approved-stamp-v01.webp",
+  "transform": {
+    "maxWidth": 1536,
+    "maxHeight": 1024,
+    "quality": 88
+  },
+  "revision": 1
+}

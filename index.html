@@ -403,6 +403,13 @@
             <img id="summitEntranceDavid" class="summit-entrance-actor summit-entrance-david" src="./public/assets/generated/characters/summit-david-speaking-v01.webp" alt="David in a confident argumentative pose, gesturing towards the Summit gatekeeper" loading="eager">
             <img id="summitEntrancePaul" class="summit-entrance-actor summit-entrance-paul" src="./public/assets/generated/characters/summit-paul-wary-v01.webp" alt="Paul leaning back, looking bewildered, with a hand raised" loading="eager">
             <img id="summitEntranceGatekeeper" class="summit-entrance-actor summit-entrance-gatekeeper" src="./public/assets/generated/characters/summit-gatekeeper-v01.webp" alt="The stern Summit gatekeeper in a dark ceremonial uniform, presenting an open gloved hand" loading="eager">
+            <div class="detention-office-label" aria-hidden="true">
+              <span>CHAPTER FOUR · AN ENTIRELY UNNECESSARY RESCUE</span>
+              <strong>OFFICE OF CEREMONIAL MISUNDERSTANDINGS</strong>
+            </div>
+            <img class="detention-intro-official" src="./public/assets/generated/characters/ending-b-ceremonial-official-neutral-v01.webp" alt="" aria-hidden="true" loading="eager">
+            <img class="detention-intro-actor detention-intro-david" src="./public/assets/generated/characters/david-hotel-standing-investigator-v01.webp" alt="" aria-hidden="true">
+            <img class="detention-intro-actor detention-intro-paul" src="./public/assets/generated/characters/paul-hotel-standing-puzzled-v01.webp" alt="" aria-hidden="true">
             <div class="rescue-travel-panel">
               <span>OPERATION: PROBABLY FINE</span>
               <h2 id="hotelRouteHeading">THE SUMMIT</h2>
@@ -445,24 +452,62 @@
               <button id="summitNextButton" class="btn btn-primary" type="button" hidden>Continue →</button>
             </section>
             <section id="detentionPaperwork" class="detention-paperwork" hidden aria-label="The Great Stamp Catastrophe">
-              <span class="detention-eyebrow">OFFICE OF CEREMONIAL MISUNDERSTANDINGS · FORM 001</span>
-              <h2 id="detentionRoundTitle">Visitor Release Authorisation</h2>
-              <p id="detentionRoundProgress" class="detention-progress"></p>
-              <p id="detentionRoundPrompt" class="detention-prompt"></p>
-              <p id="detentionRoundClue" class="detention-clue"></p>
-              <div id="detentionChoiceCards" class="detention-cards" role="group" aria-label="Select the answer for the fictional form">
+              <div class="detention-form-header">
+                <span class="detention-eyebrow">OFFICE OF CEREMONIAL MISUNDERSTANDINGS · FORM 001</span>
+                <div class="detention-title-row">
+                  <h2 id="detentionRoundTitle">Visitor Release Authorisation</h2>
+                  <p id="detentionRoundProgress" class="detention-progress"></p>
+                </div>
+              </div>
+              <div class="detention-form-columns">
+                <div class="detention-reading-column">
+                  <p id="detentionRoundPrompt" class="detention-prompt"></p>
+                  <p id="detentionRoundClue" class="detention-clue"></p>
+                  <div class="detention-art-display" aria-label="Approved illustrated bureaucracy puzzle props">
+                <img class="detention-desk-art" src="./public/assets/generated/game/ending-b-puzzle-desk-v01.webp" alt="Approved desk artwork: bear classification paperwork, Stephen's release permit and Paul’s takeaway cup">
+                <a id="detentionBearArtLink" class="detention-art-bear" href="./public/assets/generated/game/ending-b-bear-classification-v01.webp" target="_blank" rel="noopener" hidden aria-label="View the full bear classification document">
+                  <img src="./public/assets/generated/game/ending-b-bear-classification-v01.webp" alt="Official bear classification assessment, marked CONFUSING">
+                </a>
+                <div id="detentionCupPreview" class="detention-cup-preview" hidden>
+                  <img src="./public/assets/generated/game/ending-b-pauls-takeaway-cup-alpha-v01.webp" alt="Paul's official takeaway coffee cup, resting suspiciously on the desk">
+                  <span>Paul's drink · inspect it</span>
+                </div>
+                  </div>
+                </div>
+                <div class="detention-answer-column">
+                  <div id="detentionChoiceCards" class="detention-cards" role="group" aria-label="Select the answer for the fictional form">
                 <button id="detentionChoice0" class="detention-card" type="button"></button>
                 <button id="detentionChoice1" class="detention-card" type="button"></button>
                 <button id="detentionChoice2" class="detention-card" type="button"></button>
               </div>
               <div id="detentionStampPanel" class="detention-stamp-panel" hidden>
                 <p id="detentionStampInstructions">The stamp was under Paul's takeaway drink. Select the stamp, then apply it to the permit.</p>
-                <button id="detentionStampButton" class="detention-stamp" type="button" draggable="true" aria-label="Select APPROVED stamp, or drag to permit">APPROVED stamp</button>
-                <button id="detentionPermitButton" class="detention-permit" type="button" aria-label="Apply the selected stamp to the Visitor Release Authorisation">VISITOR RELEASE AUTHORISATION · APPLY STAMP HERE</button>
+                <div class="detention-art-interaction">
+                  <img class="detention-moved-cup" src="./public/assets/generated/game/ending-b-pauls-takeaway-cup-alpha-v01.webp" alt="Paul's takeaway cup, moved aside to uncover the stamp">
+                  <button id="detentionStampButton" class="detention-stamp" type="button" draggable="true" aria-pressed="false" aria-label="Select APPROVED stamp, or drag to permit">
+                    <img src="./public/assets/generated/game/ending-b-approved-stamp-v01.webp" alt="" aria-hidden="true">
+                    <span>Pick up APPROVED stamp</span>
+                  </button>
+                  <button id="detentionPermitButton" class="detention-permit" type="button" aria-label="Apply the selected stamp to Stephen Martin's ceremonial release permit">
+                    <span class="detention-permit-image">
+                      <img src="./public/assets/generated/game/ending-b-release-permit-canonical-portrait-proof-v01.webp" alt="" aria-hidden="true">
+                      <img id="detentionInkOnPermit" class="detention-ink-overlay" src="./public/assets/generated/game/ending-b-approved-ink-impression-v01.webp" alt="" aria-hidden="true" hidden>
+                    </span>
+                    <span id="detentionPermitLabel">Apply stamp to Stephen's release permit</span>
+                  </button>
+                </div>
+              </div>
+              <div id="detentionApprovedPreview" class="detention-approved-preview" hidden aria-label="Stephen's release permit has been APPROVED: All of you please leave">
+                <span class="detention-approved-preview-frame">
+                  <img src="./public/assets/generated/game/ending-b-release-permit-canonical-portrait-proof-v01.webp" alt="Stephen Martin's approved ceremonial release permit">
+                  <img class="detention-ink-overlay" src="./public/assets/generated/game/ending-b-approved-ink-impression-v01.webp" alt="" aria-hidden="true">
+                </span>
               </div>
               <p id="detentionFeedback" class="detention-feedback" aria-live="polite" hidden></p>
               <p id="detentionHint" class="detention-hint" aria-live="polite" hidden></p>
-              <button id="detentionNextButton" class="btn btn-primary" type="button" hidden>Continue →</button>
+                  <button id="detentionNextButton" class="btn btn-primary" type="button" hidden>Continue →</button>
+                </div>
+              </div>
             </section>
             <section id="reassembleWorkshop" class="assembly-workshop" hidden aria-label="Assemble the cardboard Stephen display">
               <span class="assembly-eyebrow">TOTAL RENEWAL SPA · PROMOTIONAL DISPLAY WORKSHOP</span>
@@ -537,10 +582,17 @@
         </div>
         <div id="detentionEndingScene" class="rescue-route-intro detention-ending" hidden>
           <div class="rescue-route-intro-stage detention-ending-stage">
+            <img class="detention-ending-official" src="./public/assets/generated/characters/ending-b-ceremonial-official-neutral-v01.webp" alt="" aria-hidden="true" loading="eager">
+            <img class="detention-ending-actor detention-ending-stephen" src="./public/assets/generated/characters/stephen-holiday-standing-neutral-v01.webp" alt="Stephen is perfectly fine, waiting for David and Paul to finish their unnecessary rescue">
+            <img class="detention-ending-actor detention-ending-david" src="./public/assets/generated/characters/david-hotel-standing-investigator-v01.webp" alt="David arrives, convinced his rescue succeeded">
+            <img class="detention-ending-actor detention-ending-paul" src="./public/assets/generated/characters/paul-hotel-standing-puzzled-v01.webp" alt="Paul, still bemused by the paperwork">
+            <div class="detention-ending-permit" aria-hidden="true">
+              <img src="./public/assets/generated/game/ending-b-release-permit-canonical-portrait-proof-v01.webp" alt="">
+              <img class="detention-ending-ink" src="./public/assets/generated/game/ending-b-approved-ink-impression-v01.webp" alt="">
+            </div>
             <div class="detention-ending-content">
               <span class="detention-eyebrow">OFFICE OF CEREMONIAL MISUNDERSTANDINGS · DEPARTURE DESK</span>
               <div class="detention-certificate">APPROVED: ALL OF YOU PLEASE LEAVE</div>
-              <p class="detention-art-note">Finished illustrated scene awaiting the dedicated artwork phase.</p>
               <strong id="detentionEndingSpeaker" class="detention-ending-speaker">STEPHEN</strong>
               <p id="detentionEndingLine" class="detention-ending-line" aria-live="polite"></p>
               <p id="detentionEndingProgress" class="detention-progress"></p>

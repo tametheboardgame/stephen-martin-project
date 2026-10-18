@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1la7j8yK_XxGD5kvidMk62LcvpI_s2lka"
+  },
+  "expectedSourceName": "ending-b-pauls-takeaway-cup-alpha-v01.png",
+  "destination": "public/assets/generated/game/ending-b-pauls-takeaway-cup-alpha-v01.webp",
+  "transform": {
+    "maxWidth": 1122,
+    "maxHeight": 1402,
+    "quality": 88
+  },
+  "revision": 1
+}

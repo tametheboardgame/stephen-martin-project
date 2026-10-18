@@ -127,6 +127,41 @@ if (mutedBytes.length < 50000 || mutedBytes.length > 2 * 1024 * 1024 ||
 await mkdir(path.dirname(path.join(output, approvedMutedChatCutaway)), { recursive: true });
 await copyFile(mutedSource, path.join(output, approvedMutedChatCutaway));
 
+// GAME-SP4B: include exactly the locked Ending B images and the release
+// permit assembled from Stephen's original approved office sprite pixels.
+const endingBImages = [
+  "public/assets/generated/locations/ending-b-bureau-office-v01.webp",
+  "public/assets/generated/game/ending-b-puzzle-desk-v01.webp",
+  "public/assets/generated/game/ending-b-bear-classification-v01.webp",
+  "public/assets/generated/game/ending-b-pauls-takeaway-cup-master-v01.webp",
+  "public/assets/generated/game/ending-b-pauls-takeaway-cup-alpha-v01.webp",
+  "public/assets/generated/game/ending-b-approved-stamp-v01.webp",
+  "public/assets/generated/game/ending-b-approved-ink-impression-v01.webp",
+  "public/assets/generated/game/ending-b-release-permit-canonical-portrait-proof-v01.webp",
+  "public/assets/generated/characters/ending-b-ceremonial-official-neutral-v01.webp"
+];
+const endingBTransparent = new Set([
+  "ending-b-pauls-takeaway-cup-alpha-v01.webp",
+  "ending-b-approved-stamp-v01.webp",
+  "ending-b-approved-ink-impression-v01.webp",
+  "ending-b-ceremonial-official-neutral-v01.webp"
+]);
+for (const relative of endingBImages) {
+  const data = await readFile(path.join(root,relative));
+  if (data.length < 20000 || data.length > 3 * 1024 * 1024 ||
+      data.toString("ascii",0,4) !== "RIFF" ||
+      data.toString("ascii",8,12) !== "WEBP") {
+    throw new Error("Missing/invalid locked Ending B artwork: " + relative);
+  }
+  if (endingBTransparent.has(path.basename(relative)) &&
+      (data.toString("ascii",12,16) !== "VP8X" || (data[20] & 0x10) === 0)) {
+    throw new Error("Ending B standalone prop lost its alpha channel: " + relative);
+  }
+  await mkdir(path.dirname(path.join(output,relative)),{recursive:true});
+  await copyFile(path.join(root,relative),path.join(output,relative));
+}
+console.log("Approved Ending B artworks packaged: " + endingBImages.length + "/9.");
+
 // The Chapter Two background and sprite remain independently approved WebP
 // assets. Refuse accidental opaque travel sprites or incorrectly sized art.
 const holidaySprite = await readFile(path.join(root, imageSource, "stephen-holiday-standing-neutral-v01.webp"));
