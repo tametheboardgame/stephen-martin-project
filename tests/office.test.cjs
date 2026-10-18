@@ -3473,7 +3473,7 @@ test("GAME-SP4.1D2 all accepted routes skip to unsolved hotel and preserve check
       p.el("wallDeclineButton").click();p.el("holidaySkipButton").click();
       p.el("palaceAcceptButton").click();
     }]
-  ){
+  ]){
     const p=toWallChoice();
     setup(p);
     assert.match(p.el("holidaySkipButton").textContent,/Skip to investigation/);
