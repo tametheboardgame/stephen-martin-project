@@ -2991,7 +2991,7 @@ test("GAME-SP4B.1 Ending B briefing uses accessible bottom-of-stage subtitles, n
 });
 
 
-test("GAME-SP4B.2 approved official is a separate transparent actor behind the bureau counter",()=>{
+test("GAME-SP4B.2 approved official is the original transparent full-body sprite",()=>{
   const sprite="public/assets/generated/characters/ending-b-ceremonial-official-neutral-v01.webp";
   const data=fs.readFileSync(path.join(root,sprite));
   assert.equal(data.toString("ascii",0,4),"RIFF");
@@ -3000,7 +3000,7 @@ test("GAME-SP4B.2 approved official is a separate transparent actor behind the b
   assert.ok((data[20]&0x10)!==0,"The official must preserve alpha transparency");
   assert.match(html,/class="detention-intro-official"[^>]*ending-b-ceremonial-official-neutral-v01\.webp/);
   assert.match(html,/class="detention-ending-official"[^>]*ending-b-ceremonial-official-neutral-v01\.webp/);
-  assert.match(css,/\.detention-intro-official,\s*\n#holidayScreen \.detention-ending-official \{[\s\S]*?clip-path:inset/);
+  assert.match(css,/\.detention-intro-official,\s*\n#holidayScreen \.detention-ending-official \{[\s\S]*?clip-path:none/);
   assert.match(css,/data-speaker="official"\] \.detention-intro-official/);
   assert.match(css,/data-speaker="official"\] \.detention-ending-official/);
   assert.match(read("src/game.js"),/detentionEndingScene"\)\.dataset\.speaker = showCard/);
@@ -3008,15 +3008,22 @@ test("GAME-SP4B.2 approved official is a separate transparent actor behind the b
 });
 
 
-test("GAME-SP4B.3 official remains counter-sized and clipped at the desk, including narrow screens",()=>{
-  const rules=css.slice(css.lastIndexOf("/* GAME-SP4B.2: independent official"));
-  const base=rules.match(/#holidayScreen \.detention-intro-official,\s*#holidayScreen \.detention-ending-official \{([^}]+)\}/);
-  assert.ok(base,"Official must use one shared positioning rule for briefing and ending");
-  const value=(cssRule,key)=>Number(cssRule.match(new RegExp(key+":([\\d.]+)%"))?.[1]);
-  assert.ok(value(base[1],"height")<=50,"Keep the official proportionate to the service counter");
-  assert.ok(value(base[1],"top")>=36,"Keep the head at bureau desk depth");
-  const crop=Number(base[1].match(/clip-path:inset\(0 0 ([\d.]+)% 0\)/)?.[1]);
-  assert.ok(crop>=65,"Conceal the official's lower body behind the counter");
-  assert.match(rules,/@media \(max-width:800px\) \{[\s\S]*?height:47%;[\s\S]*?clip-path:inset\(0 0 66% 0\)/);
-  assert.match(rules,/@media \(max-width:450px\) \{[\s\S]*?height:45%;[\s\S]*?clip-path:inset\(0 0 65% 0\)/);
+test("GAME-SP4B.4 official stands full length between David and Paul on matching floor level",()=>{
+  const rules=css.slice(css.lastIndexOf("/* GAME-SP4B.4:"));
+  const standing=rules.match(/#holidayScreen \.detention-intro-official,\s*#holidayScreen \.detention-ending-official \{([^}]+)\}/);
+  assert.ok(standing,"Briefing and ending reuse one unmasked, full-height sprite");
+  assert.match(standing[1],/top:auto;/);
+  assert.match(standing[1],/bottom:22%;/);
+  assert.match(standing[1],/left:52%;/);
+  assert.match(standing[1],/height:54%;/);
+  assert.match(standing[1],/clip-path:none;/,"The original full-length sprite must not be cut at a desk");
+  assert.doesNotMatch(rules,/clip-path:inset/,"No legacy reception counter cropping");
+  assert.match(rules,/#detentionEndingScene \.detention-ending-official \{\s*bottom:25%;left:57%;height:52%;/);
+  assert.match(rules,/#detentionEndingScene \.detention-ending-david \{\s*left:27%;height:52%;/);
+  assert.match(rules,/#detentionEndingScene \.detention-ending-paul \{\s*right:5%;height:50%;/);
+  assert.match(rules,/@media \(max-width:800px\) \{[\s\S]*?\.detention-intro-official \{\s*bottom:30%;left:52%;height:43%;/);
+  assert.match(rules,/@media \(max-width:450px\) \{[\s\S]*?\.detention-intro-official \{\s*bottom:34%;left:52%;height:33%;/);
+  // The three separate actors remain in the approved left/centre/right configuration.
+  assert.match(css,/#rescueRouteIntro\[data-ending-b="true"\] \.detention-intro-david \{\s*height:56%;bottom:22%;left:9%;/);
+  assert.match(css,/#rescueRouteIntro\[data-ending-b="true"\] \.detention-intro-paul \{\s*height:51%;bottom:22%;right:9%;/);
 });
