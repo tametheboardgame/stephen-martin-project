@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1a5jBcvBbY8wq22Pclqtn1Jls6rLt0hlc"
+  },
+  "expectedSourceName": "ending-b-ceremonial-official-neutral-v01.png",
+  "destination": "public/assets/generated/characters/ending-b-ceremonial-official-neutral-v01.webp",
+  "transform": {
+    "maxWidth": 1024,
+    "maxHeight": 1536,
+    "quality": 88
+  },
+  "revision": 1
+}
