@@ -3381,3 +3381,35 @@ test("GAME-SP4.1D1 hotel replies and both puzzle routes show named speech withou
   assert.equal(detention.el("detentionResponseSpeaker").textContent,"OFFICIAL");
   assert.match(detention.el("detentionFeedback").textContent,/Form 99Z/);
 });
+
+
+test("GAME-SP4.1D1 all spoken cards use the opening's external name-tab layout",()=>{
+  const expectedIds=[
+    "wallSpeakerName","palaceSpeakerName","marketSpeakerName",
+    "rescueAlarmSpeaker","hotelSpeaker","routeIntroSpeaker",
+    "summitEndingSpeaker","detentionEndingSpeaker","assemblyEndingSpeaker",
+    "summitResponseSpeaker","detentionResponseSpeaker"
+  ];
+  for(const id of expectedIds){
+    const tag=html.match(new RegExp('<strong id="'+id+'"[^>]*>'));
+    assert.ok(tag,id+" retains a real speaker label, not baked-in art");
+  }
+  assert.match(css,/#holidayScreen \.story-speech > strong \{[\s\S]*?position:absolute;[\s\S]*?transform:translateY\(calc\(-100% \+ 5px\)\)/,
+    "Every later spoken speaker badge sits outside the top edge");
+  assert.match(css,/#holidayScreen \.story-speech > strong \{[\s\S]*?background:#105baa !important;/,
+    "Speaker tab uses the opening's approved blue");
+  assert.match(css,/#holidayScreen \.story-speech > p:not\(\[hidden\]\) \{[\s\S]*?margin:0 !important;/,
+    "Speech text no longer reserves a header row inside the bubble");
+  for(const cls of ["wall-dialogue","rescue-intro-dialogue","summit-ending-content","detention-ending-content","assembly-ending-content"]){
+    assert.ok(css.includes("."+cls+".story-speech"),cls+" has compact speech padding");
+  }
+  assert.match(css,/#holidayScreen \.story-puzzle-response \{[\s\S]*?overflow:visible;/,
+    "Puzzle reply tabs are not clipped by their paper cards");
+  const opening=html.match(/id="dialogueBox"/);
+  assert.ok(opening,"The approved office speech remains the reference");
+  assert.match(html,/id="speakerName" class="speaker"/);
+  assert.match(css,/\.dialogue-header \{ position:absolute;top:-31px/,
+    "The original office label geometry is unchanged");
+  assert.match(html,/id="hotelDeductions"/);
+  assert.match(html,/id="assemblyFeedback" class="assembly-feedback"/);
+});
