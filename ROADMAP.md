@@ -646,7 +646,7 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 #### GAME-SP4.1C — Summit entrance daylight and legibility
 
-**Priority:** P0; **status:** Not started; **dependencies:** independent of B; can be a very small separate PR.  
+**Priority:** P0; **status:** Implemented on draft PR #52, pending owner visual approval; **dependencies:** SP4.1A/B now merged. Remove the Summit-wide dark gradient and retain local contrast. Full review guide: `docs/story/GAME-SP4.1C-SUMMIT-DAYLIGHT.md`.  
 **Owner observation:** Exterior of the Summit looks covered by a shadow.
 
 **Implementation tasks**
