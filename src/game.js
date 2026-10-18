@@ -1654,15 +1654,11 @@
       $("intermissionArt").dataset.destination = palaceNext ? "palace" : "market";
       $("intermissionTime").textContent = palaceNext ? "A FEW DAYS LATER…" : "THE NEXT EVENING…";
       $("intermissionDestination").textContent = palaceNext ? "THE FORBIDDEN CITY" : "THE NIGHT MARKET";
-      $("intermissionComment").textContent = palaceNext
-        ? "Still having an absolutely wonderful time. Still ignoring the group chat."
-        : "Another day of sightseeing. Surely nothing can go wrong tonight.";
     }
     if (inHandoff) {
       const route = validHolidayRoutes.includes(state.route) ? state.route : "reassemble";
       $("routeHandoffArt").dataset.route = route;
       $("handoffTitle").textContent = handoffs[route].title;
-      $("handoffDescription").textContent = handoffs[route].description;
     }
     if (inFinal) {
       const route = validHolidayRoutes.includes(state.route) ? state.route : null;
@@ -1720,7 +1716,6 @@
       $("rescueTravelEyebrow").textContent = line.eyebrow;
       $("rescueTravelSymbol").textContent = line.symbol;
       $("rescueTravelTitle").textContent = line.title;
-      $("rescueTravelDetail").textContent = line.subtext;
       $("rescueTravelProgress").textContent = "Unnecessary travel · "
         + (position + 1) + " of " + rescueAlarm.montage.length;
       $("rescueTravelNextButton").textContent = position === rescueAlarm.montage.length - 1
