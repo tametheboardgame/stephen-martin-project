@@ -4,7 +4,7 @@
 **Code baseline:** `main` merge commit `d3d7534415c75d029072a31ede9fdde7de5130b4`, PR #46 merged (Ending C), after earlier Ending B PR #44
 **Workstream branch:** `agent/game-sp41-v1-polish-audit`
 **Assessment type:** source, generated-asset inventory, CI and prior owner playtest/screenshot review. **Not** a new interactive full-playthrough or browser screenshot audit.
-**Status:** first-pass inventory and prioritised implementation plan, for owner approval before code/asset production
+**Status:** completed source audit. Owner has requested the detailed implementation sequence be committed to the master ROADMAP before work begins. `ROADMAP.md` is the current execution source, and this document retains investigation evidence. No polishing packages implemented yet.
 **Goal:** finish a compact, polished **15–25 minute** three-ending comic adventure without adding locations, branches or complexity.
 
 ## 1. Baseline qualification and important caveats

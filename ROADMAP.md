@@ -590,27 +590,192 @@ Owner approved the sequence **all mechanics → merge → art → polish**. Buil
 
 Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the third route: the fictional Total Renewal Spa and **Reassemble Stephen Martin**. The existing 13 selectable pieces, six matching slots, two-error hint, saved cardboard build and POWER ON/end dialogue are already playable and must not be reimplemented. Plan the visual work as **SP4C.1** empty spa lounge and display workshop backgrounds, **SP4C.2** coherent cardboard Stephen mounting board and six transparent compatible pieces, **SP4C.3** seven harmless decoy props plus laptop-safe tray/board controls, **SP4C.4** actual Stephen-in-robe reveal, David/Paul and cardboard counterpart sprites with short LED flourish, and **SP4C.5** QA, Cloudflare preview and explicit owner merge gate. Full asset inventory and art-specific acceptance rules: `docs/story/GAME-SP4C-ENDING-C-ART-PRODUCTION.md`. Begin with one empty spa lounge image proposal and obtain visual approval before source materialisation. This work starts on short-lived draft branch `agent/game-sp4c-ending-c-art-foundation` from merged main commit `584b4c7`. Maintain the 15–25-minute, three-outcome story guardrail.
 
-## GAME-SP4.1 — Final tidy, pacing and measured improvements (after art) 
+## GAME-SP4.1 — First-version consistency and finishing programme
 
-**Updated 18 October 2026:** Ending B PR #44 and Ending C PR #46 are both merged into `main`; the latter at `d3d7534415c75d029072a31ede9fdde7de5130b4` following **132/132** automated checks and packaging all 20 Ending C images. The current finished narrative and all three route-specific mini-games are the **refinement baseline**. The extensive, evidence-backed first-version audit and acceptance gates are in `docs/story/GAME-SP4.1-FIRST-VERSION-REFINEMENT-AUDIT.md`, reviewed from the actual merged source. This is planning, not the first complete timed visual playthrough.
+**Programme status:** Delivery order agreed 18 October 2026; **no polishing work packages implemented yet**.  
+**Starting baseline:** Three-ended story and all gameplay/art from Ending B PR #44 and Ending C PR #46 merged into main; Ending C merge `d3d7534415c75d029072a31ede9fdde7de5130b4`. Last Ending C qualification was 132/132 smoke checks and 20/20 approved Ending C images packaged.  
+**Supporting investigation:** [GAME-SP4.1 first-version source audit](docs/story/GAME-SP4.1-FIRST-VERSION-REFINEMENT-AUDIT.md). This roadmap is the executable work-package plan; the audit holds detailed observations and source-level evidence.  
+**Target:** An illustrated, reliable, funny and coherent **15–25 minute** browser-playable V1 (first run including one of three endings). Three endings remain, no new story arc or mandatory mini-game.
 
+### Delivery rules, review cadence and cross-cutting constraints
 
-Once the visual sets are assembled, do the end-to-end playtest and modest fixes: dialogue rhythm, captions/subtitles, keyboard and touch usability, saving, layering, responsiveness, music and sound accents, comedy timing, defects and coherent finale presentation. Owner may separately approve a **small** expansion or additional joke only after reviewing the art-complete game and total run time. Maintain the 15–25-minute first-play constraint, three outcomes and privacy review. No new campaign, fourth route, replacement framework or major scope increase without an explicit later decision.
+- Complete bounded `GAME-SP4.1A–J` packages rather than one sweeping rebuild. Open a **new short-lived `agent/*` branch and PR** for each independent implementation packet; begin from the latest approved `main`. Never merge unfinished unrelated polish or long-lived parallel changes to shared CSS/scene data.
+- **At the start of each package**, record exact existing behaviour and scene(s), relevant source files, screenshots or video where practical, intended change, exclusions, and any art/audio dependencies. At the end, update `STATUS.md`, package progress and material decisions, including test result, preview URL, owner feedback and merge SHA.
+- Preserve exact scene/script IDs, three routes, dialogue jokes, voice-ID mapping, six cardboard slot IDs, thirteen approved puzzle choices, existing save/resume compatibility, touch/keyboard equivalents, playback controls, privacy/fictionalisation rules and original approved character likenesses.
+- Prefer common small helpers/CSS design tokens **only where repeated behaviour warrants them**. No new web framework, animation engine, account system, significant runtime expansion, or replacement of the existing HTML/CSS/JS architecture.
+- New or revised artwork **requires its own human visual approval** and must use project Google Drive source → versioned manifest → validated WebP on a PR branch. Do not silently change approved drawings, bake text or choices into a background, or add original PNGs to Git.
+- Each implemented packet requires appropriate targeted unit/contract tests, successful `npm run verify` / production-build asset validation, a deployed Cloudflare **branch** preview, plus specific human desktop/tablet visual confirmation before merge. A passing Node test is not itself visual approval. No user-facing release implied by PR merging.
+- **Core visual checkpoints:** laptop at **1366×768** and **1440×900**, tablet approximately **800×1280** and phone approximately **390×844**. Test narrow/short screens deliberately; where mobile scrolling is necessary, it must be intentional rather than nested laptop overflow. Preserve keyboard focus, readable captions, suitable touch sizes and reduced-motion behaviour.
+- Audio production continues independently with owner-supplied ElevenLabs recordings. Missing unapproved audio or optional illustration must not hold up critical usability fixes. Do not assume the existence of a recorded clip implies all lines in a scene are voiced.
+- At any disagreement between this sequence and later explicit owner feedback, reconcile this roadmap and `STATUS.md` before shifting priorities.
 
+### Milestone 1: Correctness and perceived loading speed (P0)
 
-### SP4.1 approved planning scope and priority queue (18 October 2026)
+#### GAME-SP4.1A — Initial loading experience and scene-aware asset scheduling
 
-The owner identified progressive image drawing at launch, inconsistent David expression scale in Back in England, dark Summit entrance presentation, speech bubbles changing to blue footer text after choices, missing speaker glow in most scenes, weak illustration on travel/time transitions, and optional extra expressions/movement. These are **not yet fixed** by the audit or the PR #46 merge.
+**Priority:** P0; **status:** Not started; **dependencies:** merged three-ending V1 only; **start this first**.  
+**Owner observation:** Artwork is visibly painted as it downloads, like an old dial-up image.  
+**Source evidence:** `index.html` has 23 explicit image preloads, 41 eager-loaded scene image tags, and no dedicated current-scene loading/ready overlay. Image and audio readiness currently follow different models; loading could compete with later off-screen scenes.
 
-1. **GAME-SP4.1A, P0:** scene-aware preload/decode and honest, accessible opening loading overlay, removing unnecessary speculative eager downloads.
-2. **GAME-SP4.1B, P0:** align all Back-in-England David approved seated expression silhouettes to one stable eyeline/scale/desk baseline.
-3. **GAME-SP4.1C, P0:** reduce Summit entrance scene-wide darkness; preserve localized text contrast and approved background.
-4. **GAME-SP4.1D, P0:** standardise named character speech cards, including reaction lines after decisions, separate from interactive controls and blue footer.
-5. **GAME-SP4.1E, P1:** shared active-speaker glow/backlight across every playable dialogue scene, including cardboard Stephen's independent speaker state.
-6. **GAME-SP4.1F, P1:** individually approved transition illustration set (time skips, Britain-to-China travel, destination handoff), with concise live titles and no new narrative branches.
-7. **GAME-SP4.1G, P2:** selective approved expression/gesture states and gentle one-off movements; keep registrations fixed and prefer reduced-motion.
-8. **GAME-SP4.1H, P1 parallel:** owner-supplied remaining route-intro/puzzle/finale voice recordings, line ID inventory, clip timing/volume and reliable fallback. Existing 112/112 *currently whitelisted* dialogue clips already exist; this does **not** mean the entire game is voiced.
-9. **GAME-SP4.1I, P0 final:** one complete human timing and accessibility/responsive/save/replay/audio test per ending, release-candidate freeze and privacy review.
-10. **GAME-SP4.1J, P2 deferred:** final cardboard Stephen silhouette mount/slot-shape alignment, explicitly deferred at owner request.
+**Implementation tasks**
+1. Measure a real cold-cache, warm-cache and throttled-network start on a branch (load waterfall, first complete visible stage and time until controls usable), distinguishing browser cache effects from actual requests. Check direct Resume into a saved non-opening scene.
+2. Add an accessible, appropriately styled loading overlay or scene curtain with a clear message, for the initial stage and subsequent large stage changes when necessary. Display only when required visible artwork is loading; do not cover or disable a settled scene unnecessarily.
+3. Decode/load the **current scene’s** background, relevant cast and foreground layers before revealing them together. Reuse already-cached images; prioritise the correct intro/menu scene; trim speculative preloads and eager hidden-scene loading. Optionally warm the **next likely** scene after the current scene is interactive.
+4. Handle individual image/network failure, decode error and a bounded timeout: do not leave users trapped indefinitely. Show safe fallback/Continue while preserving accessible speech, controls and story state. Clean up load state on restart, skip, route change and saved-game Resume.
+5. Keep the overlay light and static by default; do not create artificial percentage progress or introduce a heavy animation/player library.
 
-**Sequence:** A → B/C independently → D → E; F and H can proceed in parallel where assets/audio are actually approved; G after pose and focus stabilise; I after each merged packet; J only when prioritised. Keep these small, draft-PR-gated, and respect the 15–25 minute first-play constraint. This plan supersedes stale phase references in older planning entries, but does not rewrite historical decisions or imply public release authorisation.
+**Acceptance and proof**
+- Opening and resumed scenes appear as a complete composition, not progressive stripes/partial character cut-outs. Compare slow-network recorded captures before and after.
+- No permanent loader after a failed image; no blocked sound/keyboard controls; title/menu and Resume behave as before. Confirm no avoidable fetch burst for all three endings.
+- Supply network/first-use timings, test for failure recovery, and desktop/tablet screenshot evidence. User approves preview before merge.
+**Non-goals:** Re-encode every asset, replace image pipeline or preload the entire game before opening.
+
+#### GAME-SP4.1B — David expression registration in Back in England
+
+**Priority:** P0; **status:** Not started; **dependencies:** independent of A, but start after A is integrated unless urgently needed.  
+**Owner observation:** David grows/shrinks between expressions in Chapter Three’s office rescue alarm despite the opening having already been aligned.
+
+**Implementation tasks**
+1. Identify every `rescue.alarm.001–010` David expression and actual WebP used by `rescuePortraits` / `#rescueAlarmDavid`, and compare the authorised seated source art to opening-scene registration.
+2. Inspect intrinsic canvas and alpha-visible bounds, heads/eyelines, shoulders and desk baseline. Establish a **stable actor-space anchor** and per-expression calibration; if artwork needs new aligned WebP canvases, retain canonical faces and seek approval for revised derived assets/manifests.
+3. Change pose selection/calibration only for the Chapter Three rescue alarm. Keep Dave on the approved perspective plane, Paul unchanged, foreground desk correctly in front, and avoid double-silhouette crossfades.
+4. Retain all ten voice lines, dialogue timing, phone reveal and pause/resume behaviour.
+
+**Acceptance and proof:** Every one of the ten alarm beats uses the same perceived head/body size and anchored eyes/shoulders at laptop and mobile sizes. Provide a ten-frame comparison sheet or replay clip. No change to other office scenes or Paul; existing saved checkpoint resumes correctly.
+**Non-goals:** Redesign David’s face or add new expressions in this fix.
+
+#### GAME-SP4.1C — Summit entrance daylight and legibility
+
+**Priority:** P0; **status:** Not started; **dependencies:** independent of B; can be a very small separate PR.  
+**Owner observation:** Exterior of the Summit looks covered by a shadow.
+
+**Implementation tasks**
+1. Compare approved `summit-entrance-v01.webp` with the rendered Summit briefing and admissions scene; confirm source colours versus CSS composite.
+2. Scope down/remove the existing dark gradient over the entire entrance background. Use a localised scrim **behind speech/title/cards**, rather than dimming landscape and actors.
+3. Check entrance actors, gatekeeper, atmosphere, legible interactive copy and the admissions puzzle at desktop/tablet/mobile. Do not alter the separately approved interior throne room.
+
+**Acceptance and proof:** Before/after at the same scene beat demonstrates brighter illustrated environment with adequately contrasting title, subtitles and choices; no effects on Ending B/C or throne room.
+**Non-goals:** Regenerate the approved landscape or change comic dialogue.
+
+### Milestone 2: Consistent speaking and character focus
+
+#### GAME-SP4.1D — One coherent named speech-card presentation
+
+**Priority:** P0; **status:** Not started; **dependencies:** baseline game only; **deliver before E**.  
+**Owner observation:** Initially white, named speech bubbles give way to blue footer-bar responses after an answer.
+
+**Implementation tasks**
+1. Inventory every speaking presentation, especially opening, Great Wall choice acceptance/decline, Forbidden City outcomes, Night Market confirmation, rescue alarm, visitor information/evidence and wrong guesses, three route intros, puzzles and all endings.
+2. Agree one compact **named white/paper speech card** visual contract (position, colour, width, responsive safe zone, typography, speaker label, text announcement and layer ordering) across actual dialogue. Reuse existing scene IDs and, where appropriate, simple shared render/style helpers.
+3. Display spoken **post-choice reaction lines** in the same named dialogue presentation rather than the blue action footer. Keep buttons, choices, navigation, evidence, hints, narration and status *semantically distinct*; the footer remains interactive navigation, not a speech substitute.
+4. Consolidate duplicated CSS only where proven equivalent; do not flatten or rewrite all route layouts. Preserve recorded line text, speaker IDs, autoplay waiting at choices, Save, Back/Next, scroll/focus behaviour and sound synchronization.
+5. Check against overlapping labels, character faces, top-right controls, subtitles and paper puzzles.
+
+**Acceptance and proof:** A line-by-line visual matrix shows the **same recognisable speaker card before and immediately after choices** across all three sightseeing scenes; matching named speech in alarm, hotel, route intros and all finales. No duplicate simultaneous dialogue, cut-off speech or options advancing automatically. Pass tested at 1366×768, tablet and mobile.
+**Non-goals:** Add recorded voices, alter story beats, or convert clue inspection text into character speech.
+
+#### GAME-SP4.1E — Speaking-character glow/backlight throughout the story
+
+**Priority:** P1; **status:** Not started; **dependencies:** D speaker presentation semantics and stable B calibration.  
+**Owner observation:** Only ending sequences and selected route entrances emphasise the current speaker.
+
+**Implementation tasks**
+1. Build one restrained reusable active-speaker/backlight style with common intensity, and small `setActiveSpeaker(scene, speaker)` or equivalent mapping for existing actor DOM nodes.
+2. Extend to office, Great Wall, Forbidden City, Night Market, Back in England, hotel, route intros and all three finales, **only where speaker has a visible actor**.
+3. Clear state for silence/narrator/title/choice/puzzle/hidden speaker; prevent stale highlights on replay, hide/transition, Back/Next and route changes.
+4. Keep real Stephen and the badly taped cardboard Stephen **independently highlightable**. Prefer static visual intensity over flashing or motion and respect reduced-motion.
+
+**Acceptance and proof:** Step through representative dialogue from each scene with a speaker checklist. Correct visible person glows without moving or resizing; no glow left behind during pauses, choices or narration. All endings and mobile layering remain readable.
+**Non-goals:** New choreography or expression illustrations.
+
+### Milestone 3: Illustration and selective performance (P1/P2)
+
+#### GAME-SP4.1F — Dedicated illustrated transitions
+
+**Priority:** P1; **status:** New asset approval required; **dependencies:** can be scoped/planned alongside other work, but final style follows stable D layout and asset readiness conventions from A.  
+**Owner observation:** Several scene changes feel like plain text cards rather than part of the illustrated adventure.
+
+**Proposed bounded artwork packets, each individually approved**
+1. **F1, passage of time:** One reusable illustrated frame for time passing during Stephen’s China sightseeing, retaining editable place/time titles.
+2. **F2, Operation: Probably Fine travel:** One or at most two compact illustrated cards for David and Paul’s absurd England-to-China journey. Preserve no-fuss automatic timing.
+3. **F3, route handoff:** A single consistent illustrated composition with route-specific live labels for Summit, Cultural Honours Banquet or Total Renewal Spa, not three new bespoke narrative scenes.
+4. **F4, optional finishing pass:** Chapter/intermission/end cards only if playtest identifies an obvious visual gap after F1–F3.
+
+**Implementation tasks:** Create concept using established approved visual bible and canonical actor references, obtain owner approval before upload, stage original PNG in Drive, manifest/convert/version WebP, combine with accessible live headings and small one-off dissolve if suitable. Do not change choices or outcome routing.
+
+**Acceptance and proof:** Major previously bare transitions now share coherent art direction, remain legible and responsive, respect mute/play/pause/skip and do not materially increase total runtime. Every image has an approved origin and real branch build preview.
+**Non-goals:** New cutscenes, travel levels, extended cinematics or baked-in interactive text.
+
+#### GAME-SP4.1G — Limited extra expressions, reactions and movement
+
+**Priority:** P2; **status:** Deferred until B and E are stable; **dependencies:** approved expression registration and speaker focus.  
+**Owner idea:** Add some personality through extra reactions and motion without bloating the project.
+
+**Implementation tasks**
+1. Catalogue where the **existing approved** expression assets already deliver a genuine reaction, and identify up to a few high-value missed jokes (hotel deduction, Summit disbelief, cardboard Stephen’s first line, etc.).
+2. Add listener reactions or a small selection of alternate approved scene-specific poses, one coherent batch at a time. Register intrinsic canvas, alpha bounds, eyeline and ground position to avoid scale jumps.
+3. Where helpful, add restrained occasional arrival/pose/lighting transitions, not constant bobbing or decorative animation; keep muted/reduced-motion fallback.
+4. Apply the owner’s likeness/visual approval and Drive → manifest → WebP gate to any new art. No automatic large new expression library.
+
+**Acceptance and proof:** More expressive punchlines without actor height shift, face drift, layering errors or pacing changes. Visual sign-off on each approved pack at desktop/tablet; no unwanted animation for reduced-motion users.
+**Non-goals:** A full skeleton animation system, lip-sync, motion capture or large character redraw.
+
+### Milestone 4: Parallel audio completion and final acceptance
+
+#### GAME-SP4.1H — Finish voice coverage and sound consistency
+
+**Priority:** P1; **status:** Independent recording track, open throughout milestones A–G; **dependency:** user-supplied/approved ElevenLabs recordings.  
+**Verified baseline:** 112 permitted dialogue MP3s presently exist (55 opening office, 25 holiday, 10 rescue alarm, 22 hotel); **this does not mean the endings are voiced**. The voice player currently covers those script families, but route introductions, route puzzles and endings need a further explicit inventory. Two approved song MP3s are separate.
+
+**Implementation tasks**
+1. Inventory **every still-unvoiced scripted line** with stable scene/line ID, speaker, exact approved text, estimated clip duration/acting direction and filename. Mark lines as `recording needed`, `silent by design` or `available`. Reconcile the old voice-upload guides against the true merged whitelist.
+2. Prepare upload locations and incrementally extend the **explicit** allowed filenames and audio-to-line mapping only after a batch of clips has been supplied/approved. Continue the existing ID-addressed MP3 system; do not introduce online runtime TTS.
+3. Assess consistent relative loudness, abrupt start/end, silences, dialogue/subtitle match, pause/Next, changing tabs, audio on/off, resume/replay and no-audio fallback. Test each new group in its own preview.
+4. Distinguish narrator and comic-character lines, preserve exact script and fictional identity rules. Any new voiced line or script alteration needs separate owner permission.
+
+**Acceptance and proof:** Recording manifest per route and scene showing missing versus approved clips; no missing file blocks/auto-skips text; all three endings complete with sound disabled and with any approved recordings enabled; no double-play on replay/back. **Audio remains parallel** and does not delay agreed critical visual packages.
+**Non-goals:** Generate artificial replacement audio without approval or force owner to finish every line before code/visual fixes.
+
+#### GAME-SP4.1I — Whole-game V1 test, timing and release candidate
+
+**Priority:** P0 final; **status:** Not started; **dependencies:** A–E complete and reviewed, F/G/H either approved/merged or explicitly recorded as deferred; run targeted regressions after every individual merge.  
+
+**Implementation tasks**
+1. Run and record **three complete human playthroughs**, one per ending, from fresh start. Measure total play time, text/audio pacing, joke beats and three route differences; assess against the **15–25 minute per first playthrough** target.
+2. Test sound on/off and missing clips, pause/Next/Back, manual choice waits, skipped intro, hidden browser tab, restart, Save/Resume at representative checkpoints, return/change-route, and ending summary.
+3. Run desktop 1366×768/1440×900, tablet 800×1280 and phone 390×844 checks of image layers, z-index, controls, dialogue cards, clipping, contrast, tappable/keyboard-selectable interactions and unintended nested scrollbars.
+4. Inspect all route puzzles (Summit answers, paperwork/stamp and 13-piece/6-slot cardboard model) for correct/bad answer handling, hints, impossible auto-completion and accessibility equivalents.
+5. Review original asset provenance and public repository privacy. Audit spoken/caption text for fictionalisation and third-party identifying details, metadata and deployment risks. Public release remains a **separate explicit approval**.
+6. Remove only **proven** obsolete labels/placeholder metadata or CSS after regression, reconcile `README.md`, current voice guides, `STATUS.md`, `ROADMAP.md` and `DECISIONS.md`. Freeze an unambiguous release-candidate commit SHA and any known deferrals.
+
+**Acceptance and proof:** Three route test records and timing observations, green `npm run verify`, responsive/keyboard/touch checks, no severe navigation defect, a complete missing-voices/known-issues list and owner-approved V1 release-candidate visual review. If play time misses target, propose **bounded edits for approval** rather than silently cutting canonical jokes. Production marketing/public release is **not** authorised merely by reaching this milestone.
+**Non-goals:** Huge test harness, changing game framework, fourth ending or broad narrative rewrite.
+
+#### GAME-SP4.1J — Deferred Ending C cardboard mounting-slot registration
+
+**Priority:** P2 explicitly deferred; **status:** Awaiting owner reprioritisation; **dependencies:** the rest of initial visual consistency pass, unless this becomes a practical blocker.  
+**Owner decision:** The assembly model's arm and leg *piece selection* now works correctly, but the empty physical slot shapes do not perfectly follow the pieces. This is not a reason to rebuild Ending C now.
+
+**Implementation tasks:** On a separate, small branch, overlay registration guides on the **already-approved** board and all six body-part art pieces. Correct empty slot shape/hit area, seam/alignment and per-part pose boundaries while keeping the anatomically corrected visual orientation, touch/keyboard targets, IDs, hint system and correct/decoy mapping. No changes to final real/cardboard Stephen reveal.
+
+**Acceptance and proof:** Screenshot before/after showing intuitive empty slots and tightly joined fitted head, torso, arms and legs; no limb reversal, overlap or save regression. Owner explicitly authorises this optional finishing packet before it starts.
+
+### Package sequencing, hand-offs and definition of ready
+
+| Order | Package | Depends on | Owner gate and merge criterion |
+| --- | --- | --- | --- |
+| 1 | SP4.1A | Three-ending main baseline | Cold-cache loader and failure fallback shown in working preview |
+| 2 | SP4.1B | A preferred, existing approved David assets | Ten-line pose comparison, no height changes |
+| 3 | SP4.1C | Independent (can be alongside B) | Brighter Summit entrance accepted on laptop/tablet |
+| 4 | SP4.1D | Main baseline, safe staging from A | Named speech bubbles in post-choice and other dialogue |
+| 5 | SP4.1E | D, stable actor scale | Correct speaker glow in every applicable scene |
+| 6 | SP4.1F | A/D presentation patterns; artwork approval | Each transition illustration packet previewed and signed off |
+| 7 | SP4.1G | B and E; new art sign-off where used | Poses never shift framing; restrained motion |
+| Parallel | SP4.1H | Approved user-supplied clips | Each voice batch individually listened to and previewed |
+| Final | SP4.1I | Approved A–E and explicit F/G/H deferrals if needed | Timed full-game acceptance, release candidate ready for owner |
+| Deferred | SP4.1J | Owner reschedules | Precision board geometry, no puzzle regression |
+
+**Immediate implementation next:** Open **GAME-SP4.1A, loading and asset scheduling**, on a short-lived branch from latest `main` after this roadmap change has merged. Begin by measuring actual image load behaviour, not guessing a progress percentage. Changes beyond the scoped task require a fresh decision.
+
+**Historical note:** SP4.0 and SP4C entries above describe past development stages and may mention draft branches from their original dates. For current work, this SP4.1 plan and top of `STATUS.md` take precedence. No package being listed here means its artwork, code or audio is already produced.
+
