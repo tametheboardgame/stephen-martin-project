@@ -3,7 +3,7 @@
 **Started:** 18 October 2026
 **Branch:** `agent/game-sp4c-ending-c-art-foundation`
 **Base:** merged Ending B production main at `584b4c7055777cd54331909d2b6a50a75a25c7ef`
-**Status:** Artwork foundation and staged production brief. No new Ending C illustrations are approved or committed yet.
+**Status:** Owner-locked spa lounge background and individually approved Stephen, David and Paul spa sprites are staged and integrated on draft PR #46. Workshop/assembly props remain outstanding. In-engine visual review required.
 **Owner direction:** Accept Ending B for now, merge it, and move on to visually improving Ending C.
 
 ## Existing playable baseline
@@ -53,6 +53,21 @@ A cheerful, suspiciously luxurious fictional wellness resort crossed with a baff
 - Verify Cloudflare preview for laptop and tablet at the exact head SHA, gain visual approval of coherent combined art, and merge only when instructed. Record any nonblocking polishing issues for SP4.1.
 - No new scenes, choices, routes, dialogue, changed game-state keys, fictional allegations, gameplay timers or broader campaign.
 
+## GAME-SP4C.1A — Owner-approved spa lounge scene integrated (18 October 2026)
+
+Four **separate approved** pieces now have original PNGs stored in the dedicated project Drive staging folder and materialised WebPs in `agent/game-sp4c-ending-c-art-foundation`:
+
+| Locked source | Google Drive file ID | Runtime image |
+| --- | --- | --- |
+| Empty teal-and-gold spa background | `1oo9mAJGyRXSS4XZ3c_MrrP7iKE5i94TC` | `public/assets/generated/locations/ending-c-spa-lounge-background-v01.webp` |
+| Stephen unharmed with cucumber slices, white spa robe and sandals | `14hdqdGcxqVhMdqONnq72IWtCE58tGTJD` | `public/assets/generated/characters/ending-c-stephen-spa-robe-v01.webp` |
+| David in his navy hoodie, green T-shirt and jeans, clutching phone/towel | `1dbI7uny9GIxT5KlVPi5HuWpMyhpdq4n9` | `public/assets/generated/characters/ending-c-david-spa-visitor-v01.webp` |
+| Paul in white polo/jeans with a towel, bottle and spa brochure | `1GLSrSNyUhQ3Z4f7Nr3xtJAcelAdU2mFs` | `public/assets/generated/characters/ending-c-paul-spa-visitor-v01.webp` |
+
+The owner's approved standalone character sprites, **not** the flattened three-character concept, are deployed through versioned manifests. Route intro shows David left and Paul right in the empty lounge; Stephen is withheld until the ending reveal. The finale composes David left, Stephen centred in his robe and Paul right with a bottom dialogue box and speaker-specific glow. Original dialogue, saves, route isolation and cardboard puzzle are untouched. Compact positioning includes desktop/tablet/mobile CSS and alpha validation. The assembly workshop intentionally retains its current provisional layout until its own art set is approved.
+
+Materialisation and automated CI passed. The first real in-browser visual sign-off is still pending; don't merge PR #46 until the owner sees the live composition.
+
 ## Immediate next action
 
-Request visual approval of the first **empty Total Renewal Spa lounge / finale** background candidate. Use it as the perspective/lighting master before generating the workshop and any sprites. Do not stage or commit unapproved artwork.
+Owner to review the now-layered spa introduction and finale in a deployed game preview. Then proceed to the unapproved display-workshop background, cardboard Stephen and interactive pieces in their own approval increments. Do not merge PR #46 until explicitly approved.
