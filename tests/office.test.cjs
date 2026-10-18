@@ -1908,9 +1908,9 @@ test("SP4.0B Summit foreground cast remains hidden on detention and spa briefing
     p.el("hotel"+route[0].toUpperCase()+route.slice(1)+"Button").click();
     for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
     assert.equal(saved(p).holidayPhase,"rescue-route-intro");
-    assert.equal(p.el("rescueRouteIntro").dataset.route,"other");
-    assert.equal(p.el("rescueRouteIntro").dataset.speaker,route === "detention" ? "official" : "", 
-      "Ending B has its own official actor; only the Summit gatekeeper is hidden");
+    assert.equal(p.el("rescueRouteIntro").dataset.route,route === "reassemble" ? "reassemble" : "other");
+    assert.equal(p.el("rescueRouteIntro").dataset.speaker,route === "detention" ? "official" : "david",
+      "Only the actor belonging to the current route may be highlighted");
     assert.equal(p.el("routeIntroDialogue").hidden,false);
   }
 });
