@@ -4339,10 +4339,10 @@ body:has(#menuScreen:not([hidden])) main {
   filter:saturate(1.07) brightness(1.05)
     drop-shadow(0 0 7px rgba(255,221,148,.66));
 }
-#holidayScreen .speaker-focus-actor[data-speaking="true"],
-#holidayScreen #summitEndingScene .speaker-focus-actor[data-speaking="true"],
-#holidayScreen #detentionEndingScene .speaker-focus-actor[data-speaking="true"],
-#holidayScreen #reassembleEndingScene .speaker-focus-actor[data-speaking="true"] {
+#holidayScreen [data-speaker-focus][data-speaking="true"],
+#holidayScreen #summitEndingScene [data-speaker-focus][data-speaking="true"],
+#holidayScreen #detentionEndingScene [data-speaker-focus][data-speaking="true"],
+#holidayScreen #reassembleEndingScene [data-speaker-focus][data-speaking="true"] {
   filter:brightness(1.055) saturate(1.045)
     drop-shadow(2px 4px 4px rgba(4,24,38,.40))
     drop-shadow(0 0 8px rgba(255,218,143,.75));
@@ -4356,5 +4356,5 @@ body:has(#menuScreen:not([hidden])) main {
 }
 @media (prefers-reduced-motion:reduce) {
   #officeScreen #stage .cast-actor,
-  #holidayScreen .speaker-focus-actor {transition:none !important;}
+  #holidayScreen [data-speaker-focus] {transition:none !important;}
 }
