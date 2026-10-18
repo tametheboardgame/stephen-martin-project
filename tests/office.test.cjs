@@ -3164,3 +3164,37 @@ test("GAME-SP4C.3A fitted parts are opaque and labelled slots do not obscure the
     assert.match(slots,new RegExp('id="assemblySlot'+i+'"[^>]*aria-label='),"Each target retains an accessible name");
   }
 });
+
+
+test("GAME-SP4C.3B anatomically oriented cardboard arms and legs retain natural proportions",()=>{
+  const rules=css.slice(css.lastIndexOf("/* GAME-SP4C.3B: anatomically correct"));
+  assert.ok(rules.length>500,"Dedicated fit-and-placement stage should exist");
+  function rule(name) {
+    const i=rules.indexOf("#holidayScreen .assembly-workshop ."+name+" {");
+    assert.ok(i>=0,"Expected shaped placement selector: "+name);
+    return rules.slice(i,rules.indexOf("}",i));
+  }
+  // Stephen faces the player: his LEFT hand and leg must land on screen RIGHT.
+  const la=rule("assembly-slot-left-arm");
+  const ra=rule("assembly-slot-right-arm");
+  const ll=rule("assembly-slot-left-leg");
+  const rl=rule("assembly-slot-right-leg");
+  function left(rule){return Number(rule.match(/left:(\d+(?:\.\d+)?)%/)?.[1])}
+  assert.ok(left(la)>left(ra)+50,"Left arm is on viewer right");
+  assert.ok(left(ll)>left(rl)+20,"Left leg is on viewer right");
+  for(const part of [la,ra,ll,rl]){
+    assert.match(part,/width:\d+%;height:\d+%/,"Use a specified silhouette-shaped region");
+  }
+  assert.match(rules,/\.assembly-slot-left-arm::before,[\s\S]*?clip-path:polygon/);
+  assert.match(rules,/\.assembly-slot-left-leg::before,[\s\S]*?clip-path:polygon/);
+  assert.ok(rules.includes("object-fit:contain"),"Do not stretch the approved body parts to an arbitrary rectangle");
+  assert.ok(rules.includes("width:auto;height:112%"),"Limb overlays follow the original art aspect ratio");
+  assert.doesNotMatch(rules,/\.assembly-slot-art\s*\{[^}]*object-fit:fill/);
+  assert.match(rules,/\.assembly-slot\[data-filled="true"\]\s*\{[^}]*opacity:1;/);
+  assert.ok(html.includes("Stephen faces you, so his left is on your right"),"Explain anatomical left and right");
+  assert.ok(engine.includes("He faces us, so his left is on your right"),"Hint no longer claims visible slot labels");
+  for(const id of ["left-arm","right-arm","left-leg","right-leg"]) {
+    assert.ok(html.includes('data-slot="'+id+'"'),"Don't change persisted puzzle slot IDs: "+id);
+  }
+  assert.ok(engine.includes('("assemblySlotArt"+i).hidden = !filled;'),"Keep fitted art state tied to existing progress");
+});
