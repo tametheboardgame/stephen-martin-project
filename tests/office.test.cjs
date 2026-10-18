@@ -3091,3 +3091,18 @@ test("GAME-SP4C spa artwork has a separate location and three transparent locked
   assert.ok(engine.includes('reassembleEndingScene").dataset.speaker = card'));
   assert.match(read("scripts/build.mjs"),/Approved Ending C scene artworks packaged/);
 });
+
+
+test("GAME-SP4C.1B locked spa display workshop is separate from live puzzle controls",()=>{
+  const file="public/assets/generated/locations/ending-c-spa-assembly-workshop-background-v01.webp";
+  const data=fs.readFileSync(path.join(root,file));
+  assert.equal(data.toString("ascii",0,4),"RIFF");
+  assert.equal(data.toString("ascii",8,12),"WEBP");
+  const styles=css.slice(css.lastIndexOf("/* GAME-SP4C.1B:"));
+  assert.ok(styles.includes("ending-c-spa-assembly-workshop-background-v01.webp"));
+  assert.ok(styles.includes('#rescueMiniGameScene[data-route="reassemble"]'));
+  const puzzle=html.slice(html.indexOf('id="reassembleWorkshop"'),html.indexOf('id="reassembleEndingScene"'));
+  assert.match(puzzle,/id="assemblyPiece0"/);
+  assert.match(puzzle,/id="assemblySlot0"/);
+  assert.match(read("scripts/build.mjs"),/Approved Ending C scene artworks packaged/);
+});
