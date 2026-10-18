@@ -2,6 +2,12 @@
 
 **Updated:** 17 October 2026
 
+## GAME-SP4B.2 — Chinese official sprite integrated (18 October 2026)
+
+- Owner-approved fictional official PNG staged in the project Drive folder, with manifest and transparent optimised WebP on branch `agent/game-sp4-ending-b-art-integration`, draft PR #44.
+- Official is an independent actor behind the bureau's counter in the Ending B introduction and finale, with speaking glow for Official lines and mobile/tablet offsets. No replacement of the locked office backdrop, no new dialogue, no changes to stamp mechanics or other endings.
+- Added asset alpha/build and visual-placement regression checks. **Next gate:** confirm passing GitHub CI and Cloudflare preview, then obtain owner in-engine approval before merging PR #44.
+
 ## GAME-SP4B — Ending B approved-art playable preview (17 October 2026)
 
 - Staged, materialised and committed all locked Ending B background, puzzle-desk, bear classification, takeaway-cup, physical stamp and matching red impression artwork. Reused the **exact office Stephen sprite** from the already owner-approved release-permit composite, rather than inventing another portrait. The transformed cup has its own alpha-preserving WebP; original source remains in Drive.
