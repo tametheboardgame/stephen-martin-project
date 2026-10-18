@@ -3314,10 +3314,12 @@ body:has(#menuScreen:not([hidden])) main {
  * do not turn this into a flattened room illustration. */
 #holidayScreen .detention-intro-official,
 #holidayScreen .detention-ending-official {
-  position:absolute;z-index:1;top:32%;left:52%;height:70%;width:auto;
+  /* Head is behind the centre service desk, not looming into the hall.
+   * Crop at the desk's top edge, not halfway down its wooden front. */
+  position:absolute;z-index:1;top:37%;left:52%;height:49%;width:auto;
   transform:translateX(-50%);object-fit:contain;pointer-events:none;
-  clip-path:inset(0 0 63% 0);
-  filter:drop-shadow(2px 5px 4px rgba(12,21,35,.65));
+  clip-path:inset(0 0 68% 0);
+  filter:drop-shadow(2px 4px 3px rgba(12,21,35,.48));
 }
 #holidayScreen .detention-intro-official {display:none;}
 #holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-intro-official {
@@ -3330,12 +3332,12 @@ body:has(#menuScreen:not([hidden])) main {
 @media (max-width:800px) {
   #holidayScreen .detention-intro-official,
   #holidayScreen .detention-ending-official {
-    top:35%;height:63%;left:52%;clip-path:inset(0 0 61% 0);
+    top:37.5%;height:47%;left:52%;clip-path:inset(0 0 66% 0);
   }
 }
 @media (max-width:450px) {
   #holidayScreen .detention-intro-official,
   #holidayScreen .detention-ending-official {
-    top:37%;left:52%;height:56%;clip-path:inset(0 0 60% 0);
+    top:38%;left:52%;height:45%;clip-path:inset(0 0 65% 0);
   }
 }
