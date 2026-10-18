@@ -646,7 +646,7 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 #### GAME-SP4.1C — Summit entrance daylight and legibility
 
-**Priority:** P0; **status:** Implemented on draft PR #52, pending owner visual approval; **dependencies:** SP4.1A/B now merged. Remove the Summit-wide dark gradient and retain local contrast. Full review guide: `docs/story/GAME-SP4.1C-SUMMIT-DAYLIGHT.md`.  
+**Priority:** P0; **status:** Owner visually approved and merged via PR #52 at `7f6415b`, 141/141 tests passed; **dependencies:** SP4.1A/B previously merged. Summit exterior now uses its approved daylight art without whole-stage navy overlay. Review guide: `docs/story/GAME-SP4.1C-SUMMIT-DAYLIGHT.md`.  
 **Owner observation:** Exterior of the Summit looks covered by a shadow.
 
 **Implementation tasks**
@@ -666,6 +666,9 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 **Owner observations:** Spoken responses become blue footer text after choices; the opening still shows developer-facing “Stephen: Auto”, “David: Auto”, “Paul: Auto” toggles despite the expressions now being automatically scripted; players should be able to skip long *already scripted* passages to the next meaningful choice, playable puzzle or scene ending from the playback bar.
 
 ##### GAME-SP4.1D0 — Remove the three opening expression-proof switches (small cleanup)
+
+**Implementation status (18 October 2026):** Complete on draft PR #53, pending CI of final head and owner desktop/mobile preview. Stephen/David/Paul proof UI and overrides removed; scripted automatic acting is protected by regression tests. Detailed review: `docs/story/GAME-SP4.1D0-INTRO-EXPRESSION-CONTROLS.md`.
+
 
 1. Remove the visible `.expression-proof-controls` group and its Stephen/David/Paul Auto-cycle buttons in the opening playback controls. They were created to compare approved poses during development, **not** to be part of the finished game. Reclaim space for normal playback/skip controls at laptop/tablet widths.
 2. Remove associated proof-mode state/cycle handlers and dead CSS, but **retain all approved expression source mappings, automatic per-line acting cues** (`beat.reactions` → `applySeatedExpression`), registration scales, speaking/listening effects and the existing sound, pause, Next, Back and progress controls.

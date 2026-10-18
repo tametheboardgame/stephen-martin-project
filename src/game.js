@@ -49,15 +49,8 @@
     reassemble: "Total Renewal Spa"
   };
   function bookingName(plan) { return planLabels[plan] || "Nothing booked yet"; }
-  // D2 proof-only control: the approved neutral/amused image pair shares one
-  // canvas; the toggle allows owner A/B checks without restarting the story.
-  const proofModes = ["auto", "neutral", "amused", "confused", "annoyed", "exasperated", "laughing"];
-  let stephenProofMode = "auto";
-  const davidProofModes = ["auto","neutral","confident","serious","frustrated","shocked","systems-expert"];
-  let davidProofMode = "auto";
-  const paulProofModes = ["auto", "neutral", "confused", "pleased"];
-  let paulProofMode = "auto";
-
+  // GAME-SP4.1D0: expression selection follows the approved acting cues.
+  // Development-time manual portrait preview overrides have been retired.
   const stephenSeatedSources = {
     neutral: "./public/assets/generated/characters/stephen-office-seated-neutral-v01.webp",
     amused: "./public/assets/generated/characters/stephen-office-seated-amused-v01.webp?v=3",
@@ -90,13 +83,7 @@
   function applySeatedExpression(name) {
     const sources = seatedExpressionSources[name];
     const reaction = cast[name].dataset.expression || "neutral";
-    const requested = name === "Stephen" && stephenProofMode !== "auto"
-      ? stephenProofMode
-      : name === "David" && davidProofMode !== "auto"
-        ? davidProofMode
-        : name === "Paul" && paulProofMode !== "auto"
-          ? paulProofMode
-          : reaction;
+    const requested = reaction;
     // Approved acting cues select their whole seated sprites. Unmapped acting
     // cues, including Paul's "blank", deliberately resolve to Neutral.
     const sprite = Object.hasOwn(sources, requested) ? requested : "neutral";
@@ -108,44 +95,7 @@
     }
     cast[name].dataset.seatedSprite = sprite;
     cast[name].dataset.staging = name === "Stephen" || sprite !== "neutral"
-      ? "seated-expression-proof" : "seated-neutral";
-  }
-
-  function applyStephenSeatedExpression() {
-    // The Stephen-only comparison button must not reset David or Paul.
-    applySeatedExpression("Stephen");
-  }
-
-  function cycleStephenProof() {
-    stephenProofMode = proofModes[(proofModes.indexOf(stephenProofMode) + 1) % proofModes.length];
-    const label = stephenProofMode[0].toUpperCase() + stephenProofMode.slice(1);
-    const button = $("stephenProofButton");
-    button.textContent = "Stephen: " + label + " ↻";
-    button.setAttribute("aria-label", "Stephen expression preview: " + label + ". Click to cycle Auto, Neutral, Amused, Confused, Annoyed, Exasperated and Laughing");
-    // Never render a fresh dialogue beat or restart the autoplay timer just
-    // because the user is comparing images.
-    applyStephenSeatedExpression();
-  }
-
-  function cycleDavidProof() {
-    davidProofMode = davidProofModes[(davidProofModes.indexOf(davidProofMode) + 1) % davidProofModes.length];
-    const label = davidProofMode === "systems-expert"
-      ? "Systems Expert" : davidProofMode[0].toUpperCase() + davidProofMode.slice(1);
-    const button = $("davidProofButton");
-    button.textContent = "David: " + label + " ↻";
-    button.setAttribute("aria-label", "David expression preview: " + label + ". Click to cycle Auto, Neutral, Confident, Serious, Frustrated, Shocked and Systems Expert");
-    // Preview only David's approved complete sprite; leave story timing and other actors unchanged.
-    applySeatedExpression("David");
-  }
-
-  function cyclePaulProof() {
-    paulProofMode = paulProofModes[(paulProofModes.indexOf(paulProofMode) + 1) % paulProofModes.length];
-    const label = paulProofMode[0].toUpperCase() + paulProofMode.slice(1);
-    const button = $("paulProofButton");
-    button.textContent = "Paul: " + label + " ↻";
-    button.setAttribute("aria-label", "Paul expression preview: " + label + ". Click to cycle Auto, Neutral, Confused and Pleased");
-    // Proof must not advance dialogue, reset audio or alter either other actor.
-    applySeatedExpression("Paul");
+      ? "seated-expression" : "seated-neutral";
   }
 
   let autoPlaying = true;
@@ -2361,9 +2311,6 @@
   $("songListenButton").addEventListener("click", listenToSong);
   $("songStopButton").addEventListener("click", skipFullSong);
   $("songDeclineButton").addEventListener("click", declinePessimisticSong);
-  $("stephenProofButton").addEventListener("click", cycleStephenProof);
-  $("davidProofButton").addEventListener("click", cycleDavidProof);
-  $("paulProofButton").addEventListener("click", cyclePaulProof);
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       // Never consume story lines in a background tab.
