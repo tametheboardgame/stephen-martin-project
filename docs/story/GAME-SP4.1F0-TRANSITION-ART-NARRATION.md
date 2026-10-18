@@ -3,6 +3,15 @@
 **Started:** 18 October 2026. **Baseline:** merged SP4.1C2 Ending B daylight, commit `61b94d9ed2d93b78a21c9df03d07c195f3d813f0`.
 **Status:** **Four owner-approved illustrations integrated into existing transition stages in draft PR #59. The complete optional narrator playback, 12 IDs, subtitles, timing fallback and static-build MP3 allow-list are implemented.** The user's existing ElevenLabs narrator voice will be used. The 12 written lines are **editable draft subtitle/script copy until the owner records them**; no new narrator MP3s have been uploaded. Provenance: `docs/story/GAME-SP4.1F-APPROVED-ASSETS.md`. Preview and tests documented in `STATUS.md`.
 
+## Transition card hierarchy refinement (18 October 2026)
+
+Owner review of the first illustrated Night Market intermission found **the original dark centre panel too large** once the narrator subtitle panel was added. The approved new layout separates two functions:
+
+- **Small title plate** (centred on the painting): only time and destination, route/destination, scene heading or travel-beat title. No secondary joke/commentary, description or prose in the title plate.
+- **Separate NARRATOR panel** (near the bottom): the **only** source of narrative prose, with the same cue and words shown whether an MP3 has been uploaded or not. Its existing timing, pause, Next and skip mechanics are unchanged.
+
+This applies to both China time jumps, all three route handoffs, the four rescue travel beats, Back in England and the Visitor Information arrival. Keep the Chapter Two title artwork's baked-in title as approved. No dialogue from Stephen, David or Paul is altered. CSS uses bounded card widths and media queries for ≤800px and ≤450px; the image remains visible behind the panels. Visual review at laptop/mobile is still a human gate. Regression tests guard against the old duplicate text being reintroduced.
+
 ## Implemented transition mechanics (18 October 2026)
 
 The application uses the **existing holiday audio engine** with one immutable off-stage cue table in `src/game.js`. A `transitionNarrationBeat()` function returns a cue **only** for these twelve real transitions: illustrated Chapter Two title; either intermission destination; chosen route handoff; Back in England after Stephen's own phone dialogue; four travel montage steps; and arrival at the existing hotel. There is no active narrator during Stephen's own phone line, office dialogue, clues, choices, forms or endings. The same `VOICE_PATH + id + ".mp3"` contract is used; no separate player or schema migration was required.
