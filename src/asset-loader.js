@@ -46,14 +46,17 @@
     const nodes = [root, ...root.querySelectorAll("*")];
     for (const node of nodes) {
       if (node.hidden || node.closest?.("[hidden]")) continue;
+      const computed = typeof window.getComputedStyle === "function"
+        ? window.getComputedStyle(node) : null;
+      // A scene shell can contain CSS-hidden actors belonging to another
+      // route. Check computed visibility BEFORE scheduling their IMG sources.
+      if (computed && (computed.display === "none" || computed.visibility === "hidden")) continue;
       if (node.tagName === "IMG") {
         const src = node.currentSrc || node.getAttribute("src");
         const url = src && urlFor(src);
         if (url) urls.add(url);
       }
-      if (typeof window.getComputedStyle !== "function") continue;
-      const computed = window.getComputedStyle(node);
-      if (!computed || computed.display === "none" || computed.visibility === "hidden") continue;
+      if (!computed) continue;
       addBackgrounds(computed.backgroundImage, urls);
       // A few legacy chapter cards put their scenery in pseudo-elements.
       for (const pseudo of ["::before", "::after"]) {
