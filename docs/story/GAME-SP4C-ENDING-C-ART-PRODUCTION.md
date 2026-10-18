@@ -68,6 +68,13 @@ The owner's approved standalone character sprites, **not** the flattened three-c
 
 Materialisation and automated CI passed. The first real in-browser visual sign-off is still pending; don't merge PR #46 until the owner sees the live composition.
 
+## GAME-SP4C.1B — Approved workshop and WP2 six-part artwork (18 October 2026)
+
+- **Locked by owner:** empty fictional Total Renewal Spa display workshop, with jade-and-gold cabinetry, promotional merchandise and an unobstructed central assembly area. Canonical PNG: `ending-c-spa-assembly-workshop-background-v01.png`, Google Drive file ID `1yxbNU-0UHkH8PjFhJx26j6G3v0Zdh7ju`. Runtime WebP: `public/assets/generated/locations/ending-c-spa-assembly-workshop-background-v01.webp`, materialised on draft PR #46 from `generated-assets/manifests/game-sp4c-ending-c-spa-assembly-workshop-background-v01.json`.
+- Integrated as the backing image of the existing independent cardboard mini-game. Kept all 13 puzzle buttons, six slots and accessible interactions as HTML above a legible paper-coloured panel. No scene painting into a puzzle background, no route/script changes.
+- **SP4C.2 draft for human review:** six transparent cardboard die-cut artwork assets `head`, `torso`, `left-arm`, `right-arm`, `left-leg`, `right-leg` were derived from the *approved* holiday standing Stephen source, maintaining the exact canonical facial pixels and costume. Registration metadata and a mounting-board silhouette accompany the six source prototypes. The two inaccurate generated sticker sheets were rejected and must not be used. These six prototypes are **not locked, staged to Drive, materialised or integrated**, pending owner's visual acceptance. The seven decoys remain SP4C.3.
+- Next: owner reviews each six-piece preview and confirms whether the individual thin arm/leg fragments are suitable, or requests re-illustrated standee parts before any production commit.
+
 ## Immediate next action
 
 Owner to review the now-layered spa introduction and finale in a deployed game preview. Then proceed to the unapproved display-workshop background, cardboard Stephen and interactive pieces in their own approval increments. Do not merge PR #46 until explicitly approved.
