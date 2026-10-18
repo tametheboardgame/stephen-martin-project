@@ -2684,18 +2684,18 @@ body:has(#menuScreen:not([hidden])) main {
 }
 
 
-/* GAME-SP4.0A — Approved, Drive-sourced Summit exterior environment.
- * Only the cult briefing and the admissions test share this outdoor setting.
- * The Summit ending is indoors and deliberately retains its placeholder
- * until its independently approved throne-room illustration arrives. */
+/* GAME-SP4.0A / GAME-SP4.1C — Approved Summit daylight exterior.
+ * The former full-stage dark gradient made the entire illustration muddy.
+ * Display its original colours in the briefing AND admissions background.
+ * Readability comes from the existing local title, named dialogue and
+ * admissions-card backgrounds, not a shadow spread over the landscape.
+ * This deliberately does NOT target the separately approved throne room. */
 #holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-route-intro-stage,
 #holidayScreen #rescueMiniGameScene:has(#summitAdmissions:not([hidden])) .rescue-route-intro-stage {
-  background:
-    linear-gradient(to top,rgba(5,22,41,.52),rgba(4,20,37,.24) 64%,rgba(4,20,37,.32)),
-    url("../public/assets/generated/locations/summit-entrance-v01.webp") center/cover no-repeat;
+  background:url("../public/assets/generated/locations/summit-entrance-v01.webp") center/cover no-repeat;
 }
-/* Keep the original illustrated entrance visible without sacrificing legibility
- * of editable HTML dialogue and the three accessible answer cards. */
+/* The Summit-specific title, speaker bubble and three answer cards retain
+ * their own high-contrast surfaces over the now undimmed artwork. */
 #holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-travel-panel {
   background:rgba(5,25,47,.9);
   box-shadow:0 12px 38px rgba(0,0,0,.35);
