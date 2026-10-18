@@ -41,6 +41,7 @@ class Element {
   setAttribute(k,v){this.attributes[k]=v;}
   click(){if(!this.disabled)this.events.click?.({target:this,preventDefault() {}});}
   closest(){return "button";}
+  focus(){this.focusCount=(this.focusCount||0)+1;}
 }
 function preview({audio=false}={}) {
   const elements=new Map(),stored=new Map(),timeouts=new Map(),listeners=new Map(),voices=[];
@@ -3412,4 +3413,198 @@ test("GAME-SP4.1D1 all spoken cards use the opening's external name-tab layout",
     "The original office label geometry is unchanged");
   assert.match(html,/id="hotelDeductions"/);
   assert.match(html,/id="assemblyFeedback" class="assembly-feedback"/);
+});
+
+
+test("GAME-SP4.1D2 one top-bar skip points at the first unanswered Wall choice",()=>{
+  assert.match(html,/id="holidaySkipButton"[^>]*hidden>/);
+  assert.match(css,/#holidayScreen #holidaySkipButton\[hidden\] \{display:none !important;/);
+  const p=preview();
+  p.start();p.el("skipButton").click();
+  assert.equal(saved(p).holidayPhase,"transition");
+  assert.match(p.el("holidaySkipButton").textContent,/Skip to choice/);
+  p.el("holidaySkipButton").click();
+  assert.equal(saved(p).holidayPhase,"wall");
+  assert.equal(saved(p).wallStep,story().SMP_CHINA_WALL.lines.length);
+  assert.equal(saved(p).wallDecision,null);
+  assert.equal(p.el("wallChoices").hidden,false);
+  assert.equal(p.el("holidaySkipButton").hidden,true,"No skip at unanswered route choice");
+  assert.equal(p.el("holidayNextButton").hidden,true);
+  assert.equal(p.el("wallAcceptButton").focusCount,1);
+  p.el("holidaySkipButton").click(); // Stale hidden click must be guarded.
+  assert.equal(saved(p).wallDecision,null);
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(p.el("holidaySkipButton").hidden,true);
+  assert.equal(saved(p).wallStep,story().SMP_CHINA_WALL.lines.length);
+});
+
+test("GAME-SP4.1D2 declined invitations skip to real Palace choice and fixed Market invitation",()=>{
+  const p=toWallChoice();
+  p.el("wallDeclineButton").click();
+  assert.match(p.el("holidaySkipButton").textContent,/Skip to choice/);
+  p.el("holidaySkipButton").click();
+  assert.equal(saved(p).holidayPhase,"palace");
+  assert.equal(saved(p).palaceStep,story().SMP_CHINA_PALACE.lines.length);
+  assert.equal(saved(p).palaceDecision,null);
+  assert.equal(p.el("palaceChoices").hidden,false);
+  assert.equal(p.el("holidaySkipButton").hidden,true);
+  p.el("palaceDeclineButton").click();
+  assert.match(p.el("holidaySkipButton").textContent,/Skip to invitation/);
+  p.el("holidaySkipButton").click();
+  assert.equal(saved(p).holidayPhase,"market");
+  assert.equal(saved(p).marketStep,story().SMP_CHINA_MARKET.lines.length);
+  assert.equal(saved(p).marketDecision,"accept","Night Market invitation is a fixed scripted outcome");
+  assert.equal(saved(p).pendingPlan,"reassemble");
+  assert.equal(p.el("holidaySkipButton").hidden,false);
+  assert.match(p.el("holidaySkipButton").textContent,/Skip to investigation/);
+  p.el("holidaySkipButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-hotel");
+  assert.equal(saved(p).route,"reassemble");
+  assert.equal(saved(p).hubMatched,false);
+  assert.deepEqual(saved(p).hubViewed,[]);
+  assert.equal(p.el("hotelDeductions").hidden,false);
+  assert.equal(p.el("holidaySkipButton").hidden,true,"Hotel evidence cannot be skipped");
+});
+
+test("GAME-SP4.1D2 all accepted routes skip to unsolved hotel and preserve checkpoint on Resume",()=>{
+  for(const [route,setup] of [
+    ["cult",p=>{p.el("wallAcceptButton").click();}],
+    ["detention",p=>{
+      p.el("wallDeclineButton").click();p.el("holidaySkipButton").click();
+      p.el("palaceAcceptButton").click();
+    }]
+  ){
+    const p=toWallChoice();
+    setup(p);
+    assert.match(p.el("holidaySkipButton").textContent,/Skip to investigation/);
+    p.el("holidaySkipButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-hotel",route);
+    assert.equal(saved(p).route,route);
+    assert.equal(saved(p).hubMatched,false);
+    assert.equal(saved(p).hubWrongGuesses,0);
+    assert.equal(saved(p).hubIntroStep,story().SMP_RESCUE_HUB.opening.length);
+    assert.equal(p.el("rescueHotelHotspots").hidden,false);
+    assert.equal(p.el("holidaySkipButton").hidden,true);
+    p.el("homeButton").click();p.el("resumeButton").click();
+    assert.equal(saved(p).route,route);
+    assert.equal(saved(p).holidayPhase,"rescue-hotel");
+    assert.equal(p.el("holidaySkipButton").hidden,true);
+  }
+});
+
+test("GAME-SP4.1D2 alarm, travel and hotel introduction stop at manual clue investigation",()=>{
+  const alarm=toRescueAlarm("cult");
+  assert.match(alarm.el("holidaySkipButton").textContent,/investigation/);
+  alarm.el("holidayPauseButton").click();
+  alarm.el("holidaySkipButton").click();
+  assert.equal(saved(alarm).holidayPhase,"rescue-hotel");
+  assert.equal(alarm.timeouts.size,0,"Pausing persists through the skip");
+  assert.equal(alarm.el("hotelPhoneButton").focusCount,1);
+
+  const travel=toHotelInvestigation("detention");
+  assert.match(travel.el("holidaySkipButton").textContent,/investigation/);
+  travel.el("holidaySkipButton").click();
+  assert.equal(saved(travel).hubIntroStep,8);
+  assert.equal(travel.el("hotelDeductions").hidden,false);
+  travel.el("hotelDeskButton").click();
+  assert.equal(travel.el("holidaySkipButton").hidden,true,"Open clue is manual");
+  travel.el("hotelEvidenceCloseButton").click();
+  travel.el("hotelCultButton").click();
+  assert.match(travel.el("holidaySkipButton").textContent,/investigation/);
+  const wrongCount=saved(travel).hubWrongGuesses;
+  travel.el("holidaySkipButton").click();
+  assert.equal(saved(travel).hubWrongGuesses,wrongCount);
+  assert.equal(saved(travel).hubMatched,false);
+  assert.equal(saved(travel).hubVoiceFeedbackStep,null);
+  assert.equal(travel.el("holidaySkipButton").hidden,true);
+});
+
+test("GAME-SP4.1D2 all routes jump from earned hotel match or route intro to fresh UNSOLVED game",()=>{
+  for(const [route,button,game,choice] of [
+    ["cult","hotelCultButton","summitAdmissions","summitChoice0"],
+    ["detention","hotelDetentionButton","detentionPaperwork","detentionChoice0"],
+    ["reassemble","hotelReassembleButton","reassembleWorkshop","assemblyPiece0"]
+  ]){
+    const p=toHotelInvestigation(route);
+    p.el("holidaySkipButton").click();
+    p.el(button).click();
+    assert.equal(saved(p).hubMatched,true);
+    assert.match(p.el("holidaySkipButton").textContent,/Skip to game/);
+    p.el("holidaySkipButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-minigame");
+    assert.equal(saved(p).route,route);
+    assert.equal(saved(p).rescueProgress.finished,false);
+    assert.equal(saved(p).rescueProgress.miniGameStage,0);
+    assert.equal(p.el(game).hidden,false);
+    assert.equal(p.el(choice).focusCount,1);
+    assert.equal(p.el("holidaySkipButton").hidden,true,"Unsolved game has no skip");
+    p.el("holidaySkipButton").click();
+    assert.equal(saved(p).rescueProgress.miniGameStage,0,"Stale click cannot answer puzzle");
+  }
+  const branch=toHotelInvestigation("cult");
+  branch.el("holidaySkipButton").click();
+  branch.el("hotelCultButton").click();
+  for(let i=0;i<6;i++)branch.el("hotelFinishButton").click();
+  assert.equal(saved(branch).holidayPhase,"rescue-route-intro");
+  assert.match(branch.el("holidaySkipButton").textContent,/Skip to game/);
+  branch.el("holidaySkipButton").click();
+  assert.equal(saved(branch).holidayPhase,"rescue-minigame");
+  assert.equal(saved(branch).rescueProgress.miniGameStage,0);
+});
+
+test("GAME-SP4.1D2 Skip to end is hidden before puzzle completion and available after all three routes",()=>{
+  const cases=[
+    {route:"cult",make:toSummitAdmissions,complete:p=>{
+      for(const idx of [2,1,2]){p.el("summitChoice"+idx).click();p.el("summitNextButton").click();}
+    },count:story().SMP_SUMMIT.ending.length},
+    {route:"detention",make:toDetentionPaperwork,complete:p=>{
+      finishDetentionForms(p);
+      p.el("detentionChoice2").click();p.el("detentionStampButton").click();
+      p.el("detentionPermitButton").click();p.el("detentionNextButton").click();
+    },count:story().SMP_DETENTION.ending.length},
+    {route:"reassemble",make:toAssemblyWorkshop,complete:p=>{
+      for(let i=0;i<6;i++){p.el("assemblyPiece"+i).click();p.el("assemblySlot"+i).click();}
+      assert.equal(saved(p).rescueProgress.finished,true);
+      assert.equal(p.el("holidaySkipButton").hidden,true,"POWER ON is mandatory");
+      p.el("assemblyPowerButton").click();
+    },count:story().SMP_REASSEMBLE.ending.length}
+  ];
+  for(const c of cases){
+    const p=c.make();
+    assert.equal(p.el("holidaySkipButton").hidden,true,c.route+" must earn puzzle");
+    c.complete(p);
+    assert.equal(saved(p).rescueProgress.finished,true);
+    assert.match(p.el("holidaySkipButton").textContent,/Skip to end/);
+    p.el("holidaySkipButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-ending-summary");
+    assert.equal(saved(p).route,c.route);
+    assert.equal(saved(p).rescueProgress.endingStep,c.count);
+    assert.equal(p.el("rescueEndingSummary").hidden,false);
+    assert.equal(p.el("holidaySkipButton").hidden,true,"Summary cannot be skipped");
+    p.el("homeButton").click();p.el("resumeButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-ending-summary");
+    p.el("rescueSummaryReplayButton").click();
+    assert.equal(saved(p).holidayPhase,"wall","Replay still allows another ending");
+    assert.equal(saved(p).wallDecision,null);
+    assert.equal(p.el("holidaySkipButton").hidden,true);
+  }
+});
+
+test("GAME-SP4.1D2 skip cancels voiced line and any old pending onended callback",()=>{
+  const p=preview({audio:true});
+  p.start();p.el("skipButton").click();p.el("chinaStartButton").click();
+  assert.equal(saved(p).holidayPhase,"wall");
+  const old=p.voices.at(-1);
+  assert.ok(old && old.src.includes("china.wall"),"Wall voice was started");
+  const prior=old.onended;
+  assert.equal(typeof prior,"function");
+  p.el("holidaySkipButton").click();
+  assert.equal(saved(p).wallStep,story().SMP_CHINA_WALL.lines.length);
+  assert.equal(old.paused,true);
+  assert.equal(old.onended,null,"Old voice callback unregistered");
+  assert.equal(p.timeouts.size,0);
+  prior(); // Simulate a late completion from the cancelled audio.
+  assert.equal(saved(p).wallDecision,null);
+  assert.equal(saved(p).wallStep,story().SMP_CHINA_WALL.lines.length);
+  assert.equal(p.timeouts.size,0,"Cancelled callback cannot enqueue new beats");
 });
