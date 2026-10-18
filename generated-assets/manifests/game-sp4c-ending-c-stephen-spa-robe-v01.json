@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "14hdqdGcxqVhMdqONnq72IWtCE58tGTJD"
+  },
+  "expectedSourceName": "ending-c-stephen-spa-robe-v01.png",
+  "destination": "public/assets/generated/characters/ending-c-stephen-spa-robe-v01.webp",
+  "transform": {
+    "maxWidth": 1024,
+    "maxHeight": 1536,
+    "quality": 88
+  },
+  "revision": 1
+}
