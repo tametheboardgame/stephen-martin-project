@@ -2,17 +2,15 @@
 
 **Updated:** 18 October 2026
 
-## GAME-SP4.1F0 — Four locked transition assets committed; narrator integration pending
+## GAME-SP4.1F — Transition illustrations and optional narration mechanics integrated
 
-- **Artwork ingest complete on this branch:** All four approved source PNGs uploaded to the project staging folder, four versioned JSON manifests committed and four ~0.3 MB optimised WebPs committed in `public/assets/generated/locations/`. Original filenames, hashes and source Drive IDs are recorded in `docs/story/GAME-SP4.1F-APPROVED-ASSETS.md`. The automated materialisation workflow encountered a Google workload-identity `google.subject` length error, so the already verified bytes were imported directly via Drive → GitHub blob, without altering characters or gameplay. Narration still awaits recorded audio files.
-
-
-- **SP4.1C2 approved and merged:** PR #58 at `61b94d9ed2d93b78a21c9df03d07c195f3d813f0`, final 162/162 tests and Cloudflare success. Ending B room now uses original daylight colours.
-- **F0 working branch:** `agent/game-sp41f0-transition-storyboard-narration` from that exact main commit. Roadmap split into F0/F1/F2A–B/F3/F-NARR/F4.
-- **Owner request addressed:** Four **proposed** illustration assets to generate; 12 suggested short, off-screen British narrator cues, ID-matched MP3 file names. One same illustration reused twice for sightseeing intermissions, two images for four David/Paul travel beats, and one route-neutral image reused across all three handoffs. Chapter Two title, Back in England and hotel arrival currently reuse approved art.
-- **Review source:** `docs/story/GAME-SP4.1F0-TRANSITION-ART-NARRATION.md` includes a full storyboard, proposed script and filenames, reuse inventory, voice/timing and owner approval gates. **Four approved WebPs now committed to this branch after source PNG upload to Drive; narrator MP3s are not yet supplied and gameplay remains unmodified.**
-- **Next gate:** owner approves/edits image list and narrator wording/voice before any new generation or implementation. Maintain a draft PR. Then start **F1** one illustrated sightseeing time-jump and the F-NARR audio groundwork, following the approved staging/manifest pipeline.
-
+- **Preview PR:** [#59](https://github.com/tametheboardgame/stephen-martin-project/pull/59), branch `agent/game-sp41f0-transition-storyboard-narration`, still **draft and unmerged** pending owner's scene-by-scene visual acceptance.
+- **Four locked paintings wired into their original transition states:** Stephen's time-passing panorama for two sightseeing intermissions; David/Paul airport for travel steps 001–002; upside-down map and receipts for steps 003–004; route-neutral Stephen holiday crossroads for all three handoffs. The original Chapter Two title, Back in England phone, Visitor Information lobby and all endings remain in place. Responsive captions are live HTML, never flattened into PNG.
+- **Narrator playback groundwork complete (no files required yet):** `src/game.js` reserves **12 exact `transition.*.mp3` cue IDs** matched to the existing phase/route/step. A dedicated accessible narrator subtitle overlay shows draft copy even without audio; when an MP3 arrives, the existing pauseable holiday voice engine owns its completion timing. Missing/disabled/blocked MP3s use the previous text timer. Sound, Pause, Next, contextual Skip, Resume, replay and incomplete choices/puzzles are preserved. Narrator is off-stage: actor glow remains clear.
+- **Future audio upload:** The user will generate recordings later with their **existing ElevenLabs narrator voice**. Exact filenames and target folder are in `public/assets/audio/dialogue/README.md` and all draft text in `docs/story/GAME-SP4.1F0-TRANSITION-ART-NARRATION.md`. The strict static builder now accepts 124 possible recordings (112 existing + 12 narrator) and includes uploaded narrator MP3s automatically.
+- **CI qualification on functional head `ce8a3c0`:** **168/168 tests passed**, **4/4 transition paintings**, **20/20 Ending C artworks**, **112/124 voice files (no new narrator tracks)** packaged. Cloudflare preview: https://718426d6.stephen-martin-project.pages.dev.
+- **Review gates:** check all four paintings in their intended scenes at desktop/tablet/mobile, overlay/card/subtitle occlusion, Next/Skip/manual route choices and no extra time added where audio is absent. Record final script/audio separately when ready, then listen through all 12 cues. **No merge before owner review.**
+- **Known tooling issue, separately logged:** Drive-to-GitHub automated materialisation blocked by Google OIDC `google.subject` 127-byte limit, [issue #60](https://github.com/tametheboardgame/stephen-martin-project/issues/60). Exact owner-approved PNGs remain in Drive, four optimised WebPs were committed through the verified direct import, and all images are present in the static build.
 
 ## GAME-SP4.1C2 — Brighten Ending B background (active)
 

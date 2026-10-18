@@ -1,7 +1,17 @@
 # GAME-SP4.1F0 — Illustrated transition art & spoken narrator plan
 
 **Started:** 18 October 2026. **Baseline:** merged SP4.1C2 Ending B daylight, commit `61b94d9ed2d93b78a21c9df03d07c195f3d813f0`.
-**Status:** **Four illustration revisions approved/locked and staged in Google Drive, 18 October 2026; four versioned manifests plus four optimised WebPs committed to the F0 branch.** Existing ElevenLabs narrator voice confirmed. The 12 narrator lines are **still drafts pending recording approval**, and no narrator audio is integrated. Full asset hashes/file IDs: `docs/story/GAME-SP4.1F-APPROVED-ASSETS.md`.
+**Status:** **Four owner-approved illustrations integrated into existing transition stages in draft PR #59. The complete optional narrator playback, 12 IDs, subtitles, timing fallback and static-build MP3 allow-list are implemented.** The user's existing ElevenLabs narrator voice will be used. The 12 written lines are **editable draft subtitle/script copy until the owner records them**; no new narrator MP3s have been uploaded. Provenance: `docs/story/GAME-SP4.1F-APPROVED-ASSETS.md`. Preview and tests documented in `STATUS.md`.
+
+## Implemented transition mechanics (18 October 2026)
+
+The application uses the **existing holiday audio engine** with one immutable off-stage cue table in `src/game.js`. A `transitionNarrationBeat()` function returns a cue **only** for these twelve real transitions: illustrated Chapter Two title; either intermission destination; chosen route handoff; Back in England after Stephen's own phone dialogue; four travel montage steps; and arrival at the existing hotel. There is no active narrator during Stephen's own phone line, office dialogue, clues, choices, forms or endings. The same `VOICE_PATH + id + ".mp3"` contract is used; no separate player or schema migration was required.
+
+`transitionNarration` is a dedicated subtitled off-stage panel, styled apart from the white character-name-tab bubbles. The text remains legible when MP3 playback is muted, the filename is missing, the request fails, or autoplay is blocked. Present files follow their **actual playback duration**; without a file the original phase-specific timer is used. Pause suspends audio, Play resumes it, Next/Skip invalidates old audio callbacks, and scene changes cannot allow a narrator to speak from the wrong route. Images are selected by the already saved target/route/step; no branching is modified.
+
+The four approved WebPs are required by `scripts/build.mjs` and the 12 optional narrator MP3 filenames are individually allow-listed. Current build contains all four WebPs and **none** of the 12 narrator files yet. Upload later to `public/assets/audio/dialogue/` on the current PR branch or the then-active successor branch. The existing narrator voice is preferred. **Before recording, review the twelve draft lines below; if wording changes, update both the game's subtitle copy and recording script to match.**
+
+**Functional head:** `ce8a3c0`, **168/168 smoke tests**, deployment https://718426d6.stephen-martin-project.pages.dev. Visual acceptance remains with the owner; PR #59 is unmerged.
 
 ## Decision requested
 
