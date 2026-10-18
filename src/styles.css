@@ -4451,3 +4451,101 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen .transition-narration p {font-size:11px;line-height:1.25;}
   #holidayScreen .transition-narration strong {font-size:10px;}
 }
+
+
+/* GAME-SP4.1F.1 — compact, HEADINGS-ONLY transition title plates.
+   Narration is now exclusively in #transitionNarration, never repeated on an
+   illustrated scene card. Keep the approved images visible between panels. */
+#holidayScreen .intermission-frame,
+#holidayScreen .route-handoff-card {
+  box-sizing:border-box;
+  width:min(45%,610px);
+  padding:clamp(12px,1.55vw,22px) clamp(14px,2vw,28px);
+  display:grid;
+  justify-items:center;
+  align-content:center;
+  gap:5px;
+  border-width:2px;
+  border-radius:12px;
+  background:rgba(8,29,49,.86);
+}
+#holidayScreen .intermission-frame h2,
+#holidayScreen .route-handoff-card h2 {
+  margin:0;
+  font-size:clamp(24px,3.15vw,45px);
+  line-height:1.08;
+}
+#holidayScreen .intermission-frame h3 {
+  margin:4px 0 0;
+  font-size:clamp(16px,1.85vw,27px);
+  line-height:1.15;
+}
+#holidayScreen #rescueTravelScene .rescue-travel-panel,
+#holidayScreen #rescueHubArrival .rescue-travel-panel {
+  box-sizing:border-box;
+  width:min(44%,580px);
+  max-height:50%;
+  padding:clamp(12px,1.6vw,23px);
+  gap:5px;
+  border-width:2px;
+  border-radius:12px;
+  background:rgba(8,29,49,.86);
+}
+#holidayScreen #rescueTravelScene .rescue-travel-panel h2,
+#holidayScreen #rescueHubArrival .rescue-travel-panel h2 {
+  font-size:clamp(22px,2.65vw,37px);
+  line-height:1.08;
+}
+#holidayScreen #rescueTravelScene .rescue-travel-symbol {
+  font-size:clamp(24px,3vw,38px);
+}
+#holidayScreen #chinaFinalEngland h2 {
+  max-width:90%;
+  font-size:clamp(29px,4vw,54px);
+}
+@media (max-width:800px) {
+  #holidayScreen .intermission-frame,
+  #holidayScreen .route-handoff-card {
+    width:min(76%,480px);
+    padding:11px 13px;
+  }
+  #holidayScreen #rescueTravelScene .rescue-travel-panel,
+  #holidayScreen #rescueHubArrival .rescue-travel-panel {
+    width:min(76%,480px);
+    max-height:44%;
+    padding:11px 13px;
+  }
+  #holidayScreen .intermission-frame h2,
+  #holidayScreen .route-handoff-card h2 {
+    font-size:clamp(23px,4vw,32px);
+  }
+  #holidayScreen .intermission-frame h3 {
+    font-size:clamp(16px,3vw,23px);
+  }
+}
+@media (max-width:450px) {
+  #holidayScreen .intermission-frame,
+  #holidayScreen .route-handoff-card {
+    width:84%;
+    padding:9px 10px;
+    gap:3px;
+  }
+  #holidayScreen #rescueTravelScene .rescue-travel-panel,
+  #holidayScreen #rescueHubArrival .rescue-travel-panel {
+    width:84%;
+    max-height:35%;
+    padding:9px 10px;
+    gap:3px;
+  }
+  #holidayScreen .intermission-frame h2,
+  #holidayScreen .route-handoff-card h2 {
+    font-size:clamp(20px,5.1vw,27px);
+  }
+  #holidayScreen .intermission-frame h3 {
+    font-size:clamp(15px,3.8vw,19px);
+  }
+  #holidayScreen #rescueTravelScene .rescue-travel-panel h2,
+  #holidayScreen #rescueHubArrival .rescue-travel-panel h2 {
+    font-size:clamp(20px,5vw,26px);
+  }
+}
