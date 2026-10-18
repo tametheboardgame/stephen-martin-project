@@ -3994,3 +3994,41 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen .assembly-workshop .assembly-slot:is(.assembly-slot-left-arm,.assembly-slot-right-arm,.assembly-slot-left-leg,.assembly-slot-right-leg):focus-visible {
   outline:2px solid #b96b27;
 }
+
+
+/* GAME-SP4C.4A: badly assembled cardboard Stephen is an EXTRA character
+ * in the final spa tableau. Real Stephen remains centre stage, David left,
+ * Paul right. Never substitute the real Stephen sprite with this standee. */
+#holidayScreen #reassembleEndingScene .spa-ending-cardboard-stephen {
+  left:67%;
+  bottom:24%;
+  height:43%;
+  max-width:25%;
+  width:auto;
+  transform:translateX(-50%);
+  z-index:3;
+  object-fit:contain;
+  object-position:center bottom;
+  filter:drop-shadow(3px 7px 5px rgba(18,28,27,.68));
+  pointer-events:none;
+}
+#holidayScreen #reassembleEndingScene[data-speaker="cardboard stephen"] .spa-ending-cardboard-stephen {
+  filter:drop-shadow(3px 7px 5px rgba(18,28,27,.68))
+    drop-shadow(0 0 10px rgba(245,218,126,.95));
+}
+@media (max-width:800px) {
+  #holidayScreen #reassembleEndingScene .spa-ending-cardboard-stephen {
+    left:67%;
+    bottom:30%;
+    height:33%;
+    max-width:29%;
+  }
+}
+@media (max-width:450px) {
+  #holidayScreen #reassembleEndingScene .spa-ending-cardboard-stephen {
+    left:66%;
+    bottom:34%;
+    height:27%;
+    max-width:31%;
+  }
+}
