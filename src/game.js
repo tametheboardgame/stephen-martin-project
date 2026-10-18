@@ -822,7 +822,13 @@
     $("holidayPlaybackStatus").textContent = !playing ? "Paused · Next advances one line"
       : next ? "Playing · choices and puzzles pause automatically"
         : "Waiting for your choice";
-    if (window.SMP_ASSET_LOADER?.busy()) return; // No dialogue advances beneath the scene curtain.
+    if (window.SMP_ASSET_LOADER?.busy()) {
+      // A previous holiday-scene MP3 must not continue playing behind a new
+      // loading curtain. Do not interrupt the current beat on a repeat render.
+      const upcomingId = holidayVoiceBeat()?.id || null;
+      if (holidayVoice && holidayVoiceId !== upcomingId) stopHolidayVoice();
+      return;
+    }
     syncHolidayVoice();
     if (!playing || !next || ["loading","playing","paused"].includes(holidayVoiceStatus)) return;
     const token = holidayAdvanceToken;
