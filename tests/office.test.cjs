@@ -3198,3 +3198,31 @@ test("GAME-SP4C.3B anatomically oriented cardboard arms and legs retain natural 
   }
   assert.ok(engine.includes('("assemblySlotArt"+i).hidden = !filled;'),"Keep fitted art state tied to existing progress");
 });
+
+
+test("GAME-SP4C.4A approved cardboard Stephen is an extra final-scene actor",()=>{
+  const ending=html.slice(html.indexOf('id="reassembleEndingScene"'),html.indexOf('id="rescueEndingSummary"'));
+  const intro=html.slice(html.indexOf('id="rescueRouteIntro"'),html.indexOf('id="rescueMiniGameScene"'));
+  const real='ending-c-stephen-spa-robe-v01.webp';
+  const cardboard='ending-c-stephen-cardboard-rebuilt-v01.webp';
+  assert.ok(ending.includes('class="spa-ending-actor spa-ending-stephen"'));
+  assert.ok(ending.includes(real),"Real spa Stephen must remain in the scene");
+  assert.ok(ending.includes('class="spa-ending-actor spa-ending-cardboard-stephen"'));
+  assert.ok(ending.includes(cardboard),"Taped cardboard Stephen must have his own independent actor");
+  assert.ok(ending.includes('class="spa-ending-actor spa-ending-david"'));
+  assert.ok(ending.includes('class="spa-ending-actor spa-ending-paul"'));
+  assert.ok(!intro.includes(cardboard),"No cardboard figure before POWER ON");
+  const image=fs.readFileSync(path.join(root,"public/assets/generated/characters",cardboard));
+  assert.ok(image.length>20000,"Must package the approved original artwork, not a placeholder");
+  assert.equal(image.toString("ascii",0,4),"RIFF");
+  assert.equal(image.toString("ascii",8,16),"WEBPVP8X");
+  assert.ok((image[20]&0x10)!==0,"The cardboard standee must have transparent background");
+  const code=css.slice(css.lastIndexOf("/* GAME-SP4C.4A: badly assembled Stephen"));
+  assert.ok(code.includes('.spa-ending-cardboard-stephen'));
+  assert.ok(code.includes('[data-speaker="cardboard stephen"] .spa-ending-cardboard-stephen'));
+  assert.ok(code.includes('@media (max-width:800px)'));
+  assert.ok(code.includes('@media (max-width:450px)'));
+  assert.ok(engine.includes('line.speaker.toLowerCase()'),
+    "The existing speaker cue must continue to highlight the new independent figure");
+  assert.ok(read("scripts/build.mjs").includes('endingCImages.length + "/20."'));
+});
