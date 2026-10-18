@@ -1360,6 +1360,12 @@
   // Previous-scene and narrator glow must be cleared first. Native image
   // elements cannot use pseudo-elements, so CSS uses their own subtle shadow.
   function clearSpeakerFocus() {
+    // The office's older speaking/listening classes also need resetting.
+    // Otherwise Pause hides the new glow but leaves the old emphasis behind.
+    for (const el of Object.values(cast)) {
+      el.classList.toggle("is-speaking",false);
+      el.classList.toggle("is-listening",false);
+    }
     for (const actors of Object.values(speakerFocusActors)) {
       for (const id of Object.values(actors)) $(id).dataset.speaking = "false";
     }
@@ -1388,8 +1394,13 @@
     if (!visible) return;
     if (!screens.office.hidden) {
       const beat = beats[beatIndexById.get(state.beatId)];
-      if (autoPlaying && beat?.type === "dialogue")
+      if (autoPlaying && beat?.type === "dialogue") {
+        for (const [name,el] of Object.entries(cast)) {
+          el.classList.toggle("is-speaking",beat.speaker === name && !el.hidden);
+          el.classList.toggle("is-listening",beat.speaker in cast && beat.speaker !== name);
+        }
         setActiveSpeaker("office",beat.speaker);
+      }
       return;
     }
     if (screens.holiday.hidden || !holidayAutoPlaying) return;
