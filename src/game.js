@@ -1715,6 +1715,7 @@
       const position = Number.isInteger(state.rescueTravelStep)
         ? Math.max(0, Math.min(state.rescueTravelStep, rescueAlarm.montage.length - 1)) : 0;
       state.rescueTravelStep = position;
+      $("rescueTravelScene").dataset.montage = position < 2 ? "flight-luggage" : "map-expenses";
       const line = rescueAlarm.montage[position];
       $("rescueTravelEyebrow").textContent = line.eyebrow;
       $("rescueTravelSymbol").textContent = line.symbol;
