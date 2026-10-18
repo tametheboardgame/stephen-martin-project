@@ -6,7 +6,7 @@
 
 - User approved the comically taped, full-length cardboard replica of Stephen and instructed adding it to the actual Ending C final scene. The PNG is securely staged in the established project Drive folder (`1FifUsyIYY0c4WRuwEEli89h6nKNmuYkx`); branch references it as a separate transparent WebP via its own manifest.
 - David (left), **real Stephen** (centre), taped cardboard Stephen (centre-right) and Paul (right) all remain separate layered art. The living Stephen remains visible; the card standee has independent highlight when its 13th comic line speaks. No change to route, dialogue, save, assembly or POWER ON logic.
-- Build now packages 20 approved Ending C artworks and a dedicated regression guards alpha and the four-actor composition. Pending automated materialisation/CI and in-browser visual acceptance of staging. **PR #46 draft, unmerged**; defer the remaining silhouette-slot polishing until after the rest of the Ending C review.
+- Build now packages 20 approved Ending C artworks and a dedicated regression guards alpha and the four-actor composition. Asset materialisation succeeded at `b4f9ac4`: approved cardboard Stephen WebP exists as an independent 201,846-byte alpha-preserving sprite beside the original real Stephen source; 20/20 Ending C art files are expected at build time. Final CI and human visual review are still required. **PR #46 draft, unmerged**; defer the remaining silhouette-slot polishing until after the rest of the Ending C review.
 
 ## GAME-SP4C.3B — Anatomical limb fit and shaped targets (18 October 2026)
 
