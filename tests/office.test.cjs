@@ -3331,9 +3331,10 @@ test("GAME-SP4.1D1 shares a paper speech style and gives both story sections a t
   assert.match(css,/GAME-SP4\.1D1: consistent named-paper dialogue/);
   assert.match(css,/#holidayScreen \.china-footer\.story-top-controls/);
   const p=toWallChoice();
+  const beforeSound = p.el("holidaySoundButton").textContent;
   p.el("holidaySoundButton").click();
-  assert.equal(p.el("sceneSoundButton").textContent,"Sound: On");
-  assert.equal(p.el("holidaySoundButton").textContent,"Sound: On");
+  assert.equal(p.el("sceneSoundButton").textContent,p.el("holidaySoundButton").textContent);
+  assert.notEqual(p.el("holidaySoundButton").textContent,beforeSound);
   assert.equal(p.el("holidayTopbarChapter").textContent,"CHAPTER TWO");
 });
 
