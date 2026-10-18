@@ -53,3 +53,9 @@ The user approved the separate, transparent fictional Chinese official: navy-and
 ## GAME-SP4B.4 — Full-standing official stage correction (18 October 2026)
 
 Following in-game owner feedback, **abandon the behind-counter pose**. The same approved full-length transparent official asset is used without cropping, on the front floor plane between David (left) and Paul (right). Positioning is CSS-only: matching the visitors' foot baseline and visual height on desktop, tablet and mobile. The Ending B resolution keeps Stephen at the left, David left of the central official, and Paul on the right. Retain independent alpha art, dialogue focus, interactive paperwork and the existing cinematic subtitle layout. The background and prop artwork remain locked. Automated tests passed, but the revised stage composition still requires owner visual sign-off before PR #44 is merged.
+
+## GAME-SP4B.5 — Paperwork puzzle laptop layout (18 October 2026)
+
+Owner playtesting found that the original single-column document on a laptop required scrolling to reach the answer buttons. The same approved artwork and unchanged three-stage game now use a compact two-column arrangement within the existing mini-game stage: title/progress across the top; prompt, clue and illustrated paperwork to the left; visible answer cards or stamp interaction plus feedback, hint and Continue to the right. Preserve HTML IDs, keyboard/touch/select/drag inputs, original answer text, state/saves and the route itself. At narrow widths (800px or below), stack the columns and allow scrolling as an accessible fallback rather than compressing text or tap targets. CSS reserves space for the existing toolbar and footer; approved character scenes are unchanged.
+
+The HTML/CSS change and focused layout regression passed **126/126 tests**, with **9/9 Ending B assets** packaged; owner visual approval of the laptop and narrow layouts is still outstanding. PR #44 remains draft and unmerged.
