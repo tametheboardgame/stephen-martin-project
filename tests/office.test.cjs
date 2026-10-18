@@ -3027,3 +3027,33 @@ test("GAME-SP4B.4 official stands full length between David and Paul on matching
   assert.match(css,/#rescueRouteIntro\[data-ending-b="true"\] \.detention-intro-david \{\s*height:56%;bottom:22%;left:9%;/);
   assert.match(css,/#rescueRouteIntro\[data-ending-b="true"\] \.detention-intro-paul \{\s*height:51%;bottom:22%;right:9%;/);
 });
+
+test("GAME-SP4B.5 paperwork places illustration and all selection states side-by-side on laptops",()=>{
+  const paper=html.slice(html.indexOf('<section id="detentionPaperwork"'),html.indexOf('<section id="reassembleWorkshop"'));
+  const head=paper.indexOf('class="detention-form-header"');
+  const cols=paper.indexOf('class="detention-form-columns"');
+  const reading=paper.indexOf('class="detention-reading-column"');
+  const answers=paper.indexOf('class="detention-answer-column"');
+  assert.ok(head>=0 && cols>head && reading>cols && answers>reading,
+    "Form header precedes distinct image and answer columns");
+  for(const id of ["detentionRoundPrompt","detentionRoundClue","detentionArtDisplay","detentionChoiceCards",
+    "detentionStampPanel","detentionApprovedPreview","detentionFeedback","detentionHint","detentionNextButton"]){
+    if(id==="detentionArtDisplay") {
+      assert.match(paper,/class="detention-art-display"/);
+    } else {
+      assert.match(paper,new RegExp('id="'+id+'"'),"Preserve existing puzzle element "+id);
+    }
+  }
+  assert.ok(paper.indexOf('id="detentionChoiceCards"')>answers);
+  assert.ok(paper.indexOf('id="detentionStampPanel"')>answers);
+  assert.ok(paper.indexOf('id="detentionApprovedPreview"')>answers);
+  assert.ok(paper.indexOf('id="detentionNextButton"')>answers);
+  const styles=css.slice(css.lastIndexOf("/* GAME-SP4B.5:"));
+  assert.match(styles,/\.detention-form-columns \{[\s\S]*?grid-template-columns:minmax\(0,\.98fr\) minmax\(0,1\.02fr\)/);
+  assert.match(styles,/\.detention-paperwork \.detention-cards \{[\s\S]*?grid-template-columns:1fr/);
+  assert.match(styles,/\.detention-paperwork \.detention-card \{[\s\S]*?min-height:52px/);
+  assert.match(styles,/@media \(max-width:800px\) \{[\s\S]*?\.detention-form-columns \{[\s\S]*?grid-template-columns:1fr/);
+  assert.match(styles,/overflow-y:auto; \/\* fallback only for unusually short windows/);
+  // Layout only. The full selectable/acknowledgement/stamp and save/resume logic is
+  // tested by GAME-SP4B's existing three-stage route tests.
+});
