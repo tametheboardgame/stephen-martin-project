@@ -4032,3 +4032,37 @@ body:has(#menuScreen:not([hidden])) main {
     max-width:31%;
   }
 }
+
+
+/* GAME-SP4.1A: scene readiness curtain, never a fake percent-progress bar.
+ * It sits above both chapters and can be dismissed after a slow load. */
+.asset-loading-overlay {
+  position:fixed;inset:0;z-index:10000;
+  display:grid;place-items:center;box-sizing:border-box;
+  background:#101f30;color:#fff1d8;
+  padding:clamp(16px,4vw,35px);
+}
+.asset-loading-overlay[hidden],
+#assetLoadingContinue[hidden] {display:none !important;}
+.asset-loading-card {
+  box-sizing:border-box;display:grid;justify-items:center;gap:16px;
+  width:min(100%,560px);padding:clamp(22px,5vw,40px);
+  border:3px solid #efcf85;border-radius:12px;
+  box-shadow:8px 9px 0 rgba(0,0,0,.36),0 28px 100px rgba(0,0,0,.35);
+  background:linear-gradient(145deg,#163f4b,#193148);
+  text-align:center;
+}
+.asset-loading-kicker {
+  color:#9fdfd6;font-size:clamp(11px,1.25vw,14px);
+  font-weight:900;letter-spacing:.15em;
+}
+.asset-loading-card strong {
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(27px,5vw,48px);letter-spacing:.04em;line-height:1.1;
+}
+.asset-loading-card p {font-size:clamp(14px,1.5vw,18px);margin:0;line-height:1.4;}
+.asset-loading-card .btn {min-height:44px;max-width:100%;white-space:normal;}
+.asset-loading-card button:focus-visible {outline:3px solid white;outline-offset:4px;}
+@media (prefers-reduced-motion:reduce) {
+  .asset-loading-overlay, .asset-loading-card {animation:none !important;transition:none !important;}
+}

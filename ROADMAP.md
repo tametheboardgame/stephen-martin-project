@@ -613,7 +613,7 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 #### GAME-SP4.1A — Initial loading experience and scene-aware asset scheduling
 
-**Priority:** P0; **status:** Not started; **dependencies:** merged three-ending V1 only; **start this first**.  
+**Priority:** P0; **status:** Implementation on draft PR #49, pending browser visual and performance approval; **dependencies:** merged three-ending V1 only. Current scope and verification guide: `docs/story/GAME-SP4.1A-LOADING-IMPLEMENTATION.md`.  
 **Owner observation:** Artwork is visibly painted as it downloads, like an old dial-up image.  
 **Source evidence:** `index.html` has 23 explicit image preloads, 41 eager-loaded scene image tags, and no dedicated current-scene loading/ready overlay. Image and audio readiness currently follow different models; loading could compete with later off-screen scenes.
 

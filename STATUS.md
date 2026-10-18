@@ -2,6 +2,14 @@
 
 **Updated:** 18 October 2026
 
+## GAME-SP4.1A — Loading and asset scheduling in progress (18 October 2026)
+
+- Active **draft PR #49**, `agent/game-sp41a-scene-loading` from master plan merge `ca7cca7`. First implementation adds image-decoding scene curtain, accessible Continue (2.2 seconds) and absolute timeout (7 seconds), plus prevents new dialogue/audio timing beneath the curtain.
+- Changed image fetch prioritisation: **23 → 5** high-priority image preload hints (immediate menu assets only); **41 eager → 6 eager and 35 lazy** img elements in the HTML. Active scene backgrounds and actors decode together; next office exterior alone is warmed after the menu settles. The loader is included in static build and `npm run check`.
+- First branch CI at `425ee12` passed **137/137 tests** with **20/20 Ending C assets**; Cloudflare branch preview deployed successfully. Later commits tighten previous-scene audio stop and add review documentation, so **re-run CI and check the exact final head before approving**.
+- **Not yet visually approved or merged:** Need cold-cache 1366×768/throttled-network screen recording and request waterfall, first complete illustrated frame and usable controls timing, blocked image fallback, resuming into saved late scenes, tablet/mobile and voice on/off. Initial preload count reduction is a source metric, **not verified download-speed improvement**.
+- Review guide: `docs/story/GAME-SP4.1A-LOADING-IMPLEMENTATION.md`. Owner browser review/approval remains required. Next after A approval: GAME-SP4.1B David scale and GAME-SP4.1C Summit brightness in separate packets.
+
 ## Current live milestone — three endings integrated; refinement audit underway
 
 - **`main` is the approved first-version gameplay/art baseline at `d3d7534415c75d029072a31ede9fdde7de5130b4`.** Ending B PR #44 and Ending C PR #46 have both merged. Final Ending C preview passed **132/132** Node smoke and bundled 20/20 Ending C WebPs. User approved its four-person spa tableau and accepted minor assembly-slot geometry as a later polish task.

@@ -506,7 +506,7 @@
   function scheduleAdvance() {
     clearAdvanceTimer();
     syncPlaybackControls();
-    if (!autoPlaying || screens.office.hidden || document.hidden) return;
+    if (!autoPlaying || screens.office.hidden || document.hidden || window.SMP_ASSET_LOADER?.busy()) return;
     const beat = beats[beatIndexById.get(state.beatId)];
     // A recording owns the timeline until it ends; silent visual beats and
     // missing recordings retain the established script durations.
@@ -822,6 +822,13 @@
     $("holidayPlaybackStatus").textContent = !playing ? "Paused · Next advances one line"
       : next ? "Playing · choices and puzzles pause automatically"
         : "Waiting for your choice";
+    if (window.SMP_ASSET_LOADER?.busy()) {
+      // A previous holiday-scene MP3 must not continue playing behind a new
+      // loading curtain. Do not interrupt the current beat on a repeat render.
+      const upcomingId = holidayVoiceBeat()?.id || null;
+      if (holidayVoice && holidayVoiceId !== upcomingId) stopHolidayVoice();
+      return;
+    }
     syncHolidayVoice();
     if (!playing || !next || ["loading","playing","paused"].includes(holidayVoiceStatus)) return;
     const token = holidayAdvanceToken;
@@ -1086,10 +1093,19 @@
       el.hidden = expression === "absent";
     }
     for (const name of Object.keys(cast)) applySeatedExpression(name);
+    // GAME-SP4.1A: reveal each illustrated set only after its visible images
+    // and CSS backgrounds have decoded. Alternate expressions retain the
+    // current scene and are not allowed to restart the loading curtain.
+    const officeArtworkKey = "office:" + (cutaway || (beat.id === "intro.exterior" ? "exterior" : "interior"));
+    const officeArtworkPending = window.SMP_ASSET_LOADER?.present(officeArtworkKey, $("stage"), () => {
+      if (screens.office.hidden || state.beatId !== beat.id) return;
+      startVoice(beat);
+      scheduleAdvance();
+    }) || false;
     persist();
     syncSongActions();
     if (beat.sound && beat.visual !== "song") beep(beat.sound);
-    startVoice(beat);
+    if (!officeArtworkPending) startVoice(beat);
     if (beat.id === "office.v07" && autoPlaying) startSong("optimistic", "preview");
     scheduleAdvance();
   }
@@ -1693,6 +1709,23 @@
           + " complete. New illustrations are deferred until the full functional game is approved.";
       }
     }
+    // The DOM phase toggles above have completed. Never wait for hidden
+    // branches; image decoding is scoped to the currently visible stage.
+    const visibleHolidayScene = inWall ? "wallScene" : inPalace ? "palaceScene"
+      : inMarket ? "marketScene" : inIntermission ? "chinaIntermission"
+      : inHandoff ? "chinaRouteHandoff" : inFinal ? "chinaFinalScene"
+      : inAlarm ? "rescueAlarmScene" : inTravel ? "rescueTravelScene"
+      : inArrival ? "rescueHubArrival" : inHotel ? "rescueHotelScene"
+      : inRouteIntro ? "rescueRouteIntro" : inMiniGame ? "rescueMiniGameScene"
+      : inSummitEnding ? "summitEndingScene"
+      : inDetentionEnding ? "detentionEndingScene"
+      : inAssemblyEnding ? "reassembleEndingScene"
+      : inSummary ? "rescueEndingSummary" : "chinaTransition";
+    const artworkPhase = phase + ":" + (state.route || "") + ":" + (inMiniGame ? state.rescueProgress?.miniGameStage || 0 : "");
+    window.SMP_ASSET_LOADER?.present("holiday:" + artworkPhase,
+      $(visibleHolidayScene), () => {
+        if (!screens.holiday.hidden && state.holidayPhase === phase) scheduleHolidayAdvance();
+      });
     state.holidayFlowVersion = 2;
     persist();
     scheduleHolidayAdvance();
@@ -2200,6 +2233,10 @@
   function showMenu() {
     reveal("menu");
     $("resumeButton").hidden = !readSave();
+    window.SMP_ASSET_LOADER?.present("menu", $("menuScreen"), () => {
+      // Warm only the immediate first exterior scene, not every route.
+      window.SMP_ASSET_LOADER?.warm("./public/assets/generated/locations/office-exterior-opening-v01.webp");
+    });
   }
 
   function resume() {
