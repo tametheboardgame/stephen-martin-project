@@ -2,6 +2,15 @@
 
 **Updated:** 18 October 2026
 
+## GAME-SP4.1D1 — Named dialogue and consistent top controls (active)
+
+- **D0 approved and merged:** PR #53 at merge `27f61b36a0bfd4cdc074a82d53bfe07371876a40` after final **143/143** CI and Cloudflare success.
+- **D1 working branch:** `agent/game-sp41d1-dialogue-topbar`, created from freshly merged `main`. First pass moves office transport into the existing top toolbar, aligns the Chapter Two onward top menu, adds a Sound toggle and introduces named white/paper dialogue throughout scene and puzzle replies.
+- Post-choice Stephen lines at Great Wall, Forbidden City and Night Market and hotel deduction replies are now presented as actor dialogue; original texts, voices, route decisions, saves and puzzles remain unchanged. Multi-speaker puzzle feedback retains later speakers inline.
+- **Latest owner feedback implemented:** all spoken holiday, hotel, route-intro, puzzle-response and three-ending speech cards now use the **opening office style**, with a separate blue name tab attached to the upper-left outside edge of a more compact white bubble. The original opening composition remains untouched. Instructions, hints and statuses retain separate styling. Added targeted regression checking every named card and overflow handling.
+- **Pending:** final exact-head CI and fresh Cloudflare preview, then owner checks desktop/tablet/mobile tab placement and bubble height. PR #54 remains draft and unmerged. Next D2 contextual skips remain separately planned. See `docs/story/GAME-SP4.1D1-NAMED-DIALOGUE-TOP-MENU.md`.
+
+
 ## GAME-SP4.1D0 — Remove manual Auto expression buttons (18 October 2026)
 
 - **SP4.1C now approved and merged:** Summit daylight PR #52 at `7f6415bd3d4f98dcfb1b2e919879f9872f080349`, with **141/141** automated checks, Cloudflare build and owner's visual acceptance.

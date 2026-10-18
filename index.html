@@ -90,6 +90,9 @@
             <p id="sceneCaption">One continuous office conversation</p>
           </div>
           <div class="scene-toolbar-actions">
+            <button id="playPauseButton" type="button" class="mini-button" aria-pressed="true">Ⅱ Pause</button>
+            <button id="backButton" type="button" class="mini-button">← Back</button>
+            <button id="nextButton" type="button" class="mini-button">Next →</button>
             <button id="sceneSoundButton" type="button" class="mini-button" aria-pressed="false" title="Toggle voiced dialogue and sound effects">Sound: Off</button>
             <button id="restartButton" type="button" class="mini-button">Restart</button>
             <button id="skipButton" type="button" class="mini-button">Skip intro <span aria-hidden="true">↗</span></button>
@@ -118,7 +121,7 @@
           <div id="cutawayPanel" class="cutaway-panel" hidden aria-hidden="true">
             <div class="cutaway-inner" id="cutawayContent"></div>
           </div>
-        <div class="dialogue" id="dialogueBox">
+        <div class="dialogue story-speech" id="dialogueBox">
           <div class="dialogue-accent" aria-hidden="true"></div>
           <div class="dialogue-main">
             <div class="dialogue-header">
@@ -148,11 +151,7 @@
         <div class="progress-track" role="progressbar" aria-label="Opening scene progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="storyProgress"><div class="progress-fill" id="progressFill"></div></div>
             <div class="dialogue-actions">
               <span id="playbackStatus" class="dialogue-hint" role="status" aria-live="off">AUTO · RECORDED VOICES WHEN ENABLED</span>
-              <div class="dialogue-buttons">
-                <button id="playPauseButton" type="button" class="btn btn-small btn-secondary" aria-pressed="true">Ⅱ Pause</button>
-                <button id="backButton" type="button" class="btn btn-small btn-secondary">← Back</button>
-                <button id="nextButton" type="button" class="btn btn-small btn-primary">Next <span aria-hidden="true">→</span></button>
-              </div>
+
             </div>
       </section>
 
@@ -175,7 +174,7 @@
               <div class="wall-phone-heading">✉ DAVID · RESCUE GROUP</div>
               <p id="wallPhoneText">Please confirm you're safe. I've identified several geopolitical variables.</p>
             </div>
-            <div class="wall-dialogue" id="wallDialogue">
+            <div class="wall-dialogue story-speech" id="wallDialogue">
               <strong id="wallSpeakerName">STEPHEN</strong>
               <p id="wallLineText" aria-live="polite"></p>
             </div>
@@ -206,7 +205,7 @@
             <div class="wall-place-label"><span>CHAPTER TWO · CHINA</span><strong>THE FORBIDDEN CITY</strong></div>
             <div class="wall-booking" aria-live="polite"><span>THE INVITATION</span><strong id="palaceBookingLabel">Honorary banquet</strong></div>
             <div class="palace-honour-badge" id="palaceHonourBadge" hidden>VISITING INTERNATIONAL SPECIALIST</div>
-            <div class="wall-dialogue" id="palaceDialogue">
+            <div class="wall-dialogue story-speech" id="palaceDialogue">
               <strong id="palaceSpeakerName">ATTENDANT</strong>
               <p id="palaceLineText" aria-live="polite"></p>
             </div>
@@ -242,7 +241,7 @@
             <div class="wall-place-label"><span>CHAPTER TWO · CHINA</span><strong>THE NIGHT MARKET</strong></div>
             <div class="wall-booking" aria-live="polite"><span>THE OFFER</span><strong id="marketBookingLabel">Total Renewal Spa</strong></div>
             <div id="marketSpaSign" class="market-spa-sign" hidden><span>TOTAL RENEWAL SPA</span><strong>90% OFF</strong><span>THE COMPLETE STEPHEN EXPERIENCE</span><small>Replacement components sold separately.</small></div>
-            <div class="wall-dialogue" id="marketDialogue"><strong id="marketSpeakerName">STEPHEN</strong><p id="marketLineText" aria-live="polite"></p></div>
+            <div class="wall-dialogue story-speech" id="marketDialogue"><strong id="marketSpeakerName">STEPHEN</strong><p id="marketLineText" aria-live="polite"></p></div>
           </div>
           <div class="wall-action-strip">
             <div class="wall-story-progress" id="marketProgressLabel"></div>
@@ -307,7 +306,7 @@
             <img class="rescue-alarm-foreground" src="./public/assets/generated/locations/office-foreground-01-v01.webp" alt="" loading="lazy">
             <div class="wall-place-label"><span>CHAPTER THREE · BACK IN ENGLAND</span><strong>THE RESCUE ALARM</strong></div>
             <div id="rescueAlarmPhone" class="rescue-alarm-phone" hidden><strong>STEPHEN RESCUE GROUP</strong><p id="rescueAlarmPhoneText"></p><span>Last message · Battery unknown</span></div>
-            <div class="wall-dialogue rescue-alarm-dialogue"><strong id="rescueAlarmSpeaker">DAVID</strong><p id="rescueAlarmLine" aria-live="polite"></p></div>
+            <div class="wall-dialogue story-speech rescue-alarm-dialogue"><strong id="rescueAlarmSpeaker">DAVID</strong><p id="rescueAlarmLine" aria-live="polite"></p></div>
           </div>
           <div class="wall-action-strip">
             <div id="rescueAlarmProgress" class="wall-story-progress">Rescue briefing</div>
@@ -356,7 +355,7 @@
               <button id="hotelBrochureButton" class="rescue-hotel-hotspot hotel-hotspot-brochure" type="button"><span class="hub-symbol" aria-hidden="true">▤</span> Activity brochures</button>
               <button id="hotelDeskButton" class="rescue-hotel-hotspot hotel-hotspot-desk" type="button"><span class="hub-symbol" aria-hidden="true">⌕</span> Information desk</button>
             </div>
-            <div id="rescueHotelDialogue" class="wall-dialogue rescue-hotel-dialogue">
+            <div id="rescueHotelDialogue" class="wall-dialogue story-speech rescue-hotel-dialogue">
               <strong id="hotelSpeaker">DAVID</strong><p id="hotelLine" aria-live="polite"></p>
             </div>
           </div>
@@ -413,7 +412,7 @@
               <h2 id="hotelRouteHeading">THE SUMMIT</h2>
               <p id="hotelRouteDescription"></p>
               <small>Route confirmed by the investigation. No wrong guess can change Stephen's destination.</small>
-              <div id="routeIntroDialogue" class="rescue-intro-dialogue" role="group" aria-label="Route introduction">
+              <div id="routeIntroDialogue" class="rescue-intro-dialogue story-speech" role="group" aria-label="Route introduction">
                 <strong id="routeIntroSpeaker"></strong>
                 <p id="routeIntroLine" aria-live="polite"></p>
               </div>
@@ -445,7 +444,10 @@
                 <button id="summitChoice1" class="summit-card" type="button"></button>
                 <button id="summitChoice2" class="summit-card" type="button"></button>
               </div>
-              <p id="summitFeedback" class="summit-feedback" aria-live="polite" hidden></p>
+              <div id="summitResponseCard" class="story-speech story-puzzle-response" hidden>
+                <strong id="summitResponseSpeaker">GATEKEEPER</strong>
+                <p id="summitFeedback" class="summit-feedback" aria-live="polite" hidden></p>
+              </div>
               <p id="summitHint" class="summit-hint" aria-live="polite" hidden></p>
               <button id="summitNextButton" class="btn btn-primary" type="button" hidden>Continue →</button>
             </section>
@@ -501,7 +503,10 @@
                   <img class="detention-ink-overlay" src="./public/assets/generated/game/ending-b-approved-ink-impression-v01.webp" alt="" aria-hidden="true">
                 </span>
               </div>
-              <p id="detentionFeedback" class="detention-feedback" aria-live="polite" hidden></p>
+              <div id="detentionResponseCard" class="story-speech story-puzzle-response" hidden>
+                <strong id="detentionResponseSpeaker">OFFICIAL</strong>
+                <p id="detentionFeedback" class="detention-feedback" aria-live="polite" hidden></p>
+              </div>
               <p id="detentionHint" class="detention-hint" aria-live="polite" hidden></p>
                   <button id="detentionNextButton" class="btn btn-primary" type="button" hidden>Continue →</button>
                 </div>
@@ -568,7 +573,7 @@
             <img id="summitThroneStephen" class="summit-throne-stephen" src="./public/assets/generated/characters/summit-stephen-seated-chairman-v02.webp" alt="Stephen grinning on the throne in sunglasses and a blue chairman sash, holding a gold goblet aloft" loading="lazy">
             <img id="summitThroneDavid" class="summit-throne-actor summit-throne-david" src="./public/assets/generated/characters/summit-throne-david-confrontational-v01.webp" alt="David, left of the throne, confronting Stephen with both hands raised" loading="lazy">
             <img id="summitThronePaul" class="summit-throne-actor summit-throne-paul" src="./public/assets/generated/characters/summit-throne-paul-astonished-v01.webp" alt="Paul, right of the throne, staring in disbelief with his hands half raised" loading="lazy">
-            <div class="summit-ending-content">
+            <div class="summit-ending-content story-speech">
               <strong id="summitEndingSpeaker" class="summit-ending-speaker">STEPHEN</strong>
               <p id="summitEndingLine" class="summit-ending-line" aria-live="polite"></p>
               <p id="summitEndingProgress" class="summit-progress"></p>
@@ -589,7 +594,7 @@
               <img src="./public/assets/generated/game/ending-b-release-permit-canonical-portrait-proof-v01.webp" alt="">
               <img class="detention-ending-ink" src="./public/assets/generated/game/ending-b-approved-ink-impression-v01.webp" alt="">
             </div>
-            <div class="detention-ending-content">
+            <div class="detention-ending-content story-speech">
               <span class="detention-eyebrow">OFFICE OF CEREMONIAL MISUNDERSTANDINGS · DEPARTURE DESK</span>
               <div class="detention-certificate">APPROVED: ALL OF YOU PLEASE LEAVE</div>
               <strong id="detentionEndingSpeaker" class="detention-ending-speaker">STEPHEN</strong>
@@ -612,7 +617,7 @@
             <img class="spa-ending-actor spa-ending-stephen" src="./public/assets/generated/characters/ending-c-stephen-spa-robe-v01.webp" alt="Stephen perfectly unharmed in a white spa robe, holding cucumber slices" loading="lazy">
             <img class="spa-ending-actor spa-ending-cardboard-stephen" src="./public/assets/generated/characters/ending-c-stephen-cardboard-rebuilt-v01.webp" alt="A visibly crooked cardboard replica of Stephen in a spa robe, badly held together with tape" loading="lazy">
             <img class="spa-ending-actor spa-ending-paul" src="./public/assets/generated/characters/ending-c-paul-spa-visitor-v01.webp" alt="Paul still reading his spa brochure, holding a towel and bottle" loading="lazy">
-            <div class="assembly-ending-content">
+            <div class="assembly-ending-content story-speech">
               <span class="assembly-eyebrow">TOTAL RENEWAL SPA · COMPLETELY NORMAL MASSAGE</span>
               <div class="assembly-reveal">CUSTOM SOUVENIR CUT-OUT · POWERED ON</div>
 
@@ -642,11 +647,13 @@
             <button id="rescueSummaryMenuButton" class="btn btn-secondary" type="button">Main menu</button>
           </div>
         </div>
-        <div class="china-footer" role="group" aria-label="Story playback and navigation">
+        <div class="china-footer story-top-controls" role="group" aria-label="Story playback and navigation">
+          <strong id="holidayTopbarChapter" class="story-toolbar-label" aria-hidden="true">CHAPTER TWO</strong>
           <button id="holidayPauseButton" type="button" class="mini-button" aria-pressed="true" title="Pause or resume automatically advancing dialogue">Ⅱ Pause</button>
           <button id="holidayNextButton" type="button" class="mini-button" title="Advance to the next story line" hidden>Next line →</button>
           <button id="holidayRouteButton" type="button" class="mini-button" title="Return to the Great Wall decision and clear later choices" hidden>Change route ↺</button>
           <button id="replayButton" type="button" class="mini-button" hidden>Replay office ↺</button>
+          <button id="holidaySoundButton" type="button" class="mini-button" aria-pressed="false" title="Toggle voiced dialogue and sound effects">Sound: Off</button>
           <button id="homeButton" type="button" class="mini-button">Menu</button>
           <span id="holidayPlaybackStatus" role="status" aria-live="off">Story plays automatically · choices wait for you</span>
         </div>

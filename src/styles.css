@@ -4078,3 +4078,226 @@ body:has(#menuScreen:not([hidden])) main {
 @media (prefers-reduced-motion:reduce) {
   .asset-loading-overlay, .asset-loading-card {animation:none !important;transition:none !important;}
 }
+
+
+/* GAME-SP4.1D1: one opening-office-style named speech tab throughout.
+   Dialogue text lives in a compact paper box; the speaker badge straddles
+   the upper-left border without taking space INSIDE the box. The separate
+   top transport and gameplay/status panels keep their own visual semantics.
+   Existing sprites, timers, route logic and interactive hit regions unchanged. */
+#officeScreen .story-speech,
+#holidayScreen .story-speech {
+  box-sizing:border-box;
+  background:#fff9ec !important;
+  color:#1b3040 !important;
+  border:3px solid #e8c982 !important;
+  border-radius:12px !important;
+  box-shadow:5px 6px 0 rgba(4,19,36,.48) !important;
+  text-align:left;
+}
+/* Stages already position their own dialogue box absolutely. Route intro
+   and puzzle response cards need an explicit local positioning context. */
+#holidayScreen .rescue-intro-dialogue.story-speech,
+#holidayScreen .story-puzzle-response.story-speech {
+  position:relative;
+}
+#holidayScreen .story-speech > strong {
+  position:absolute;
+  z-index:2;
+  top:0;
+  left:12px;
+  transform:translateY(calc(-100% + 5px));
+  display:block;
+  box-sizing:border-box;
+  width:max-content;
+  max-width:calc(100% - 24px);
+  margin:0 !important;
+  padding:6px 15px !important;
+  border:3px solid #083161;
+  border-bottom:0;
+  border-radius:8px 8px 0 0;
+  background:#105baa !important;
+  color:#fff !important;
+  font:900 clamp(15px,1.55vw,22px) "Trebuchet MS",sans-serif !important;
+  line-height:1.2 !important;
+  letter-spacing:.035em;
+  text-align:left;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  pointer-events:none;
+}
+#holidayScreen .story-speech > p:not([hidden]) {
+  color:#203445 !important;
+  font-size:clamp(15px,1.55vw,21px);
+  font-weight:800;
+  line-height:1.34 !important;
+  margin:0 !important;
+}
+/* Removing the internal speaker row lets every spoken box be shorter, and
+   preserves the approved office geometry rather than resizing its own tab. */
+#holidayScreen .wall-dialogue.story-speech,
+#holidayScreen .rescue-intro-dialogue.story-speech,
+#holidayScreen .summit-ending-content.story-speech,
+#holidayScreen .detention-ending-content.story-speech,
+#holidayScreen .assembly-ending-content.story-speech {
+  padding:11px 15px 9px !important;
+}
+#holidayScreen .rescue-intro-dialogue.story-speech,
+#holidayScreen .summit-ending-content.story-speech,
+#holidayScreen .detention-ending-content.story-speech,
+#holidayScreen .assembly-ending-content.story-speech {
+  overflow:visible !important;
+  max-height:none !important;
+}
+#holidayScreen .story-speech:is(.summit-ending-content,.detention-ending-content,.assembly-ending-content) > p:last-child {
+  color:#556878 !important;
+  font-size:clamp(10px,.9vw,12px) !important;
+}
+/* Spoken puzzle responses are paper cards, not the game status/footer. */
+#holidayScreen .story-puzzle-response {
+  position:relative;
+  z-index:5;
+  margin:29px 0 9px;
+  padding:10px 13px;
+  max-height:none;
+  overflow:visible;
+}
+#holidayScreen .story-puzzle-response > p {
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:#203445 !important;
+  font-size:clamp(14px,1.35vw,18px) !important;
+  line-height:1.35 !important;
+}
+#holidayScreen #summitResponseCard[hidden],
+#holidayScreen #detentionResponseCard[hidden],
+#holidayScreen #summitFeedback[hidden],
+#holidayScreen #detentionFeedback[hidden],
+#holidayScreen #wallResultText[hidden],
+#holidayScreen #palaceResultText[hidden],
+#holidayScreen #marketResultText[hidden],
+#holidayScreen #hotelDeductionFeedback[hidden],
+#holidayScreen #hotelResolvedText[hidden] {display:none !important;}
+
+/* One consistent compact dark top navigation, with a clear sound toggle
+   available in both the opening and all subsequent scenes. */
+#officeScreen .scene-toolbar,
+#holidayScreen .china-footer.story-top-controls {
+  background:rgba(4,25,48,.95) !important;
+  border:1px solid rgba(147,204,224,.7) !important;
+  border-radius:9px !important;
+  box-shadow:0 5px 18px rgba(3,17,31,.35);
+}
+#officeScreen .scene-toolbar {
+  box-sizing:border-box;
+  min-height:48px;
+  padding:6px 10px;
+}
+#officeScreen .scene-toolbar-actions {
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:flex-end;
+}
+#holidayScreen .china-footer.story-top-controls {
+  position:absolute !important;
+  z-index:50;
+  top:10px !important;
+  right:10px !important;
+  bottom:auto !important;
+  left:auto !important;
+  max-width:min(96%,760px);
+  min-height:48px;
+  padding:6px 9px;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:flex-end;
+  gap:6px;
+}
+#holidayScreen .story-toolbar-label {
+  display:inline-block;
+  margin-right:auto;
+  padding:0 9px 0 4px;
+  color:#f4db9a;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.075em;
+  white-space:nowrap;
+}
+#officeScreen .scene-toolbar-actions .mini-button,
+#holidayScreen .china-footer.story-top-controls .mini-button {
+  box-sizing:border-box;
+  min-height:34px !important;
+  padding:6px 9px !important;
+  color:#fff4df;
+  border:1px solid #739baa;
+  border-radius:6px;
+  background:#16415a;
+  font-size:11px !important;
+  line-height:1.25;
+  white-space:nowrap;
+  cursor:pointer;
+}
+#officeScreen .scene-toolbar-actions .mini-button:is(:hover,:focus-visible),
+#holidayScreen .china-footer.story-top-controls .mini-button:is(:hover,:focus-visible) {
+  background:#286886;
+  border-color:#f2d28d;
+}
+#officeScreen .scene-toolbar-actions .mini-button:focus-visible,
+#holidayScreen .china-footer.story-top-controls .mini-button:focus-visible {
+  outline:3px solid #fff;
+  outline-offset:2px;
+}
+#officeScreen .dialogue-actions {
+  min-height:0;
+  padding:3px 10px;
+}
+@media(max-width:800px) {
+  #officeScreen .scene-toolbar {align-items:flex-start;gap:5px;}
+  #officeScreen .scene-heading {display:none;}
+  #officeScreen .scene-toolbar-actions {
+    display:flex;flex-direction:row;flex-wrap:wrap;width:100%;
+    gap:4px;justify-content:center;
+  }
+  #officeScreen .scene-toolbar-actions .mini-button,
+  #holidayScreen .china-footer.story-top-controls .mini-button {
+    min-height:34px !important;padding:5px 6px !important;font-size:10px !important;
+  }
+  #holidayScreen .china-footer.story-top-controls {
+    right:6px !important;top:6px !important;max-width:calc(100% - 12px);
+    padding:4px 6px;gap:4px;min-height:38px;
+  }
+  #holidayScreen .story-toolbar-label {display:none;}
+  #holidayScreen .story-speech > strong {
+    left:9px;
+    padding:5px 10px !important;
+    font-size:clamp(13px,2.4vw,17px) !important;
+  }
+  #holidayScreen .story-speech > p:not([hidden]) {font-size:clamp(14px,2.55vw,18px);}
+  #holidayScreen .story-puzzle-response {margin-top:26px;max-height:none;}
+  #holidayScreen .wall-dialogue.story-speech,
+  #holidayScreen .rescue-intro-dialogue.story-speech,
+  #holidayScreen .summit-ending-content.story-speech,
+  #holidayScreen .detention-ending-content.story-speech,
+  #holidayScreen .assembly-ending-content.story-speech {
+    padding:9px 11px 8px !important;
+  }
+}
+@media(max-width:450px) {
+  #officeScreen .scene-toolbar {padding:4px 5px;}
+  #officeScreen .scene-toolbar-actions .mini-button,
+  #holidayScreen .china-footer.story-top-controls .mini-button {
+    padding:5px 4px !important;font-size:10px !important;
+  }
+  #holidayScreen .story-speech > strong {
+    left:8px;
+    max-width:calc(100% - 16px);
+    padding:4px 9px !important;
+    font-size:13px !important;
+  }
+  #holidayScreen .story-speech > p:not([hidden]) {font-size:14px;line-height:1.3 !important;}
+  #holidayScreen .story-puzzle-response {padding:8px 10px;max-height:none;margin-top:25px;}
+}

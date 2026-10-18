@@ -3316,3 +3316,100 @@ test("GAME-SP4.1D0 saved intro resumes its authored character acting, not a proo
       name+" keeps automatic reactions after Resume");
   }
 });
+
+
+test("GAME-SP4.1D1 shares a paper speech style and gives both story sections a top control bar",()=>{
+  for(const id of ["playPauseButton","backButton","nextButton","sceneSoundButton",
+      "holidayPauseButton","holidayNextButton","holidaySoundButton","homeButton"]){
+    assert.ok(html.includes('id="'+id+'"'),id+" is retained");
+  }
+  const officeToolbar=html.slice(html.indexOf('class="scene-toolbar-actions"'),
+    html.indexOf('class="scene-toolbar-actions"')+750);
+  for(const id of ["playPauseButton","backButton","nextButton","sceneSoundButton"])
+    assert.ok(officeToolbar.includes('id="'+id+'"'),id+" belongs in the top office menu");
+  assert.match(html,/class="china-footer story-top-controls"/);
+  assert.match(css,/GAME-SP4\.1D1: one opening-office-style named speech tab throughout/);
+  assert.match(css,/#holidayScreen \.china-footer\.story-top-controls/);
+  const p=toWallChoice();
+  const beforeSound = p.el("holidaySoundButton").textContent;
+  p.el("holidaySoundButton").click();
+  assert.equal(p.el("sceneSoundButton").textContent,p.el("holidaySoundButton").textContent);
+  assert.notEqual(p.el("holidaySoundButton").textContent,beforeSound);
+  assert.equal(p.el("holidayTopbarChapter").textContent,"CHAPTER TWO");
+});
+
+test("GAME-SP4.1D1 spoken decisions return to named scene dialogue rather than footer captions",()=>{
+  const wall=toWallChoice();
+  wall.el("wallAcceptButton").click();
+  assert.equal(wall.el("wallDialogue").hidden,false);
+  assert.equal(wall.el("wallSpeakerName").textContent,"STEPHEN");
+  assert.match(wall.el("wallLineText").textContent,/actual cult/);
+  assert.equal(wall.el("wallResultText").hidden,true);
+  const palace=toPalaceChoice();
+  palace.el("palaceDeclineButton").click();
+  assert.equal(palace.el("palaceDialogue").hidden,false);
+  assert.equal(palace.el("palaceSpeakerName").textContent,"STEPHEN");
+  assert.match(palace.el("palaceLineText").textContent,/meetings/);
+  assert.equal(palace.el("palaceResultText").hidden,true);
+  const market=toMarket();
+  finishMarket(market);
+  assert.equal(market.el("marketDialogue").hidden,false);
+  assert.equal(market.el("marketSpeakerName").textContent,"STEPHEN");
+  assert.match(market.el("marketLineText").textContent,/saved a fortune/);
+  assert.equal(market.el("marketResultText").hidden,true);
+});
+
+test("GAME-SP4.1D1 hotel replies and both puzzle routes show named speech without changing choices",()=>{
+  const hotel=toHotelInvestigation("detention");
+  completeHotelIntro(hotel);
+  hotel.el("hotelCultButton").click();
+  assert.equal(hotel.el("rescueHotelDialogue").hidden,false);
+  assert.equal(hotel.el("hotelSpeaker").textContent,"PAUL");
+  assert.equal(hotel.el("hotelDeductionFeedback").hidden,true);
+  hotel.el("hotelDetentionButton").click();
+  assert.equal(hotel.el("rescueHotelDialogue").hidden,false);
+  assert.equal(hotel.el("hotelSpeaker").textContent,"DAVID");
+  assert.match(hotel.el("hotelLine").textContent,/our location/);
+  const summit=toSummitAdmissions();
+  summit.el("summitChoice0").click();
+  assert.equal(summit.el("summitResponseCard").hidden,false);
+  assert.equal(summit.el("summitResponseSpeaker").textContent,"GATEKEEPER");
+  assert.match(summit.el("summitFeedback").textContent,/Can it charge/);
+  const detention=toDetentionPaperwork();
+  detention.el("detentionChoice0").click();
+  assert.equal(detention.el("detentionResponseCard").hidden,false);
+  assert.equal(detention.el("detentionResponseSpeaker").textContent,"OFFICIAL");
+  assert.match(detention.el("detentionFeedback").textContent,/Form 99Z/);
+});
+
+
+test("GAME-SP4.1D1 all spoken cards use the opening's external name-tab layout",()=>{
+  const expectedIds=[
+    "wallSpeakerName","palaceSpeakerName","marketSpeakerName",
+    "rescueAlarmSpeaker","hotelSpeaker","routeIntroSpeaker",
+    "summitEndingSpeaker","detentionEndingSpeaker","assemblyEndingSpeaker",
+    "summitResponseSpeaker","detentionResponseSpeaker"
+  ];
+  for(const id of expectedIds){
+    const tag=html.match(new RegExp('<strong id="'+id+'"[^>]*>'));
+    assert.ok(tag,id+" retains a real speaker label, not baked-in art");
+  }
+  assert.match(css,/#holidayScreen \.story-speech > strong \{[\s\S]*?position:absolute;[\s\S]*?transform:translateY\(calc\(-100% \+ 5px\)\)/,
+    "Every later spoken speaker badge sits outside the top edge");
+  assert.match(css,/#holidayScreen \.story-speech > strong \{[\s\S]*?background:#105baa !important;/,
+    "Speaker tab uses the opening's approved blue");
+  assert.match(css,/#holidayScreen \.story-speech > p:not\(\[hidden\]\) \{[\s\S]*?margin:0 !important;/,
+    "Speech text no longer reserves a header row inside the bubble");
+  for(const cls of ["wall-dialogue","rescue-intro-dialogue","summit-ending-content","detention-ending-content","assembly-ending-content"]){
+    assert.ok(css.includes("."+cls+".story-speech"),cls+" has compact speech padding");
+  }
+  assert.match(css,/#holidayScreen \.story-puzzle-response \{[\s\S]*?overflow:visible;/,
+    "Puzzle reply tabs are not clipped by their paper cards");
+  const opening=html.match(/id="dialogueBox"/);
+  assert.ok(opening,"The approved office speech remains the reference");
+  assert.match(html,/id="speakerName" class="speaker"/);
+  assert.match(css,/\.dialogue-header \{ position:absolute;top:-31px/,
+    "The original office label geometry is unchanged");
+  assert.match(html,/id="hotelDeductions"/);
+  assert.match(html,/id="assemblyFeedback" class="assembly-feedback"/);
+});

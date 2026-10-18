@@ -944,7 +944,7 @@
       scheduleAdvance();
     }
     if (!screens.holiday.hidden) scheduleHolidayAdvance();
-    for (const id of ["soundButton", "sceneSoundButton", "menuSoundButton"]) {
+    for (const id of ["soundButton", "sceneSoundButton", "menuSoundButton", "holidaySoundButton"]) {
       const button = $(id);
       button.textContent = enabled ? "Sound: On" : "Sound: Off";
       button.setAttribute("aria-pressed", String(enabled));
@@ -1141,6 +1141,17 @@
     delete state.assemblyFeedback;
     delete state.assemblyPowered;
   }
+  // Keep each existing reply and choice ID. Promote the first spoken
+  // character prefix into the named card; later character cues stay inline.
+  function renderNamedResponse(cardId, speakerId, textId, response) {
+    const copy = typeof response === "string" ? response : "";
+    const prefix = /^([A-Za-z][A-Za-z ]{1,24}):\s*/.exec(copy);
+    $(cardId).hidden = !copy;
+    $(textId).hidden = !copy;
+    $(speakerId).textContent = prefix ? prefix[1].toUpperCase() : "RESPONSE";
+    $(textId).textContent = prefix ? copy.slice(prefix[0].length) : copy;
+  }
+
   function renderHoliday() {
     clearHolidayAdvanceTimer();
     reveal("holiday");
@@ -1166,6 +1177,10 @@
     const inDetentionEnding = phase === "rescue-route-ending" && state.route === "detention";
     const inAssemblyEnding = phase === "rescue-route-ending" && state.route === "reassemble";
     const inSummary = phase === "rescue-ending-summary";
+    $("holidayTopbarChapter").textContent = inSummary ? "THE END" :
+      (inRouteIntro || inMiniGame || inSummitEnding || inDetentionEnding || inAssemblyEnding)
+        ? "CHAPTER FOUR" : (inAlarm || inTravel || inArrival || inHotel)
+          ? "CHAPTER THREE" : "CHAPTER TWO";
     $("chinaTransition").hidden = phase !== "transition";
     $("wallScene").hidden = !inWall;
     $("palaceScene").hidden = !inPalace;
@@ -1197,7 +1212,7 @@
       $("wallPhone").hidden = position !== 0;
       $("wallPhoneText").textContent = greatWall.phoneText;
       $("wallBookingLabel").textContent = decision === "accept" ? "The Summit — accepted" : "The Summit";
-      $("wallDialogue").hidden = position >= greatWall.lines.length;
+      $("wallDialogue").hidden = position >= greatWall.lines.length && !choiceMade;
       $("wallNextButton").hidden = position >= greatWall.lines.length;
       $("wallChoices").hidden = position !== greatWall.lines.length || choiceMade;
       $("wallResult").hidden = !choiceMade;
@@ -1207,6 +1222,10 @@
         const line = greatWall.lines[position];
         $("wallSpeakerName").textContent = line.speaker.toUpperCase();
         $("wallLineText").textContent = line.text;
+      } else if (choiceMade) {
+        $("wallSpeakerName").textContent = "STEPHEN";
+        $("wallLineText").textContent = decision === "accept"
+          ? greatWall.acceptReaction : greatWall.declineReaction;
       }
       $("wallProgressLabel").textContent = choiceMade ? "Great Wall decision saved"
         : position >= greatWall.lines.length ? "Choose Stephen's next destination"
@@ -1215,6 +1234,7 @@
         $("wallResultTitle").textContent = decision === "accept" ? "The Summit — accepted ✓" : "Invitation declined";
         $("wallResultText").textContent = decision === "accept"
           ? greatWall.acceptReaction : greatWall.declineReaction;
+        $("wallResultText").hidden = true; // Spoken dialogue is on the stage.
       }
     }
     if (inPalace) {
@@ -1231,7 +1251,8 @@
       const showingReply = accepted && replyIndex < palace.acceptReply.length;
       $("palaceChoices").hidden = showingIntro || choiceMade;
       $("palaceNextButton").hidden = !showingIntro && !showingReply;
-      $("palaceDialogue").hidden = !showingIntro && !showingReply;
+      const spokenDecline = decision === "decline" && !showingIntro;
+      $("palaceDialogue").hidden = !showingIntro && !showingReply && !spokenDecline;
       $("palaceResult").hidden = !choiceMade || showingReply;
       $("palaceGoMarketButton").hidden = decision !== "decline";
       $("palaceGoIncidentButton").hidden = !accepted || showingReply;
@@ -1247,6 +1268,9 @@
         const line = showingIntro ? palace.lines[position] : palace.acceptReply[replyIndex];
         $("palaceSpeakerName").textContent = line.speaker.toUpperCase();
         $("palaceLineText").textContent = line.text;
+      } else if (spokenDecline) {
+        $("palaceSpeakerName").textContent = "STEPHEN";
+        $("palaceLineText").textContent = palace.declineReply;
       }
       if (showingIntro) {
         $("palaceProgressLabel").textContent = "Forbidden City conversation · " + (position + 1) + " of " + palace.lines.length;
@@ -1260,6 +1284,7 @@
         $("palaceResultText").textContent = accepted
           ? "Paul's bear picture has somehow become Stephen's event photo."
           : palace.declineReply;
+        $("palaceResultText").hidden = !accepted;
       }
     }
     if (inMarket) {
@@ -1270,7 +1295,7 @@
       $("marketSpaRep").hidden = position < 2;
       $("marketSpaSign").hidden = position < 1;
       $("marketBookingLabel").textContent = complete ? "Total Renewal Spa — Stephen's going" : "Total Renewal Spa — 90% off";
-      $("marketDialogue").hidden = complete;
+      $("marketDialogue").hidden = false; // Final reaction is also spoken.
       $("marketNextButton").hidden = complete;
       $("marketResult").hidden = !complete;
       $("marketProgressLabel").textContent = complete ? "Stephen's bargain is sealed"
@@ -1282,6 +1307,9 @@
       } else {
         $("marketResultTitle").textContent = "Stephen takes the 90%-off deal ✓";
         $("marketResultText").textContent = market.acceptLabel + " " + market.acceptReaction;
+        $("marketResultText").hidden = true;
+        $("marketSpeakerName").textContent = "STEPHEN";
+        $("marketLineText").textContent = market.acceptReaction;
       }
     }
     if (inIntermission) {
@@ -1421,6 +1449,25 @@
           ? "Next line →" : step === rescueHub.correct.length - 1
             ? "Finish deduction →" : "Head to " + choice.label + " →";
       }
+      // Voiced wrong guesses, Paul's hint and correct replies reuse the
+      // existing in-scene named dialogue rather than the blue footer.
+      let hotelSpeech = duringIntro ? rescueHub.opening[introStep] : null;
+      if (!duringIntro && matched) {
+        hotelSpeech = rescueHub.correct[Math.min(state.hubCorrectStep || 0, rescueHub.correct.length - 1)];
+      } else if (!duringIntro && !clue && Number.isInteger(state.hubVoiceFeedbackStep)) {
+        hotelSpeech = rescueHub.wrong[wrongRoute]?.[state.hubVoiceFeedbackStep] || null;
+        if (!hotelSpeech && state.hubVoiceFeedbackStep === 2 &&
+            mistakes >= 2 && !state.hubVoiceHintHeard && route) {
+          hotelSpeech = {speaker:"Paul",text:rescueHub.hint[route].replace(/^Paul:\s*/, "")};
+        }
+      }
+      $("rescueHotelDialogue").hidden = !hotelSpeech;
+      if (hotelSpeech) {
+        $("hotelSpeaker").textContent = hotelSpeech.speaker.toUpperCase();
+        $("hotelLine").textContent = hotelSpeech.text;
+      }
+      $("hotelDeductionFeedback").hidden = true;
+      $("hotelResolvedText").hidden = Boolean(matched);
     }
     if (inRouteIntro || inMiniGame || inSummitEnding || inDetentionEnding || inAssemblyEnding || inSummary) {
       const route = state.route;
@@ -1487,8 +1534,8 @@
             button.textContent = round.options[i].label;
             button.dataset.correct = "false";
           }
-          $("summitFeedback").hidden = !response;
-          $("summitFeedback").textContent = response ? response.response : "";
+          renderNamedResponse("summitResponseCard", "summitResponseSpeaker", "summitFeedback",
+            response ? response.response : "");
           $("summitHint").hidden = acknowledging || !progress.hintVisible;
           $("summitHint").textContent = progress.hintVisible ? round.hint : "";
           $("summitNextButton").hidden = !acknowledging;
@@ -1537,8 +1584,8 @@
             : state.detentionStampSelected === true && inStampSearch
               ? "Paul: That's it. Put it on the permit. David: I was about to suggest the same."
               : option ? option.response : "";
-          $("detentionFeedback").hidden = !feedback;
-          $("detentionFeedback").textContent = feedback;
+          renderNamedResponse("detentionResponseCard", "detentionResponseSpeaker",
+            "detentionFeedback", feedback);
           $("detentionHint").hidden = acknowledging || !progress.hintVisible;
           $("detentionHint").textContent = progress.hintVisible ? round.hint : "";
           $("detentionNextButton").hidden = !acknowledging;
@@ -2307,6 +2354,7 @@
   $("soundButton").addEventListener("click", () => setSound(!soundEnabled, true));
   $("sceneSoundButton").addEventListener("click", () => setSound(!soundEnabled, true));
   $("menuSoundButton").addEventListener("click", () => setSound(!soundEnabled, true));
+  $("holidaySoundButton").addEventListener("click", () => setSound(!soundEnabled, true));
   $("playPauseButton").addEventListener("click", () => setAutoplay(!autoPlaying));
   $("songListenButton").addEventListener("click", listenToSong);
   $("songStopButton").addEventListener("click", skipFullSong);

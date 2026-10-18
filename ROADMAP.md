@@ -661,7 +661,7 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 #### GAME-SP4.1D — Consistent dialogue, removal of proof controls and contextual story skips
 
-**Priority:** P0 for speech-card coherence, P1 for first-version navigation cleanup; **status:** Planned, not implemented. **Dependencies:** A/B merged; C remains the next separate implementation. **Delivery:** three small, independently approved implementation PRs **D0 → D1 → D2**, followed by E. The new owner requests of 18 October 2026 are explicitly included below. Do not combine the three into one high-risk UI/state rewrite.
+**Priority:** P0 for speech-card coherence, P1 for first-version navigation cleanup; **status:** D0 approved and merged; D1 first implementation in progress on independent branch. **Dependencies:** A/B/C/D0 merged. **Delivery:** three small, independently approved implementation PRs **D0 → D1 → D2**, followed by E. The new owner requests of 18 October 2026 are explicitly included below. Do not combine the three into one high-risk UI/state rewrite.
 
 **Owner observations:** Spoken responses become blue footer text after choices; the opening still shows developer-facing “Stephen: Auto”, “David: Auto”, “Paul: Auto” toggles despite the expressions now being automatically scripted; players should be able to skip long *already scripted* passages to the next meaningful choice, playable puzzle or scene ending from the playback bar.
 
@@ -677,6 +677,9 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 **D0 acceptance:** No Stephen/David/Paul Auto buttons appear or accept input anywhere in the opening; all three still switch through their scripted expressions as the story progresses. No broken element lookups/event listeners, no change to David’s just-approved registration, no lost audio or saved-game compatibility. Verify desktop and phone toolbar spacing.
 
 ##### GAME-SP4.1D1 — One coherent named dialogue bubble before and after choices
+
+**Owner extension (18 October 2026):** also standardise the menu/transport at the **top** of the office and all later scenes, using consistent buttons, Sound availability, responsive spacing and a compact chapter label. This belongs in D1, not a new unplanned package. First branch `agent/game-sp41d1-dialogue-topbar` implements the dialogue/toolbar pass; verify preview and acceptance checklist in `docs/story/GAME-SP4.1D1-NAMED-DIALOGUE-TOP-MENU.md` before merge.
+
 
 1. Inventory actual spoken-line UI in the opening, Great Wall pre-/post-choice, Forbidden City post-decision, Night Market confirmation, Back in England alarm, visitor-information/hotel evidence/feedback, three route intros, interactive response lines and each ending.
 2. Use a compact shared **named white/paper speech-card** visual contract: consistent speaker label, typography, safe position/z-order, accessible text announcement and mobile placement. Reuse or modestly consolidate scene-specific HTML/CSS/render helpers while keeping stable IDs and the existing game architecture.
