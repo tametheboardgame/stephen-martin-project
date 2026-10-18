@@ -2,6 +2,13 @@
 
 **Updated:** 18 October 2026
 
+## GAME-SP4C — Ending C visual production opened (18 October 2026)
+
+- Ending B artwork and laptop mini-game layout were explicitly accepted by the owner and merged via [PR #44](https://github.com/tametheboardgame/stephen-martin-project/pull/44) into `main`, merge SHA `584b4c7055777cd54331909d2b6a50a75a25c7ef`. 126/126 tests and successful Cloudflare preview were confirmed before merge.
+- Started a new dedicated development branch `agent/game-sp4c-ending-c-art-foundation` from the exact merged main head, with the art inventory, work packages and per-asset approval gates in `docs/story/GAME-SP4C-ENDING-C-ART-PRODUCTION.md`. No new spa images or other game changes are approved or implemented by this plan.
+- Existing Ending C gameplay is functional (six cardboard pieces, seven joke decoys, save/replay, POWER ON and full scripted ending), but the workshop and spa ending use provisional CSS/emoji staging.
+- **Next action:** create and seek approval for an empty 16:9 Total Renewal Spa lounge/finale background. Then complete the separately approved assembly workshop, cardboard board and parts, decoys, ending sprites and responsive integration in bounded packets. Do not merge incomplete art.
+
 ## GAME-SP4B.5 — Laptop paperwork layout correction (18 October 2026)
 
 - Owner's laptop screenshot showed the Ending B mini-game form scrolling internally, hiding the three answer choices. Restructured only the paperwork form into a compact title/progress row and two responsive columns: prompt, clue and original desk illustration left; answer choices, stamp interaction, feedback/hint and Continue right.
