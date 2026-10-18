@@ -3894,3 +3894,103 @@ body:has(#menuScreen:not([hidden])) main {
     height:clamp(38px,6.5vh,52px);
   }
 }
+
+
+/* GAME-SP4C.3B: anatomical limb placement and shaped hit regions.
+ * Stephen FACES the player. His left side appears on the viewer's right.
+ * Keep piece IDs and save records unchanged; swap visual anchor positions,
+ * not game logic. These are painted paper dolls, never 3D anatomy. */
+#holidayScreen .assembly-workshop .assembly-silhouette {
+  overflow:visible;
+}
+#holidayScreen .assembly-workshop .assembly-slot {
+  box-sizing:border-box;
+  padding:0;
+  border:0 !important;
+  border-radius:0;
+  background:transparent !important;
+  outline-offset:2px;
+  overflow:visible;
+  transform:none;
+  /* A rectangular focus/touch box surrounds the visible shaped target.
+     The shape itself is drawn by ::before, not clipping the approved PNG. */
+}
+#holidayScreen .assembly-workshop .assembly-slot::before {
+  content:"";
+  position:absolute;inset:2%;z-index:0;pointer-events:none;
+  background:transparent;
+  opacity:1;
+}
+#holidayScreen .assembly-workshop .assembly-slot[data-filled="true"] {
+  z-index:5;
+  opacity:1;
+}
+#holidayScreen .assembly-workshop .assembly-slot[data-filled="true"]::before {
+  display:none;
+}
+#holidayScreen .assembly-workshop .assembly-slot:not([data-filled="true"]):is(:hover,:focus-visible,[data-hint="true"])::before {
+  background:rgba(248,201,104,.4);
+  outline:2px solid rgba(168,99,28,.74);
+}
+/* The cut-out board's own grooves provide the initial empty-slot outlines.
+   Each target's hover highlight follows its limb's silhouette instead of
+   drawing a rectangular box across Stephen's robe or legs. */
+#holidayScreen .assembly-workshop .assembly-slot-left-arm::before,
+#holidayScreen .assembly-workshop .assembly-slot-right-arm::before {
+  clip-path:polygon(34% 0,74% 1%,93% 10%,100% 29%,91% 46%,78% 56%,85% 74%,75% 92%,48% 100%,18% 92%,4% 71%,13% 49%,0 34%,10% 14%);
+  border-radius:26% 32% 28% 24%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-left-leg::before,
+#holidayScreen .assembly-workshop .assembly-slot-right-leg::before {
+  clip-path:polygon(23% 0,77% 0,89% 14%,79% 43%,81% 69%,100% 91%,88% 100%,7% 100%,0 89%,22% 69%,18% 37%,10% 14%);
+  border-radius:20% 20% 28% 28%;
+}
+/* Visual positions are explicitly anatomically swapped:
+   left limbs -> viewer RIGHT; right limbs -> viewer LEFT. */
+#holidayScreen .assembly-workshop .assembly-slot-left-arm {
+  top:27%;left:73%;right:auto;width:26%;height:34%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-right-arm {
+  top:27%;left:1%;right:auto;width:26%;height:34%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-left-leg {
+  top:61%;left:52%;right:auto;width:27%;height:37%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-right-leg {
+  top:61%;left:21%;right:auto;width:27%;height:37%;
+}
+/* Slot art uses its source aspect ratio, not object-fit:fill. With
+   height-based sizing, paper-doll arms and sandal legs keep their proportions
+   and sit over the sculpted area. Existing head and torso stay untouched. */
+#holidayScreen .assembly-workshop .assembly-slot:is(.assembly-slot-left-arm,.assembly-slot-right-arm,.assembly-slot-left-leg,.assembly-slot-right-leg) .assembly-slot-art {
+  position:absolute;
+  top:49%;left:50%;
+  width:auto;height:112%;
+  max-width:none;max-height:none;
+  object-fit:contain;
+  transform:translate(-50%,-50%);
+  transform-origin:center;
+  z-index:3;
+  pointer-events:none;
+}
+#holidayScreen .assembly-workshop .assembly-slot-left-arm .assembly-slot-art {
+  top:51%;left:48%;height:114%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-right-arm .assembly-slot-art {
+  top:51%;left:52%;height:114%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-left-leg .assembly-slot-art {
+  top:49%;left:48%;height:108%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-right-leg .assembly-slot-art {
+  top:49%;left:52%;height:108%;
+}
+/* Permit shaped highlighting without masking any pixels of the completed
+   puzzle. Suppress the old rectangular hover/focus overlay for limb slots. */
+#holidayScreen .assembly-workshop .assembly-slot:is(.assembly-slot-left-arm,.assembly-slot-right-arm,.assembly-slot-left-leg,.assembly-slot-right-leg):not(:disabled):hover {
+  background:transparent;
+  outline:none;
+}
+#holidayScreen .assembly-workshop .assembly-slot:is(.assembly-slot-left-arm,.assembly-slot-right-arm,.assembly-slot-left-leg,.assembly-slot-right-leg):focus-visible {
+  outline:2px solid #b96b27;
+}
