@@ -2,6 +2,14 @@
 
 **Updated:** 18 October 2026
 
+## GAME-SP4.1D0 — Remove manual Auto expression buttons (18 October 2026)
+
+- **SP4.1C now approved and merged:** Summit daylight PR #52 at `7f6415bd3d4f98dcfb1b2e919879f9872f080349`, with **141/141** automated checks, Cloudflare build and owner's visual acceptance.
+- **Active draft PR #53:** `agent/game-sp41d0-remove-expression-proof` from the freshly merged `main`. Removed three introductory Stephen/David/Paul `Auto` expression proof buttons and their manual override flags, click handlers and unused CSS. **All three characters still switch approved expressions automatically** from `beat.reactions` when each office line renders; David's previously approved optical scale and Paul's blank fallback are unchanged.
+- Replaced obsolete proof-button tests with line-by-line Next/Back automatic acting tests and new saved Resume coverage. CI at `93e2f58` passed **142/142** tests; later Resume test and documentation commits require fresh exact-head qualification.
+- **Pending owner visual approval:** inspect the office introduction in [PR #53](https://github.com/tametheboardgame/stephen-martin-project/pull/53) branch preview at desktop/mobile width, verify no Auto switches/gaps and all three still change poses during scripted dialogue. Keep PR draft/unmerged until reviewed.
+- **Next after D0:** GAME-SP4.1D1 consistent named white speech bubbles including post-choice spoken responses; D2 contextual skip-to-choice/game/end remains separately planned. Evidence/review: `docs/story/GAME-SP4.1D0-INTRO-EXPRESSION-CONTROLS.md`.
+
 ## GAME-SP4.1C — Summit entrance daylight refinement (18 October 2026)
 
 - **GitHub connected.** Draft **PR #52**, branch `agent/game-sp41c-summit-daylight`, based on approved `main` `3702ea83`. The corrected CSS removes the old 24–52% full-stage navy gradient over the approved Summit exterior artwork for both the route-intro and admissions stage. Existing local dark title, speaker and question panels keep their own contrast.
