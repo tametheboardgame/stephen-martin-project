@@ -2,6 +2,12 @@
 
 **Updated:** 18 October 2026
 
+## GAME-SP4C.1A — Owner-locked spa background and character scene integrated (18 October 2026)
+
+- User approved the standalone Total Renewal Spa background and three canonical standalone actor variants, explicitly ordering integration into the playable game, not another flattened illustration. Original PNGs staged in project Google Drive and all four converted to WebP through the manifest pipeline. Production source IDs/paths: `docs/story/GAME-SP4C-ENDING-C-ART-PRODUCTION.md`.
+- On draft PR #46, the spa intro now layers David on the left and Paul on the right in ordinary clothes; the Finale layers David left, unharmed Stephen in a white robe centre, Paul right. New spa backdrop is shared but the cast is never baked into it. Existing live bottom speech and speaker-focus cues apply; correct route/puzzle/save logic is preserved.
+- Build checks validate all four WebPs and alpha for each actor; no source PNGs were committed into the repository. **Next human gate:** visual review of the live spa intro/finale at laptop and tablet widths. Next unreleased assets are the workshop and cardboard assembly illustrations; no merge until explicit authorisation.
+
 ## GAME-SP4C — Ending C visual production opened (18 October 2026)
 
 - Ending B artwork and laptop mini-game layout were explicitly accepted by the owner and merged via [PR #44](https://github.com/tametheboardgame/stephen-martin-project/pull/44) into `main`, merge SHA `584b4c7055777cd54331909d2b6a50a75a25c7ef`. 126/126 tests and successful Cloudflare preview were confirmed before merge.
