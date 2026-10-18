@@ -403,6 +403,12 @@
             <img id="summitEntranceDavid" class="summit-entrance-actor summit-entrance-david" src="./public/assets/generated/characters/summit-david-speaking-v01.webp" alt="David in a confident argumentative pose, gesturing towards the Summit gatekeeper" loading="eager">
             <img id="summitEntrancePaul" class="summit-entrance-actor summit-entrance-paul" src="./public/assets/generated/characters/summit-paul-wary-v01.webp" alt="Paul leaning back, looking bewildered, with a hand raised" loading="eager">
             <img id="summitEntranceGatekeeper" class="summit-entrance-actor summit-entrance-gatekeeper" src="./public/assets/generated/characters/summit-gatekeeper-v01.webp" alt="The stern Summit gatekeeper in a dark ceremonial uniform, presenting an open gloved hand" loading="eager">
+            <div class="spa-intro-label" aria-hidden="true">
+              <span>CHAPTER FOUR · A COMPLETELY UNNECESSARY RESCUE</span>
+              <strong>TOTAL RENEWAL SPA</strong>
+            </div>
+            <img class="spa-intro-actor spa-intro-david" src="./public/assets/generated/characters/ending-c-david-spa-visitor-v01.webp" alt="David investigates the spa clutching his phone and a towel" loading="eager">
+            <img class="spa-intro-actor spa-intro-paul" src="./public/assets/generated/characters/ending-c-paul-spa-visitor-v01.webp" alt="Paul examines the spa leaflet while holding a towel and water bottle" loading="eager">
             <div class="detention-office-label" aria-hidden="true">
               <span>CHAPTER FOUR · AN ENTIRELY UNNECESSARY RESCUE</span>
               <strong>OFFICE OF CEREMONIAL MISUNDERSTANDINGS</strong>
@@ -512,34 +518,35 @@
             <section id="reassembleWorkshop" class="assembly-workshop" hidden aria-label="Assemble the cardboard Stephen display">
               <span class="assembly-eyebrow">TOTAL RENEWAL SPA · PROMOTIONAL DISPLAY WORKSHOP</span>
               <h2>Reassemble Stephen Martin</h2>
-              <p class="assembly-description">This is a <strong>foam-and-cardboard souvenir model</strong>, not a person. Select a piece, then its labelled silhouette slot. Mouse users can drag a piece onto a slot instead.</p>
+              <p class="assembly-description">This is a <strong>foam-and-cardboard souvenir model</strong>, not a person. Select a piece, then tap its matching shape on the standee. Stephen faces you, so his left is on your right. You can also drag pieces onto the standee.</p>
               <p id="assemblyProgress" class="assembly-progress" aria-live="polite">0 of 6 correct pieces placed</p>
               <div class="assembly-layout">
                 <div class="assembly-tray" role="group" aria-label="Select cardboard pieces and comical extras">
                   <strong>Souvenir kit and absolutely unnecessary extras</strong>
-                  <button id="assemblyPiece0" class="assembly-piece" type="button" draggable="true" data-piece="head" aria-pressed="false">Head</button>
-                  <button id="assemblyPiece1" class="assembly-piece" type="button" draggable="true" data-piece="torso" aria-pressed="false">Torso</button>
-                  <button id="assemblyPiece2" class="assembly-piece" type="button" draggable="true" data-piece="left-arm" aria-pressed="false">Left arm</button>
-                  <button id="assemblyPiece3" class="assembly-piece" type="button" draggable="true" data-piece="right-arm" aria-pressed="false">Right arm</button>
-                  <button id="assemblyPiece4" class="assembly-piece" type="button" draggable="true" data-piece="left-leg" aria-pressed="false">Left leg</button>
-                  <button id="assemblyPiece5" class="assembly-piece" type="button" draggable="true" data-piece="right-leg" aria-pressed="false">Right leg</button>
-                  <button id="assemblyPiece6" class="assembly-piece" type="button" draggable="true" data-piece="kidney-1" aria-pressed="false">Spare kidney 1</button>
-                  <button id="assemblyPiece7" class="assembly-piece" type="button" draggable="true" data-piece="kidney-2" aria-pressed="false">Spare kidney 2</button>
-                  <button id="assemblyPiece8" class="assembly-piece" type="button" draggable="true" data-piece="kidney-3" aria-pressed="false">Spare kidney 3</button>
-                  <button id="assemblyPiece9" class="assembly-piece" type="button" draggable="true" data-piece="wifi-heart" aria-pressed="false">Wi-Fi heart</button>
-                  <button id="assemblyPiece10" class="assembly-piece" type="button" draggable="true" data-piece="toaster" aria-pressed="false">Toaster</button>
-                  <button id="assemblyPiece11" class="assembly-piece" type="button" draggable="true" data-piece="banana" aria-pressed="false">Plastic banana</button>
-                  <button id="assemblyPiece12" class="assembly-piece" type="button" draggable="true" data-piece="spleen" aria-pressed="false">Mystery foam spleen</button>
+                  <button id="assemblyPiece0" class="assembly-piece" type="button" draggable="true" data-piece="head" aria-pressed="false"><img class="assembly-piece-art" src="./public/assets/generated/game/ending-c-cardboard-head-v01.webp" alt="" aria-hidden="true" draggable="false"><span id="assemblyPieceLabel0" class="assembly-piece-label">Head</span></button>
+                  <button id="assemblyPiece1" class="assembly-piece" type="button" draggable="true" data-piece="torso" aria-pressed="false"><img class="assembly-piece-art" src="./public/assets/generated/game/ending-c-cardboard-torso-v01.webp" alt="" aria-hidden="true" draggable="false"><span id="assemblyPieceLabel1" class="assembly-piece-label">Torso</span></button>
+                  <button id="assemblyPiece2" class="assembly-piece" type="button" draggable="true" data-piece="left-arm" aria-pressed="false"><img class="assembly-piece-art" src="./public/assets/generated/game/ending-c-cardboard-left-arm-v01.webp" alt="" aria-hidden="true" draggable="false"><span id="assemblyPieceLabel2" class="assembly-piece-label">Left arm</span></button>
+                  <button id="assemblyPiece3" class="assembly-piece" type="button" draggable="true" data-piece="right-arm" aria-pressed="false"><img class="assembly-piece-art" src="./public/assets/generated/game/ending-c-cardboard-right-arm-v01.webp" alt="" aria-hidden="true" draggable="false"><span id="assemblyPieceLabel3" class="assembly-piece-label">Right arm</span></button>
+                  <button id="assemblyPiece4" class="assembly-piece" type="button" draggable="true" data-piece="left-leg" aria-pressed="false"><img class="assembly-piece-art" src="./public/assets/generated/game/ending-c-cardboard-left-leg-v01.webp" alt="" aria-hidden="true" draggable="false"><span id="assemblyPieceLabel4" class="assembly-piece-label">Left leg</span></button>
+                  <button id="assemblyPiece5" class="assembly-piece" type="button" draggable="true" data-piece="right-leg" aria-pressed="false"><img class="assembly-piece-art" src="./public/assets/generated/game/ending-c-cardboard-right-leg-v01.webp" alt="" aria-hidden="true" draggable="false"><span id="assemblyPieceLabel5" class="assembly-piece-label">Right leg</span></button>
+                  <button id="assemblyPiece6" class="assembly-piece" type="button" draggable="true" data-piece="kidney-1" aria-pressed="false"><img class="assembly-piece-art" src="./public/assets/generated/game/ending-c-cardboard-kidney-1-v01.webp" alt="" aria-hidden="true" draggable="false"><span id="assemblyPieceLabel6" class="assembly-piece-label">Spare kidney 1</span></button>
+                  <button id="assemblyPiece7" class="assembly-piece" type="button" draggable="true" data-piece="kidney-2" aria-pressed="false"><img class="assembly-piece-art" src="./public/assets/generated/game/ending-c-cardboard-kidney-2-v01.webp" alt="" aria-hidden="true" draggable="false"><span id="assemblyPieceLabel7" class="assembly-piece-label">Spare kidney 2</span></button>
+                  <button id="assemblyPiece8" class="assembly-piece" type="button" draggable="true" data-piece="kidney-3" aria-pressed="false"><img class="assembly-piece-art" src="./public/assets/generated/game/ending-c-cardboard-kidney-3-v01.webp" alt="" aria-hidden="true" draggable="false"><span id="assemblyPieceLabel8" class="assembly-piece-label">Spare kidney 3</span></button>
+                  <button id="assemblyPiece9" class="assembly-piece" type="button" draggable="true" data-piece="wifi-heart" aria-pressed="false"><img class="assembly-piece-art" src="./public/assets/generated/game/ending-c-cardboard-wifi-heart-v01.webp" alt="" aria-hidden="true" draggable="false"><span id="assemblyPieceLabel9" class="assembly-piece-label">Wi-Fi heart</span></button>
+                  <button id="assemblyPiece10" class="assembly-piece" type="button" draggable="true" data-piece="toaster" aria-pressed="false"><img class="assembly-piece-art" src="./public/assets/generated/game/ending-c-cardboard-toaster-v01.webp" alt="" aria-hidden="true" draggable="false"><span id="assemblyPieceLabel10" class="assembly-piece-label">Toaster</span></button>
+                  <button id="assemblyPiece11" class="assembly-piece" type="button" draggable="true" data-piece="banana" aria-pressed="false"><img class="assembly-piece-art" src="./public/assets/generated/game/ending-c-cardboard-banana-v01.webp" alt="" aria-hidden="true" draggable="false"><span id="assemblyPieceLabel11" class="assembly-piece-label">Plastic banana</span></button>
+                  <button id="assemblyPiece12" class="assembly-piece" type="button" draggable="true" data-piece="spleen" aria-pressed="false"><img class="assembly-piece-art" src="./public/assets/generated/game/ending-c-cardboard-spleen-v01.webp" alt="" aria-hidden="true" draggable="false"><span id="assemblyPieceLabel12" class="assembly-piece-label">Mystery foam spleen</span></button>
                 </div>
                 <div class="assembly-board" role="group" aria-label="Place selected piece in a matching slot">
                   <strong>Custom souvenir cut-out</strong>
                   <div class="assembly-silhouette">
-                  <button id="assemblySlot0" class="assembly-slot assembly-slot-head" type="button" data-slot="head" aria-label="Place Head on cardboard model">Head</button>
-                  <button id="assemblySlot1" class="assembly-slot assembly-slot-torso" type="button" data-slot="torso" aria-label="Place Torso on cardboard model">Torso</button>
-                  <button id="assemblySlot2" class="assembly-slot assembly-slot-left-arm" type="button" data-slot="left-arm" aria-label="Place Left arm on cardboard model">Left arm</button>
-                  <button id="assemblySlot3" class="assembly-slot assembly-slot-right-arm" type="button" data-slot="right-arm" aria-label="Place Right arm on cardboard model">Right arm</button>
-                  <button id="assemblySlot4" class="assembly-slot assembly-slot-left-leg" type="button" data-slot="left-leg" aria-label="Place Left leg on cardboard model">Left leg</button>
-                  <button id="assemblySlot5" class="assembly-slot assembly-slot-right-leg" type="button" data-slot="right-leg" aria-label="Place Right leg on cardboard model">Right leg</button>
+                    <img class="assembly-board-art" src="./public/assets/generated/game/ending-c-cardboard-board-v01.webp" alt="" aria-hidden="true" draggable="false">
+                  <button id="assemblySlot0" class="assembly-slot assembly-slot-head" type="button" data-slot="head" aria-label="Place Head on cardboard model"><img id="assemblySlotArt0" class="assembly-slot-art" src="./public/assets/generated/game/ending-c-cardboard-head-v01.webp" alt="" aria-hidden="true" draggable="false" hidden><span id="assemblySlotLabel0" class="assembly-slot-label">Head</span></button>
+                  <button id="assemblySlot1" class="assembly-slot assembly-slot-torso" type="button" data-slot="torso" aria-label="Place Torso on cardboard model"><img id="assemblySlotArt1" class="assembly-slot-art" src="./public/assets/generated/game/ending-c-cardboard-torso-v01.webp" alt="" aria-hidden="true" draggable="false" hidden><span id="assemblySlotLabel1" class="assembly-slot-label">Torso</span></button>
+                  <button id="assemblySlot2" class="assembly-slot assembly-slot-left-arm" type="button" data-slot="left-arm" aria-label="Place Left arm on cardboard model"><img id="assemblySlotArt2" class="assembly-slot-art" src="./public/assets/generated/game/ending-c-cardboard-left-arm-v01.webp" alt="" aria-hidden="true" draggable="false" hidden><span id="assemblySlotLabel2" class="assembly-slot-label">Left arm</span></button>
+                  <button id="assemblySlot3" class="assembly-slot assembly-slot-right-arm" type="button" data-slot="right-arm" aria-label="Place Right arm on cardboard model"><img id="assemblySlotArt3" class="assembly-slot-art" src="./public/assets/generated/game/ending-c-cardboard-right-arm-v01.webp" alt="" aria-hidden="true" draggable="false" hidden><span id="assemblySlotLabel3" class="assembly-slot-label">Right arm</span></button>
+                  <button id="assemblySlot4" class="assembly-slot assembly-slot-left-leg" type="button" data-slot="left-leg" aria-label="Place Left leg on cardboard model"><img id="assemblySlotArt4" class="assembly-slot-art" src="./public/assets/generated/game/ending-c-cardboard-left-leg-v01.webp" alt="" aria-hidden="true" draggable="false" hidden><span id="assemblySlotLabel4" class="assembly-slot-label">Left leg</span></button>
+                  <button id="assemblySlot5" class="assembly-slot assembly-slot-right-leg" type="button" data-slot="right-leg" aria-label="Place Right leg on cardboard model"><img id="assemblySlotArt5" class="assembly-slot-art" src="./public/assets/generated/game/ending-c-cardboard-right-leg-v01.webp" alt="" aria-hidden="true" draggable="false" hidden><span id="assemblySlotLabel5" class="assembly-slot-label">Right leg</span></button>
                   </div>
                 </div>
               </div>
@@ -605,10 +612,18 @@
         </div>
         <div id="reassembleEndingScene" class="rescue-route-intro assembly-ending" hidden>
           <div class="rescue-route-intro-stage assembly-ending-stage">
+            <div class="spa-ending-label" aria-hidden="true">
+              <span>CHAPTER FOUR · SOME ASSEMBLY REQUIRED</span>
+              <strong>TOTAL RENEWAL SPA</strong>
+            </div>
+            <img class="spa-ending-actor spa-ending-david" src="./public/assets/generated/characters/ending-c-david-spa-visitor-v01.webp" alt="David clutching his phone and a towel, convinced his rescue was successful" loading="eager">
+            <img class="spa-ending-actor spa-ending-stephen" src="./public/assets/generated/characters/ending-c-stephen-spa-robe-v01.webp" alt="Stephen perfectly unharmed in a white spa robe, holding cucumber slices" loading="eager">
+            <img class="spa-ending-actor spa-ending-cardboard-stephen" src="./public/assets/generated/characters/ending-c-stephen-cardboard-rebuilt-v01.webp" alt="A visibly crooked cardboard replica of Stephen in a spa robe, badly held together with tape" loading="eager">
+            <img class="spa-ending-actor spa-ending-paul" src="./public/assets/generated/characters/ending-c-paul-spa-visitor-v01.webp" alt="Paul still reading his spa brochure, holding a towel and bottle" loading="eager">
             <div class="assembly-ending-content">
               <span class="assembly-eyebrow">TOTAL RENEWAL SPA · COMPLETELY NORMAL MASSAGE</span>
               <div class="assembly-reveal">CUSTOM SOUVENIR CUT-OUT · POWERED ON</div>
-              <p class="assembly-art-note">Illustrated spa and display cutscene will be added during the dedicated art phase.</p>
+
               <strong id="assemblyEndingSpeaker" class="assembly-ending-speaker">STEPHEN</strong>
               <p id="assemblyEndingLine" class="assembly-ending-line" aria-live="polite"></p>
               <p id="assemblyEndingProgress" class="assembly-progress"></p>

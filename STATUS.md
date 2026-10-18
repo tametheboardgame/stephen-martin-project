@@ -2,6 +2,51 @@
 
 **Updated:** 18 October 2026
 
+## GAME-SP4C.4A — Cardboard Stephen joins Ending C finale (18 October 2026)
+
+- User approved the comically taped, full-length cardboard replica of Stephen and instructed adding it to the actual Ending C final scene. The PNG is securely staged in the established project Drive folder (`1FifUsyIYY0c4WRuwEEli89h6nKNmuYkx`); branch references it as a separate transparent WebP via its own manifest.
+- David (left), **real Stephen** (centre), taped cardboard Stephen (centre-right) and Paul (right) all remain separate layered art. The living Stephen remains visible; the card standee has independent highlight when its 13th comic line speaks. No change to route, dialogue, save, assembly or POWER ON logic.
+- Build now packages 20 approved Ending C artworks and a dedicated regression guards alpha and the four-actor composition. Asset materialisation succeeded at `b4f9ac4`: approved cardboard Stephen WebP exists as an independent 201,846-byte alpha-preserving sprite beside the original real Stephen source; 20/20 Ending C art files are expected at build time. Final CI and human visual review are still required. **PR #46 draft, unmerged**; defer the remaining silhouette-slot polishing until after the rest of the Ending C review.
+
+## GAME-SP4C.3B — Anatomical limb fit and shaped targets (18 October 2026)
+
+- Owner reviewed the fully built cardboard Stephen and found reversed arms/legs, boxy placement targets and artwork that failed to follow the silhouette. Keep all 13 parts, six IDs, artwork, saved state, selection/drop/power behaviour locked.
+- Corrected only visual CSS anchors for four limbs: because Stephen faces the player, **his left side is to the viewer's right**. Separate per-arm and per-leg offsets place cut-outs against the board, use their natural source aspect ratio (`object-fit:contain`) instead of earlier image distortion, and show non-rectangular clipped highlight shapes for the active mounting regions while preserving keyboard-friendly button targets.
+- Updated player instructions and Paul hint to explain the anatomical reversal and remove the now-false suggestion that silhouette labels are printed on the board. Existing DOM slot names and placement semantics remain unchanged.
+- Added focused geometry/mapping/accessibility regression. **131/131 smoke tests passed**, **19/19 Ending C art assets packaged** at `959e8e9`, and Cloudflare preview deployed. Owner in-game placement review still required; draft PR #46 is unmerged.
+
+## GAME-SP4C.3A — Puzzle slot layering and tray stability (18 October 2026)
+
+- Owner laptop screenshots showed that empty slot labels covered the board, completed arms/legs appeared to vanish and a sudden nested scrollbar appeared in the tray after a wrong-answer hint.
+- Root causes identified in actual CSS: global `button:disabled {opacity:.38}` faded successfully mounted sprites; fitted portrait artworks used `object-fit:contain` inside narrow slot boxes, making limbs too small; 5-column tray used `grid-auto-rows:minmax(0,1fr)` + `overflow-y:auto`, forcing a scrollbar when hint feedback consumed height.
+- New scoped CSS keeps completed slot buttons non-interactive **but fully opaque** with fitted pieces layered above the board. Text labels remain in HTML/ARIA but are visually hidden on the engraved silhouette; hover/focus and hint affordances remain. Switched to filled slot imagery and stable header + three-row tray at laptop width, with short-window fallback and unchanged tablet/mobile stack.
+- Dedicated regression added. GitHub smoke at `073621a`: **130/130 passed**, `19/19` Ending C images packaged. Cloudflare successfully deployed the corrected interactive preview. **Human visual confirmation still required** for placed arms/legs, fit, hints and scrollbar; draft PR #46 must remain unmerged.
+
+## GAME-SP4C.2–3 — Approved cardboard puzzle artwork integration (18 October 2026)
+
+- Owner approved the **final** 6 Stephen cut-outs, 7 distinct comedy decoys and empty cardboard mounting board (14 originals). The art is independently staged in Google Drive, registered in manifest files and wired into the existing 13-choice/6-slot puzzle. Do not use earlier rejected Paul-faced or roughly segmented Stephen drafts.
+- Individual transparent WebPs form the live tray; filled slots reveal their actual corresponding images. The board image stays separate; image rerender no longer removes sprite tags. Existing keyboard, touch, drag/drop, hint, save, wrong-answer dialogue and POWER ON mechanics remain in place.
+- Responsiveness: compact five-column laptop tray and matching standee silhouette, with tablet/mobile stacking. New asset/alpha and markup regression checks have been added. **Materialisation confirmed:** 14/14 approved puzzle WebPs committed through GitHub Actions to the same branch at `13fc380`; **19/19 Ending C assets** now exist. Cloudflare deployed the complete layered puzzle at `https://9f1112e2.stephen-martin-project.pages.dev`. Source assets are safely locked in Drive. **Next:** final automated game smoke on this materialised head and owner laptop/mobile visual playtest; PR #46 stays draft until approval.
+
+## GAME-SP4C.1B / SP4C.2 — Workshop locked; six-piece cardboard Stephen prototype (18 October 2026)
+
+- Approved display-workshop background staged in Google Drive and materialised into PR #46 as an independent WebP. Added CSS-backed puzzle scene, explicit build inclusion and a regression test; old 13-item/six-slot HTML and save/interaction flows remain intact.
+- Six *unapproved draft* standalone cardboard cut-outs were made from the locked Stephen standing art: head, torso, left arm, right arm, left leg and right leg, plus a registration JSON and blank standee board. First attempts that used Paul's face were rejected and not staged. The piece set is a prototype awaiting user visual approval, not a playable puzzle integration or merged asset.
+- **Human gates:** preview the existing workshop integration and inspect the six-piece kit before uploading/committing any puzzle artwork. The decoys remain a later packet; keep draft PR #46 unmerged.
+
+## GAME-SP4C.1A — Owner-locked spa background and character scene integrated (18 October 2026)
+
+- User approved the standalone Total Renewal Spa background and three canonical standalone actor variants, explicitly ordering integration into the playable game, not another flattened illustration. Original PNGs staged in project Google Drive and all four converted to WebP through the manifest pipeline. Production source IDs/paths: `docs/story/GAME-SP4C-ENDING-C-ART-PRODUCTION.md`.
+- On draft PR #46, the spa intro now layers David on the left and Paul on the right in ordinary clothes; the Finale layers David left, unharmed Stephen in a white robe centre, Paul right. New spa backdrop is shared but the cast is never baked into it. Existing live bottom speech and speaker-focus cues apply; correct route/puzzle/save logic is preserved.
+- Build checks validate all four WebPs and alpha for each actor; no source PNGs were committed into the repository. **Next human gate:** visual review of the live spa intro/finale at laptop and tablet widths. Next unreleased assets are the workshop and cardboard assembly illustrations; no merge until explicit authorisation.
+
+## GAME-SP4C — Ending C visual production opened (18 October 2026)
+
+- Ending B artwork and laptop mini-game layout were explicitly accepted by the owner and merged via [PR #44](https://github.com/tametheboardgame/stephen-martin-project/pull/44) into `main`, merge SHA `584b4c7055777cd54331909d2b6a50a75a25c7ef`. 126/126 tests and successful Cloudflare preview were confirmed before merge.
+- Started a new dedicated development branch `agent/game-sp4c-ending-c-art-foundation` from the exact merged main head, with the art inventory, work packages and per-asset approval gates in `docs/story/GAME-SP4C-ENDING-C-ART-PRODUCTION.md`. No new spa images or other game changes are approved or implemented by this plan.
+- Existing Ending C gameplay is functional (six cardboard pieces, seven joke decoys, save/replay, POWER ON and full scripted ending), but the workshop and spa ending use provisional CSS/emoji staging.
+- **Next action:** create and seek approval for an empty 16:9 Total Renewal Spa lounge/finale background. Then complete the separately approved assembly workshop, cardboard board and parts, decoys, ending sprites and responsive integration in bounded packets. Do not merge incomplete art.
+
 ## GAME-SP4B.5 — Laptop paperwork layout correction (18 October 2026)
 
 - Owner's laptop screenshot showed the Ending B mini-game form scrolling internally, hiding the three answer choices. Restructured only the paperwork form into a compact title/progress row and two responsive columns: prompt, clue and original desk illustration left; answer choices, stamp interaction, feedback/hint and Continue right.

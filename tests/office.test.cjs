@@ -1908,9 +1908,9 @@ test("SP4.0B Summit foreground cast remains hidden on detention and spa briefing
     p.el("hotel"+route[0].toUpperCase()+route.slice(1)+"Button").click();
     for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
     assert.equal(saved(p).holidayPhase,"rescue-route-intro");
-    assert.equal(p.el("rescueRouteIntro").dataset.route,"other");
-    assert.equal(p.el("rescueRouteIntro").dataset.speaker,route === "detention" ? "official" : "", 
-      "Ending B has its own official actor; only the Summit gatekeeper is hidden");
+    assert.equal(p.el("rescueRouteIntro").dataset.route,route === "reassemble" ? "reassemble" : "other");
+    assert.equal(p.el("rescueRouteIntro").dataset.speaker,route === "detention" ? "official" : "david",
+      "Only the actor belonging to the current route may be highlighted");
     assert.equal(p.el("routeIntroDialogue").hidden,false);
   }
 });
@@ -3056,4 +3056,173 @@ test("GAME-SP4B.5 paperwork places illustration and all selection states side-by
   assert.match(styles,/overflow-y:auto; \/\* fallback only for unusually short windows/);
   // Layout only. The full selectable/acknowledgement/stamp and save/resume logic is
   // tested by GAME-SP4B's existing three-stage route tests.
+});
+
+
+test("GAME-SP4C spa artwork has a separate location and three transparent locked actors",()=>{
+  const base="public/assets/generated/";
+  const location="locations/ending-c-spa-lounge-background-v01.webp";
+  const actors=[
+    "characters/ending-c-stephen-spa-robe-v01.webp",
+    "characters/ending-c-david-spa-visitor-v01.webp",
+    "characters/ending-c-paul-spa-visitor-v01.webp"
+  ];
+  for(const filename of [location,...actors]) {
+    const bytes=fs.readFileSync(path.join(root,base,filename));
+    assert.equal(bytes.toString("ascii",0,4),"RIFF",filename+" must be a WebP");
+    assert.equal(bytes.toString("ascii",8,12),"WEBP");
+    if(filename.includes("/characters/")) {
+      assert.equal(bytes.toString("ascii",12,16),"VP8X",filename+" must have extended WebP format");
+      assert.ok((bytes[20]&0x10)!==0,filename+" must retain transparency");
+    }
+  }
+  const intro=html.slice(html.indexOf('id="rescueRouteIntro"'),html.indexOf('id="rescueMiniGameScene"'));
+  const ending=html.slice(html.indexOf('id="reassembleEndingScene"'),html.indexOf('id="rescueEndingSummary"'));
+  for(const name of ["david","paul"]) {
+    assert.match(intro,new RegExp('class="spa-intro-actor spa-intro-'+name+'"[^>]*ending-c-'+name+'-spa-visitor-v01\\.webp'));
+    assert.match(ending,new RegExp('class="spa-ending-actor spa-ending-'+name+'"[^>]*ending-c-'+name+'-spa-visitor-v01\\.webp'));
+  }
+  assert.doesNotMatch(intro,/spa-intro-stephen/,"Stephen's appearance remains the final reveal");
+  assert.ok(ending.includes('class="spa-ending-actor spa-ending-stephen"') && ending.includes("ending-c-stephen-spa-robe-v01.webp"));
+  const stage=css.slice(css.indexOf("/* GAME-SP4C.1: approved EMPTY spa"));
+  assert.ok(stage.includes("ending-c-spa-lounge-background-v01.webp"));
+  assert.ok(stage.includes('#rescueRouteIntro[data-route="reassemble"]'));
+  assert.ok(stage.includes('#reassembleEndingScene[data-speaker="stephen"] .spa-ending-stephen'));
+  assert.ok(engine.includes('reassembleEndingScene").dataset.speaker = card'));
+  assert.match(read("scripts/build.mjs"),/Approved Ending C scene artworks packaged/);
+});
+
+
+test("GAME-SP4C.1B locked spa display workshop is separate from live puzzle controls",()=>{
+  const file="public/assets/generated/locations/ending-c-spa-assembly-workshop-background-v01.webp";
+  const data=fs.readFileSync(path.join(root,file));
+  assert.equal(data.toString("ascii",0,4),"RIFF");
+  assert.equal(data.toString("ascii",8,12),"WEBP");
+  const styles=css.slice(css.lastIndexOf("/* GAME-SP4C.1B:"));
+  assert.ok(styles.includes("ending-c-spa-assembly-workshop-background-v01.webp"));
+  assert.ok(styles.includes('#rescueMiniGameScene[data-route="reassemble"]'));
+  const puzzle=html.slice(html.indexOf('id="reassembleWorkshop"'),html.indexOf('id="reassembleEndingScene"'));
+  assert.match(puzzle,/id="assemblyPiece0"/);
+  assert.match(puzzle,/id="assemblySlot0"/);
+  assert.match(read("scripts/build.mjs"),/Approved Ending C scene artworks packaged/);
+});
+
+
+test("GAME-SP4C.2-3 all approved illustrated pieces stay separate and preserve puzzle controls",()=>{
+  const ids=[
+    "head","torso","left-arm","right-arm","left-leg","right-leg",
+    "kidney-1","kidney-2","kidney-3","wifi-heart","toaster","banana","spleen"
+  ];
+  const block=html.slice(html.indexOf('id="reassembleWorkshop"'),html.indexOf('id="reassembleEndingScene"'));
+  for(const [i,id] of ids.entries()){
+    const asset="ending-c-cardboard-"+id+"-v01.webp";
+    const bytes=fs.readFileSync(path.join(root,"public/assets/generated/game",asset));
+    assert.ok(bytes.length>20000,"Asset should be the actual approved art: "+asset);
+    assert.equal(bytes.toString("ascii",0,4),"RIFF",asset);
+    assert.equal(bytes.toString("ascii",8,16),"WEBPVP8X",asset);
+    assert.ok((bytes[20]&0x10)!==0,"Approved art must retain WebP alpha: "+asset);
+    assert.ok(block.includes('id="assemblyPiece'+i+'"'),"Keep original selectable button "+id);
+    assert.ok(block.includes('id="assemblyPieceLabel'+i+'"'),"Keep accessible label "+id);
+    assert.ok(block.includes(asset),"Render individual art "+id);
+  }
+  const board=fs.readFileSync(path.join(root,"public/assets/generated/game/ending-c-cardboard-board-v01.webp"));
+  assert.equal(board.toString("ascii",8,16),"WEBPVP8X");
+  assert.ok((board[20]&0x10)!==0,"Board must retain transparency");
+  assert.ok(block.includes('class="assembly-board-art"'));
+  for(let i=0;i<6;i++){
+    assert.ok(block.includes('id="assemblySlot'+i+'"'),"Preserve six interactive slots");
+    assert.ok(block.includes('id="assemblySlotArt'+i+'"'),"Keep separate fitted art layer");
+    assert.ok(block.includes('id="assemblySlotLabel'+i+'"'),"Keep six human-readable slot labels");
+  }
+  assert.ok(engine.includes('("assemblySlotArt"+i).hidden = !filled;'),"Reveal only fitted cardboard art");
+  assert.ok(engine.includes('("assemblyPieceLabel"+i).textContent'),"Rerender cannot destroy images");
+  assert.ok(engine.includes('("assemblySlotLabel"+i).textContent'),"Keep saved slot images mounted");
+  const artCss=css.slice(css.lastIndexOf("/* GAME-SP4C.2-3: interactive cardboard puzzle"));
+  assert.ok(artCss.includes("grid-template-columns:repeat(5,minmax(0,1fr))"),"Laptop shows compact art tray");
+  assert.ok(artCss.includes("@media (max-width:800px)"),"Stack at tablet widths");
+  assert.ok(artCss.includes("@media (max-width:450px)"),"Retain large mobile tap targets");
+});
+
+
+test("GAME-SP4C.3A fitted parts are opaque and labelled slots do not obscure the board",()=>{
+  const stage=css.slice(css.lastIndexOf("/* GAME-SP4C.3A: stable standee layers"));
+  assert.ok(stage.includes('.assembly-slot[data-filled="true"]:disabled'),"Completed slots must counter the generic disabled button opacity");
+  assert.match(stage,/\.assembly-slot\[data-filled="true"\]:disabled\s*\{[^}]*opacity:1;/);
+  assert.match(stage,/\.assembly-slot-art\s*\{[^}]*z-index:3;/);
+  assert.match(stage,/\.assembly-board-art\s*\{[^}]*z-index:0;/);
+  assert.match(stage,/\.assembly-slot\[data-filled="true"\]\s*\{[^}]*z-index:4;/);
+  assert.match(stage,/\.assembly-slot-art\s*\{[^}]*object-fit:fill;/);
+  assert.match(stage,/\.assembly-slot-label\s*\{[^}]*display:none !important;/);
+  assert.match(stage,/@media \(min-width:801px\)[\s\S]*?grid-template-rows:min-content repeat\(3,minmax\(88px,1fr\)\)/);
+  assert.match(stage,/\.assembly-tray\s*\{[^}]*overflow:visible;/);
+  assert.match(stage,/@media \(min-width:801px\) and \(max-height:730px\)/);
+  assert.ok(engine.includes('("assemblySlotArt"+i).hidden = !filled;'),"Fitted state must switch the independent image on");
+  const slots=html.slice(html.indexOf('class="assembly-silhouette"'),html.indexOf('id="assemblyFeedback"'));
+  for(let i=0;i<6;i++){
+    assert.ok(slots.includes('id="assemblySlotArt'+i+'"'),"Keep each individual artwork image");
+    assert.ok(slots.includes('id="assemblySlotLabel'+i+'"'),"Retain accessible label text in DOM");
+    assert.match(slots,new RegExp('id="assemblySlot'+i+'"[^>]*aria-label='),"Each target retains an accessible name");
+  }
+});
+
+
+test("GAME-SP4C.3B anatomically oriented cardboard arms and legs retain natural proportions",()=>{
+  const rules=css.slice(css.lastIndexOf("/* GAME-SP4C.3B: anatomical limb placement"));
+  assert.ok(rules.length>500,"Dedicated fit-and-placement stage should exist");
+  function rule(name) {
+    const i=rules.indexOf("#holidayScreen .assembly-workshop ."+name+" {");
+    assert.ok(i>=0,"Expected shaped placement selector: "+name);
+    return rules.slice(i,rules.indexOf("}",i));
+  }
+  // Stephen faces the player: his LEFT hand and leg must land on screen RIGHT.
+  const la=rule("assembly-slot-left-arm");
+  const ra=rule("assembly-slot-right-arm");
+  const ll=rule("assembly-slot-left-leg");
+  const rl=rule("assembly-slot-right-leg");
+  function left(rule){return Number(rule.match(/left:(\d+(?:\.\d+)?)%/)?.[1])}
+  assert.ok(left(la)>left(ra)+50,"Left arm is on viewer right");
+  assert.ok(left(ll)>left(rl)+20,"Left leg is on viewer right");
+  for(const part of [la,ra,ll,rl]){
+    assert.match(part,/width:\d+%;height:\d+%/,"Use a specified silhouette-shaped region");
+  }
+  assert.match(rules,/\.assembly-slot-left-arm::before,[\s\S]*?clip-path:polygon/);
+  assert.match(rules,/\.assembly-slot-left-leg::before,[\s\S]*?clip-path:polygon/);
+  assert.ok(rules.includes("object-fit:contain"),"Do not stretch the approved body parts to an arbitrary rectangle");
+  assert.ok(rules.includes("width:auto;height:112%"),"Limb overlays follow the original art aspect ratio");
+  assert.doesNotMatch(rules,/\.assembly-slot-art\s*\{[^}]*object-fit:fill/);
+  assert.match(rules,/\.assembly-slot\[data-filled="true"\]\s*\{[^}]*opacity:1;/);
+  assert.ok(html.includes("Stephen faces you, so his left is on your right"),"Explain anatomical left and right");
+  assert.ok(engine.includes("He faces us, so his left is on your right"),"Hint no longer claims visible slot labels");
+  for(const id of ["left-arm","right-arm","left-leg","right-leg"]) {
+    assert.ok(html.includes('data-slot="'+id+'"'),"Don't change persisted puzzle slot IDs: "+id);
+  }
+  assert.ok(engine.includes('("assemblySlotArt"+i).hidden = !filled;'),"Keep fitted art state tied to existing progress");
+});
+
+
+test("GAME-SP4C.4A approved cardboard Stephen is an extra final-scene actor",()=>{
+  const ending=html.slice(html.indexOf('id="reassembleEndingScene"'),html.indexOf('id="rescueEndingSummary"'));
+  const intro=html.slice(html.indexOf('id="rescueRouteIntro"'),html.indexOf('id="rescueMiniGameScene"'));
+  const real='ending-c-stephen-spa-robe-v01.webp';
+  const cardboard='ending-c-stephen-cardboard-rebuilt-v01.webp';
+  assert.ok(ending.includes('class="spa-ending-actor spa-ending-stephen"'));
+  assert.ok(ending.includes(real),"Real spa Stephen must remain in the scene");
+  assert.ok(ending.includes('class="spa-ending-actor spa-ending-cardboard-stephen"'));
+  assert.ok(ending.includes(cardboard),"Taped cardboard Stephen must have his own independent actor");
+  assert.ok(ending.includes('class="spa-ending-actor spa-ending-david"'));
+  assert.ok(ending.includes('class="spa-ending-actor spa-ending-paul"'));
+  assert.ok(!intro.includes(cardboard),"No cardboard figure before POWER ON");
+  const image=fs.readFileSync(path.join(root,"public/assets/generated/characters",cardboard));
+  assert.ok(image.length>20000,"Must package the approved original artwork, not a placeholder");
+  assert.equal(image.toString("ascii",0,4),"RIFF");
+  assert.equal(image.toString("ascii",8,16),"WEBPVP8X");
+  assert.ok((image[20]&0x10)!==0,"The cardboard standee must have transparent background");
+  const code=css.slice(css.lastIndexOf("/* GAME-SP4C.4A: badly assembled cardboard Stephen"));
+  assert.ok(code.includes('.spa-ending-cardboard-stephen'));
+  assert.ok(code.includes('[data-speaker="cardboard stephen"] .spa-ending-cardboard-stephen'));
+  assert.ok(code.includes('@media (max-width:800px)'));
+  assert.ok(code.includes('@media (max-width:450px)'));
+  assert.ok(engine.includes('line.speaker.toLowerCase()'),
+    "The existing speaker cue must continue to highlight the new independent figure");
+  assert.ok(read("scripts/build.mjs").includes('endingCImages.length + "/20."'));
 });

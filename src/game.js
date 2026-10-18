@@ -1215,7 +1215,7 @@
     // The approved Summit entrance appears only while approaching/entering
     // the fictional club. Detention/spa keep their own staging, and the
     // throne-room finale will receive a separate interior background.
-    $("rescueRouteIntro").dataset.route = state.route === "cult" ? "cult" : "other";
+    $("rescueRouteIntro").dataset.route = state.route === "cult" ? "cult" : state.route === "reassemble" ? "reassemble" : "other";
     $("rescueMiniGameScene").hidden = !inMiniGame;
     $("summitEndingScene").hidden = !inSummitEnding;
     $("detentionEndingScene").hidden = !inDetentionEnding;
@@ -1473,7 +1473,7 @@
         $("routeIntroLine").textContent = duringDialogue ? line.text : "";
         // The three separately approved Summit sprites remain fixed on the
         // exterior stage; highlight whoever owns the current spoken line.
-        $("rescueRouteIntro").dataset.speaker = duringDialogue && (route === "cult" || route === "detention")
+        $("rescueRouteIntro").dataset.speaker = duringDialogue && (route === "cult" || route === "detention" || route === "reassemble")
           ? line.speaker.toLowerCase() : "";
         $("routeIntroStatus").textContent = duringDialogue
           ? "Rescue briefing · " + (progress.introStep + 1) + " of " + config.intro.length
@@ -1588,7 +1588,7 @@
             const part = [...assembly.parts,...assembly.decoys][i];
             const pieceButton = $("assemblyPiece"+i);
             const isPlaced = placed.includes(part.id);
-            pieceButton.textContent = part.mark + " " + part.label + (isPlaced ? " ✓ Placed" : "");
+            $("assemblyPieceLabel"+i).textContent = part.label + (isPlaced ? " ✓ Placed" : "");
             pieceButton.disabled = isPlaced || progress.finished;
             pieceButton.dataset.placed = isPlaced ? "true" : "false";
             pieceButton.dataset.selected = selected === part.id && !isPlaced ? "true" : "false";
@@ -1598,7 +1598,8 @@
             const part = assembly.parts[i];
             const slot = $("assemblySlot"+i);
             const filled = placed.includes(part.id);
-            slot.textContent = filled ? "✓ "+part.label+" fitted" : part.label+" · empty slot";
+            $("assemblySlotLabel"+i).textContent = filled ? "✓ "+part.label+" fitted" : part.label+" · empty slot";
+            $("assemblySlotArt"+i).hidden = !filled;
             slot.disabled = filled || progress.finished;
             slot.dataset.filled = filled ? "true" : "false";
             slot.dataset.hint = progress.hintVisible && selected === part.id && !filled ? "true" : "false";
@@ -1607,7 +1608,7 @@
             "Select a labelled foam/cardboard part and tap the matching silhouette slot.";
           $("assemblyHint").hidden = !progress.hintVisible || progress.finished;
           $("assemblyHint").textContent = selectedPart && assembly.parts.some(part => part.id === selected)
-            ? "Paul: "+selectedPart.label+" goes in the "+selectedPart.label+" slot. It's written on both, mate."
+            ? "Paul: Match the "+selectedPart.label+" shape to the standee. He faces us, so his left is on your right."
             : "Paul: Try the six normal cardboard bits. Spare kidneys, Wi-Fi hearts and toasters are extras.";
           $("assemblyPowerButton").hidden = !progress.finished || state.assemblyPowered === true;
           $("assemblyPowerButton").textContent = assembly.powerText+" →";
@@ -1662,6 +1663,7 @@
         state.rescueProgress.endingStep = step;
         const card = step === assembly.ending.length;
         const line = assembly.ending[Math.min(step,assembly.ending.length-1)];
+        $("reassembleEndingScene").dataset.speaker = card ? "" : line.speaker.toLowerCase();
         $("assemblyEndingSpeaker").textContent = card ? "ENDING C" : line.speaker.toUpperCase();
         $("assemblyEndingLine").textContent = card ? assembly.endCard : line.text;
         $("assemblyEndingProgress").textContent = card

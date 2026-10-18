@@ -1,3 +1,8 @@
+
+## SP-D046, 18 October 2026: Finish Ending B and commence staged Ending C artwork
+
+Owner approved the current Ending B experience despite possible future polish and explicitly requested merging PR #44 before starting to improve Ending C. PR #44 was merged into `main` at `584b4c7055777cd54331909d2b6a50a75a25c7ef`. The existing third-route gameplay and dialogue remain canonical. Develop missing Total Renewal Spa and cartoon cardboard assembly illustrations on a new short-lived branch with independent assets, consistent scene perspective, usable laptop-sized controls and explicit approval of each finished visual. Do not flatten interactive puzzle elements into backgrounds, alter six-slot/13-item mechanics, introduce anatomy/gore or merge unrevised art without owner sign-off. See `docs/story/GAME-SP4C-ENDING-C-ART-PRODUCTION.md`.
+
 # Accepted project decisions
 
 Entries are concise, durable design decisions. Additional decisions are added only where they materially affect scope, design, delivery or implementation.

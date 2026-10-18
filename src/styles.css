@@ -3514,3 +3514,521 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen .detention-paperwork .detention-art-display {height:clamp(125px,20vh,190px);}
   #holidayScreen .detention-paperwork .detention-card {min-height:48px;}
 }
+
+
+/* GAME-SP4C.1: approved EMPTY spa lounge and independently approved
+ * Stephen/David/Paul assets. Preserve the live captions and actual puzzle. */
+#holidayScreen #rescueRouteIntro .spa-intro-label,
+#holidayScreen #rescueRouteIntro .spa-intro-actor {display:none;}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-route-intro-stage,
+#holidayScreen #reassembleEndingScene .assembly-ending-stage {
+  position:relative;isolation:isolate;overflow:hidden;
+  display:block;padding:0;
+  background:linear-gradient(to top,rgba(8,29,36,.25),transparent 52%),
+    url("../public/assets/generated/locations/ending-c-spa-lounge-background-v01.webp") center/cover no-repeat;
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .spa-intro-label,
+#holidayScreen #reassembleEndingScene .spa-ending-label {
+  position:absolute;z-index:4;top:3%;left:2.7%;
+  display:grid;gap:3px;max-width:45%;padding:9px 12px;
+  border:2px solid rgba(241,214,159,.92);border-radius:9px;
+  background:rgba(6,34,45,.86);color:#fff1d8;pointer-events:none;
+}
+#holidayScreen .spa-intro-label span,
+#holidayScreen .spa-ending-label span {
+  color:#aae4d1;font-size:clamp(10px,1vw,13px);
+  letter-spacing:.09em;font-weight:850;
+}
+#holidayScreen .spa-intro-label strong,
+#holidayScreen .spa-ending-label strong {
+  font-size:clamp(15px,1.8vw,24px);letter-spacing:.045em;
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .spa-intro-actor,
+#holidayScreen #reassembleEndingScene .spa-ending-actor {
+  display:block;position:absolute;z-index:2;pointer-events:none;
+  object-fit:contain;object-position:center bottom;
+  width:auto;transform-origin:center bottom;
+  filter:drop-shadow(3px 7px 5px rgba(12,31,34,.47));
+  transition:filter 160ms ease;
+}
+/* At the briefing Stephen has not appeared yet: only his two rescuers
+ * inhabit the foreground. Both are in their normal clothes, not robes. */
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .spa-intro-david {
+  left:15%;bottom:20%;height:55%;max-width:33%;
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .spa-intro-paul {
+  right:14%;bottom:20%;height:51%;max-width:33%;
+}
+/* The post-puzzle reveal adds Stephen in the centre; his robe is the
+ * only robe in this tableau. Similar feet baseline; slightly recessed. */
+#holidayScreen #reassembleEndingScene .spa-ending-david {
+  left:7%;bottom:23%;height:49%;max-width:28%;
+}
+#holidayScreen #reassembleEndingScene .spa-ending-stephen {
+  left:50%;bottom:24%;height:48%;max-width:27%;
+  transform:translateX(-50%);
+}
+#holidayScreen #reassembleEndingScene .spa-ending-paul {
+  right:7%;bottom:23%;height:47%;max-width:28%;
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-travel-panel {
+  position:absolute;z-index:6;left:3%;right:3%;bottom:11%;
+  width:94%;max-width:none;max-height:27%;margin:0;padding:0;
+  display:block;overflow:visible;text-align:left;
+  background:transparent;border:none;box-shadow:none;
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-travel-panel > span,
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-travel-panel > h2,
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-travel-panel > p:not(#routeIntroStatus),
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-travel-panel > small {display:none;}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-intro-dialogue,
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] #routeIntroStatus,
+#holidayScreen #reassembleEndingScene .assembly-ending-content {
+  box-sizing:border-box;width:100%;max-width:none;margin:0;
+  padding:11px 18px;border:3px solid #f0cf89;border-radius:11px;
+  color:#fff5dd;text-align:left;background:rgba(5,25,48,.94);
+  box-shadow:4px 5px 0 rgba(0,0,0,.4);
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-intro-dialogue strong,
+#holidayScreen #reassembleEndingScene .assembly-ending-speaker {
+  color:#ffdb87;font-size:clamp(13px,1.25vw,18px);font-weight:900;
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-intro-dialogue p,
+#holidayScreen #reassembleEndingScene .assembly-ending-line {
+  margin:5px 0 3px;font-size:clamp(16px,1.8vw,25px);
+  line-height:1.35;font-weight:800;color:#fff5dd;
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] #routeIntroStatus {
+  font-size:clamp(14px,1.5vw,20px);font-weight:800;
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] #routeIntroDialogue[hidden] {display:none !important;}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"]:has(#routeIntroDialogue:not([hidden])) #routeIntroStatus {display:none;}
+#holidayScreen #reassembleEndingScene .assembly-ending-content {
+  position:absolute;z-index:5;left:3%;right:3%;bottom:8%;
+  width:94%;max-height:28%;overflow-y:auto;
+}
+#holidayScreen #reassembleEndingScene .assembly-reveal {
+  display:none;
+}
+#holidayScreen #reassembleEndingScene .assembly-ending-progress {
+  margin:2px 0 0;text-align:right;font-size:clamp(11px,1vw,13px);
+}
+#holidayScreen #reassembleEndingScene .assembly-progress {
+  margin:2px 0 0;text-align:right;color:#b5e6d6;font-size:clamp(11px,1vw,13px);
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"][data-speaker="david"] .spa-intro-david,
+#holidayScreen #rescueRouteIntro[data-route="reassemble"][data-speaker="paul"] .spa-intro-paul,
+#holidayScreen #reassembleEndingScene[data-speaker="david"] .spa-ending-david,
+#holidayScreen #reassembleEndingScene[data-speaker="paul"] .spa-ending-paul,
+#holidayScreen #reassembleEndingScene[data-speaker="stephen"] .spa-ending-stephen {
+  filter:drop-shadow(3px 7px 5px rgba(12,31,34,.47))
+    drop-shadow(0 0 7px rgba(255,224,155,.78));
+}
+@media (max-width:800px) {
+  #holidayScreen #rescueRouteIntro[data-route="reassemble"] .spa-intro-david {left:9%;bottom:28%;height:43%;max-width:39%;}
+  #holidayScreen #rescueRouteIntro[data-route="reassemble"] .spa-intro-paul {right:8%;bottom:28%;height:40%;max-width:39%;}
+  #holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-travel-panel {bottom:16%;max-height:32%;}
+  #holidayScreen #reassembleEndingScene .spa-ending-david {left:2%;bottom:30%;height:35%;max-width:34%;}
+  #holidayScreen #reassembleEndingScene .spa-ending-stephen {bottom:30%;height:36%;max-width:34%;}
+  #holidayScreen #reassembleEndingScene .spa-ending-paul {right:2%;bottom:30%;height:34%;max-width:34%;}
+  #holidayScreen #reassembleEndingScene .assembly-ending-content {bottom:13%;max-height:32%;padding:9px 12px;}
+}
+@media (max-width:450px) {
+  #holidayScreen #rescueRouteIntro[data-route="reassemble"] .spa-intro-david {left:2%;bottom:32%;height:34%;max-width:48%;}
+  #holidayScreen #rescueRouteIntro[data-route="reassemble"] .spa-intro-paul {right:2%;bottom:32%;height:32%;max-width:48%;}
+  #holidayScreen #reassembleEndingScene .spa-ending-david {left:0;bottom:34%;height:28%;max-width:39%;}
+  #holidayScreen #reassembleEndingScene .spa-ending-stephen {bottom:34%;height:29%;max-width:40%;}
+  #holidayScreen #reassembleEndingScene .spa-ending-paul {right:0;bottom:34%;height:27%;max-width:39%;}
+  #holidayScreen #reassembleEndingScene .assembly-ending-content {bottom:15%;max-height:34%;padding:8px 10px;}
+  #holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-intro-dialogue p,
+  #holidayScreen #reassembleEndingScene .assembly-ending-line {font-size:clamp(14px,3.6vw,17px);}
+}
+
+/* GAME-SP4C.1B: owner-locked display workshop artwork under the live puzzle.
+ * The translucent card remains interactive until WP2 parts/board are approved. */
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .rescue-route-intro-stage {
+  background:
+    linear-gradient(100deg,rgba(14,43,42,.28),rgba(8,31,31,.25)),
+    url("../public/assets/generated/locations/ending-c-spa-assembly-workshop-background-v01.webp")
+      center/cover no-repeat;
+}
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-workshop {
+  background:rgba(251,245,229,.96);
+}
+
+
+/* GAME-SP4C.2-3: interactive cardboard puzzle, 13 independently selectable art
+ * cards, six separate mounting targets, and an approved empty silhouette.
+ * Assets are individual alpha WebPs, not a flattened screenshot. */
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .rescue-route-intro-stage {
+  padding:8px 2% 68px;
+}
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-workshop {
+  width:min(100%,1260px);height:100%;max-height:100%;
+  display:flex;flex-direction:column;gap:5px;
+  overflow-y:auto;box-sizing:border-box;
+  padding:9px 14px 10px;
+}
+#holidayScreen .assembly-workshop .assembly-eyebrow {font-size:10px;}
+#holidayScreen .assembly-workshop h2 {
+  font-size:clamp(18px,2vw,26px);margin:0;line-height:1.1;
+}
+#holidayScreen .assembly-workshop .assembly-description {
+  margin:0;font-size:clamp(11px,1vw,13px);line-height:1.22;
+}
+#holidayScreen .assembly-workshop .assembly-progress {margin:0;font-size:13px;}
+#holidayScreen .assembly-workshop .assembly-layout {
+  display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.85fr);
+  align-items:stretch;gap:12px;min-height:0;flex:1 1 auto;
+}
+#holidayScreen .assembly-workshop .assembly-tray,
+#holidayScreen .assembly-workshop .assembly-board {
+  min-height:0;padding:7px;background:rgba(255,250,234,.96);
+  border:2px solid #b88c56;align-content:start;
+}
+#holidayScreen .assembly-workshop .assembly-tray {
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  grid-auto-rows:minmax(0,1fr);gap:6px;overflow-y:auto;
+}
+#holidayScreen .assembly-workshop .assembly-tray strong,
+#holidayScreen .assembly-workshop .assembly-board strong {
+  font-size:12px;line-height:1.2;
+}
+#holidayScreen .assembly-workshop .assembly-tray strong {grid-column:1/-1;}
+#holidayScreen .assembly-workshop .assembly-piece {
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-width:0;min-height:78px;padding:3px 4px;gap:3px;
+  border:2px solid #66918b;background:rgba(238,248,241,.9);
+  font-size:11px;line-height:1.16;
+}
+#holidayScreen .assembly-workshop .assembly-piece-art {
+  display:block;width:100%;height:clamp(46px,8.5vh,76px);
+  object-fit:contain;pointer-events:none;flex-shrink:1;
+}
+#holidayScreen .assembly-workshop .assembly-piece-label {
+  display:block;max-width:100%;overflow-wrap:anywhere;font-size:11px;
+}
+#holidayScreen .assembly-workshop .assembly-piece[data-placed="true"] {
+  opacity:.58;
+}
+#holidayScreen .assembly-workshop .assembly-board {
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  overflow:hidden;
+}
+#holidayScreen .assembly-workshop .assembly-silhouette {
+  position:relative;display:block;flex:1 1 auto;
+  width:auto;max-width:100%;height:100%;
+  min-height:230px;max-height:100%;aspect-ratio:2/3;
+  margin:0 auto;
+}
+#holidayScreen .assembly-workshop .assembly-board-art {
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:contain;pointer-events:none;
+}
+#holidayScreen .assembly-workshop .assembly-slot {
+  position:absolute;display:flex;align-items:center;justify-content:center;
+  padding:0;min-height:0;width:auto;
+  border:1px dashed rgba(58,105,95,.8);border-radius:9px;
+  background:rgba(236,250,234,.32);color:#234a46;box-shadow:none;
+  font-size:clamp(9px,.9vw,12px);line-height:1.1;
+  overflow:visible;
+}
+#holidayScreen .assembly-workshop .assembly-slot-head {
+  top:1%;left:34%;width:32%;height:22%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-torso {
+  top:22%;left:24%;width:52%;height:39%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-left-arm {
+  top:30%;left:3%;width:24%;height:29%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-right-arm {
+  top:30%;right:3%;width:24%;height:29%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-left-leg {
+  top:62%;left:27%;width:22%;height:36%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-right-leg {
+  top:62%;right:27%;width:22%;height:36%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-art {
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:contain;pointer-events:none;
+}
+#holidayScreen .assembly-workshop .assembly-slot-art[hidden] {display:none !important;}
+#holidayScreen .assembly-workshop .assembly-slot-label {
+  position:relative;z-index:1;max-width:100%;padding:2px 3px;
+  background:rgba(255,248,217,.91);border-radius:4px;
+  white-space:normal;overflow-wrap:anywhere;
+}
+#holidayScreen .assembly-workshop .assembly-slot[data-filled="true"] {
+  background:transparent;border-color:transparent;
+}
+#holidayScreen .assembly-workshop .assembly-slot[data-filled="true"] .assembly-slot-label {
+  display:none;
+}
+#holidayScreen .assembly-workshop .assembly-slot[data-hint="true"] {
+  outline:3px solid #d78d21;outline-offset:2px;
+}
+#holidayScreen .assembly-workshop .assembly-feedback,
+#holidayScreen .assembly-workshop .assembly-hint {
+  font-size:12px;line-height:1.2;margin:1px 0;
+}
+#holidayScreen .assembly-workshop #assemblyPowerButton {
+  margin:2px auto 0;min-height:40px;
+}
+@media (min-width:801px) and (max-height:730px) {
+  #holidayScreen .assembly-workshop .assembly-piece-art {height:clamp(38px,7vh,56px);}
+  #holidayScreen .assembly-workshop .assembly-piece {min-height:60px;padding:2px;}
+  #holidayScreen .assembly-workshop .assembly-silhouette {min-height:190px;}
+  #holidayScreen .assembly-workshop .assembly-description {font-size:11px;}
+}
+@media (max-width:800px) {
+  #holidayScreen #rescueMiniGameScene[data-route="reassemble"] .rescue-route-intro-stage {
+    padding:7px 2% 68px;
+  }
+  #holidayScreen .assembly-workshop .assembly-layout {
+    display:flex;flex-direction:column;gap:10px;flex:0 0 auto;
+  }
+  #holidayScreen .assembly-workshop .assembly-tray {
+    grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible;
+  }
+  #holidayScreen .assembly-workshop .assembly-board {min-height:390px;}
+  #holidayScreen .assembly-workshop .assembly-silhouette {
+    width:min(90%,265px);height:360px;min-height:300px;flex:0 0 auto;
+  }
+  #holidayScreen .assembly-workshop .assembly-piece-art {height:68px;}
+}
+@media (max-width:450px) {
+  #holidayScreen .assembly-workshop .assembly-tray {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  #holidayScreen .assembly-workshop .assembly-board {min-height:350px;}
+  #holidayScreen .assembly-workshop .assembly-silhouette {
+    width:min(88%,225px);height:318px;min-height:280px;
+  }
+}
+
+
+/* GAME-SP4C.3A: stable standee layers and laptop tray.
+ * Correctly fitted slots are disabled to prevent repeat placement, but the
+ * global button:disabled opacity MUST NOT fade their artwork to 38%. */
+#holidayScreen .assembly-workshop .assembly-slot[data-filled="true"]:disabled {
+  opacity:1;
+  filter:none;
+  border-color:transparent;
+  background:transparent;
+}
+#holidayScreen .assembly-workshop .assembly-silhouette {
+  isolation:isolate;
+}
+#holidayScreen .assembly-workshop .assembly-board-art {
+  z-index:0;
+}
+#holidayScreen .assembly-workshop .assembly-slot {
+  z-index:2;
+  background:transparent;
+  border:1px dashed rgba(57,109,97,.46);
+  box-shadow:none;
+  overflow:visible;
+}
+#holidayScreen .assembly-workshop .assembly-slot[data-filled="true"] {
+  z-index:4;
+}
+#holidayScreen .assembly-workshop .assembly-slot-art {
+  z-index:3;
+  /* Standee pieces are portrait images placed into tall, narrow body slots.
+   * Filling the region avoids tiny limbs caused by object-fit:contain. */
+  top:-5%;left:-5%;width:110%;height:110%;
+  max-width:none;max-height:none;object-fit:fill;
+  opacity:1;visibility:visible;
+  pointer-events:none;
+}
+#holidayScreen .assembly-workshop .assembly-slot-art[hidden] {
+  display:none !important;
+}
+/* The engraved blank silhouette provides its own slot markings.
+ * Keep the original text + aria-label attributes for accessibility only. */
+#holidayScreen .assembly-workshop .assembly-slot-label {
+  display:none !important;
+}
+#holidayScreen .assembly-workshop .assembly-slot:not(:disabled):hover {
+  background:rgba(244,217,153,.22);
+  outline:2px dashed #ad7538;
+  outline-offset:1px;
+}
+#holidayScreen .assembly-workshop .assembly-slot:focus-visible {
+  outline:3px solid #b96b27;
+  outline-offset:2px;
+}
+/* Preserve all three rows of 13 parts when a wrong-choice hint appears:
+ * previously grid-auto-rows divided the height with the heading, then
+ * overflow-y:auto introduced a sudden nested scrollbar. */
+@media (min-width:801px) {
+  #holidayScreen .assembly-workshop .assembly-layout {
+    min-height:318px;
+  }
+  #holidayScreen .assembly-workshop .assembly-tray {
+    grid-template-rows:min-content repeat(3,minmax(88px,1fr));
+    grid-auto-rows:auto;
+    align-content:stretch;
+    overflow:visible;
+    min-height:0;
+  }
+  #holidayScreen .assembly-workshop .assembly-piece {
+    min-height:0;
+  }
+  #holidayScreen .assembly-workshop .assembly-piece-art {
+    height:clamp(45px,7.2vh,65px);
+  }
+}
+@media (min-width:801px) and (max-height:730px) {
+  #holidayScreen .assembly-workshop .assembly-layout {
+    min-height:290px;
+  }
+  #holidayScreen .assembly-workshop .assembly-tray {
+    grid-template-rows:min-content repeat(3,minmax(78px,1fr));
+    gap:4px;
+  }
+  #holidayScreen .assembly-workshop .assembly-piece-art {
+    height:clamp(38px,6.5vh,52px);
+  }
+}
+
+
+/* GAME-SP4C.3B: anatomical limb placement and shaped hit regions.
+ * Stephen FACES the player. His left side appears on the viewer's right.
+ * Keep piece IDs and save records unchanged; swap visual anchor positions,
+ * not game logic. These are painted paper dolls, never 3D anatomy. */
+#holidayScreen .assembly-workshop .assembly-silhouette {
+  overflow:visible;
+}
+#holidayScreen .assembly-workshop .assembly-slot {
+  box-sizing:border-box;
+  padding:0;
+  border:0 !important;
+  border-radius:0;
+  background:transparent !important;
+  outline-offset:2px;
+  overflow:visible;
+  transform:none;
+  /* A rectangular focus/touch box surrounds the visible shaped target.
+     The shape itself is drawn by ::before, not clipping the approved PNG. */
+}
+#holidayScreen .assembly-workshop .assembly-slot::before {
+  content:"";
+  position:absolute;inset:2%;z-index:0;pointer-events:none;
+  background:transparent;
+  opacity:1;
+}
+#holidayScreen .assembly-workshop .assembly-slot[data-filled="true"] {
+  z-index:5;
+  opacity:1;
+}
+#holidayScreen .assembly-workshop .assembly-slot[data-filled="true"]::before {
+  display:none;
+}
+#holidayScreen .assembly-workshop .assembly-slot:not([data-filled="true"]):is(:hover,:focus-visible,[data-hint="true"])::before {
+  background:rgba(248,201,104,.4);
+  outline:2px solid rgba(168,99,28,.74);
+}
+/* The cut-out board's own grooves provide the initial empty-slot outlines.
+   Each target's hover highlight follows its limb's silhouette instead of
+   drawing a rectangular box across Stephen's robe or legs. */
+#holidayScreen .assembly-workshop .assembly-slot-left-arm::before,
+#holidayScreen .assembly-workshop .assembly-slot-right-arm::before {
+  clip-path:polygon(34% 0,74% 1%,93% 10%,100% 29%,91% 46%,78% 56%,85% 74%,75% 92%,48% 100%,18% 92%,4% 71%,13% 49%,0 34%,10% 14%);
+  border-radius:26% 32% 28% 24%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-left-leg::before,
+#holidayScreen .assembly-workshop .assembly-slot-right-leg::before {
+  clip-path:polygon(23% 0,77% 0,89% 14%,79% 43%,81% 69%,100% 91%,88% 100%,7% 100%,0 89%,22% 69%,18% 37%,10% 14%);
+  border-radius:20% 20% 28% 28%;
+}
+/* Visual positions are explicitly anatomically swapped:
+   left limbs -> viewer RIGHT; right limbs -> viewer LEFT. */
+#holidayScreen .assembly-workshop .assembly-slot-left-arm {
+  top:27%;left:73%;right:auto;width:26%;height:34%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-right-arm {
+  top:27%;left:1%;right:auto;width:26%;height:34%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-left-leg {
+  top:61%;left:52%;right:auto;width:27%;height:37%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-right-leg {
+  top:61%;left:21%;right:auto;width:27%;height:37%;
+}
+/* Slot art uses its source aspect ratio, not object-fit:fill. With
+   height-based sizing, paper-doll arms and sandal legs keep their proportions
+   and sit over the sculpted area. Existing head and torso stay untouched. */
+#holidayScreen .assembly-workshop .assembly-slot:is(.assembly-slot-left-arm,.assembly-slot-right-arm,.assembly-slot-left-leg,.assembly-slot-right-leg) .assembly-slot-art {
+  position:absolute;
+  top:49%;left:50%;
+  width:auto;height:112%;
+  max-width:none;max-height:none;
+  object-fit:contain;
+  transform:translate(-50%,-50%);
+  transform-origin:center;
+  z-index:3;
+  pointer-events:none;
+}
+#holidayScreen .assembly-workshop .assembly-slot-left-arm .assembly-slot-art {
+  top:51%;left:48%;height:114%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-right-arm .assembly-slot-art {
+  top:51%;left:52%;height:114%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-left-leg .assembly-slot-art {
+  top:49%;left:48%;height:108%;
+}
+#holidayScreen .assembly-workshop .assembly-slot-right-leg .assembly-slot-art {
+  top:49%;left:52%;height:108%;
+}
+/* Permit shaped highlighting without masking any pixels of the completed
+   puzzle. Suppress the old rectangular hover/focus overlay for limb slots. */
+#holidayScreen .assembly-workshop .assembly-slot:is(.assembly-slot-left-arm,.assembly-slot-right-arm,.assembly-slot-left-leg,.assembly-slot-right-leg):not(:disabled):hover {
+  background:transparent;
+  outline:none;
+}
+#holidayScreen .assembly-workshop .assembly-slot:is(.assembly-slot-left-arm,.assembly-slot-right-arm,.assembly-slot-left-leg,.assembly-slot-right-leg):focus-visible {
+  outline:2px solid #b96b27;
+}
+
+
+/* GAME-SP4C.4A: badly assembled cardboard Stephen is an EXTRA character
+ * in the final spa tableau. Real Stephen remains centre stage, David left,
+ * Paul right. Never substitute the real Stephen sprite with this standee. */
+#holidayScreen #reassembleEndingScene .spa-ending-cardboard-stephen {
+  left:67%;
+  bottom:24%;
+  height:43%;
+  max-width:25%;
+  width:auto;
+  transform:translateX(-50%);
+  z-index:3;
+  object-fit:contain;
+  object-position:center bottom;
+  filter:drop-shadow(3px 7px 5px rgba(18,28,27,.68));
+  pointer-events:none;
+}
+#holidayScreen #reassembleEndingScene[data-speaker="cardboard stephen"] .spa-ending-cardboard-stephen {
+  filter:drop-shadow(3px 7px 5px rgba(18,28,27,.68))
+    drop-shadow(0 0 10px rgba(245,218,126,.95));
+}
+@media (max-width:800px) {
+  #holidayScreen #reassembleEndingScene .spa-ending-cardboard-stephen {
+    left:67%;
+    bottom:30%;
+    height:33%;
+    max-width:29%;
+  }
+}
+@media (max-width:450px) {
+  #holidayScreen #reassembleEndingScene .spa-ending-cardboard-stephen {
+    left:66%;
+    bottom:34%;
+    height:27%;
+    max-width:31%;
+  }
+}

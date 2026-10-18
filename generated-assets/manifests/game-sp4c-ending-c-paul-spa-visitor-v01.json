@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1GLSrSNyUhQ3Z4f7Nr3xtJAcelAdU2mFs"
+  },
+  "expectedSourceName": "ending-c-paul-spa-visitor-v01.png",
+  "destination": "public/assets/generated/characters/ending-c-paul-spa-visitor-v01.webp",
+  "transform": {
+    "maxWidth": 1024,
+    "maxHeight": 1536,
+    "quality": 88
+  },
+  "revision": 2
+}

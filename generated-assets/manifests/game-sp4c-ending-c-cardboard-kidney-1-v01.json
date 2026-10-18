@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1Bjge8soXYG2o-4tJxjYr1yn6-oVMBBhs"
+  },
+  "expectedSourceName": "ending-c-cardboard-kidney-1-v01.png",
+  "destination": "public/assets/generated/game/ending-c-cardboard-kidney-1-v01.webp",
+  "transform": {
+    "maxWidth": 768,
+    "maxHeight": 1024,
+    "quality": 86
+  },
+  "revision": 2
+}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1yxbNU-0UHkH8PjFhJx26j6G3v0Zdh7ju"
+  },
+  "expectedSourceName": "ending-c-spa-assembly-workshop-background-v01.png",
+  "destination": "public/assets/generated/locations/ending-c-spa-assembly-workshop-background-v01.webp",
+  "transform": {
+    "maxWidth": 1672,
+    "maxHeight": 941,
+    "quality": 88
+  },
+  "revision": 1
+}

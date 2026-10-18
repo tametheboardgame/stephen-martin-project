@@ -162,6 +162,47 @@ for (const relative of endingBImages) {
 }
 console.log("Approved Ending B artworks packaged: " + endingBImages.length + "/9.");
 
+// GAME-SP4C: spa lounge and three approved separate alpha characters.
+// Fail the preview build rather than silently showing missing assets.
+const endingCImages = [
+  "public/assets/generated/locations/ending-c-spa-lounge-background-v01.webp",
+  "public/assets/generated/locations/ending-c-spa-assembly-workshop-background-v01.webp",
+  "public/assets/generated/characters/ending-c-stephen-spa-robe-v01.webp",
+  "public/assets/generated/characters/ending-c-stephen-cardboard-rebuilt-v01.webp",
+  "public/assets/generated/characters/ending-c-david-spa-visitor-v01.webp",
+  "public/assets/generated/characters/ending-c-paul-spa-visitor-v01.webp",
+  "public/assets/generated/game/ending-c-cardboard-head-v01.webp",
+  "public/assets/generated/game/ending-c-cardboard-torso-v01.webp",
+  "public/assets/generated/game/ending-c-cardboard-left-arm-v01.webp",
+  "public/assets/generated/game/ending-c-cardboard-right-arm-v01.webp",
+  "public/assets/generated/game/ending-c-cardboard-left-leg-v01.webp",
+  "public/assets/generated/game/ending-c-cardboard-right-leg-v01.webp",
+  "public/assets/generated/game/ending-c-cardboard-board-v01.webp",
+  "public/assets/generated/game/ending-c-cardboard-kidney-1-v01.webp",
+  "public/assets/generated/game/ending-c-cardboard-kidney-2-v01.webp",
+  "public/assets/generated/game/ending-c-cardboard-kidney-3-v01.webp",
+  "public/assets/generated/game/ending-c-cardboard-wifi-heart-v01.webp",
+  "public/assets/generated/game/ending-c-cardboard-toaster-v01.webp",
+  "public/assets/generated/game/ending-c-cardboard-banana-v01.webp",
+  "public/assets/generated/game/ending-c-cardboard-spleen-v01.webp"
+];
+for (const relative of endingCImages) {
+  const data = await readFile(path.join(root,relative));
+  if (data.length < 20000 || data.length > 3 * 1024 * 1024 ||
+      data.toString("ascii",0,4) !== "RIFF" ||
+      data.toString("ascii",8,12) !== "WEBP") {
+    throw new Error("Missing or invalid locked Ending C art: " + relative);
+  }
+  if ((relative.includes("/characters/") || relative.includes("/game/ending-c-cardboard-")) &&
+      (data.toString("ascii",12,16) !== "VP8X" || (data[20] & 0x10) === 0)) {
+    throw new Error("Ending C separate spa actor lost alpha channel: " + relative);
+  }
+  await mkdir(path.dirname(path.join(output,relative)),{recursive:true});
+  await copyFile(path.join(root,relative),path.join(output,relative));
+}
+console.log("Approved Ending C scene artworks packaged: " + endingCImages.length + "/20.");
+
+
 // The Chapter Two background and sprite remain independently approved WebP
 // assets. Refuse accidental opaque travel sprites or incorrectly sized art.
 const holidaySprite = await readFile(path.join(root, imageSource, "stephen-holiday-standing-neutral-v01.webp"));

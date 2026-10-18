@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1oo9mAJGyRXSS4XZ3c_MrrP7iKE5i94TC"
+  },
+  "expectedSourceName": "ending-c-spa-lounge-background-v01.png",
+  "destination": "public/assets/generated/locations/ending-c-spa-lounge-background-v01.webp",
+  "transform": {
+    "maxWidth": 1672,
+    "maxHeight": 941,
+    "quality": 88
+  },
+  "revision": 2
+}

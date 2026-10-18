@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1tQQCjF5noWSCS7FF_Zx-tgOzlzzAsi82"
+  },
+  "expectedSourceName": "ending-c-cardboard-head-v01.png",
+  "destination": "public/assets/generated/game/ending-c-cardboard-head-v01.webp",
+  "transform": {
+    "maxWidth": 768,
+    "maxHeight": 1024,
+    "quality": 86
+  },
+  "revision": 2
+}

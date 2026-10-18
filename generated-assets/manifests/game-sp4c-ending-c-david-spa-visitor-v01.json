@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1dbI7uny9GIxT5KlVPi5HuWpMyhpdq4n9"
+  },
+  "expectedSourceName": "ending-c-david-spa-visitor-v01.png",
+  "destination": "public/assets/generated/characters/ending-c-david-spa-visitor-v01.webp",
+  "transform": {
+    "maxWidth": 1024,
+    "maxHeight": 1536,
+    "quality": 88
+  },
+  "revision": 2
+}
