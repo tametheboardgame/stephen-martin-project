@@ -1473,7 +1473,7 @@
         $("routeIntroLine").textContent = duringDialogue ? line.text : "";
         // The three separately approved Summit sprites remain fixed on the
         // exterior stage; highlight whoever owns the current spoken line.
-        $("rescueRouteIntro").dataset.speaker = duringDialogue && route === "cult"
+        $("rescueRouteIntro").dataset.speaker = duringDialogue && (route === "cult" || route === "detention")
           ? line.speaker.toLowerCase() : "";
         $("routeIntroStatus").textContent = duringDialogue
           ? "Rescue briefing · " + (progress.introStep + 1) + " of " + config.intro.length
@@ -1643,6 +1643,7 @@
         state.rescueProgress.endingStep = step;
         const showCard = step === detention.ending.length;
         const line = detention.ending[Math.min(step, detention.ending.length - 1)];
+        $("detentionEndingScene").dataset.speaker = showCard ? "" : line.speaker.toLowerCase();
         $("detentionEndingSpeaker").textContent = showCard ? "ENDING B" : line.speaker.toUpperCase();
         $("detentionEndingLine").textContent = showCard ? detention.endCard : line.text;
         $("detentionEndingProgress").textContent = showCard
