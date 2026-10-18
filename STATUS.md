@@ -2,6 +2,12 @@
 
 **Updated:** 18 October 2026
 
+## GAME-SP4B.5 — Laptop paperwork layout correction (18 October 2026)
+
+- Owner's laptop screenshot showed the Ending B mini-game form scrolling internally, hiding the three answer choices. Restructured only the paperwork form into a compact title/progress row and two responsive columns: prompt, clue and original desk illustration left; answer choices, stamp interaction, feedback/hint and Continue right.
+- Retains all three puzzle stages, source images, gameplay/save/touch/keyboard controls and approved standing-official introduction/finale. Up to 800px width, content stacks with a normal accessible scroll fallback rather than being squeezed unreadably.
+- Cloudflare preview and GitHub smoke passed at `196d622`: **126/126 tests, 9/9 Ending B art assets**. Owner laptop visual review outstanding; development PR #44 remains draft and unmerged.
+
 ## GAME-SP4B.4 — Restore standing official on the visitors' floor (18 October 2026)
 
 - Owner rejected the behind-desk visual after two layout iterations and explicitly requested the **original, uncut full-length approved official**, standing between David and Paul in the Ending B briefing. The same source WebP and manifest are reused, with no regenerated artwork or changes to the bureau background.
