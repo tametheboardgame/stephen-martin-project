@@ -6,6 +6,12 @@
 
 Standardise the **top menu** along with existing D1 named-dialogue work. Do not defer it to the contextual-skip D2 package.
 
+## Owner feedback: compact external name tabs (18 October 2026)
+
+The user approved the first D1 preview but asked for all character speech to follow the **opening scene** rather than having the character name inside the white box. The external upper-left blue name tab is now canonical for all spoken dialogue, including post-choice/mini-game responses. The label overlaps the paper box's top edge, preserving room for artwork and reducing internal whitespace. Keep information, hints, progress, menu controls and other non-spoken panels visually separate.
+
+Implementation uses the existing `.story-speech` hooks and a local absolute name tab; original office `.speaker` styling stays untouched. Route intros, all three endings and puzzle reply cards explicitly allow label overflow. Tablet/mobile name typography and padding are reduced without changing scene layout or the voice/saving engine. Review the actual new branch preview before accepting.
+
 ## First implementation
 
 - Place Pause, Back, Next, Sound, Restart and Skip Intro together in the office's existing top toolbar. Keep existing event IDs and keyboard behaviour; reduce the lower dialogue transport to a small status line.
