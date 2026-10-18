@@ -1215,7 +1215,7 @@
     // The approved Summit entrance appears only while approaching/entering
     // the fictional club. Detention/spa keep their own staging, and the
     // throne-room finale will receive a separate interior background.
-    $("rescueRouteIntro").dataset.route = state.route === "cult" ? "cult" : "other";
+    $("rescueRouteIntro").dataset.route = state.route === "cult" ? "cult" : state.route === "reassemble" ? "reassemble" : "other";
     $("rescueMiniGameScene").hidden = !inMiniGame;
     $("summitEndingScene").hidden = !inSummitEnding;
     $("detentionEndingScene").hidden = !inDetentionEnding;
@@ -1473,7 +1473,7 @@
         $("routeIntroLine").textContent = duringDialogue ? line.text : "";
         // The three separately approved Summit sprites remain fixed on the
         // exterior stage; highlight whoever owns the current spoken line.
-        $("rescueRouteIntro").dataset.speaker = duringDialogue && (route === "cult" || route === "detention")
+        $("rescueRouteIntro").dataset.speaker = duringDialogue && (route === "cult" || route === "detention" || route === "reassemble")
           ? line.speaker.toLowerCase() : "";
         $("routeIntroStatus").textContent = duringDialogue
           ? "Rescue briefing · " + (progress.introStep + 1) + " of " + config.intro.length
@@ -1662,6 +1662,7 @@
         state.rescueProgress.endingStep = step;
         const card = step === assembly.ending.length;
         const line = assembly.ending[Math.min(step,assembly.ending.length-1)];
+        $("reassembleEndingScene").dataset.speaker = card ? "" : line.speaker.toLowerCase();
         $("assemblyEndingSpeaker").textContent = card ? "ENDING C" : line.speaker.toUpperCase();
         $("assemblyEndingLine").textContent = card ? assembly.endCard : line.text;
         $("assemblyEndingProgress").textContent = card
