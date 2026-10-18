@@ -2738,7 +2738,7 @@ test("Back in England missing MP3 falls back to timed subtitles; other recording
   assert.equal(p.timeouts.size,1,"Muted audio restores the old text timer");
 });
 
-test("All ten alarm files map in order; travel montage stays silent and retains scene props",()=>{
+test("All ten alarm files map in order; travel montage now uses optional narrator recordings",()=>{
   const p=voicedRescueAlarm();
   for(let i=0;i<10;i++){
     assert.ok(p.voices.at(-1).src.endsWith("rescue.alarm."+String(i+1).padStart(3,"0")+".mp3"));
@@ -2752,7 +2752,9 @@ test("All ten alarm files map in order; travel montage stays silent and retains 
   p.el("rescueAlarmTravelButton").click();
   assert.equal(saved(p).holidayPhase,"rescue-travel");
   p.el("rescueTravelNextButton").click();
-  assert.equal(p.voices.length,total,"Do not generate narration for travel title cards");
+  assert.equal(p.voices.length,total+2,"Two successive travel cards request two distinct narrator IDs");
+  assert.ok(p.voices.at(-2).src.endsWith("transition.travel.001.mp3"));
+  assert.ok(p.voices.at(-1).src.endsWith("transition.travel.002.mp3"));
 });
 
 
@@ -3827,4 +3829,181 @@ test("GAME-SP4.1C2 Ending B uses approved original colours at briefing, puzzle a
   assert.match(css,/#holidayScreen #detentionEndingScene \.detention-ending-content/);
   assert.ok(!css.slice(css.indexOf("GAME-SP4B / GAME-SP4.1C2 — Ending B daylight")).includes("filter:brightness(.5)"),
     "No full-scene dimming reintroduced");
+});
+
+
+test("GAME-SP4.1F four locked transition WebPs are valid, packaged, and used only in intended scenes",()=>{
+  const names=[
+    "transition-china-passing-time-v01.webp",
+    "transition-operation-flight-luggage-v01.webp",
+    "transition-operation-map-expenses-v01.webp",
+    "transition-stephen-route-handoff-v01.webp"
+  ];
+  for(const name of names){
+    const bytes=fs.readFileSync(path.join(root,"public/assets/generated/locations",name));
+    assert.equal(bytes.toString("ascii",0,4),"RIFF",name);
+    assert.equal(bytes.toString("ascii",8,12),"WEBP",name);
+    assert.ok(bytes.length>20000&&bytes.length<2*1024*1024,"Approved WebP size "+name);
+    assert.ok(css.includes(name),"Styles must reference "+name);
+    assert.ok(read("scripts/build.mjs").includes(name),"Static build must include "+name);
+    const manifest=JSON.parse(read("generated-assets/manifests/game-sp41f-"+name.replace(/\.webp$/,"")+".json"));
+    assert.equal(manifest.destination,"public/assets/generated/locations/"+name);
+    assert.equal(manifest.transform.maxWidth,1672);
+    assert.equal(manifest.transform.maxHeight,941);
+  }
+  assert.match(css,/#holidayScreen \.china-intermission-art\[data-destination="palace"\],\s*#holidayScreen \.china-intermission-art\[data-destination="market"\]/);
+  assert.match(css,/#holidayScreen \.china-route-handoff-art\[data-route="cult"\],\s*#holidayScreen \.china-route-handoff-art\[data-route="detention"\],\s*#holidayScreen \.china-route-handoff-art\[data-route="reassemble"\]/);
+  assert.match(css,/#holidayScreen #rescueTravelScene\[data-montage="flight-luggage"\]/);
+  assert.match(css,/#holidayScreen #rescueTravelScene\[data-montage="map-expenses"\]/);
+  assert.match(css,/#holidayScreen #transitionNarration\[hidden\] \{display:none !important;/);
+  assert.ok(!html.includes("transition.china.chapter-two.001.mp3"),
+    "No hardcoded audio resource, just dynamic optional ID playback");
+});
+
+test("GAME-SP4.1F narrator subtitle tracks chapter, both time jumps and all three route handoffs",()=>{
+  const p=preview();p.start();p.el("skipButton").click();
+  assert.equal(p.el("transitionNarration").hidden,false);
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.china.chapter-two.001");
+  assert.match(p.el("transitionNarrationLine").textContent,/risk assessment/);
+  p.el("chinaStartButton").click();
+  assert.equal(p.el("transitionNarration").hidden,true);
+  for(let i=0;i<5;i++)p.el("wallNextButton").click();
+  p.el("wallDeclineButton").click();p.el("wallGoPalaceButton").click();
+  assert.equal(saved(p).holidayPhase,"intermission");
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.china.to-palace.001");
+  assert.equal(p.el("intermissionArt").dataset.destination,"palace");
+  p.el("intermissionContinueButton").click();
+  assert.equal(p.el("transitionNarration").hidden,true);
+  for(let i=0;i<4;i++)p.el("palaceNextButton").click();
+  p.el("palaceDeclineButton").click();p.el("palaceGoMarketButton").click();
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.china.to-market.001");
+  assert.equal(p.el("intermissionArt").dataset.destination,"market");
+  p.el("intermissionContinueButton").click();
+  for(let i=0;i<6;i++)p.el("marketNextButton").click();
+  p.el("marketGoIncidentButton").click();
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.route.spa.001");
+  assert.equal(p.el("routeHandoffArt").dataset.route,"reassemble");
+  p.el("handoffContinueButton").click();
+  assert.equal(p.el("transitionNarration").hidden,true);
+  p.el("chinaFinalNextButton").click();
+  assert.equal(p.el("transitionNarration").hidden,true,"Stephen's own spoken line is not duplicated");
+  p.el("chinaFinalNextButton").click();
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.england.back.001");
+  const cult=toRescueAlarm("cult");
+  cult.el("holidayRouteButton").click(); // Route reset remains separate from narrator.
+  const allCases=[
+    ["cult","transition.route.summit.001"],
+    ["detention","transition.route.banquet.001"],
+    ["reassemble","transition.route.spa.001"]
+  ];
+  for(const [route,id]of allCases){
+    const q=toRescueAlarm(route);
+    q.el("holidayNextButton"); // Route already locked by choice.
+    q.el("holidayRouteButton").click();
+    assert.equal(saved(q).wallDecision,null);
+    const pre=preview();pre.start();pre.el("skipButton").click();
+    pre.el("chinaStartButton").click();
+    for(let i=0;i<5;i++)pre.el("wallNextButton").click();
+    if(route==="cult"){pre.el("wallAcceptButton").click();pre.el("wallGoIncidentButton").click();}
+    else{
+      pre.el("wallDeclineButton").click();pre.el("wallGoPalaceButton").click();
+      pre.el("intermissionContinueButton").click();
+      for(let i=0;i<4;i++)pre.el("palaceNextButton").click();
+      if(route==="detention"){
+        pre.el("palaceAcceptButton").click();
+        for(let i=0;i<5;i++)pre.el("palaceNextButton").click();
+        pre.el("palaceGoIncidentButton").click();
+      } else {
+        pre.el("palaceDeclineButton").click();pre.el("palaceGoMarketButton").click();
+        pre.el("intermissionContinueButton").click();
+        for(let i=0;i<6;i++)pre.el("marketNextButton").click();
+        pre.el("marketGoIncidentButton").click();
+      }
+    }
+    assert.equal(pre.el("transitionNarration").dataset.cue,id,route);
+  }
+});
+
+test("GAME-SP4.1F four rescue travel cards select the two approved backdrops and hotel arrival subtitle",()=>{
+  const p=toRescueAlarm("cult");
+  for(let i=0;i<10;i++)p.el("rescueAlarmNextButton").click();
+  p.el("rescueAlarmTravelButton").click();
+  for(let i=0;i<4;i++){
+    assert.equal(saved(p).holidayPhase,"rescue-travel");
+    assert.equal(p.el("rescueTravelScene").dataset.montage,i<2?"flight-luggage":"map-expenses");
+    assert.equal(p.el("transitionNarration").dataset.cue,"transition.travel."+String(i+1).padStart(3,"0"));
+    assert.ok(p.el("transitionNarrationLine").textContent.length>50);
+    p.el("rescueTravelNextButton").click();
+  }
+  assert.equal(saved(p).holidayPhase,"rescue-hub-arrival");
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.hotel.arrival.001");
+  p.el("rescueHubStartButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-hotel");
+  assert.equal(p.el("transitionNarration").hidden,true);
+  assert.equal(p.el("holidaySkipButton").hidden,false);
+});
+
+test("GAME-SP4.1F existing voice engine plays optional narrator audio and falls back on missing files",async()=>{
+  const p=preview({audio:true});p.start();p.el("skipButton").click();
+  let voice=p.voices.at(-1);
+  assert.ok(voice.src.endsWith("transition.china.chapter-two.001.mp3"));
+  await Promise.resolve();
+  assert.equal(p.timeouts.size,0,"Present narrator MP3 owns transition timing");
+  p.el("holidayPauseButton").click();
+  assert.equal(voice.paused,true);
+  assert.equal(p.timeouts.size,0);
+  p.el("holidayPauseButton").click();
+  await Promise.resolve();
+  assert.equal(voice.playCount,2);
+  voice.fail(); // All narrator recordings are not uploaded yet.
+  assert.equal(p.el("transitionNarration").dataset.audio,"text-fallback");
+  assert.equal(p.timeouts.size,1,"Missing narrator falls back to original card duration");
+  assert.equal(Array.from(p.timeouts.values())[0].delay,3600);
+  p.tick();
+  assert.equal(saved(p).holidayPhase,"wall");
+  assert.equal(p.el("transitionNarration").hidden,true);
+  assert.ok(p.voices.at(-1).src.endsWith("china.wall.001.mp3"));
+});
+
+test("GAME-SP4.1F manual Next/Skip/mute cancel narration and preserve unanswered choices",async()=>{
+  const p=preview({audio:true});p.start();p.el("skipButton").click();
+  const first=p.voices.at(-1);
+  await Promise.resolve();
+  const stale=first.onended;
+  p.el("holidaySkipButton").click();
+  assert.equal(first.paused,true);
+  assert.equal(first.onended,null);
+  assert.equal(saved(p).holidayPhase,"wall");
+  assert.equal(saved(p).wallDecision,null);
+  assert.equal(p.el("wallChoices").hidden,false);
+  assert.equal(p.el("transitionNarration").hidden,true);
+  stale();
+  assert.equal(saved(p).wallDecision,null);
+  assert.equal(p.timeouts.size,0);
+  p.el("holidayRouteButton").click(); // Can only change a route after choosing one.
+  assert.equal(saved(p).wallDecision,null);
+  const q=preview({audio:true});q.start();q.el("skipButton").click();
+  assert.equal(q.el("transitionNarration").hidden,false);
+  const clip=q.voices.at(-1);
+  q.el("holidaySoundButton").click(); // Sound off, text still visible.
+  assert.equal(clip.paused,true);
+  assert.equal(q.el("transitionNarration").hidden,false);
+  assert.equal(q.timeouts.size,1);
+  q.el("holidayNextButton").click();
+  assert.equal(saved(q).holidayPhase,"wall");
+  assert.equal(q.el("transitionNarration").hidden,true);
+});
+
+test("GAME-SP4.1F narrator filename allow-list exactly matches IDs reserved in game data",()=>{
+  const src=read("scripts/build.mjs");
+  const ids=[...engine.matchAll(/id:"(transition\.[a-z0-9.-]+)"/g)].map(m=>m[1]);
+  const filenames=[...src.matchAll(/"(transition\.[a-z0-9.-]+)"/g)].map(m=>m[1]);
+  assert.equal(ids.length,12);
+  assert.equal(new Set(ids).size,12);
+  assert.equal(filenames.length,12);
+  assert.deepEqual(ids.slice().sort(),filenames.slice().sort());
+  assert.match(src,/permitted\.size !== 124/);
+  assert.match(src,/Approved transition artworks packaged:/);
+  assert.match(read("public/assets/audio/dialogue/README.md"),/transition\.travel\.004\.mp3/);
+  assert.ok(fs.existsSync(path.join(root,"docs/story/GAME-SP4.1F-APPROVED-ASSETS.md")));
 });
