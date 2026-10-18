@@ -1909,7 +1909,8 @@ test("SP4.0B Summit foreground cast remains hidden on detention and spa briefing
     for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
     assert.equal(saved(p).holidayPhase,"rescue-route-intro");
     assert.equal(p.el("rescueRouteIntro").dataset.route,"other");
-    assert.equal(p.el("rescueRouteIntro").dataset.speaker,"");
+    assert.equal(p.el("rescueRouteIntro").dataset.speaker,route === "detention" ? "official" : "", 
+      "Ending B has its own official actor; only the Summit gatekeeper is hidden");
     assert.equal(p.el("routeIntroDialogue").hidden,false);
   }
 });
