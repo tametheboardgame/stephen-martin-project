@@ -15,4 +15,13 @@
 
 **Narrator voice:** The owner has confirmed the existing narrator voice in ElevenLabs. The 12 draft spoken narrator lines/audio IDs remain in `docs/story/GAME-SP4.1F0-TRANSITION-ART-NARRATION.md`; the owner has **not yet approved final recording scripts or uploaded those files**. Do not mark audio integrated or fake recordings.
 
-**Status:** Approved original PNGs staged; GitHub manifest commit prepared. Check workflow evidence for successful WebP materialisation before marking repository binary asset ingestion complete. PR #59 remains draft until full preview/review.
+**Status:** The four approved PNGs are staged in Drive. All four corresponding optimised WebPs have been committed directly into this development branch using GitHub blob/tree commits, retaining the literal filenames/destinations declared by their versioned manifests. The automatic materialisation job **failed at Google workload identity authentication** before reading any originals (mapped `google.subject` exceeded 127 bytes); its existing manifests remain committed for provenance and later credential remediation. Source WebP copies are in the same Drive staging folder. The direct-import route used the approved source PNGs at WebP quality 85 and verified image decoding and byte sizes locally. **No story scenes were rewired in this artwork lock step.** PR #59 remains draft until separate scene integration and review.
+
+**WebP source hashes** (SHA-256 of the exact optimised bytes):
+
+- F1: `6fd46e526c6b0e5739f1a11e20413527371c0f147e57cdeeedb524ae0aa72c69` (301,822 bytes)
+- F2A: `621b9337593d9a64205b9e89c7f21dd208fa902a283ab6ca29055686e2e08a0b` (292,250 bytes)
+- F2B: `2ec9e5cb7eff40dbd8c2387a94ada3a74b3e83a1039bfe872d9abbdf96cbf887` (300,558 bytes)
+- F3: `79c74c27594dd02a8dfa3a808a098a182af710aa6ede81ad7984f6ce9d15982f` (342,896 bytes)
+
+**Technical debt:** Google Workload Identity Provider `google.subject` length error must be resolved before subsequent automatic Drive materialisations. Do not add unapproved raw PNGs or make the originals public in the interim.
