@@ -3106,3 +3106,39 @@ test("GAME-SP4C.1B locked spa display workshop is separate from live puzzle cont
   assert.match(puzzle,/id="assemblySlot0"/);
   assert.match(read("scripts/build.mjs"),/Approved Ending C scene artworks packaged/);
 });
+
+
+test("GAME-SP4C.2-3 all approved illustrated pieces stay separate and preserve puzzle controls",()=>{
+  const ids=[
+    "head","torso","left-arm","right-arm","left-leg","right-leg",
+    "kidney-1","kidney-2","kidney-3","wifi-heart","toaster","banana","spleen"
+  ];
+  const block=html.slice(html.indexOf('id="reassembleWorkshop"'),html.indexOf('id="reassembleEndingScene"'));
+  for(const [i,id] of ids.entries()){
+    const asset="ending-c-cardboard-"+id+"-v01.webp";
+    const bytes=fs.readFileSync(path.join(root,"public/assets/generated/game",asset));
+    assert.ok(bytes.length>20000,"Asset should be the actual approved art: "+asset);
+    assert.equal(bytes.toString("ascii",0,4),"RIFF",asset);
+    assert.equal(bytes.toString("ascii",8,16),"WEBPVP8X",asset);
+    assert.ok((bytes[20]&0x10)!==0,"Approved art must retain WebP alpha: "+asset);
+    assert.ok(block.includes('id="assemblyPiece'+i+'"'),"Keep original selectable button "+id);
+    assert.ok(block.includes('id="assemblyPieceLabel'+i+'"'),"Keep accessible label "+id);
+    assert.ok(block.includes(asset),"Render individual art "+id);
+  }
+  const board=fs.readFileSync(path.join(root,"public/assets/generated/game/ending-c-cardboard-board-v01.webp"));
+  assert.equal(board.toString("ascii",8,16),"WEBPVP8X");
+  assert.ok((board[20]&0x10)!==0,"Board must retain transparency");
+  assert.ok(block.includes('class="assembly-board-art"'));
+  for(let i=0;i<6;i++){
+    assert.ok(block.includes('id="assemblySlot'+i+'"'),"Preserve six interactive slots");
+    assert.ok(block.includes('id="assemblySlotArt'+i+'"'),"Keep separate fitted art layer");
+    assert.ok(block.includes('id="assemblySlotLabel'+i+'"'),"Keep six human-readable slot labels");
+  }
+  assert.ok(engine.includes('("assemblySlotArt"+i).hidden = !filled;'),"Reveal only fitted cardboard art");
+  assert.ok(engine.includes('("assemblyPieceLabel"+i).textContent'),"Rerender cannot destroy images");
+  assert.ok(engine.includes('("assemblySlotLabel"+i).textContent'),"Keep saved slot images mounted");
+  const artCss=css.slice(css.lastIndexOf("/* GAME-SP4C.2-3: interactive cardboard puzzle"));
+  assert.ok(artCss.includes("grid-template-columns:repeat(5,minmax(0,1fr))"),"Laptop shows compact art tray");
+  assert.ok(artCss.includes("@media (max-width:800px)"),"Stack at tablet widths");
+  assert.ok(artCss.includes("@media (max-width:450px)"),"Retain large mobile tap targets");
+});
