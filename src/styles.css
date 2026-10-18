@@ -3309,17 +3309,23 @@ body:has(#menuScreen:not([hidden])) main {
 }
 
 
-/* GAME-SP4B.2: independent official behind the fixed bureau counter.
- * Clip the lower part of the full-body sprite at the counter's front edge;
- * do not turn this into a flattened room illustration. */
+/* GAME-SP4B.4: the ORIGINAL complete alpha sprite stands with David and Paul.
+ * Ground his shoes on the same floor plane as the other actors. Do not mask
+ * his lower body or position him behind the built-in reception counter. */
 #holidayScreen .detention-intro-official,
 #holidayScreen .detention-ending-official {
-  /* Head is behind the centre service desk, not looming into the hall.
-   * Crop at the desk's top edge, not halfway down its wooden front. */
-  position:absolute;z-index:1;top:37%;left:52%;height:49%;width:auto;
-  transform:translateX(-50%);object-fit:contain;pointer-events:none;
-  clip-path:inset(0 0 68% 0);
-  filter:drop-shadow(2px 4px 3px rgba(12,21,35,.48));
+  position:absolute;
+  z-index:2;
+  top:auto;
+  bottom:22%;
+  left:52%;
+  height:54%;
+  width:auto;
+  transform:translateX(-50%);
+  object-fit:contain;
+  pointer-events:none;
+  clip-path:none;
+  filter:drop-shadow(3px 6px 5px rgba(12,21,35,.58));
 }
 #holidayScreen .detention-intro-official {display:none;}
 #holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-intro-official {
@@ -3329,15 +3335,51 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen #detentionEndingScene[data-speaker="official"] .detention-ending-official {
   filter:drop-shadow(0 0 9px rgba(255,225,158,.82)) brightness(1.12);
 }
+/* Ending B has four people, not the three of the briefing: keep Stephen
+ * at far left, David beside him, the official in the central gap and Paul right. */
+#holidayScreen #detentionEndingScene .detention-ending-official {
+  bottom:25%;left:57%;height:52%;
+}
+#holidayScreen #detentionEndingScene .detention-ending-stephen {
+  left:5%;height:52%;
+}
+#holidayScreen #detentionEndingScene .detention-ending-david {
+  left:27%;height:52%;
+}
+#holidayScreen #detentionEndingScene .detention-ending-paul {
+  right:5%;height:50%;
+}
 @media (max-width:800px) {
-  #holidayScreen .detention-intro-official,
-  #holidayScreen .detention-ending-official {
-    top:37.5%;height:47%;left:52%;clip-path:inset(0 0 66% 0);
+  #holidayScreen .detention-intro-official {
+    bottom:30%;left:52%;height:43%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-official {
+    bottom:34%;left:57%;height:43%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-stephen {
+    left:1%;height:43%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-david {
+    left:26%;height:43%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-paul {
+    right:1%;height:41%;
   }
 }
 @media (max-width:450px) {
-  #holidayScreen .detention-intro-official,
-  #holidayScreen .detention-ending-official {
-    top:38%;left:52%;height:45%;clip-path:inset(0 0 65% 0);
+  #holidayScreen .detention-intro-official {
+    bottom:34%;left:52%;height:33%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-official {
+    bottom:34%;left:56%;height:34%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-stephen {
+    left:0;height:34%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-david {
+    left:22%;height:34%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-paul {
+    right:0;height:32%;
   }
 }
