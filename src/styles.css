@@ -4549,3 +4549,41 @@ body:has(#menuScreen:not([hidden])) main {
     font-size:clamp(20px,5vw,26px);
   }
 }
+
+
+/* GAME-SP4.1F.2 — Chapter Two title-art subtitle clearance.
+ * The approved Chapter Two image has its own lettering near the foot of the
+ * image. Its off-stage narrator gets a smaller LOWER-LEFT slot, leaving that
+ * lettering clear and the separate bottom-right Explore button accessible.
+ * Other transitions retain their approved narrator placement unchanged. */
+@media (min-width:801px) {
+  #holidayScreen:has(#chinaTransition:not([hidden])) #transitionNarration {
+    bottom:16px;
+    left:3%;
+    transform:none;
+    width:min(60%,790px);
+    padding:7px 12px 8px;
+  }
+}
+/* On touch/narrow layouts, do not overlay the poster at all: the subtitle
+ * follows the image/actions in natural document flow. This also avoids
+ * obscuring the original baked-in text on small portrait screens. */
+@media (max-width:800px) {
+  #holidayScreen:has(#chinaTransition:not([hidden])) #transitionNarration {
+    position:relative;
+    bottom:auto;
+    left:auto;
+    transform:none;
+    width:min(92%,720px);
+    max-width:none;
+    margin:7px auto 12px;
+    padding:7px 10px 8px;
+  }
+}
+@media (max-width:450px) {
+  #holidayScreen:has(#chinaTransition:not([hidden])) #transitionNarration {
+    width:94%;
+    margin:6px auto 10px;
+    padding:6px 8px;
+  }
+}
