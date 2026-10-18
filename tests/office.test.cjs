@@ -466,8 +466,11 @@ test("voice pause/resume retains clip position, and navigation stops previous au
   assert.equal(saved(p).beatId,"intro.exterior");
   await Promise.resolve(); // Wait for manually selected line's audio-loading promise.
   assert.equal(p.timeouts.size,0,"Back leaves autoplay disabled");
+  const previousOfficeClip=p.voices.at(-1);
   p.el("skipButton").click();
-  assert.equal(p.voices.at(-1).paused,true);
+  assert.equal(previousOfficeClip.paused,true,"Office recording stops on scene change");
+  assert.ok(p.voices.at(-1).src.endsWith("transition.china.chapter-two.001.mp3"),
+    "Chapter Two now has its own off-stage narrator cue");
   assert.equal(saved(p).scene,"holiday");
 });
 
@@ -2589,8 +2592,11 @@ test("Forbidden City branch recordings and Night Market files follow actual rout
   p2.el("marketGoIncidentButton").click();p2.el("handoffContinueButton").click();
   p2.el("chinaFinalNextButton").click();
   assert.ok(p2.voices.at(-1).src.endsWith("china.final.001.mp3"));
+  const phoneClip=p2.voices.at(-1);
   p2.el("chinaFinalNextButton").click();
-  assert.equal(p2.voices.at(-1).paused,true,"Leaving the phone scene cancels its voice");
+  assert.equal(phoneClip.paused,true,"Leaving Stephen's phone cancels his voice");
+  assert.ok(p2.voices.at(-1).src.endsWith("transition.england.back.001.mp3"),
+    "Back in England now uses the separate narrator rather than Stephen's voice");
 });
 
 test("SP4.0G approved phone cutaway shows group creation without messages",()=>{
