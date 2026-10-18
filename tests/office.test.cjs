@@ -3084,7 +3084,7 @@ test("GAME-SP4C spa artwork has a separate location and three transparent locked
   }
   assert.doesNotMatch(intro,/spa-intro-stephen/,"Stephen's appearance remains the final reveal");
   assert.ok(ending.includes('class="spa-ending-actor spa-ending-stephen"') && ending.includes("ending-c-stephen-spa-robe-v01.webp"));
-  const stage=css.slice(css.indexOf("/* GAME-SP4C.1: approved spa"));
+  const stage=css.slice(css.indexOf("/* GAME-SP4C.1: approved EMPTY spa"));
   assert.ok(stage.includes("ending-c-spa-lounge-background-v01.webp"));
   assert.ok(stage.includes('#rescueRouteIntro[data-route="reassemble"]'));
   assert.ok(stage.includes('#reassembleEndingScene[data-speaker="stephen"] .spa-ending-stephen'));
