@@ -755,6 +755,182 @@
     return null; // Ending summaries and unresolved decisions wait for input.
   }
 
+
+  // GAME-SP4.1D2: explicit atomic checkpoints. Never drive them by repeated
+  // synthetic Next clicks and never manufacture an unresolved choice or a
+  // successful puzzle result. All changes are persisted by renderHoliday().
+  let pendingSkipFocus = null;
+
+  function skipToInvestigation(route) {
+    // Only a route chosen by Stephen, or previously locked by that choice,
+    // may land at the hotel. The clue puzzle remains completely unattempted.
+    state.route = route;
+    state.pendingPlan = route;
+    state.finalStep = 2;
+    state.rescueAlarmStep = rescueAlarm.lines.length;
+    state.rescueTravelStep = rescueAlarm.montage.length - 1;
+    state.hubIntroStep = rescueHub.opening.length;
+    state.hubViewed = [];
+    state.hubActiveClue = null;
+    state.hubWrongGuesses = 0;
+    state.hubLastWrongRoute = null;
+    state.hubMatched = false;
+    state.hubCorrectStep = 0;
+    state.hubVoiceFeedbackStep = null;
+    state.hubVoiceHintHeard = false;
+    delete state.rescueProgress;
+    delete state.summitResponse;
+    delete state.detentionResponse;
+    delete state.detentionStampFound;
+    delete state.detentionStampSelected;
+    delete state.assemblySelectedPart;
+    delete state.assemblyFeedback;
+    delete state.assemblyPowered;
+    state.holidayPhase = "rescue-hotel";
+  }
+
+  function skipToPalaceChoice() {
+    // Preserve the earlier Wall decline, but discard any later tentative
+    // decisions before revealing the genuinely unanswered Palace choice.
+    clearDownstream();
+    state.palaceStep = palace.lines.length;
+    state.holidayPhase = "palace";
+  }
+
+  function skipToMarketInvitation() {
+    // Night Market has no optional branch. The last, fixed invitation was
+    // always accepted by advancing the script normally.
+    state.marketStep = market.lines.length;
+    state.marketDecision = "accept";
+    state.pendingPlan = "reassemble";
+    state.holidayPhase = "market";
+  }
+
+  function finishScriptedEnding(route) {
+    const data = route === "cult" ? summit :
+      route === "detention" ? detention : assembly;
+    const progress = rescueFramework.normalise(state.rescueProgress,route);
+    state.rescueProgress = progress;
+    progress.endingStep = data.ending.length;
+    state.holidayPhase = "rescue-ending-summary";
+  }
+
+  function holidaySkipCheckpoint() {
+    const phase = state.holidayPhase;
+    const point = (label,focusId,apply) => ({label,focusId,apply});
+    const route = state.route;
+    const locked = validHolidayRoutes.includes(route) &&
+      (route === "cult" && state.wallDecision === "accept" ||
+       route === "detention" && state.wallDecision === "decline" &&
+         state.palaceDecision === "accept" ||
+       route === "reassemble" && state.wallDecision === "decline" &&
+         state.palaceDecision === "decline" && state.marketDecision === "accept");
+    const toHotel = (r) => point("Skip to investigation","hotelPhoneButton",
+      () => skipToInvestigation(r));
+
+    if (phase === "transition" ||
+        phase === "wall" && !state.wallDecision && state.wallStep < greatWall.lines.length)
+      return point("Skip to choice","wallAcceptButton",() => {
+        if (phase === "transition") {
+          state.wallDecision = null;
+          clearDownstream();
+          state.holidayPhase = "wall";
+        }
+        state.wallStep = greatWall.lines.length;
+      });
+    if (phase === "wall" && state.wallDecision === "accept")
+      return toHotel("cult");
+    if (phase === "wall" && state.wallDecision === "decline")
+      return point("Skip to choice","palaceAcceptButton",skipToPalaceChoice);
+
+    if (phase === "intermission" && state.intermissionTarget === "palace" &&
+        state.wallDecision === "decline")
+      return point("Skip to choice","palaceAcceptButton",skipToPalaceChoice);
+    if (phase === "intermission" && state.intermissionTarget === "market" &&
+        state.wallDecision === "decline" && state.palaceDecision === "decline")
+      return point("Skip to invitation","marketGoIncidentButton",skipToMarketInvitation);
+
+    if (phase === "palace" && state.wallDecision === "decline") {
+      if (!state.palaceDecision && state.palaceStep < palace.lines.length)
+        return point("Skip to choice","palaceAcceptButton",
+          () => { state.palaceStep = palace.lines.length; });
+      if (state.palaceDecision === "accept") return toHotel("detention");
+      if (state.palaceDecision === "decline")
+        return point("Skip to invitation","marketGoIncidentButton",skipToMarketInvitation);
+    }
+    if (phase === "market" && state.wallDecision === "decline" &&
+        state.palaceDecision === "decline") {
+      if (state.marketStep < market.lines.length)
+        return point("Skip to invitation","marketGoIncidentButton",skipToMarketInvitation);
+      if (state.marketDecision === "accept") return toHotel("reassemble");
+    }
+
+    if (["route-handoff","final-message","rescue-alarm","rescue-travel",
+         "rescue-hub-arrival"].includes(phase) && locked)
+      return toHotel(route);
+    if (phase === "rescue-hotel" && validHolidayRoutes.includes(route)) {
+      if (state.hubIntroStep < rescueHub.opening.length)
+        return point("Skip to investigation","hotelPhoneButton",
+          () => { state.hubIntroStep = rescueHub.opening.length; });
+      if (state.hubMatched === true && !state.hubActiveClue)
+        return point("Skip to game",route === "cult" ? "summitChoice0" :
+          route === "detention" ? "detentionChoice0" : "assemblyPiece0",() => {
+          state.hubCorrectStep = rescueHub.correct.length;
+          state.rescueProgress = rescueFramework.fresh(route);
+          state.holidayPhase = "rescue-minigame";
+        });
+      if (!state.hubMatched && !state.hubActiveClue &&
+          Number.isInteger(state.hubVoiceFeedbackStep))
+        return point("Skip to investigation","hotelCultButton",() => {
+          state.hubVoiceHintHeard = state.hubVoiceHintHeard ||
+            state.hubWrongGuesses >= 2;
+          state.hubVoiceFeedbackStep = null;
+        });
+      return null; // An open clue or unanswered deduction is never skipped.
+    }
+    if (phase === "rescue-route-intro" && state.hubMatched === true &&
+        validHolidayRoutes.includes(route))
+      return point("Skip to game",route === "cult" ? "summitChoice0" :
+        route === "detention" ? "detentionChoice0" : "assemblyPiece0",() => {
+        // Preserve already-solved steps if the player returned to briefing.
+        state.rescueProgress = rescueFramework.normalise(state.rescueProgress,route);
+        state.holidayPhase = "rescue-minigame";
+      });
+
+    if (["rescue-minigame","rescue-route-ending"].includes(phase) &&
+        state.hubMatched === true && validHolidayRoutes.includes(route)) {
+      const progress = rescueFramework.normalise(state.rescueProgress,route);
+      if (!progress.finished ||
+          route === "reassemble" && state.assemblyPowered !== true)
+        return null;
+      // Game success must already have been recorded by the real puzzle.
+      return point("Skip to end","rescueSummaryReplayButton",
+        () => finishScriptedEnding(route));
+    }
+    return null;
+  }
+
+  function focusSkippedCheckpoint() {
+    if (!pendingSkipFocus || window.SMP_ASSET_LOADER?.busy()) return;
+    const target = $(pendingSkipFocus);
+    pendingSkipFocus = null;
+    if (target && !target.hidden && typeof target.focus === "function") {
+      target.focus({preventScroll:true});
+    }
+  }
+
+  function skipHolidayToCheckpoint() {
+    if (screens.holiday.hidden) return;
+    const checkpoint = holidaySkipCheckpoint();
+    if (!checkpoint) return; // Reject clicks on an obsolete/hidden control.
+    clearHolidayAdvanceTimer();
+    stopHolidayVoice(); // Also invalidates late audio callbacks and queued starts.
+    pendingSkipFocus = checkpoint.focusId;
+    checkpoint.apply();
+    renderHoliday();
+    focusSkippedCheckpoint();
+  }
+
   function scheduleHolidayAdvance() {
     clearHolidayAdvanceTimer();
     if (screens.holiday.hidden) return;
@@ -765,6 +941,9 @@
     $("holidayPauseButton").textContent = playing ? "Ⅱ Pause" : "▶ Play";
     $("holidayPauseButton").setAttribute("aria-pressed", String(playing));
     $("holidayNextButton").hidden = !next;
+    const skipCheckpoint = holidaySkipCheckpoint();
+    $("holidaySkipButton").hidden = !skipCheckpoint;
+    $("holidaySkipButton").textContent = skipCheckpoint ? skipCheckpoint.label+" ↗" : "Skip ↗";
     const canChange = state.wallDecision === "accept" || state.wallDecision === "decline";
     $("holidayRouteButton").hidden = !canChange;
     $("holidayRouteButton").textContent = state.holidayPhase === "rescue-ending-summary"
@@ -1721,7 +1900,10 @@
     const artworkPhase = phase + ":" + (state.route || "") + ":" + (inMiniGame ? state.rescueProgress?.miniGameStage || 0 : "");
     window.SMP_ASSET_LOADER?.present("holiday:" + artworkPhase,
       $(visibleHolidayScene), () => {
-        if (!screens.holiday.hidden && state.holidayPhase === phase) scheduleHolidayAdvance();
+        if (!screens.holiday.hidden && state.holidayPhase === phase) {
+          scheduleHolidayAdvance();
+          focusSkippedCheckpoint();
+        }
       });
     state.holidayFlowVersion = 2;
     persist();
@@ -2350,6 +2532,7 @@
   $("rescueSummaryMenuButton").addEventListener("click", showMenu);
   $("holidayPauseButton").addEventListener("click",()=>setHolidayAutoplay(!holidayAutoPlaying));
   $("holidayNextButton").addEventListener("click",nextHolidayStoryBeat);
+  $("holidaySkipButton").addEventListener("click",skipHolidayToCheckpoint);
   $("holidayRouteButton").addEventListener("click",chooseAnotherEnding);
   $("soundButton").addEventListener("click", () => setSound(!soundEnabled, true));
   $("sceneSoundButton").addEventListener("click", () => setSound(!soundEnabled, true));
