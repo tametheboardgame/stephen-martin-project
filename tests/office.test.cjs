@@ -2988,3 +2988,20 @@ test("GAME-SP4B.1 Ending B briefing uses accessible bottom-of-stage subtitles, n
   assert.equal(p.el("rescueRouteIntro").dataset.endingB,"true");
   assert.equal(p.el("routeIntroDialogue").hidden,false);
 });
+
+
+test("GAME-SP4B.2 approved official is a separate transparent actor behind the bureau counter",()=>{
+  const sprite="public/assets/generated/characters/ending-b-ceremonial-official-neutral-v01.webp";
+  const data=fs.readFileSync(path.join(root,sprite));
+  assert.equal(data.toString("ascii",0,4),"RIFF");
+  assert.equal(data.toString("ascii",8,12),"WEBP");
+  assert.equal(data.toString("ascii",12,16),"VP8X");
+  assert.ok((data[20]&0x10)!==0,"The official must preserve alpha transparency");
+  assert.match(html,/class="detention-intro-official"[^>]*ending-b-ceremonial-official-neutral-v01\.webp/);
+  assert.match(html,/class="detention-ending-official"[^>]*ending-b-ceremonial-official-neutral-v01\.webp/);
+  assert.match(css,/\.detention-intro-official,\s*\n#holidayScreen \.detention-ending-official \{[\s\S]*?clip-path:inset/);
+  assert.match(css,/data-speaker="official"\] \.detention-intro-official/);
+  assert.match(css,/data-speaker="official"\] \.detention-ending-official/);
+  assert.match(read("src/game.js"),/detentionEndingScene"\)\.dataset\.speaker = showCard/);
+  assert.match(read("scripts/build.mjs"),/ending-b-ceremonial-official-neutral-v01\.webp/);
+});
