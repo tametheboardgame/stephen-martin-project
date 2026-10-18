@@ -267,7 +267,8 @@ test("David's expressions follow the script on Next and Back without manual over
   assert.equal(p.el("castDavid").dataset.seatedSprite,"systems-expert");
   assert.match(p.el("portraitDavid").src,/david-office-seated-systems-expert-v01\.webp\?v=1$/);
   assert.equal(p.el("portraitPaul").src,paulSrc);
-  assert.equal(p.el("portraitStephen").src,stephenSrc);
+  assert.equal(p.el("castStephen").dataset.expression,all.find(x=>x.id===saved(p).beatId).reactions.Stephen);
+  assert.notEqual(p.el("portraitStephen").src,stephenSrc,"Stephen must continue reacting automatically");
   p.el("backButton").click();
   assert.equal(saved(p).beatId,"office.006");
   assert.equal(p.el("castDavid").dataset.seatedSprite,"confident");
