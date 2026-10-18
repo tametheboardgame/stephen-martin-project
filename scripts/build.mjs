@@ -166,6 +166,7 @@ console.log("Approved Ending B artworks packaged: " + endingBImages.length + "/9
 // Fail the preview build rather than silently showing missing assets.
 const endingCImages = [
   "public/assets/generated/locations/ending-c-spa-lounge-background-v01.webp",
+  "public/assets/generated/locations/ending-c-spa-assembly-workshop-background-v01.webp",
   "public/assets/generated/characters/ending-c-stephen-spa-robe-v01.webp",
   "public/assets/generated/characters/ending-c-david-spa-visitor-v01.webp",
   "public/assets/generated/characters/ending-c-paul-spa-visitor-v01.webp"
@@ -184,7 +185,7 @@ for (const relative of endingCImages) {
   await mkdir(path.dirname(path.join(output,relative)),{recursive:true});
   await copyFile(path.join(root,relative),path.join(output,relative));
 }
-console.log("Approved Ending C scene artworks packaged: " + endingCImages.length + "/4.");
+console.log("Approved Ending C scene artworks packaged: " + endingCImages.length + "/5.");
 
 
 // The Chapter Two background and sprite remain independently approved WebP
