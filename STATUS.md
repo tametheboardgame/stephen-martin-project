@@ -2,6 +2,13 @@
 
 **Updated:** 18 October 2026
 
+## GAME-SP4C.3A — Puzzle slot layering and tray stability (18 October 2026)
+
+- Owner laptop screenshots showed that empty slot labels covered the board, completed arms/legs appeared to vanish and a sudden nested scrollbar appeared in the tray after a wrong-answer hint.
+- Root causes identified in actual CSS: global `button:disabled {opacity:.38}` faded successfully mounted sprites; fitted portrait artworks used `object-fit:contain` inside narrow slot boxes, making limbs too small; 5-column tray used `grid-auto-rows:minmax(0,1fr)` + `overflow-y:auto`, forcing a scrollbar when hint feedback consumed height.
+- New scoped CSS keeps completed slot buttons non-interactive **but fully opaque** with fitted pieces layered above the board. Text labels remain in HTML/ARIA but are visually hidden on the engraved silhouette; hover/focus and hint affordances remain. Switched to filled slot imagery and stable header + three-row tray at laptop width, with short-window fallback and unchanged tablet/mobile stack.
+- Dedicated regression added. GitHub smoke at `073621a`: **130/130 passed**, `19/19` Ending C images packaged. Cloudflare successfully deployed the corrected interactive preview. **Human visual confirmation still required** for placed arms/legs, fit, hints and scrollbar; draft PR #46 must remain unmerged.
+
 ## GAME-SP4C.2–3 — Approved cardboard puzzle artwork integration (18 October 2026)
 
 - Owner approved the **final** 6 Stephen cut-outs, 7 distinct comedy decoys and empty cardboard mounting board (14 originals). The art is independently staged in Google Drive, registered in manifest files and wired into the existing 13-choice/6-slot puzzle. Do not use earlier rejected Paul-faced or roughly segmented Stephen drafts.
