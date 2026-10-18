@@ -657,11 +657,17 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 **Acceptance and proof:** Before/after at the same scene beat demonstrates brighter illustrated environment with adequately contrasting title, subtitles and choices; no effects on Ending B/C or throne room.
 **Non-goals:** Regenerate the approved landscape or change comic dialogue.
 
+#### GAME-SP4.1C2 — Ending B background daylight and legibility (deferred)
+
+**Priority:** P2 visual follow-up; **status:** Logged 18 October 2026 as [GitHub issue #56](https://github.com/tametheboardgame/stephen-martin-project/issues/56), **not started**. **Owner observation:** Ending B has the same excessively dark whole-scene treatment previously corrected for the Summit entrance in GAME-SP4.1C. This is a separate issue and must **not block GAME-SP4.1D2** or be changed in its skip-navigation PR.
+
+**Future investigation and acceptance:** Compare the original approved Ending B bureaucratic office artwork against rendered intro, permit/stamp game and ending scene. Check for CSS full-stage dark gradients/overlays and remove only unnecessary global shading, while retaining local contrast behind headings, white dialogue, paperwork and prompts. Check desktop/tablet/mobile and confirm image, actor positions, scripts, puzzle interaction and layout are unchanged. Prepare a separate bounded branch/PR, screenshot comparison and owner visual approval; do not regenerate approved art.
+
 ### Milestone 2: Consistent speaking and character focus
 
 #### GAME-SP4.1D — Consistent dialogue, removal of proof controls and contextual story skips
 
-**Priority:** P0 for speech-card coherence, P1 for first-version navigation cleanup; **status:** D0 approved and merged; D1 first implementation in progress on independent branch. **Dependencies:** A/B/C/D0 merged. **Delivery:** three small, independently approved implementation PRs **D0 → D1 → D2**, followed by E. The new owner requests of 18 October 2026 are explicitly included below. Do not combine the three into one high-risk UI/state rewrite.
+**Priority:** P0 for speech-card coherence, P1 for first-version navigation cleanup; **status:** D0 and D1 approved/merged (D1 PR #54 at `2e8347b`); D2 started on its own branch 18 October 2026. **Dependencies:** A/B/C/D0/D1 merged. **Delivery:** three small, independently approved implementation PRs **D0 → D1 → D2**, followed by E. The new owner requests of 18 October 2026 are explicitly included below. Do not combine the three into one high-risk UI/state rewrite.
 
 **Owner observations:** Spoken responses become blue footer text after choices; the opening still shows developer-facing “Stephen: Auto”, “David: Auto”, “Paul: Auto” toggles despite the expressions now being automatically scripted; players should be able to skip long *already scripted* passages to the next meaningful choice, playable puzzle or scene ending from the playback bar.
 
