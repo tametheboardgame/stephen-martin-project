@@ -2,6 +2,15 @@
 
 **Updated:** 18 October 2026
 
+## GAME-SP4.1F0 — Transition illustrations and spoken narration (planning and approval)
+
+- **SP4.1C2 approved and merged:** PR #58 at `61b94d9ed2d93b78a21c9df03d07c195f3d813f0`, final 162/162 tests and Cloudflare success. Ending B room now uses original daylight colours.
+- **F0 working branch:** `agent/game-sp41f0-transition-storyboard-narration` from that exact main commit. Roadmap split into F0/F1/F2A–B/F3/F-NARR/F4.
+- **Owner request addressed:** Four **proposed** illustration assets to generate; 12 suggested short, off-screen British narrator cues, ID-matched MP3 file names. One same illustration reused twice for sightseeing intermissions, two images for four David/Paul travel beats, and one route-neutral image reused across all three handoffs. Chapter Two title, Back in England and hotel arrival currently reuse approved art.
+- **Review source:** `docs/story/GAME-SP4.1F0-TRANSITION-ART-NARRATION.md` includes a full storyboard, proposed script and filenames, reuse inventory, voice/timing and owner approval gates. **No new artwork or audio files created; existing dialogue and gameplay unmodified.**
+- **Next gate:** owner approves/edits image list and narrator wording/voice before any new generation or implementation. Maintain a draft PR. Then start **F1** one illustrated sightseeing time-jump and the F-NARR audio groundwork, following the approved staging/manifest pipeline.
+
+
 ## GAME-SP4.1C2 — Brighten Ending B background (active)
 
 - **SP4.1E approved and merged:** PR #57 at `827610da9edb69a00ba970e3e60e6bb30c41e151`. **161/161** CI tests and Cloudflare successful before merge.
