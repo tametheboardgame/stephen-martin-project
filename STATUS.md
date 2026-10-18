@@ -2,6 +2,12 @@
 
 **Updated:** 18 October 2026
 
+## GAME-SP4C.1B / SP4C.2 — Workshop locked; six-piece cardboard Stephen prototype (18 October 2026)
+
+- Approved display-workshop background staged in Google Drive and materialised into PR #46 as an independent WebP. Added CSS-backed puzzle scene, explicit build inclusion and a regression test; old 13-item/six-slot HTML and save/interaction flows remain intact.
+- Six *unapproved draft* standalone cardboard cut-outs were made from the locked Stephen standing art: head, torso, left arm, right arm, left leg and right leg, plus a registration JSON and blank standee board. First attempts that used Paul's face were rejected and not staged. The piece set is a prototype awaiting user visual approval, not a playable puzzle integration or merged asset.
+- **Human gates:** preview the existing workshop integration and inspect the six-piece kit before uploading/committing any puzzle artwork. The decoys remain a later packet; keep draft PR #46 unmerged.
+
 ## GAME-SP4C.1A — Owner-locked spa background and character scene integrated (18 October 2026)
 
 - User approved the standalone Total Renewal Spa background and three canonical standalone actor variants, explicitly ordering integration into the playable game, not another flattened illustration. Original PNGs staged in project Google Drive and all four converted to WebP through the manifest pipeline. Production source IDs/paths: `docs/story/GAME-SP4C-ENDING-C-ART-PRODUCTION.md`.
