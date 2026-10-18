@@ -8,7 +8,9 @@
 - **D2 branch:** `agent/game-sp41d2-contextual-skip` from the exact D1 merge commit. One top-bar skip is labelled from a real checkpoint map, and hidden at unanswered route choices, hotel clues, unsolved games, unpowered cardboard and final summaries.
 - Atomic skips cancel the old holiday timer and voiced MP3, persist through normal V3 rendering, focus the target interactive control and keep three route puzzles manual. Full matrix and test plan: `docs/story/GAME-SP4.1D2-CONTEXTUAL-SKIP.md`.
 - **Separately logged for later:** `GAME-SP4.1C2`, Ending B's excessively dark artwork overlay; no fix to that visual issue in D2.
-- **Pending:** exact-branch CI, deployed preview and owner testing. D2 remains unmerged; subsequent SP4.1E speaker highlighting remains separate.
+- **First verified D2 build:** head `4fa9614`, **154/154** automated tests passed, **20/20** approved Ending C assets packaged; Cloudflare preview https://14a50c9f.stephen-martin-project.pages.dev. Final documentation commit will receive fresh CI before acceptance.
+- **Deferred issue:** [Ending B lighting #56](https://github.com/tametheboardgame/stephen-martin-project/issues/56) tracks GAME-SP4.1C2 independently of D2.
+- **Pending:** final exact-head CI and owner desktop/tablet/mobile testing. D2 remains draft and unmerged; SP4.1E speaker highlighting follows separately.
 
 
 ## GAME-SP4.1D1 — Named dialogue and consistent top controls (active)
