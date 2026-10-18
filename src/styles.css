@@ -4080,9 +4080,11 @@ body:has(#menuScreen:not([hidden])) main {
 }
 
 
-/* GAME-SP4.1D1: consistent named-paper dialogue and top transport.
-   Only presentation changes here: all approved stages, sprites and games retain
-   their positioning, state transitions and interactive hit regions. */
+/* GAME-SP4.1D1: one opening-office-style named speech tab throughout.
+   Dialogue text lives in a compact paper box; the speaker badge straddles
+   the upper-left border without taking space INSIDE the box. The separate
+   top transport and gameplay/status panels keep their own visual semantics.
+   Existing sprites, timers, route logic and interactive hit regions unchanged. */
 #officeScreen .story-speech,
 #holidayScreen .story-speech {
   box-sizing:border-box;
@@ -4093,25 +4095,59 @@ body:has(#menuScreen:not([hidden])) main {
   box-shadow:5px 6px 0 rgba(4,19,36,.48) !important;
   text-align:left;
 }
+/* Stages already position their own dialogue box absolutely. Route intro
+   and puzzle response cards need an explicit local positioning context. */
+#holidayScreen .rescue-intro-dialogue.story-speech,
+#holidayScreen .story-puzzle-response.story-speech {
+  position:relative;
+}
 #holidayScreen .story-speech > strong {
-  display:inline-block;
-  width:auto;
-  max-width:100%;
-  margin:0 0 5px !important;
-  padding:5px 10px !important;
-  border-radius:5px;
-  background:#163c56 !important;
-  color:#fff4df !important;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(13px,1.25vw,17px) !important;
-  line-height:1.15 !important;
-  letter-spacing:.075em;
+  position:absolute;
+  z-index:2;
+  top:0;
+  left:12px;
+  transform:translateY(calc(-100% + 5px));
+  display:block;
+  box-sizing:border-box;
+  width:max-content;
+  max-width:calc(100% - 24px);
+  margin:0 !important;
+  padding:6px 15px !important;
+  border:3px solid #083161;
+  border-bottom:0;
+  border-radius:8px 8px 0 0;
+  background:#105baa !important;
+  color:#fff !important;
+  font:900 clamp(15px,1.55vw,22px) "Trebuchet MS",sans-serif !important;
+  line-height:1.2 !important;
+  letter-spacing:.035em;
+  text-align:left;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  pointer-events:none;
 }
 #holidayScreen .story-speech > p:not([hidden]) {
   color:#203445 !important;
   font-size:clamp(15px,1.55vw,21px);
   font-weight:800;
-  line-height:1.4;
+  line-height:1.34 !important;
+  margin:0 !important;
+}
+/* Removing the internal speaker row lets every spoken box be shorter, and
+   preserves the approved office geometry rather than resizing its own tab. */
+#holidayScreen .wall-dialogue.story-speech,
+#holidayScreen .rescue-intro-dialogue.story-speech,
+#holidayScreen .summit-ending-content.story-speech,
+#holidayScreen .detention-ending-content.story-speech,
+#holidayScreen .assembly-ending-content.story-speech {
+  padding:11px 15px 9px !important;
+}
+#holidayScreen .rescue-intro-dialogue.story-speech,
+#holidayScreen .summit-ending-content.story-speech,
+#holidayScreen .detention-ending-content.story-speech,
+#holidayScreen .assembly-ending-content.story-speech {
+  overflow:visible !important;
+  max-height:none !important;
 }
 #holidayScreen .story-speech:is(.summit-ending-content,.detention-ending-content,.assembly-ending-content) > p:last-child {
   color:#556878 !important;
@@ -4121,13 +4157,13 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen .story-puzzle-response {
   position:relative;
   z-index:5;
-  margin:9px 0;
+  margin:29px 0 9px;
   padding:10px 13px;
-  max-height:min(160px,26dvh);
-  overflow-y:auto;
+  max-height:none;
+  overflow:visible;
 }
 #holidayScreen .story-puzzle-response > p {
-  margin:3px 0 0 !important;
+  margin:0 !important;
   padding:0 !important;
   border:0 !important;
   background:transparent !important;
@@ -4235,7 +4271,20 @@ body:has(#menuScreen:not([hidden])) main {
     padding:4px 6px;gap:4px;min-height:38px;
   }
   #holidayScreen .story-toolbar-label {display:none;}
-  #holidayScreen .story-puzzle-response {max-height:175px;}
+  #holidayScreen .story-speech > strong {
+    left:9px;
+    padding:5px 10px !important;
+    font-size:clamp(13px,2.4vw,17px) !important;
+  }
+  #holidayScreen .story-speech > p:not([hidden]) {font-size:clamp(14px,2.55vw,18px);}
+  #holidayScreen .story-puzzle-response {margin-top:26px;max-height:none;}
+  #holidayScreen .wall-dialogue.story-speech,
+  #holidayScreen .rescue-intro-dialogue.story-speech,
+  #holidayScreen .summit-ending-content.story-speech,
+  #holidayScreen .detention-ending-content.story-speech,
+  #holidayScreen .assembly-ending-content.story-speech {
+    padding:9px 11px 8px !important;
+  }
 }
 @media(max-width:450px) {
   #officeScreen .scene-toolbar {padding:4px 5px;}
@@ -4243,6 +4292,12 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen .china-footer.story-top-controls .mini-button {
     padding:5px 4px !important;font-size:10px !important;
   }
-  #holidayScreen .story-speech > p:not([hidden]) {font-size:14px;}
-  #holidayScreen .story-puzzle-response {padding:7px 9px;max-height:155px;}
+  #holidayScreen .story-speech > strong {
+    left:8px;
+    max-width:calc(100% - 16px);
+    padding:4px 9px !important;
+    font-size:13px !important;
+  }
+  #holidayScreen .story-speech > p:not([hidden]) {font-size:14px;line-height:1.3 !important;}
+  #holidayScreen .story-puzzle-response {padding:8px 10px;max-height:none;margin-top:25px;}
 }
