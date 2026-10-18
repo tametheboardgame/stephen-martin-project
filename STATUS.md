@@ -2,6 +2,15 @@
 
 **Updated:** 18 October 2026
 
+## Current live milestone — three endings integrated; refinement audit underway
+
+- **`main` is the approved first-version gameplay/art baseline at `d3d7534415c75d029072a31ede9fdde7de5130b4`.** Ending B PR #44 and Ending C PR #46 have both merged. Final Ending C preview passed **132/132** Node smoke and bundled 20/20 Ending C WebPs. User approved its four-person spa tableau and accepted minor assembly-slot geometry as a later polish task.
+- The game includes the complete shared story, three functional mini-games/endings, approved image references, office/holiday/alarm/hotel voice clips and two opening song files. **No public release sign-off** has been given. The three complete human-timed playthroughs, accessibility/viewports and privacy review are still pending.
+- **New planning branch:** `agent/game-sp41-v1-polish-audit`. Canonical issue/priority/acceptance inventory: `docs/story/GAME-SP4.1-FIRST-VERSION-REFINEMENT-AUDIT.md`. This PR is **documentation-only**; it changes neither UI nor sound.
+- Priority next steps proposed for owner review: **SP4.1A** image decode/loading layer; **B** Back-in-England David expression scale registration; **C** Summit entrance lighten; **D** consistent named dialogue bubble even after choices; **E** active speaker backlight in all scenes; **F** transition illustration; **G** selective expressions/movement; **H** independent remaining voices; **I** full-playthrough validation; **J** deferred Ending C slot geometry.
+- **Source audit findings:** 23 image preloads, 41 eager scene image tags and no scene-specific loader; 112/112 presently whitelisted dialogue MP3s available but three route intros/puzzles/endings not yet voiced by the app; 100 source WebPs (roughly 19.1 MB in repo). These are not measured browser load metrics. Stale historical sections below still describe earlier draft PRs; use this current section and the SP4.1 audit for next action.
+- **Next human gate:** agree package order. Next code stream begins with SP4.1A in a short-lived branch based on merged `main`; do not combine all ten fixes into one PR or start a new major game mechanic.
+
 ## GAME-SP4C.4A — Cardboard Stephen joins Ending C finale (18 October 2026)
 
 - User approved the comically taped, full-length cardboard replica of Stephen and instructed adding it to the actual Ending C final scene. The PNG is securely staged in the established project Drive folder (`1FifUsyIYY0c4WRuwEEli89h6nKNmuYkx`); branch references it as a separate transparent WebP via its own manifest.
