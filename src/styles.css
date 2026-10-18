@@ -4361,3 +4361,93 @@ body:has(#menuScreen:not([hidden])) main {
   #officeScreen #stage .cast-actor,
   #holidayScreen [data-speaker-focus] {transition:none !important;}
 }
+
+
+/* GAME-SP4.1F — four OWNER-LOCKED illustrated transition backgrounds.
+ * Reuse F1 twice, F2A/B across two beats each, and F3 for all three routes.
+ * Original artwork stays fully bright; local caption surfaces own contrast. */
+#holidayScreen .china-intermission-art[data-destination="palace"],
+#holidayScreen .china-intermission-art[data-destination="market"] {
+  background-image:url("../public/assets/generated/locations/transition-china-passing-time-v01.webp");
+  background-position:center;
+}
+#holidayScreen .china-route-handoff-art[data-route="cult"],
+#holidayScreen .china-route-handoff-art[data-route="detention"],
+#holidayScreen .china-route-handoff-art[data-route="reassemble"] {
+  background-image:url("../public/assets/generated/locations/transition-stephen-route-handoff-v01.webp");
+  background-position:center;
+}
+#holidayScreen #rescueTravelScene[data-montage="flight-luggage"] .rescue-travel-stage {
+  background:url("../public/assets/generated/locations/transition-operation-flight-luggage-v01.webp") center/cover no-repeat;
+}
+#holidayScreen #rescueTravelScene[data-montage="map-expenses"] .rescue-travel-stage {
+  background:url("../public/assets/generated/locations/transition-operation-map-expenses-v01.webp") center/cover no-repeat;
+}
+/* These approved bright paintings do not need the old full-stage night wash. */
+#holidayScreen .china-intermission-art::before,
+#holidayScreen .china-route-handoff-art::before {
+  background:linear-gradient(90deg,rgba(3,18,33,.17),transparent 40%,rgba(3,18,33,.08));
+}
+#holidayScreen .intermission-frame,
+#holidayScreen .route-handoff-card {
+  width:min(68%,740px);
+  padding:clamp(14px,2vw,26px) clamp(16px,2.5vw,32px);
+  background:rgba(8,29,49,.86);
+}
+#holidayScreen #rescueTravelScene .rescue-travel-panel {
+  width:min(62%,760px);
+  max-height:65%;
+  padding:clamp(12px,2vw,25px);
+  gap:7px;
+  background:rgba(8,29,49,.83);
+}
+#holidayScreen #rescueTravelScene .rescue-travel-symbol {font-size:clamp(25px,4vw,45px);}
+#holidayScreen #rescueTravelScene .rescue-travel-panel h2 {font-size:clamp(19px,3vw,39px);}
+
+/* One subtitle surface, separate from the white character speech bubbles.
+ * This is only visible during actual illustrated narration beats, and stays
+ * readable if the MP3 has not yet been uploaded or Sound is turned off. */
+#holidayScreen #transitionNarration[hidden] {display:none !important;}
+#holidayScreen .transition-narration {
+  position:absolute;z-index:22;
+  bottom:clamp(70px,9%,115px);
+  left:50%;transform:translateX(-50%);
+  box-sizing:border-box;
+  width:min(76%,940px);
+  padding:8px 15px 9px;
+  border:2px solid rgba(245,210,147,.85);
+  border-radius:10px;
+  background:rgba(7,27,45,.91);
+  color:#fffbec;
+  box-shadow:0 6px 14px rgba(2,14,26,.38);
+  text-align:center;
+  pointer-events:none;
+}
+#holidayScreen .transition-narration strong {
+  display:block;
+  font:900 clamp(10px,1vw,13px) system-ui,sans-serif;
+  letter-spacing:.14em;
+  color:#ffdb95;
+}
+#holidayScreen .transition-narration p {
+  margin:4px 0 0;
+  font:650 clamp(12px,1.25vw,18px)/1.32 "Trebuchet MS",system-ui,sans-serif;
+  overflow-wrap:break-word;
+}
+@media(max-width:800px) {
+  #holidayScreen .intermission-frame,
+  #holidayScreen .route-handoff-card {
+    width:83%;padding:13px 12px;
+  }
+  #holidayScreen #rescueTravelScene .rescue-travel-panel {width:80%;padding:12px;max-height:60%;}
+  #holidayScreen .transition-narration {bottom:63px;width:91%;padding:7px 10px;}
+  #holidayScreen .transition-narration p {font-size:clamp(11px,2vw,15px);}
+}
+@media(max-width:450px) {
+  #holidayScreen .intermission-frame,
+  #holidayScreen .route-handoff-card {width:90%;padding:11px 9px;}
+  #holidayScreen #rescueTravelScene .rescue-travel-panel {width:93%;max-height:51%;gap:3px;}
+  #holidayScreen .transition-narration {bottom:56px;width:95%;padding:6px 8px;}
+  #holidayScreen .transition-narration p {font-size:11px;line-height:1.25;}
+  #holidayScreen .transition-narration strong {font-size:10px;}
+}
