@@ -137,12 +137,14 @@ const endingBImages = [
   "public/assets/generated/game/ending-b-pauls-takeaway-cup-alpha-v01.webp",
   "public/assets/generated/game/ending-b-approved-stamp-v01.webp",
   "public/assets/generated/game/ending-b-approved-ink-impression-v01.webp",
-  "public/assets/generated/game/ending-b-release-permit-canonical-portrait-proof-v01.webp"
+  "public/assets/generated/game/ending-b-release-permit-canonical-portrait-proof-v01.webp",
+  "public/assets/generated/characters/ending-b-ceremonial-official-neutral-v01.webp"
 ];
 const endingBTransparent = new Set([
   "ending-b-pauls-takeaway-cup-alpha-v01.webp",
   "ending-b-approved-stamp-v01.webp",
-  "ending-b-approved-ink-impression-v01.webp"
+  "ending-b-approved-ink-impression-v01.webp",
+  "ending-b-ceremonial-official-neutral-v01.webp"
 ]);
 for (const relative of endingBImages) {
   const data = await readFile(path.join(root,relative));
@@ -158,7 +160,7 @@ for (const relative of endingBImages) {
   await mkdir(path.dirname(path.join(output,relative)),{recursive:true});
   await copyFile(path.join(root,relative),path.join(output,relative));
 }
-console.log("Approved Ending B artworks packaged: " + endingBImages.length + "/8.");
+console.log("Approved Ending B artworks packaged: " + endingBImages.length + "/9.");
 
 // The Chapter Two background and sprite remain independently approved WebP
 // assets. Refuse accidental opaque travel sprites or incorrectly sized art.
