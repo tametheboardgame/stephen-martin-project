@@ -1588,7 +1588,7 @@
             const part = [...assembly.parts,...assembly.decoys][i];
             const pieceButton = $("assemblyPiece"+i);
             const isPlaced = placed.includes(part.id);
-            pieceButton.textContent = part.mark + " " + part.label + (isPlaced ? " ✓ Placed" : "");
+            $("assemblyPieceLabel"+i).textContent = part.label + (isPlaced ? " ✓ Placed" : "");
             pieceButton.disabled = isPlaced || progress.finished;
             pieceButton.dataset.placed = isPlaced ? "true" : "false";
             pieceButton.dataset.selected = selected === part.id && !isPlaced ? "true" : "false";
@@ -1598,7 +1598,8 @@
             const part = assembly.parts[i];
             const slot = $("assemblySlot"+i);
             const filled = placed.includes(part.id);
-            slot.textContent = filled ? "✓ "+part.label+" fitted" : part.label+" · empty slot";
+            $("assemblySlotLabel"+i).textContent = filled ? "✓ "+part.label+" fitted" : part.label+" · empty slot";
+            $("assemblySlotArt"+i).hidden = !filled;
             slot.disabled = filled || progress.finished;
             slot.dataset.filled = filled ? "true" : "false";
             slot.dataset.hint = progress.hintVisible && selected === part.id && !filled ? "true" : "false";
