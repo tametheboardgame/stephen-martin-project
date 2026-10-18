@@ -4013,3 +4013,73 @@ test("GAME-SP4.1F narrator filename allow-list exactly matches IDs reserved in g
   assert.match(read("public/assets/audio/dialogue/README.md"),/transition\.travel\.004\.mp3/);
   assert.ok(fs.existsSync(path.join(root,"docs/story/GAME-SP4.1F-APPROVED-ASSETS.md")));
 });
+
+
+test("GAME-SP4.1F.1 every old transition title panel contains headings, not duplicated narrator prose",()=>{
+  const between=(start,end)=>{
+    const a=html.indexOf(start);
+    assert.ok(a>=0,"Expected scene section "+start);
+    const z=html.indexOf(end,a+start.length);
+    assert.ok(z>a,"Expected section boundary "+end);
+    return html.slice(a,z);
+  };
+  const cuts=[
+    ["id=\"chinaIntermission\"","id=\"chinaRouteHandoff\"","intermission"],
+    ["id=\"chinaRouteHandoff\"","id=\"chinaFinalScene\"","handoff"],
+    ["id=\"rescueTravelScene\"","id=\"rescueHubArrival\"","travel"],
+    ["id=\"rescueHubArrival\"","id=\"rescueHotelScene\"","arrival"]
+  ];
+  for(const [start,end,label] of cuts){
+    const scene=between(start,end);
+    assert.doesNotMatch(scene,/<p(?:\s|>)/i,label+" does not repeat narrator dialogue");
+    assert.doesNotMatch(scene,/<small(?:\s|>)/i,label+" does not add another story subtitle");
+    assert.match(scene,/<h[23]\b/,label+" preserves a readable title");
+  }
+  const england=between('id="chinaFinalEngland"','id="rescueAlarmScene"');
+  assert.doesNotMatch(england,/<p(?:\s|>)|<small(?:\s|>)/i);
+  assert.match(england,/BACK IN ENGLAND/);
+  assert.ok(!html.includes('id="intermissionComment"'));
+  assert.ok(!html.includes('id="handoffDescription"'));
+  assert.ok(!html.includes('id="rescueTravelDetail"'));
+  assert.doesNotMatch(engine,/\$\("(?:intermissionComment|handoffDescription|rescueTravelDetail)"\)/);
+  assert.match(html,/id="transitionNarration"[^>]*aria-label="Transition narrator subtitles"/);
+  assert.match(html,/id="transitionNarrationLine" aria-live="off"/);
+});
+
+test("GAME-SP4.1F.1 compact transition plates leave artwork and narrator separate at all viewports",()=>{
+  const block=css.slice(css.indexOf("GAME-SP4.1F.1 — compact"));
+  assert.ok(block.length>0,"Dedicated last-in-cascade title-only styling");
+  assert.match(block,/\.intermission-frame,\s*#holidayScreen \.route-handoff-card \{[\s\S]*?width:min\(45%,610px\);/);
+  assert.match(block,/#holidayScreen #rescueTravelScene \.rescue-travel-panel,\s*#holidayScreen #rescueHubArrival \.rescue-travel-panel \{[\s\S]*?width:min\(44%,580px\);/);
+  assert.match(block,/@media \(max-width:800px\)/);
+  assert.match(block,/@media \(max-width:450px\)/);
+  assert.match(css,/#holidayScreen \.transition-narration \{[\s\S]*?z-index:22;/);
+  // The label and subtitle stay outside the scene title plate in the markup.
+  const subtitleOffset=html.indexOf('id="transitionNarration"');
+  assert.ok(subtitleOffset>html.indexOf('id="rescueHubArrival"'));
+  assert.ok(subtitleOffset<html.indexOf('id="holidayTopbarChapter"'));
+});
+
+test("GAME-SP4.1F.1 narrator subtitles remain on transitions while title plates contain only destinations",()=>{
+  const p=preview();p.start();p.el("skipButton").click();
+  assert.equal(p.el("transitionNarration").hidden,false);
+  assert.match(p.el("transitionNarrationLine").textContent,/marvellous time/);
+  p.el("chinaStartButton").click();
+  assert.equal(p.el("transitionNarration").hidden,true);
+  for(let i=0;i<5;i++)p.el("wallNextButton").click();
+  p.el("wallDeclineButton").click();p.el("wallGoPalaceButton").click();
+  assert.equal(p.el("intermissionDestination").textContent,"THE FORBIDDEN CITY");
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.china.to-palace.001");
+  p.el("intermissionContinueButton").click();
+  for(let i=0;i<4;i++)p.el("palaceNextButton").click();
+  p.el("palaceDeclineButton").click();p.el("palaceGoMarketButton").click();
+  assert.equal(p.el("intermissionDestination").textContent,"THE NIGHT MARKET");
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.china.to-market.001");
+  p.el("intermissionContinueButton").click();
+  for(let i=0;i<6;i++)p.el("marketNextButton").click();
+  p.el("marketGoIncidentButton").click();
+  assert.ok(p.el("handoffTitle").textContent.length>0);
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.route.spa.001");
+  p.el("handoffContinueButton").click();
+  assert.equal(p.el("transitionNarration").hidden,true);
+});
