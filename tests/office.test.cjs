@@ -3006,3 +3006,16 @@ test("GAME-SP4B.2 approved official is a separate transparent actor behind the b
   assert.match(read("src/game.js"),/detentionEndingScene"\)\.dataset\.speaker = showCard/);
   assert.match(read("scripts/build.mjs"),/ending-b-ceremonial-official-neutral-v01\.webp/);
 });
+
+
+test("GAME-SP4B.3 official remains counter-sized and clipped at the desk, including narrow screens",()=>{
+  const rules=css.slice(css.lastIndexOf("/* GAME-SP4B.2: independent official"));
+  const base=rules.match(/#holidayScreen \.detention-intro-official,\s*#holidayScreen \.detention-ending-official \{([^}]+)\}/);
+  assert.ok(base,"Official must use one shared positioning rule for briefing and ending");
+  const value=(cssRule,key)=>Number(cssRule.match(new RegExp(key+":([\\d.]+)%"))?.[1]);
+  assert.ok(value(base[1],"height")<=50,"Keep the official proportionate to the service counter");
+  assert.ok(value(base[1],"top")>=36,"Keep the head at bureau desk depth");
+  assert.ok(value(base[1],"inset")>=65,"Conceal the official's lower body behind the counter");
+  assert.match(rules,/@media \(max-width:800px\) \{[\s\S]*?height:47%;[\s\S]*?clip-path:inset\(0 0 66% 0\)/);
+  assert.match(rules,/@media \(max-width:450px\) \{[\s\S]*?height:45%;[\s\S]*?clip-path:inset\(0 0 65% 0\)/);
+});
