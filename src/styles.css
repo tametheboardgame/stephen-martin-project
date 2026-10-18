@@ -2184,6 +2184,47 @@ body:has(#menuScreen:not([hidden])) main {
   filter:drop-shadow(5px 6px 5px rgba(0,0,0,.3));
 }
 #holidayScreen .rescue-alarm-david {left:17%;}
+
+/* GAME-SP4.1B: use the already-approved opening David expression calibration
+ * in Back in England. These are the SAME source WebPs, not re-illustrations.
+ * Lock a scene-space frame for every pose before applying the shared optical
+ * scale, so differing source canvas margins cannot resize his layout box. */
+#holidayScreen #rescueAlarmScene #rescueAlarmDavid {
+  width:32%;
+  height:79%;
+  max-width:none;
+  object-fit:contain;
+  object-position:center bottom;
+  transform-origin:center bottom;
+  transition:none;
+}
+#holidayScreen #rescueAlarmScene #rescueAlarmDavid[data-sprite="serious"] {
+  transform:scale(.96);
+}
+#holidayScreen #rescueAlarmScene #rescueAlarmDavid[data-sprite="confident"] {
+  transform:scale(.93);
+}
+#holidayScreen #rescueAlarmScene #rescueAlarmDavid[data-sprite="frustrated"] {
+  transform:scale(.92);
+}
+#holidayScreen #rescueAlarmScene #rescueAlarmDavid[data-sprite="systems-expert"] {
+  transform:scale(.94);
+}
+/* Keep David at the same desk baseline as Paul and the foreground, allowing
+ * the existing breakpoints to alter the overall frame, not the pose ratios. */
+@media (max-width:800px) {
+  #holidayScreen #rescueAlarmScene #rescueAlarmDavid {
+    width:42%;
+    height:67%;
+  }
+}
+@media (max-width:450px) {
+  #holidayScreen #rescueAlarmScene #rescueAlarmDavid {
+    width:55%;
+    height:57%;
+  }
+}
+
 #holidayScreen .rescue-alarm-paul {right:14%;}
 #holidayScreen .rescue-alarm-foreground {z-index:3;pointer-events:none;}
 #holidayScreen .rescue-alarm-dialogue {bottom:11%;left:3%;width:min(73%,850px);z-index:7;}
