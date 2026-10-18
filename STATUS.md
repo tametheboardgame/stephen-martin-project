@@ -2,6 +2,13 @@
 
 **Updated:** 18 October 2026
 
+## GAME-SP4.1C — Summit entrance daylight refinement (18 October 2026)
+
+- **GitHub connected.** Draft **PR #52**, branch `agent/game-sp41c-summit-daylight`, based on approved `main` `3702ea83`. The corrected CSS removes the old 24–52% full-stage navy gradient over the approved Summit exterior artwork for both the route-intro and admissions stage. Existing local dark title, speaker and question panels keep their own contrast.
+- Changes limited to CSS, regression coverage and documentation. Approved `summit-entrance-v01.webp`, character images/positions, narration, voice mapping, gameplay, saves, detention/spa artwork and the separately approved throne room have not been changed.
+- **Merge gate:** automated Node smoke/build and a real Cloudflare branch preview; owner compares the exterior's natural daylight, readability and admissions answer cards on laptop/mobile, then explicitly approves. Record final SHA and CI evidence when complete. The browser visual review is still outstanding.
+- After approval, deliver separately planned **SP4.1D0** removal of introductory Auto proof switches, **D1** consistent white named speech, **D2** context-aware skips; then **E** speaker focus. Full checklist: `docs/story/GAME-SP4.1C-SUMMIT-DAYLIGHT.md`.
+
 ## Current milestone — SP4.1B merged; Summit brightness next (18 October 2026)
 
 - **GAME-SP4.1B completed and owner visually approved.** PR #50 merged into `main` at `b5b6881c99c6ad6728cb6b43f1d350b08f1654b0`; **140/140 automated tests passed**, Cloudflare deployment successful. Back in England David's four approved expression sources now use the consistent, opening-approved optical scales; Paul and all story/save/audio behaviour unchanged. Previous loader SP4.1A PR #49 is also merged.
