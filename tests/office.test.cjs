@@ -3328,7 +3328,7 @@ test("GAME-SP4.1D1 shares a paper speech style and gives both story sections a t
   for(const id of ["playPauseButton","backButton","nextButton","sceneSoundButton"])
     assert.ok(officeToolbar.includes('id="'+id+'"'),id+" belongs in the top office menu");
   assert.match(html,/class="china-footer story-top-controls"/);
-  assert.match(css,/GAME-SP4\.1D1: consistent named-paper dialogue/);
+  assert.match(css,/GAME-SP4\.1D1: one opening-office-style named speech tab throughout/);
   assert.match(css,/#holidayScreen \.china-footer\.story-top-controls/);
   const p=toWallChoice();
   const beforeSound = p.el("holidaySoundButton").textContent;
