@@ -1,7 +1,7 @@
 # GAME-SP4.1F0 — Illustrated transition art & spoken narrator plan
 
 **Started:** 18 October 2026. **Baseline:** merged SP4.1C2 Ending B daylight, commit `61b94d9ed2d93b78a21c9df03d07c195f3d813f0`.
-**Status:** Proposed artwork and narrator copy for owner review, **NOT YET AUTHORISED FOR GENERATION OR AUDIO INTEGRATION**.
+**Status:** **Four illustration revisions approved/locked and staged in Google Drive, 18 October 2026; image-manifest import authorised.** Existing ElevenLabs narrator voice confirmed. The 12 narrator lines are **still drafts pending recording approval**, and no narrator audio is integrated. Full asset hashes/file IDs: `docs/story/GAME-SP4.1F-APPROVED-ASSETS.md`.
 
 ## Decision requested
 

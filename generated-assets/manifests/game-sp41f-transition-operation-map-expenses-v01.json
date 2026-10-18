@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1_3-3pcPQj8ppbp7mYrKbdBcnpXc9KHsU"
+  },
+  "expectedSourceName": "transition-operation-map-expenses-v01.png",
+  "destination": "public/assets/generated/locations/transition-operation-map-expenses-v01.webp",
+  "transform": {
+    "maxWidth": 1672,
+    "maxHeight": 941,
+    "quality": 85
+  },
+  "revision": 1
+}
