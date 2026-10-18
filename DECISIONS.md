@@ -1,3 +1,9 @@
+## SP-D047, 18 October 2026: Merge all three endings and finish a small V1 through measured polish
+
+Owner approved the current three-ending game and instructed merging completed Ending C into `main` **before** starting an overall refinement review. PR #46 merged successfully at `d3d7534415c75d029072a31ede9fdde7de5130b4`, with 132/132 branch smoke tests, 20/20 Ending C WebPs, and separate real and taped-cardboard Stephen assets. Minor cardboard mounting-slot geometry is explicitly deferred, not a merge blocker. Preserve all three routes, canonical story, approved visual likenesses, local save, the small plain-browser architecture and the 15–25-minute first playthrough limit.
+
+Prioritise the six owner-identified consistency issues (progressive opening-image painting; David shrinking/growing in Back in England; over-dark Summit entrance; named speech bubbles reverting to footer text after decisions; missing all-scene speaker focus; plain transitional cards), then selective animation/expression improvements and a separately continuing owner-supplied voice recording track. Work in small, independently previewable SP4.1A–J packages and undertake a full timed visual/functional/voice/accessibility playtest before any release. Documentation-only source audit: `docs/story/GAME-SP4.1-FIRST-VERSION-REFINEMENT-AUDIT.md`. The audit does not itself approve any additional art, new dialogue, code changes or public marketing.
+
 
 ## SP-D046, 18 October 2026: Finish Ending B and commence staged Ending C artwork
 
