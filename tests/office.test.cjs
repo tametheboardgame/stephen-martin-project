@@ -3332,8 +3332,8 @@ test("GAME-SP4.1D1 shares a paper speech style and gives both story sections a t
   assert.match(css,/#holidayScreen \.china-footer\.story-top-controls/);
   const p=toWallChoice();
   p.el("holidaySoundButton").click();
-  assert.equal(p.el("sceneSoundButton").getAttribute("aria-pressed"),"true");
-  assert.equal(p.el("holidaySoundButton").getAttribute("aria-pressed"),"true");
+  assert.equal(p.el("sceneSoundButton").textContent,"Sound: On");
+  assert.equal(p.el("holidaySoundButton").textContent,"Sound: On");
   assert.equal(p.el("holidayTopbarChapter").textContent,"CHAPTER TWO");
 });
 
