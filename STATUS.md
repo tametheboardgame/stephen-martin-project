@@ -2,6 +2,12 @@
 
 **Updated:** 18 October 2026
 
+## GAME-SP4C.2–3 — Approved cardboard puzzle artwork integration (18 October 2026)
+
+- Owner approved the **final** 6 Stephen cut-outs, 7 distinct comedy decoys and empty cardboard mounting board (14 originals). The art is independently staged in Google Drive, registered in manifest files and wired into the existing 13-choice/6-slot puzzle. Do not use earlier rejected Paul-faced or roughly segmented Stephen drafts.
+- Individual transparent WebPs form the live tray; filled slots reveal their actual corresponding images. The board image stays separate; image rerender no longer removes sprite tags. Existing keyboard, touch, drag/drop, hint, save, wrong-answer dialogue and POWER ON mechanics remain in place.
+- Responsiveness: compact five-column laptop tray and matching standee silhouette, with tablet/mobile stacking. New asset/alpha and markup regression checks have been added. **Next:** confirm materialisation, green build, Cloudflare preview and owner visual sign-off before PR #46 may merge.
+
 ## GAME-SP4C.1B / SP4C.2 — Workshop locked; six-piece cardboard Stephen prototype (18 October 2026)
 
 - Approved display-workshop background staged in Google Drive and materialised into PR #46 as an independent WebP. Added CSS-backed puzzle scene, explicit build inclusion and a regression test; old 13-item/six-slot HTML and save/interaction flows remain intact.
