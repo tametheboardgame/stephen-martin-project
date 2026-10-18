@@ -3281,9 +3281,9 @@ test("GAME-SP4.1C Summit entrance retains full daylight and uses local contrast 
     "Never darken the entire outdoor environment to make text readable");
   assert.match(summitCss,/\.rescue-travel-panel\s*\{[^}]*background:rgba\(5,25,47,\.9\)/,
     "Intro's bounded text surface must remain contrast-protected");
-  assert.match(summitCss,/\.summit-entrance-label\s*\{[^}]*background:rgba\(7,30,53,\.84\)/,
+  assert.match(css,/\.summit-entrance-label\s*\{[^}]*background:rgba\(7,30,53,\.84\)/,
     "Summit title uses a local opaque backing");
-  assert.match(summitCss,/\.rescue-intro-dialogue,[\s\S]*?background:rgba\(5,25,48,\.94\)/,
+  assert.match(css,/\.rescue-intro-dialogue,[\s\S]*?background:rgba\(5,25,48,\.94\)/,
     "Named dialogue remains individually legible without a global tint");
   assert.match(css,/#holidayScreen \.summit-admissions\s*\{[^}]*background:rgba\(5,25,47,\.94\)/,
     "Admission questions retain their legible local card");
