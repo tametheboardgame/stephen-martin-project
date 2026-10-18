@@ -3142,3 +3142,25 @@ test("GAME-SP4C.2-3 all approved illustrated pieces stay separate and preserve p
   assert.ok(artCss.includes("@media (max-width:800px)"),"Stack at tablet widths");
   assert.ok(artCss.includes("@media (max-width:450px)"),"Retain large mobile tap targets");
 });
+
+
+test("GAME-SP4C.3A fitted parts are opaque and labelled slots do not obscure the board",()=>{
+  const stage=css.slice(css.lastIndexOf("/* GAME-SP4C.3A: stable standee layers"));
+  assert.ok(stage.includes('.assembly-slot[data-filled="true"]:disabled'),"Completed slots must counter the generic disabled button opacity");
+  assert.match(stage,/\.assembly-slot\[data-filled="true"\]:disabled\s*\{[^}]*opacity:1;/);
+  assert.match(stage,/\.assembly-slot-art\s*\{[^}]*z-index:3;/);
+  assert.match(stage,/\.assembly-board-art\s*\{[^}]*z-index:0;/);
+  assert.match(stage,/\.assembly-slot\[data-filled="true"\]\s*\{[^}]*z-index:4;/);
+  assert.match(stage,/\.assembly-slot-art\s*\{[^}]*object-fit:fill;/);
+  assert.match(stage,/\.assembly-slot-label\s*\{[^}]*display:none !important;/);
+  assert.match(stage,/@media \(min-width:801px\)[\s\S]*?grid-template-rows:min-content repeat\(3,minmax\(88px,1fr\)\)/);
+  assert.match(stage,/\.assembly-tray\s*\{[^}]*overflow:visible;/);
+  assert.match(stage,/@media \(min-width:801px\) and \(max-height:730px\)/);
+  assert.ok(engine.includes('("assemblySlotArt"+i).hidden = !filled;'),"Fitted state must switch the independent image on");
+  const slots=html.slice(html.indexOf('class="assembly-silhouette"'),html.indexOf('id="assemblyFeedback"'));
+  for(let i=0;i<6;i++){
+    assert.ok(slots.includes('id="assemblySlotArt'+i+'"'),"Keep each individual artwork image");
+    assert.ok(slots.includes('id="assemblySlotLabel'+i+'"'),"Retain accessible label text in DOM");
+    assert.match(slots,new RegExp('id="assemblySlot'+i+'"[^>]*aria-label='),"Each target retains an accessible name");
+  }
+});
