@@ -34,7 +34,7 @@ function harness({failure=false,hanging=false}={}) {
     }
   }
   const window={Image:ImageMock,getComputedStyle(node,pseudo){
-    return {display:"block",visibility:"visible",
+    return {display:node.display || "block",visibility:"visible",
       backgroundImage:!pseudo?node.background || "none":"none",
       content:pseudo?"none":""};
   }};
@@ -124,4 +124,20 @@ test("GAME-SP4.1A navigation supersedes stale scene promises and resets timers",
   assert.equal(p.el("assetLoadingOverlay").hidden,true);
   assert.equal(p.timeouts.size,0);
   assert.equal(next,0);
+});
+
+
+test("GAME-SP4.1A does not preload actors hidden by a different route's CSS",async()=>{
+  const p=harness();
+  const current=p.stage("./correct-route.webp");
+  const nodes=current.querySelectorAll();
+  nodes.push({tagName:"IMG",hidden:false,currentSrc:"",display:"none",
+    getAttribute:key=>key==="src"?"./other-route.webp":null,
+    closest(){return null;}});
+  current.querySelectorAll=()=>nodes;
+  p.loader.present("route-a",current,()=>{});
+  await p.settle();
+  assert.equal(p.loader.busy(),false);
+  assert.ok(p.loaded.some(x=>x.endsWith("/correct-route.webp")));
+  assert.ok(!p.loaded.some(x=>x.endsWith("/other-route.webp")));
 });
