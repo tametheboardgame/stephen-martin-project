@@ -3797,5 +3797,5 @@ test("GAME-SP4.1E actor selectors stay tied to the approved art, no extra sprite
   assert.match(css,/prefers-reduced-motion:reduce/);
   assert.match(engine,/function refreshSpeakerFocus\(\)/);
   assert.match(engine,/function clearSpeakerFocus\(\)/);
-  assert.match(engine,/cardboard stephen:"assemblyEndingCardboardActor"/);
+  assert.match(engine,/"cardboard stephen":"assemblyEndingCardboardActor"/);
 });
