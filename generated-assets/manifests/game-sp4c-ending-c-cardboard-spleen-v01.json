@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1Wvg9u3atOYjJgOWiPBnVntxq6_gfcvDb"
+  },
+  "expectedSourceName": "ending-c-cardboard-spleen-v01.png",
+  "destination": "public/assets/generated/game/ending-c-cardboard-spleen-v01.webp",
+  "transform": {
+    "maxWidth": 768,
+    "maxHeight": 1024,
+    "quality": 86
+  },
+  "revision": 1
+}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "139IhwbbtIqmlCtef65bKHcl3x2aAU3vc"
+  },
+  "expectedSourceName": "ending-c-cardboard-left-arm-v01.png",
+  "destination": "public/assets/generated/game/ending-c-cardboard-left-arm-v01.webp",
+  "transform": {
+    "maxWidth": 768,
+    "maxHeight": 1024,
+    "quality": 86
+  },
+  "revision": 1
+}
