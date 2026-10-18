@@ -3,7 +3,7 @@
 **Started:** 18 October 2026
 **Branch:** `agent/game-sp4c-ending-c-art-foundation`
 **Base:** merged Ending B production main at `584b4c7055777cd54331909d2b6a50a75a25c7ef`
-**Status:** Owner-locked spa lounge background and individually approved Stephen, David and Paul spa sprites are staged and integrated on draft PR #46. Workshop/assembly props remain outstanding. In-engine visual review required.
+**Status:** Owner-locked spa environments and three actors are integrated. The owner has now approved six Stephen cardboard parts, seven decoys and the silhouette board for the interactive Ending C puzzle. All are being staged and integrated in draft PR #46; in-engine visual playtest and merge sign-off remain outstanding.
 **Owner direction:** Accept Ending B for now, merge it, and move on to visually improving Ending C.
 
 ## Existing playable baseline
@@ -75,6 +75,29 @@ Materialisation and automated CI passed. The first real in-browser visual sign-o
 - **SP4C.2 draft for human review:** six transparent cardboard die-cut artwork assets `head`, `torso`, `left-arm`, `right-arm`, `left-leg`, `right-leg` were derived from the *approved* holiday standing Stephen source, maintaining the exact canonical facial pixels and costume. Registration metadata and a mounting-board silhouette accompany the six source prototypes. The two inaccurate generated sticker sheets were rejected and must not be used. These six prototypes are **not locked, staged to Drive, materialised or integrated**, pending owner's visual acceptance. The seven decoys remain SP4C.3.
 - Next: owner reviews each six-piece preview and confirms whether the individual thin arm/leg fragments are suitable, or requests re-illustrated standee parts before any production commit.
 
+## GAME-SP4C.2–3 — Six approved Stephen pieces, seven approved decoys and standee board (18 October 2026)
+
+The owner has **explicitly approved** the complete improved cut-out set: blond-haired Stephen's six cardboard body parts in his white spa robe, the separate backing silhouette and seven absurd decoys. These new individual generated originals replace **all previously rejected Paul-likeness, rough segmentation and prototype cut-outs**. Do not restore any older `v02` preview parts. Sources are staged in the project's Google Drive folder and committed via individual JSON manifests in a single source-of-truth batch, optimised to independent WebPs.
+
+| Piece ID (puzzle data preserved) | Locked source Drive file ID | Runtime image |
+| --- | --- | --- |
+| `head` | `1tQQCjF5noWSCS7FF_Zx-tgOzlzzAsi82` | `public/assets/generated/game/ending-c-cardboard-head-v01.webp` |
+| `torso` | `11LOBpLo5RVjd2yo_TT48xJKrFEWS6Mvq` | `public/assets/generated/game/ending-c-cardboard-torso-v01.webp` |
+| `left-arm` | `139IhwbbtIqmlCtef65bKHcl3x2aAU3vc` | `public/assets/generated/game/ending-c-cardboard-left-arm-v01.webp` |
+| `right-arm` | `1cBtwQow_YyGBkZPzu8uB9ZOmyEv-znCQ` | `public/assets/generated/game/ending-c-cardboard-right-arm-v01.webp` |
+| `left-leg` | `1j1ryh_jb5qElpwpzhZpuci1iRdqluR92` | `public/assets/generated/game/ending-c-cardboard-left-leg-v01.webp` |
+| `right-leg` | `1fgxIWAZbY39KZPyyR_ASbe3eujFZ-GG5` | `public/assets/generated/game/ending-c-cardboard-right-leg-v01.webp` |
+| `board` | `13tFdtrEek607Y13nJMIm1zPF8w1dwt2c` | `public/assets/generated/game/ending-c-cardboard-board-v01.webp` |
+| `kidney-1` | `1Bjge8soXYG2o-4tJxjYr1yn6-oVMBBhs` | `public/assets/generated/game/ending-c-cardboard-kidney-1-v01.webp` |
+| `kidney-2` | `14wPFrchNiEH7OatqCKXEBBGo7Dacx3jQ` | `public/assets/generated/game/ending-c-cardboard-kidney-2-v01.webp` |
+| `kidney-3` | `1lzjJtlyhjn3iJUn7QM6or6PGbW05e1YY` | `public/assets/generated/game/ending-c-cardboard-kidney-3-v01.webp` |
+| `wifi-heart` | `1vVeAqAnkNOMJHIwwa8_R-Fe5YrdkpvON` | `public/assets/generated/game/ending-c-cardboard-wifi-heart-v01.webp` |
+| `toaster` | `1S-sxEnyZNY8s4hXwG1kKUAtX99qnJXC_` | `public/assets/generated/game/ending-c-cardboard-toaster-v01.webp` |
+| `banana` | `1_S_YYSl05PABzEKDHdwv-9dBkMzq8EiD` | `public/assets/generated/game/ending-c-cardboard-banana-v01.webp` |
+| `spleen` | `1Wvg9u3atOYjJgOWiPBnVntxq6_gfcvDb` | `public/assets/generated/game/ending-c-cardboard-spleen-v01.webp` |
+
+Integration uses all thirteen existing `assemblyPiece0..12` buttons as keyboard-, touch- and mouse-accessible choice targets with real artwork inside. The six original `assemblySlot0..5` buttons are independently positioned over the empty silhouette, and each reveals its matching source WebP only when fitted. Labels, accessible names, selected/fitted/hint styling, saved parts, wrong-piece dialogue, drag-and-drop and POWER ON remain unchanged. The 5-column laptop tray is intended to show all choices without repeated scrolling; tablet/mobile use a stacked, scrollable layout rather than microscopic targets. `scripts/build.mjs` validates 19 approved Ending C scene/puzzle images including alpha. Automated checks and Cloudflare visual preview remain mandatory before final merge.
+
 ## Immediate next action
 
-Owner to review the now-layered spa introduction and finale in a deployed game preview. Then proceed to the unapproved display-workshop background, cardboard Stephen and interactive pieces in their own approval increments. Do not merge PR #46 until explicitly approved.
+Verify the fresh Cloudflare Ending C build and visually inspect all thirteen actual image tiles, the six fitted overlays on the empty board, wrong-answer hints, laptop no-scroll layout, touch/keyboard drag fallback, POWER ON and final scene. Keep PR #46 draft and unmerged until explicitly approved.
