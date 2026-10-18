@@ -659,7 +659,7 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 #### GAME-SP4.1C2 — Ending B background daylight and legibility (deferred)
 
-**Priority:** P2 visual follow-up; **status:** Logged 18 October 2026, **not started**. **Owner observation:** Ending B has the same excessively dark whole-scene treatment previously corrected for the Summit entrance in GAME-SP4.1C. This is a separate issue and must **not block GAME-SP4.1D2** or be changed in its skip-navigation PR.
+**Priority:** P2 visual follow-up; **status:** Logged 18 October 2026 as [GitHub issue #56](https://github.com/tametheboardgame/stephen-martin-project/issues/56), **not started**. **Owner observation:** Ending B has the same excessively dark whole-scene treatment previously corrected for the Summit entrance in GAME-SP4.1C. This is a separate issue and must **not block GAME-SP4.1D2** or be changed in its skip-navigation PR.
 
 **Future investigation and acceptance:** Compare the original approved Ending B bureaucratic office artwork against rendered intro, permit/stamp game and ending scene. Check for CSS full-stage dark gradients/overlays and remove only unnecessary global shading, while retaining local contrast behind headings, white dialogue, paperwork and prompts. Check desktop/tablet/mobile and confirm image, actor positions, scripts, puzzle interaction and layout are unchanged. Prepare a separate bounded branch/PR, screenshot comparison and owner visual approval; do not regenerate approved art.
 
