@@ -2,6 +2,12 @@
 
 **Updated:** 17 October 2026
 
+## GAME-SP4B.3 — Bureau official depth correction (18 October 2026)
+
+- Owner's Cloudflare screenshot showed the official disproportionately large and cut off across the **front** of the reception counter, making him look detached from the desk.
+- Adjusted only the shared intro/ending official CSS: desktop from `top:32%; height:70%; clip-bottom:63%` to `top:37%; height:49%; clip-bottom:68%`, plus proportionate tablet/mobile refinements. This places a smaller official further back at the central desk and conceals the lower body at the countertop. Original transparent sprite and room art are unchanged.
+- Added focused breakpoint/geometry regression. Automated checks passed on development PR #44; Cloudflare visual confirmation is still the owner's gate. Do not merge until approved.
+
 ## GAME-SP4B.2 — Chinese official sprite integrated (18 October 2026)
 
 - Owner-approved fictional official PNG staged in the project Drive folder, with manifest and transparent optimised WebP on branch `agent/game-sp4-ending-b-art-integration`, draft PR #44.
