@@ -2,13 +2,12 @@
 
 **Updated:** 18 October 2026
 
-## GAME-SP4.1B — Back in London David expression size calibration (18 October 2026)
+## Current milestone — SP4.1B merged; Summit brightness next (18 October 2026)
 
-- Owner was pleased with SP4.1A loading behaviour and authorised continuation. PR #49 was qualified (138/138 tests and successful Cloudflare preview), marked ready and merged into main at `57407e94f0ea64ec0a276514963b629a383ead6d`. User-visible cold-cache improvement confirmed; complete formal network timing and saved-endings browser coverage remain final QA tasks.
-- Active branch: `agent/game-sp41b-london-david-registration` (from main after PR #49). Chapter Three rescue alarm uses **the same approved David seated WebPs** as the opening, but had no optical scales and used an intrinsic-width frame. Scoped CSS now locks the displayed frame and applies the established opening scales (Serious .96, Confident .93, Frustrated .92, Systems Expert .94), including tablet/mobile frame sizing. Paul, approved art, scripts, route ID, desk layers, voice file IDs and save logic unchanged.
-- Dedicated automated contract verifies all four canonical CSS ratios against the opening and tests the ten alarm beats, original asset filenames and saved checkpoint.
-- **Owner visual gate:** inspect the Back in London ten-line sequence, especially 002–004 and 005–006, at laptop/mobile width, verifying consistent height/eyes and foreground alignment. Exact Cloudflare preview/CI qualification to follow; do not merge until accepted.
-- Work instruction and review checks: `docs/story/GAME-SP4.1B-LONDON-DAVID-REGISTRATION.md`. After this, begin separate SP4.1C Summit contrast correction.
+- **GAME-SP4.1B completed and owner visually approved.** PR #50 merged into `main` at `b5b6881c99c6ad6728cb6b43f1d350b08f1654b0`; **140/140 automated tests passed**, Cloudflare deployment successful. Back in England David's four approved expression sources now use the consistent, opening-approved optical scales; Paul and all story/save/audio behaviour unchanged. Previous loader SP4.1A PR #49 is also merged.
+- **Next development:** **GAME-SP4.1C** — brighten the Summit entrance using focused CSS only, preserve readability, present a small independently reviewable PR. The two new owner-requested navigation improvements have been **scheduled, not coded**, after C.
+- **Roadmap refinements on planning branch `agent/game-sp41-nav-polish-roadmap`:** SP4.1D0 remove three developer-facing Stephen/David/Paul `Auto` expression-proof buttons, leaving scripted reactions automatic; SP4.1D1 unify named white speech bubbles; SP4.1D2 provide a contextual Skip to Choice / Game / End in common playback transport, using safe unsolved-choice/game checkpoints and never completing puzzles automatically.
+- **Upcoming owner gates:** visual approval of Summit colour, then separate proof-toggle removal, speech cards and skip navigation with tested voiced playback, save/Resume and three route outcomes. No code changes to the game in this roadmap-planning branch. Continue SP4.1H audio separately.
 
 ## GAME-SP4.1A — Loading and asset scheduling merged (18 October 2026)
 
@@ -20,7 +19,7 @@
 
 ## Current live milestone — three endings integrated; refinement audit underway
 
-- **`main` is the approved first-version gameplay/art baseline at `d3d7534415c75d029072a31ede9fdde7de5130b4`.** Ending B PR #44 and Ending C PR #46 have both merged. Final Ending C preview passed **132/132** Node smoke and bundled 20/20 Ending C WebPs. User approved its four-person spa tableau and accepted minor assembly-slot geometry as a later polish task.
+- **Historical three-ending art baseline: `d3d7534415c75d029072a31ede9fdde7de5130b4`.** Current main additionally includes merged SP4.1A and SP4.1B; consult the top status for the active milestone. Ending B PR #44 and Ending C PR #46 have both merged. Final Ending C preview passed **132/132** Node smoke and bundled 20/20 Ending C WebPs. User approved its four-person spa tableau and accepted minor assembly-slot geometry as a later polish task.
 - The game includes the complete shared story, three functional mini-games/endings, approved image references, office/holiday/alarm/hotel voice clips and two opening song files. **No public release sign-off** has been given. The three complete human-timed playthroughs, accessibility/viewports and privacy review are still pending.
 - **Planning incorporated into main:** GAME-SP4.1 audit PR #47 merged at `1b2a74f89c1186d5230b7b4954058981e592ed0b`. The owner has now requested committing the **full execution-level ten-package plan directly into `ROADMAP.md`**, via documentation-only branch `agent/game-sp41-roadmap-detail`. Supporting evidence remains in `docs/story/GAME-SP4.1-FIRST-VERSION-REFINEMENT-AUDIT.md`. No polishing UI, assets or sound have been changed by this plan.
 - Priority next steps proposed for owner review: **SP4.1A** image decode/loading layer; **B** Back-in-England David expression scale registration; **C** Summit entrance lighten; **D** consistent named dialogue bubble even after choices; **E** active speaker backlight in all scenes; **F** transition illustration; **G** selective expressions/movement; **H** independent remaining voices; **I** full-playthrough validation; **J** deferred Ending C slot geometry.

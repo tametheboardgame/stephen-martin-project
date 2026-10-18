@@ -659,20 +659,49 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 ### Milestone 2: Consistent speaking and character focus
 
-#### GAME-SP4.1D — One coherent named speech-card presentation
+#### GAME-SP4.1D — Consistent dialogue, removal of proof controls and contextual story skips
 
-**Priority:** P0; **status:** Not started; **dependencies:** baseline game only; **deliver before E**.  
-**Owner observation:** Initially white, named speech bubbles give way to blue footer-bar responses after an answer.
+**Priority:** P0 for speech-card coherence, P1 for first-version navigation cleanup; **status:** Planned, not implemented. **Dependencies:** A/B merged; C remains the next separate implementation. **Delivery:** three small, independently approved implementation PRs **D0 → D1 → D2**, followed by E. The new owner requests of 18 October 2026 are explicitly included below. Do not combine the three into one high-risk UI/state rewrite.
 
-**Implementation tasks**
-1. Inventory every speaking presentation, especially opening, Great Wall choice acceptance/decline, Forbidden City outcomes, Night Market confirmation, rescue alarm, visitor information/evidence and wrong guesses, three route intros, puzzles and all endings.
-2. Agree one compact **named white/paper speech card** visual contract (position, colour, width, responsive safe zone, typography, speaker label, text announcement and layer ordering) across actual dialogue. Reuse existing scene IDs and, where appropriate, simple shared render/style helpers.
-3. Display spoken **post-choice reaction lines** in the same named dialogue presentation rather than the blue action footer. Keep buttons, choices, navigation, evidence, hints, narration and status *semantically distinct*; the footer remains interactive navigation, not a speech substitute.
-4. Consolidate duplicated CSS only where proven equivalent; do not flatten or rewrite all route layouts. Preserve recorded line text, speaker IDs, autoplay waiting at choices, Save, Back/Next, scroll/focus behaviour and sound synchronization.
-5. Check against overlapping labels, character faces, top-right controls, subtitles and paper puzzles.
+**Owner observations:** Spoken responses become blue footer text after choices; the opening still shows developer-facing “Stephen: Auto”, “David: Auto”, “Paul: Auto” toggles despite the expressions now being automatically scripted; players should be able to skip long *already scripted* passages to the next meaningful choice, playable puzzle or scene ending from the playback bar.
 
-**Acceptance and proof:** A line-by-line visual matrix shows the **same recognisable speaker card before and immediately after choices** across all three sightseeing scenes; matching named speech in alarm, hotel, route intros and all finales. No duplicate simultaneous dialogue, cut-off speech or options advancing automatically. Pass tested at 1366×768, tablet and mobile.
-**Non-goals:** Add recorded voices, alter story beats, or convert clue inspection text into character speech.
+##### GAME-SP4.1D0 — Remove the three opening expression-proof switches (small cleanup)
+
+1. Remove the visible `.expression-proof-controls` group and its Stephen/David/Paul Auto-cycle buttons in the opening playback controls. They were created to compare approved poses during development, **not** to be part of the finished game. Reclaim space for normal playback/skip controls at laptop/tablet widths.
+2. Remove associated proof-mode state/cycle handlers and dead CSS, but **retain all approved expression source mappings, automatic per-line acting cues** (`beat.reactions` → `applySeatedExpression`), registration scales, speaking/listening effects and the existing sound, pause, Next, Back and progress controls.
+3. Update the old proof-toggle regression tests to verify that expressive changes still happen automatically when each character speaks/reacts, including restored sessions; never replace moving characters with static neutral art merely to delete the buttons.
+
+**D0 acceptance:** No Stephen/David/Paul Auto buttons appear or accept input anywhere in the opening; all three still switch through their scripted expressions as the story progresses. No broken element lookups/event listeners, no change to David’s just-approved registration, no lost audio or saved-game compatibility. Verify desktop and phone toolbar spacing.
+
+##### GAME-SP4.1D1 — One coherent named dialogue bubble before and after choices
+
+1. Inventory actual spoken-line UI in the opening, Great Wall pre-/post-choice, Forbidden City post-decision, Night Market confirmation, Back in England alarm, visitor-information/hotel evidence/feedback, three route intros, interactive response lines and each ending.
+2. Use a compact shared **named white/paper speech-card** visual contract: consistent speaker label, typography, safe position/z-order, accessible text announcement and mobile placement. Reuse or modestly consolidate scene-specific HTML/CSS/render helpers while keeping stable IDs and the existing game architecture.
+3. Route **spoken choice-result reactions** back through the named dialogue treatment instead of the dark blue action footer. Choices, narration, clue inspection, puzzle hints, game status and navigation **are not spoken character dialogue** and keep deliberately separate semantics.
+4. Preserve line text/IDs, correct speaker attribution, branch state, choice waits, save/resume, real recorded audio and missing-MP3 timing. Fix accidental overlap with actor faces, title bars, toolbar, phones and stamp/cardboard puzzle controls.
+
+**D1 acceptance:** Visual matrix covers every relevant scene at 1366×768, tablet and mobile. Named white bubbles persist through spoken choice responses, no two conflicting speech panels, no hidden/off-screen speaker name, no truncated text and no buttons disguised as dialogue. Every manual choice and puzzle remains manual. Owner signs off a true playable branch preview.
+
+##### GAME-SP4.1D2 — Context-sensitive Skip to Choice / Game / End navigation
+
+**Intent:** One optional, clearly labelled **contextual skip** in the established playback/transport area for all applicable scenes; **do not** present an inert universal button or add a second competing toolbar. Use the existing `Skip intro` action where it already works, harmonising it with the other transport actions.
+
+1. Build a small explicit **checkpoint map** keyed to real current game phases, backed by the same existing render/save states and script IDs. The control label and destination depend on what is next, not a fixed “Skip everything” action. Example labels:
+   - Opening scripted office → **Skip intro** (to the existing Stephen holiday transition; do not skip ahead into any incident).
+   - Great Wall / Forbidden City → **Skip to choice** (last scripted line played/completed, choice not selected).
+   - Night Market → **Skip to decision** or **Skip to invitation**, as appropriate to its existing fixed-route semantics (no invented choice).
+   - Stephen’s phone / Back in England alarm / rescue travel → **Skip to rescue** or **Skip to investigation** at the next genuine state boundary.
+   - Hotel opening dialogue → **Skip to investigation** (enable clue hotspots, not a deduction result); hotel feedback → only a safe existing unresolved deduction boundary.
+   - Each rescue-route introduction → **Skip to game** (begin Summit questions, permit/stamp, or cardboard assembly at its normal unsolved initial state).
+   - A **completed** mini-game’s or finale’s *remaining scripted* closing dialogue → **Skip to end** (reach its own ending summary). **Never** offer this as a shortcut around an unsolved mini-game or to fabricate its completion flags.
+2. Put the button in the same top/transport bar as Play/Pause/Next where practical (office has a separate top scene toolbar and dialogue transport; holiday scenes use the shared `.china-footer`). Use consistent placement and modest responsive sizing; on short screens do not obscure dialogue or make an extra laptop scrollbar. If there is no safe forward checkpoint (already at an unresolved choice, clue, game or final summary), **hide/disable** the contextual skip.
+3. A skip is an **atomic** state transition, not a rapid stream of synthetic Next clicks. Stop any active voice and text timers, avoid delayed onended callbacks firing on the new scene, update current phase/line checkpoint, persist, render the target, respect scene-aware image decoding and focus the newly revealed choice or game region. Do not automatically answer a choice, deduce a route, select/drag a piece, stamp a document, pass a Summit round, change route or consume a save inadvertently.
+4. Preserve all three ending paths, including sound-off/missing-file behaviour, Play/Pause, Back/Next, restart, Resume, Change route, tab-hide handling and keyboard/touch alternatives. Skip labels must describe precisely where they go; do not promise “Skip to end” until that route’s puzzle has actually been completed.
+5. Cover all meaningful source phases in a **navigation matrix** before coding, then add focused transition-state/voice-cancellation/save tests across each ending. Test skipping during a playing MP3, paused line, loading curtain and restored checkpoint; verify the landing state on laptop, tablet and phone.
+
+**D2 acceptance:** Every purely scripted stretch of the game has a contextually correct skip-to-next-interaction/end where safe; buttons are obvious but unobtrusive alongside the existing transport. Users can jump directly to **choices**, **unsolved games** or **the ending summary after completing a game**, with all route logic, voice cancellation and V3 saves correct. At an unresolved interaction the skip cannot bypass it. Full three-path checkpoint table, automated tests and owner preview approval before merge.
+
+**D-wide constraints:** No change to canonical dialogue, actor images, approved expressions, three routes, save schema or puzzle correctness. Do not make skip controls mandatory, introduce a fourth story path or automatically solve the existing puzzles. Defer additional acting animations to SP4.1G, but **retain** automatic reactions when removing expression proof controls.
 
 #### GAME-SP4.1E — Speaking-character glow/backlight throughout the story
 
@@ -767,7 +796,9 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 | 1 | SP4.1A | Three-ending main baseline | Cold-cache loader and failure fallback shown in working preview |
 | 2 | SP4.1B | A preferred, existing approved David assets | Ten-line pose comparison, no height changes |
 | 3 | SP4.1C | Independent (can be alongside B) | Brighter Summit entrance accepted on laptop/tablet |
-| 4 | SP4.1D | Main baseline, safe staging from A | Named speech bubbles in post-choice and other dialogue |
+| 4a | SP4.1D0 | B merged, independent of C | Remove three expression-proof toggles while automatic acting remains intact |
+| 4b | SP4.1D1 | D0 and current scene presentation | Named white speech bubbles before and after choices |
+| 4c | SP4.1D2 | D1's unified transport/speaker presentation | Contextual skip only to safe choice/game/end checkpoints, never through puzzles |
 | 5 | SP4.1E | D, stable actor scale | Correct speaker glow in every applicable scene |
 | 6 | SP4.1F | A/D presentation patterns; artwork approval | Each transition illustration packet previewed and signed off |
 | 7 | SP4.1G | B and E; new art sign-off where used | Poses never shift framing; restrained motion |
@@ -775,7 +806,7 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 | Final | SP4.1I | Approved A–E and explicit F/G/H deferrals if needed | Timed full-game acceptance, release candidate ready for owner |
 | Deferred | SP4.1J | Owner reschedules | Precision board geometry, no puzzle regression |
 
-**Immediate implementation next:** Open **GAME-SP4.1A, loading and asset scheduling**, on a short-lived branch from latest `main` after this roadmap change has merged. Begin by measuring actual image load behaviour, not guessing a progress percentage. Changes beyond the scoped task require a fresh decision.
+**Current implementation next (18 October 2026):** SP4.1A and SP4.1B are merged and user-approved. Start **GAME-SP4.1C (Summit entrance brightness)** from the latest `main`. Then deliver SP4.1D0 (remove Auto proof controls), D1 (consistent named speech bubbles) and D2 (contextual skip checkpoints) as separately reviewed PRs before SP4.1E speaker glow. Continue voices independently. No extra gameplay or new art is authorised by this planning update.
 
 **Historical note:** SP4.0 and SP4C entries above describe past development stages and may mention draft branches from their original dates. For current work, this SP4.1 plan and top of `STATUS.md` take precedence. No package being listed here means its artwork, code or audio is already produced.
 
