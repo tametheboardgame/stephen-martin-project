@@ -6,7 +6,7 @@
 
 - Owner approved the **final** 6 Stephen cut-outs, 7 distinct comedy decoys and empty cardboard mounting board (14 originals). The art is independently staged in Google Drive, registered in manifest files and wired into the existing 13-choice/6-slot puzzle. Do not use earlier rejected Paul-faced or roughly segmented Stephen drafts.
 - Individual transparent WebPs form the live tray; filled slots reveal their actual corresponding images. The board image stays separate; image rerender no longer removes sprite tags. Existing keyboard, touch, drag/drop, hint, save, wrong-answer dialogue and POWER ON mechanics remain in place.
-- Responsiveness: compact five-column laptop tray and matching standee silhouette, with tablet/mobile stacking. New asset/alpha and markup regression checks have been added. **Next:** confirm materialisation, green build, Cloudflare preview and owner visual sign-off before PR #46 may merge.
+- Responsiveness: compact five-column laptop tray and matching standee silhouette, with tablet/mobile stacking. New asset/alpha and markup regression checks have been added. **Materialisation confirmed:** 14/14 approved puzzle WebPs committed through GitHub Actions to the same branch at `13fc380`; **19/19 Ending C assets** now exist. Cloudflare deployed the complete layered puzzle at `https://9f1112e2.stephen-martin-project.pages.dev`. Source assets are safely locked in Drive. **Next:** final automated game smoke on this materialised head and owner laptop/mobile visual playtest; PR #46 stays draft until approval.
 
 ## GAME-SP4C.1B / SP4C.2 — Workshop locked; six-piece cardboard Stephen prototype (18 October 2026)
 
