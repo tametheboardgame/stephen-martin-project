@@ -4083,3 +4083,28 @@ test("GAME-SP4.1F.1 narrator subtitles remain on transitions while title plates 
   p.el("handoffContinueButton").click();
   assert.equal(p.el("transitionNarration").hidden,true);
 });
+
+
+test("GAME-SP4.1F.2 Chapter Two narrator avoids printed title and continue button without moving other subtitles",()=>{
+  const marker="GAME-SP4.1F.2 — Chapter Two title-art subtitle clearance";
+  const start=css.indexOf(marker);
+  assert.ok(start>0,"Opener-only narrator correction is in the stylesheet");
+  const rules=css.slice(start);
+  assert.match(rules,/@media \(min-width:801px\)/);
+  assert.match(rules,/#holidayScreen:has\(#chinaTransition:not\(\[hidden\]\)\) #transitionNarration \{\s*bottom:16px;\s*left:3%;\s*transform:none;\s*width:min\(60%,790px\);/);
+  assert.match(rules,/@media \(max-width:800px\)/);
+  assert.match(rules,/#holidayScreen:has\(#chinaTransition:not\(\[hidden\]\)\) #transitionNarration \{\s*position:relative;\s*bottom:auto;\s*left:auto;\s*transform:none;/);
+  assert.match(rules,/@media \(max-width:450px\)/);
+  assert.ok(!rules.includes("#chinaIntermission"),"Do not disturb approved sightseeing cards");
+  assert.ok(!rules.includes("#chinaRouteHandoff"),"Do not disturb approved route cards");
+  assert.ok(!rules.includes("#rescueTravelScene"),"Do not disturb approved travel cards");
+  assert.match(html,/id="chinaTransition" class="china-transition"/);
+  assert.match(html,/id="chinaStartButton"/);
+  const p=preview();p.start();p.el("skipButton").click();
+  assert.equal(saved(p).holidayPhase,"transition");
+  assert.equal(p.el("transitionNarration").hidden,false);
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.china.chapter-two.001");
+  p.el("chinaStartButton").click();
+  assert.equal(saved(p).holidayPhase,"wall");
+  assert.equal(p.el("transitionNarration").hidden,true);
+});
