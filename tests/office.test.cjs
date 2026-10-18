@@ -3015,7 +3015,8 @@ test("GAME-SP4B.3 official remains counter-sized and clipped at the desk, includ
   const value=(cssRule,key)=>Number(cssRule.match(new RegExp(key+":([\\d.]+)%"))?.[1]);
   assert.ok(value(base[1],"height")<=50,"Keep the official proportionate to the service counter");
   assert.ok(value(base[1],"top")>=36,"Keep the head at bureau desk depth");
-  assert.ok(value(base[1],"inset")>=65,"Conceal the official's lower body behind the counter");
+  const crop=Number(base[1].match(/clip-path:inset\(0 0 ([\d.]+)% 0\)/)?.[1]);
+  assert.ok(crop>=65,"Conceal the official's lower body behind the counter");
   assert.match(rules,/@media \(max-width:800px\) \{[\s\S]*?height:47%;[\s\S]*?clip-path:inset\(0 0 66% 0\)/);
   assert.match(rules,/@media \(max-width:450px\) \{[\s\S]*?height:45%;[\s\S]*?clip-path:inset\(0 0 65% 0\)/);
 });
