@@ -3039,12 +3039,15 @@ body:has(#menuScreen:not([hidden])) main {
 }
 
 
-/* GAME-SP4B approved bureaucratic scene; all objects remain independently layered. */
+/* GAME-SP4B / GAME-SP4.1C2 — Ending B daylight, matching the approved
+ * Summit entrance correction. The original artist-approved bureaucratic hall
+ * appears without a full-stage dark wash, across briefing, paperwork and
+ * finale. Existing opaque/local title, dialogue and form surfaces maintain
+ * legibility; sprites, poses, puzzle hitboxes and staging are unchanged. */
 #holidayScreen #rescueRouteIntro[data-ending-b="true"] .rescue-route-intro-stage,
 #holidayScreen #rescueMiniGameScene[data-route="detention"] .rescue-route-intro-stage,
-#holidayScreen .detention-ending-stage {
-  background:linear-gradient(90deg,rgba(10,22,35,.24),rgba(10,22,35,.13)),
-    url("../public/assets/generated/locations/ending-b-bureau-office-v01.webp") center/cover no-repeat;
+#holidayScreen #detentionEndingScene .detention-ending-stage {
+  background:url("../public/assets/generated/locations/ending-b-bureau-office-v01.webp") center/cover no-repeat;
 }
 #holidayScreen #rescueRouteIntro[data-ending-b="true"] .summit-entrance-label,
 #holidayScreen #rescueRouteIntro[data-ending-b="true"] .summit-entrance-actor {
