@@ -3307,3 +3307,35 @@ body:has(#menuScreen:not([hidden])) main {
     font-size:clamp(14px,3.6vw,17px);
   }
 }
+
+
+/* GAME-SP4B.2: independent official behind the fixed bureau counter.
+ * Clip the lower part of the full-body sprite at the counter's front edge;
+ * do not turn this into a flattened room illustration. */
+#holidayScreen .detention-intro-official,
+#holidayScreen .detention-ending-official {
+  position:absolute;z-index:1;top:32%;left:52%;height:70%;width:auto;
+  transform:translateX(-50%);object-fit:contain;pointer-events:none;
+  clip-path:inset(0 0 63% 0);
+  filter:drop-shadow(2px 5px 4px rgba(12,21,35,.65));
+}
+#holidayScreen .detention-intro-official {display:none;}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"] .detention-intro-official {
+  display:block;
+}
+#holidayScreen #rescueRouteIntro[data-ending-b="true"][data-speaker="official"] .detention-intro-official,
+#holidayScreen #detentionEndingScene[data-speaker="official"] .detention-ending-official {
+  filter:drop-shadow(0 0 9px rgba(255,225,158,.82)) brightness(1.12);
+}
+@media (max-width:800px) {
+  #holidayScreen .detention-intro-official,
+  #holidayScreen .detention-ending-official {
+    top:35%;height:63%;left:52%;clip-path:inset(0 0 61% 0);
+  }
+}
+@media (max-width:450px) {
+  #holidayScreen .detention-intro-official,
+  #holidayScreen .detention-ending-official {
+    top:37%;left:52%;height:56%;clip-path:inset(0 0 60% 0);
+  }
+}
