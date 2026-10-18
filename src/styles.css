@@ -3643,3 +3643,15 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-intro-dialogue p,
   #holidayScreen #reassembleEndingScene .assembly-ending-line {font-size:clamp(14px,3.6vw,17px);}
 }
+
+/* GAME-SP4C.1B: owner-locked display workshop artwork under the live puzzle.
+ * The translucent card remains interactive until WP2 parts/board are approved. */
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .rescue-route-intro-stage {
+  background:
+    linear-gradient(100deg,rgba(14,43,42,.28),rgba(8,31,31,.25)),
+    url("../public/assets/generated/locations/ending-c-spa-assembly-workshop-background-v01.webp")
+      center/cover no-repeat;
+}
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-workshop {
+  background:rgba(251,245,229,.96);
+}
