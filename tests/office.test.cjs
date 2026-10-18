@@ -3263,3 +3263,32 @@ test("GAME-SP4.1B all ten alarm beats use the unchanged pose assets and checkpoi
   assert.equal(saved(p).rescueAlarmStep,9,"Keep resume checkpoint and voice IDs unchanged");
   assert.equal(saved(p).holidayPhase,"rescue-alarm");
 });
+
+
+test("GAME-SP4.1C Summit entrance retains full daylight and uses local contrast only",()=>{
+  const start=css.indexOf("/* GAME-SP4.0A / GAME-SP4.1C");
+  const end=css.indexOf("/* SP4.0B",start);
+  assert.ok(start>=0&&end>start,"Summit daylight style block must be explicitly scoped");
+  const summitCss=css.slice(start,end);
+  const stageRules=summitCss.slice(summitCss.indexOf("#holidayScreen #rescueRouteIntro[data-route=\"cult\"] .rescue-route-intro-stage"),summitCss.indexOf("/* The Summit-specific title"));
+  const approved='url("../public/assets/generated/locations/summit-entrance-v01.webp")';
+  assert.ok(stageRules.includes(approved),"Both exterior stages use the original approved image");
+  assert.equal((stageRules.match(/summit-entrance-v01\.webp/g)||[]).length,1,
+    "Briefing and admissions must use a common approved background rule");
+  assert.ok(stageRules.includes('#rescueMiniGameScene:has(#summitAdmissions:not([hidden]))'),
+    "Admission test uses the same full-daylight exterior");
+  assert.doesNotMatch(stageRules,/linear-gradient|rgba\s*\(/,
+    "Never darken the entire outdoor environment to make text readable");
+  assert.match(summitCss,/\.rescue-travel-panel\s*\{[^}]*background:rgba\(5,25,47,\.9\)/,
+    "Intro's bounded text surface must remain contrast-protected");
+  assert.match(summitCss,/\.summit-entrance-label\s*\{[^}]*background:rgba\(7,30,53,\.84\)/,
+    "Summit title uses a local opaque backing");
+  assert.match(summitCss,/\.rescue-intro-dialogue,[\s\S]*?background:rgba\(5,25,48,\.94\)/,
+    "Named dialogue remains individually legible without a global tint");
+  assert.match(css,/#holidayScreen \.summit-admissions\s*\{[^}]*background:rgba\(5,25,47,\.94\)/,
+    "Admission questions retain their legible local card");
+  assert.ok(!stageRules.includes("summit-throne"),"The separate throne room art must be untouched");
+  assert.ok(css.includes("summit-throne-room-v01.webp"),"Original throne-room artwork remains present");
+  assert.ok(!stageRules.includes('data-route="detention"')&&!stageRules.includes('data-route="reassemble"'),
+    "The outdoor colour correction must not change other ending routes");
+});
