@@ -507,8 +507,68 @@
   let holidayVoiceStartTimer = null;
   const missingHolidayVoices = new Set();
 
+
+  // GAME-SP4.1F: OFF-STAGE narrator for illustrated transition cards. These
+  // optional IDs share the existing holiday voice player, audio ownership,
+  // playback controls and 404 fallback. Every cue is independent of the
+  // approved character dialogue IDs, and no route/decision is manufactured.
+  const transitionNarration = Object.freeze({
+    chapterTwo: Object.freeze({id:"transition.china.chapter-two.001",
+      text:"Two days later, in China. Stephen was having a marvellous time. David’s risk assessment had not made the journey."}),
+    palace: Object.freeze({id:"transition.china.to-palace.001",
+      text:"A few days later, Stephen continued sightseeing, blissfully unaware that the group chat was still in a state of emergency."}),
+    market: Object.freeze({id:"transition.china.to-market.001",
+      text:"The next evening, Stephen headed into the night market. Surely nothing completely unnecessary would happen there."}),
+    cult: Object.freeze({id:"transition.route.summit.001",
+      text:"Stephen was off to the Summit. Spectacular scenery, extremely friendly company, and absolutely no cause for concern."}),
+    detention: Object.freeze({id:"transition.route.banquet.001",
+      text:"Stephen had accepted an honorary banquet invitation. It was about to become a great deal more official than anyone intended."}),
+    reassemble: Object.freeze({id:"transition.route.spa.001",
+      text:"Stephen had chosen the spa. David and Paul, unfortunately, were not going to enjoy the relaxing part."}),
+    backEngland: Object.freeze({id:"transition.england.back.001",
+      text:"Meanwhile, back in England, two men were about to mistake a flat phone battery for an international incident."}),
+    travel: Object.freeze([
+      {id:"transition.travel.001",text:"Two tickets were booked. Neither was refundable. Neither had been properly thought through."},
+      {id:"transition.travel.002",text:"Paul had brought all the printer’s bear pictures. The luggage allowance had not been consulted."},
+      {id:"transition.travel.003",text:"David consulted his map. Paul suggested turning it the right way up."},
+      {id:"transition.travel.004",text:"Several hours and a spectacular expense claim later, neither had tried phoning Stephen’s hotel."}
+    ].map(Object.freeze)),
+    hotel: Object.freeze({id:"transition.hotel.arrival.001",
+      text:"At last, visitor information. The investigation could begin, despite there being absolutely nothing to investigate."})
+  });
+
+  function transitionNarrationBeat() {
+    if (state.scene !== "holiday") return null;
+    switch (state.holidayPhase) {
+      case "transition": return transitionNarration.chapterTwo;
+      case "intermission":
+        return state.intermissionTarget === "palace" ? transitionNarration.palace :
+          state.intermissionTarget === "market" ? transitionNarration.market : null;
+      case "route-handoff": return transitionNarration[state.route] || null;
+      case "final-message":
+        return state.finalStep === 2 ? transitionNarration.backEngland : null;
+      case "rescue-travel":
+        return transitionNarration.travel[state.rescueTravelStep] || null;
+      case "rescue-hub-arrival": return transitionNarration.hotel;
+      default: return null; // Never narrate an unanswered decision or game.
+    }
+  }
+
+  function renderTransitionNarration() {
+    const cue = transitionNarrationBeat();
+    const box = $("transitionNarration");
+    box.hidden = !cue;
+    $("transitionNarrationLine").textContent = cue?.text || "";
+    box.dataset.cue = cue?.id || "";
+    // Text is always a usable subtitle even if no MP3 has been uploaded.
+    box.dataset.audio = cue && missingHolidayVoices.has(cue.id)
+      ? "text-fallback" : "optional";
+  }
+
   function holidayVoiceBeat() {
     if (state.scene !== "holiday") return null;
+    const narration = transitionNarrationBeat();
+    if (narration) return narration;
     if (state.holidayPhase === "wall") {
       if (state.wallStep < greatWall.lines.length) return greatWall.lines[state.wallStep];
       if (state.wallDecision === "accept") return {id:greatWall.acceptReactionId, text:greatWall.acceptReaction};
@@ -570,6 +630,7 @@
     missingHolidayVoices.add(holidayVoiceId);
     stopHolidayVoice();
     holidayVoiceStatus = "missing";
+    renderTransitionNarration();
     scheduleHolidayAdvance();
   }
 
@@ -1982,6 +2043,7 @@
           + " complete. New illustrations are deferred until the full functional game is approved.";
       }
     }
+    renderTransitionNarration();
     // The DOM phase toggles above have completed. Never wait for hidden
     // branches; image decoding is scoped to the currently visible stage.
     const visibleHolidayScene = inWall ? "wallScene" : inPalace ? "palaceScene"
