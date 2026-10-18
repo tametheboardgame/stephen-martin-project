@@ -1,6 +1,12 @@
 # Project status
 
-**Updated:** 17 October 2026
+**Updated:** 18 October 2026
+
+## GAME-SP4B.4 — Restore standing official on the visitors' floor (18 October 2026)
+
+- Owner rejected the behind-desk visual after two layout iterations and explicitly requested the **original, uncut full-length approved official**, standing between David and Paul in the Ending B briefing. The same source WebP and manifest are reused, with no regenerated artwork or changes to the bureau background.
+- Removed the entire official clipping mask and moved his feet to the same baseline as David and Paul at desktop/tablet/mobile widths. Rebalanced the four characters in the Ending B resolution (Stephen, David, official, Paul) to avoid foreground overlap. Existing speaker emphasis is retained.
+- Updated layout assertions and static build. GitHub smoke **125/125 passed** at `509d7a3`; Cloudflare visual approval of the final composition remains outstanding. PR #44 stays draft and must not be merged without authorisation.
 
 ## GAME-SP4B.3 — Bureau official depth correction (18 October 2026)
 
