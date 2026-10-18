@@ -3226,3 +3226,40 @@ test("GAME-SP4C.4A approved cardboard Stephen is an extra final-scene actor",()=
     "The existing speaker cue must continue to highlight the new independent figure");
   assert.ok(read("scripts/build.mjs").includes('endingCImages.length + "/20."'));
 });
+
+
+test("GAME-SP4.1B London David uses the already approved opening optical registration",()=>{
+  const expected={"serious":".96","confident":".93","frustrated":".92","systems-expert":".94"};
+  const opening=css.slice(css.indexOf("/* GAME-SP4.0D: optically register David"),
+    css.indexOf("/* Listening actors retain"));
+  const london=css.slice(css.indexOf("/* GAME-SP4.1B: use the already-approved opening David"),
+    css.indexOf("#holidayScreen .rescue-alarm-paul {right:14%;}"));
+  assert.ok(london.length>750,"Must keep focused London-only actor CSS");
+  assert.match(london,/#rescueAlarmScene #rescueAlarmDavid\s*\{[^}]*width:32%;[^}]*height:79%;[^}]*object-fit:contain;[^}]*transform-origin:center bottom;[^}]*transition:none;/);
+  for(const [pose,scale] of Object.entries(expected)){
+    const openRule=opening.match(new RegExp('data-seated-sprite="'+pose.replace("-","\\-")+'"[^}]*transform: scale\\((\\.[0-9]+)\\) !important;'));
+    const alarmRule=london.match(new RegExp('data-sprite="'+pose.replace("-","\\-")+'"[^}]*transform:scale\\((\\.[0-9]+)\\);'));
+    assert.ok(openRule&&alarmRule,"Require both optical calibration rules for "+pose);
+    assert.equal(openRule[1],scale,"Opening approval value must remain unchanged for "+pose);
+    assert.equal(alarmRule[1],scale,"Reuse approved optical calibration in London for "+pose);
+  }
+  assert.match(london,/@media \(max-width:800px\)/);
+  assert.match(london,/@media \(max-width:450px\)/);
+  assert.doesNotMatch(london,/#rescueAlarmPaul|\.rescue-alarm-paul/,"Do not adjust Paul's pose/geometry");
+});
+test("GAME-SP4.1B all ten alarm beats use the unchanged pose assets and checkpoint",()=>{
+  const p=toRescueAlarm();
+  const lines=story().SMP_RESCUE_ALARM.lines;
+  const valid=["serious","confident","frustrated","systems-expert"];
+  for(let i=0;i<lines.length;i++){
+    const actor=p.el("rescueAlarmDavid");
+    assert.equal(actor.dataset.sprite,lines[i].david,"Pose must match approved line "+lines[i].id);
+    assert.ok(valid.includes(actor.dataset.sprite));
+    assert.ok(actor.src.endsWith("david-office-seated-"+lines[i].david+"-v01.webp"),
+      "Use only the original approved WebP on "+lines[i].id);
+    assert.equal(p.el("rescueAlarmScene").hidden,false);
+    if(i+1<lines.length)p.el("rescueAlarmNextButton").click();
+  }
+  assert.equal(saved(p).rescueAlarmStep,9,"Keep resume checkpoint and voice IDs unchanged");
+  assert.equal(saved(p).holidayPhase,"rescue-alarm");
+});

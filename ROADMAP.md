@@ -613,7 +613,7 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 #### GAME-SP4.1A — Initial loading experience and scene-aware asset scheduling
 
-**Priority:** P0; **status:** Implementation on draft PR #49, pending browser visual and performance approval; **dependencies:** merged three-ending V1 only. Current scope and verification guide: `docs/story/GAME-SP4.1A-LOADING-IMPLEMENTATION.md`.  
+**Priority:** P0; **status:** Merged to `main` via PR #49 at `57407e9`, after 138/138 smoke tests and owner confirming markedly improved loading; **dependencies:** completed. Supporting guide: `docs/story/GAME-SP4.1A-LOADING-IMPLEMENTATION.md`. Actual network-timing comparison and saved-phase cold-cache coverage are retained as later final QA checks.  
 **Owner observation:** Artwork is visibly painted as it downloads, like an old dial-up image.  
 **Source evidence:** `index.html` has 23 explicit image preloads, 41 eager-loaded scene image tags, and no dedicated current-scene loading/ready overlay. Image and audio readiness currently follow different models; loading could compete with later off-screen scenes.
 
@@ -632,7 +632,7 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 #### GAME-SP4.1B — David expression registration in Back in England
 
-**Priority:** P0; **status:** Not started; **dependencies:** independent of A, but start after A is integrated unless urgently needed.  
+**Priority:** P0; **status:** Implementation on `agent/game-sp41b-london-david-registration`, visual review pending; **dependencies:** A merged into main. Owner-approved opening pose calibration is reused in the London alarm. Detailed evidence/review: `docs/story/GAME-SP4.1B-LONDON-DAVID-REGISTRATION.md`.  
 **Owner observation:** David grows/shrinks between expressions in Chapter Three’s office rescue alarm despite the opening having already been aligned.
 
 **Implementation tasks**

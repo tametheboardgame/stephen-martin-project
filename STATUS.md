@@ -2,12 +2,20 @@
 
 **Updated:** 18 October 2026
 
-## GAME-SP4.1A — Loading and asset scheduling in progress (18 October 2026)
+## GAME-SP4.1B — Back in London David expression size calibration (18 October 2026)
 
-- Active **draft PR #49**, `agent/game-sp41a-scene-loading` from master plan merge `ca7cca7`. First implementation adds image-decoding scene curtain, accessible Continue (2.2 seconds) and absolute timeout (7 seconds), plus prevents new dialogue/audio timing beneath the curtain.
+- Owner was pleased with SP4.1A loading behaviour and authorised continuation. PR #49 was qualified (138/138 tests and successful Cloudflare preview), marked ready and merged into main at `57407e94f0ea64ec0a276514963b629a383ead6d`. User-visible cold-cache improvement confirmed; complete formal network timing and saved-endings browser coverage remain final QA tasks.
+- Active branch: `agent/game-sp41b-london-david-registration` (from main after PR #49). Chapter Three rescue alarm uses **the same approved David seated WebPs** as the opening, but had no optical scales and used an intrinsic-width frame. Scoped CSS now locks the displayed frame and applies the established opening scales (Serious .96, Confident .93, Frustrated .92, Systems Expert .94), including tablet/mobile frame sizing. Paul, approved art, scripts, route ID, desk layers, voice file IDs and save logic unchanged.
+- Dedicated automated contract verifies all four canonical CSS ratios against the opening and tests the ten alarm beats, original asset filenames and saved checkpoint.
+- **Owner visual gate:** inspect the Back in London ten-line sequence, especially 002–004 and 005–006, at laptop/mobile width, verifying consistent height/eyes and foreground alignment. Exact Cloudflare preview/CI qualification to follow; do not merge until accepted.
+- Work instruction and review checks: `docs/story/GAME-SP4.1B-LONDON-DAVID-REGISTRATION.md`. After this, begin separate SP4.1C Summit contrast correction.
+
+## GAME-SP4.1A — Loading and asset scheduling merged (18 October 2026)
+
+- Completed **PR #49**, merged into `main` at `57407e9` (historical development branch: `agent/game-sp41a-scene-loading`). Previously active, `agent/game-sp41a-scene-loading` from master plan merge `ca7cca7`. First implementation adds image-decoding scene curtain, accessible Continue (2.2 seconds) and absolute timeout (7 seconds), plus prevents new dialogue/audio timing beneath the curtain.
 - Changed image fetch prioritisation: **23 → 5** high-priority image preload hints (immediate menu assets only); **41 eager → 6 eager and 35 lazy** img elements in the HTML. Active scene backgrounds and actors decode together; next office exterior alone is warmed after the menu settles. The loader is included in static build and `npm run check`.
 - First branch CI at `425ee12` passed **137/137 tests** with **20/20 Ending C assets**; Cloudflare branch preview deployed successfully. Later commits tighten previous-scene audio stop and add review documentation, so **re-run CI and check the exact final head before approving**.
-- **Not yet visually approved or merged:** Need cold-cache 1366×768/throttled-network screen recording and request waterfall, first complete illustrated frame and usable controls timing, blocked image fallback, resuming into saved late scenes, tablet/mobile and voice on/off. Initial preload count reduction is a source metric, **not verified download-speed improvement**.
+- **Owner confirmed much improved startup and approved continuation; PR merged.** Formal network timing remains to be recorded during final QA. Previously planned cold-cache 1366×768/throttled-network screen recording and request waterfall, first complete illustrated frame and usable controls timing, blocked image fallback, resuming into saved late scenes, tablet/mobile and voice on/off. Initial preload count reduction is a source metric, **not verified download-speed improvement**.
 - Review guide: `docs/story/GAME-SP4.1A-LOADING-IMPLEMENTATION.md`. Owner browser review/approval remains required. Next after A approval: GAME-SP4.1B David scale and GAME-SP4.1C Summit brightness in separate packets.
 
 ## Current live milestone — three endings integrated; refinement audit underway
