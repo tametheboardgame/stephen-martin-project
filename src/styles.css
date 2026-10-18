@@ -4078,3 +4078,171 @@ body:has(#menuScreen:not([hidden])) main {
 @media (prefers-reduced-motion:reduce) {
   .asset-loading-overlay, .asset-loading-card {animation:none !important;transition:none !important;}
 }
+
+
+/* GAME-SP4.1D1: consistent named-paper dialogue and top transport.
+   Only presentation changes here: all approved stages, sprites and games retain
+   their positioning, state transitions and interactive hit regions. */
+#officeScreen .story-speech,
+#holidayScreen .story-speech {
+  box-sizing:border-box;
+  background:#fff9ec !important;
+  color:#1b3040 !important;
+  border:3px solid #e8c982 !important;
+  border-radius:12px !important;
+  box-shadow:5px 6px 0 rgba(4,19,36,.48) !important;
+  text-align:left;
+}
+#holidayScreen .story-speech > strong {
+  display:inline-block;
+  width:auto;
+  max-width:100%;
+  margin:0 0 5px !important;
+  padding:5px 10px !important;
+  border-radius:5px;
+  background:#163c56 !important;
+  color:#fff4df !important;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(13px,1.25vw,17px) !important;
+  line-height:1.15 !important;
+  letter-spacing:.075em;
+}
+#holidayScreen .story-speech > p:not([hidden]) {
+  color:#203445 !important;
+  font-size:clamp(15px,1.55vw,21px);
+  font-weight:800;
+  line-height:1.4;
+}
+#holidayScreen .story-speech:is(.summit-ending-content,.detention-ending-content,.assembly-ending-content) > p:last-child {
+  color:#556878 !important;
+  font-size:clamp(10px,.9vw,12px) !important;
+}
+/* Spoken puzzle responses are paper cards, not the game status/footer. */
+#holidayScreen .story-puzzle-response {
+  position:relative;
+  z-index:5;
+  margin:9px 0;
+  padding:10px 13px;
+  max-height:min(160px,26dvh);
+  overflow-y:auto;
+}
+#holidayScreen .story-puzzle-response > p {
+  margin:3px 0 0 !important;
+  padding:0 !important;
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:#203445 !important;
+  font-size:clamp(14px,1.35vw,18px) !important;
+  line-height:1.35 !important;
+}
+#holidayScreen #summitResponseCard[hidden],
+#holidayScreen #detentionResponseCard[hidden],
+#holidayScreen #summitFeedback[hidden],
+#holidayScreen #detentionFeedback[hidden],
+#holidayScreen #wallResultText[hidden],
+#holidayScreen #palaceResultText[hidden],
+#holidayScreen #marketResultText[hidden],
+#holidayScreen #hotelDeductionFeedback[hidden],
+#holidayScreen #hotelResolvedText[hidden] {display:none !important;}
+
+/* One consistent compact dark top navigation, with a clear sound toggle
+   available in both the opening and all subsequent scenes. */
+#officeScreen .scene-toolbar,
+#holidayScreen .china-footer.story-top-controls {
+  background:rgba(4,25,48,.95) !important;
+  border:1px solid rgba(147,204,224,.7) !important;
+  border-radius:9px !important;
+  box-shadow:0 5px 18px rgba(3,17,31,.35);
+}
+#officeScreen .scene-toolbar {
+  box-sizing:border-box;
+  min-height:48px;
+  padding:6px 10px;
+}
+#officeScreen .scene-toolbar-actions {
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:flex-end;
+}
+#holidayScreen .china-footer.story-top-controls {
+  position:absolute !important;
+  z-index:50;
+  top:10px !important;
+  right:10px !important;
+  bottom:auto !important;
+  left:auto !important;
+  max-width:min(96%,760px);
+  min-height:48px;
+  padding:6px 9px;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:flex-end;
+  gap:6px;
+}
+#holidayScreen .story-toolbar-label {
+  display:inline-block;
+  margin-right:auto;
+  padding:0 9px 0 4px;
+  color:#f4db9a;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.075em;
+  white-space:nowrap;
+}
+#officeScreen .scene-toolbar-actions .mini-button,
+#holidayScreen .china-footer.story-top-controls .mini-button {
+  box-sizing:border-box;
+  min-height:34px !important;
+  padding:6px 9px !important;
+  color:#fff4df;
+  border:1px solid #739baa;
+  border-radius:6px;
+  background:#16415a;
+  font-size:11px !important;
+  line-height:1.25;
+  white-space:nowrap;
+  cursor:pointer;
+}
+#officeScreen .scene-toolbar-actions .mini-button:is(:hover,:focus-visible),
+#holidayScreen .china-footer.story-top-controls .mini-button:is(:hover,:focus-visible) {
+  background:#286886;
+  border-color:#f2d28d;
+}
+#officeScreen .scene-toolbar-actions .mini-button:focus-visible,
+#holidayScreen .china-footer.story-top-controls .mini-button:focus-visible {
+  outline:3px solid #fff;
+  outline-offset:2px;
+}
+#officeScreen .dialogue-actions {
+  min-height:0;
+  padding:3px 10px;
+}
+@media(max-width:800px) {
+  #officeScreen .scene-toolbar {align-items:flex-start;gap:5px;}
+  #officeScreen .scene-heading {display:none;}
+  #officeScreen .scene-toolbar-actions {
+    display:flex;flex-direction:row;flex-wrap:wrap;width:100%;
+    gap:4px;justify-content:center;
+  }
+  #officeScreen .scene-toolbar-actions .mini-button,
+  #holidayScreen .china-footer.story-top-controls .mini-button {
+    min-height:34px !important;padding:5px 6px !important;font-size:10px !important;
+  }
+  #holidayScreen .china-footer.story-top-controls {
+    right:6px !important;top:6px !important;max-width:calc(100% - 12px);
+    padding:4px 6px;gap:4px;min-height:38px;
+  }
+  #holidayScreen .story-toolbar-label {display:none;}
+  #holidayScreen .story-puzzle-response {max-height:175px;}
+}
+@media(max-width:450px) {
+  #officeScreen .scene-toolbar {padding:4px 5px;}
+  #officeScreen .scene-toolbar-actions .mini-button,
+  #holidayScreen .china-footer.story-top-controls .mini-button {
+    padding:5px 4px !important;font-size:10px !important;
+  }
+  #holidayScreen .story-speech > p:not([hidden]) {font-size:14px;}
+  #holidayScreen .story-puzzle-response {padding:7px 9px;max-height:155px;}
+}
