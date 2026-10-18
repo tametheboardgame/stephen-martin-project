@@ -3057,3 +3057,37 @@ test("GAME-SP4B.5 paperwork places illustration and all selection states side-by
   // Layout only. The full selectable/acknowledgement/stamp and save/resume logic is
   // tested by GAME-SP4B's existing three-stage route tests.
 });
+
+
+test("GAME-SP4C spa artwork has a separate location and three transparent locked actors",()=>{
+  const base="public/assets/generated/";
+  const location="locations/ending-c-spa-lounge-background-v01.webp";
+  const actors=[
+    "characters/ending-c-stephen-spa-robe-v01.webp",
+    "characters/ending-c-david-spa-visitor-v01.webp",
+    "characters/ending-c-paul-spa-visitor-v01.webp"
+  ];
+  for(const filename of [location,...actors]) {
+    const bytes=fs.readFileSync(path.join(root,base,filename));
+    assert.equal(bytes.toString("ascii",0,4),"RIFF",filename+" must be a WebP");
+    assert.equal(bytes.toString("ascii",8,12),"WEBP");
+    if(filename.includes("/characters/")) {
+      assert.equal(bytes.toString("ascii",12,16),"VP8X",filename+" must have extended WebP format");
+      assert.ok((bytes[20]&0x10)!==0,filename+" must retain transparency");
+    }
+  }
+  const intro=html.slice(html.indexOf('id="rescueRouteIntro"'),html.indexOf('id="rescueMiniGameScene"'));
+  const ending=html.slice(html.indexOf('id="reassembleEndingScene"'),html.indexOf('id="rescueEndingSummary"'));
+  for(const name of ["david","paul"]) {
+    assert.match(intro,new RegExp('class="spa-intro-actor spa-intro-'+name+'"[^>]*ending-c-'+name+'-spa-visitor-v01\\.webp'));
+    assert.match(ending,new RegExp('class="spa-ending-actor spa-ending-'+name+'"[^>]*ending-c-'+name+'-spa-visitor-v01\\.webp'));
+  }
+  assert.doesNotMatch(intro,/spa-intro-stephen/,"Stephen's appearance remains the final reveal");
+  assert.match(ending,/class="spa-ending-actor spa-ending-stephen"[^>]*ending-c-stephen-spa-robe-v01\\.webp/);
+  const stage=css.slice(css.indexOf("/* GAME-SP4C.1: approved spa"));
+  assert.match(stage,/ending-c-spa-lounge-background-v01\\.webp/);
+  assert.match(stage,/#rescueRouteIntro\\[data-route="reassemble"\\]/);
+  assert.match(stage,/#reassembleEndingScene\\[data-speaker="stephen"\\] \\.spa-ending-stephen/);
+  assert.match(engine,/reassembleEndingScene"\\)\\.dataset\\.speaker = card/);
+  assert.match(read("scripts/build.mjs"),/Approved Ending C scene artworks packaged/);
+});
