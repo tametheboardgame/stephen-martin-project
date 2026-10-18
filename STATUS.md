@@ -2,6 +2,13 @@
 
 **Updated:** 18 October 2026
 
+## GAME-SP4C.3B — Anatomical limb fit and shaped targets (18 October 2026)
+
+- Owner reviewed the fully built cardboard Stephen and found reversed arms/legs, boxy placement targets and artwork that failed to follow the silhouette. Keep all 13 parts, six IDs, artwork, saved state, selection/drop/power behaviour locked.
+- Corrected only visual CSS anchors for four limbs: because Stephen faces the player, **his left side is to the viewer's right**. Separate per-arm and per-leg offsets place cut-outs against the board, use their natural source aspect ratio (`object-fit:contain`) instead of earlier image distortion, and show non-rectangular clipped highlight shapes for the active mounting regions while preserving keyboard-friendly button targets.
+- Updated player instructions and Paul hint to explain the anatomical reversal and remove the now-false suggestion that silhouette labels are printed on the board. Existing DOM slot names and placement semantics remain unchanged.
+- Added focused geometry/mapping/accessibility regression. **131/131 smoke tests passed**, **19/19 Ending C art assets packaged** at `959e8e9`, and Cloudflare preview deployed. Owner in-game placement review still required; draft PR #46 is unmerged.
+
 ## GAME-SP4C.3A — Puzzle slot layering and tray stability (18 October 2026)
 
 - Owner laptop screenshots showed that empty slot labels covered the board, completed arms/legs appeared to vanish and a sudden nested scrollbar appeared in the tray after a wrong-answer hint.
