@@ -3294,3 +3294,25 @@ test("GAME-SP4.1D0 retires proof switches without removing approved acting or pl
   }
   assert.ok(css.includes('data-seated-sprite="confident"'),"Keep calibrated seated portraits");
 });
+
+
+test("GAME-SP4.1D0 saved intro resumes its authored character acting, not a proof override",()=>{
+  const p=preview();p.start();p.at("office.021");
+  const checkpoint=saved(p).beatId;
+  const before=Object.fromEntries(["Stephen","David","Paul"].map(name=>
+    [name,p.el("portrait"+name).src]));
+  p.el("homeButton").click();
+  p.el("resumeButton").click();
+  assert.equal(saved(p).beatId,checkpoint);
+  for(const name of ["Stephen","David","Paul"]){
+    assert.equal(p.el("portrait"+name).src,before[name],name+" resumes its scripted pose");
+    assert.equal(p.el("cast"+name).dataset.expression,all.find(x=>x.id===checkpoint).reactions[name]);
+  }
+  p.el("nextButton").click();
+  const current=all.find(x=>x.id===saved(p).beatId);
+  assert.ok(current);
+  for(const name of ["Stephen","David","Paul"]){
+    assert.equal(p.el("cast"+name).dataset.expression,current.reactions[name],
+      name+" keeps automatic reactions after Resume");
+  }
+});
