@@ -1608,7 +1608,7 @@
             "Select a labelled foam/cardboard part and tap the matching silhouette slot.";
           $("assemblyHint").hidden = !progress.hintVisible || progress.finished;
           $("assemblyHint").textContent = selectedPart && assembly.parts.some(part => part.id === selected)
-            ? "Paul: "+selectedPart.label+" goes in the "+selectedPart.label+" slot. It's written on both, mate."
+            ? "Paul: Match the "+selectedPart.label+" shape to the standee. He faces us, so his left is on your right."
             : "Paul: Try the six normal cardboard bits. Spare kidneys, Wi-Fi hearts and toasters are extras.";
           $("assemblyPowerButton").hidden = !progress.finished || state.assemblyPowered === true;
           $("assemblyPowerButton").textContent = assembly.powerText+" →";
