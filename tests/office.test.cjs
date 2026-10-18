@@ -213,7 +213,7 @@ test("six scripted cutaways are visible, readable and return to the same office"
   assert.ok(p.el("sceneEffect").innerHTML.includes("RESCUE"));
 });
 
-test("approved full seated Stephen and David poses swap independently, Paul remains Neutral",()=>{
+test("approved seated expressions react automatically and independently across office beats",()=>{
   const p=preview();p.start();p.at("office.021");
   assert.equal(p.el("castStephen").dataset.expression,"laughing");
   assert.match(p.el("portraitStephen").src,/stephen-office-seated-laughing-v01\.webp/);
@@ -221,15 +221,22 @@ test("approved full seated Stephen and David poses swap independently, Paul rema
   assert.equal(p.el("castDavid").dataset.seatedSprite,"frustrated");
   assert.match(p.el("portraitDavid").src,/david-office-seated-frustrated-v01\.webp\?v=1$/);
   assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
-  const davidSrc=p.el("portraitDavid").src;
-  p.el("stephenProofButton").click();
-  assert.equal(p.el("portraitStephen").dataset.sprite,"neutral");
-  p.el("stephenProofButton").click();
-  assert.equal(p.el("portraitStephen").dataset.sprite,"amused");
-  assert.equal(p.el("portraitDavid").src,davidSrc);
-  assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
+  const before=all.findIndex(x=>x.id==="office.021");
+  p.el("nextButton").click();
+  const next=all[before+1];
+  assert.equal(saved(p).beatId,next.id);
+  for(const actor of ["Stephen","David","Paul"]){
+    const expected=next.reactions[actor];
+    const source=actor==="Paul" && !["confused","pleased"].includes(expected)?"neutral":expected;
+    assert.equal(p.el("cast"+actor).dataset.expression,expected);
+    assert.equal(p.el("cast"+actor).dataset.seatedSprite,source);
+    assert.ok(p.el("portrait"+actor).src.includes(actor.toLowerCase()+"-office-seated-"+source+"-v01.webp"));
+  }
+  p.el("backButton").click();
+  assert.equal(saved(p).beatId,"office.021");
+  assert.equal(p.el("castStephen").dataset.seatedSprite,"laughing");
+  assert.equal(p.el("castDavid").dataset.seatedSprite,"frustrated");
 });
-
 test("David's full approved six-state set is mapped to every scripted beat",()=>{
   const expected={neutral:"neutral",confident:"confident",serious:"serious",frustrated:"frustrated",shocked:"shocked","systems-expert":"systems-expert"};
   const p=preview();p.start();
@@ -249,35 +256,23 @@ test("David's full approved six-state set is mapped to every scripted beat",()=>
   }
 });
 
-test("David proof cycles all six states without changing scene or the other actors",()=>{
+test("David's expressions follow the script on Next and Back without manual overrides",()=>{
   const p=preview();p.start();p.at("office.006");
   assert.equal(p.el("castDavid").dataset.expression,"confident");
   assert.equal(p.el("castDavid").dataset.seatedSprite,"confident");
   assert.match(p.el("portraitDavid").src,/david-office-seated-confident-v01\.webp\?v=4$/);
   const paulSrc=p.el("portraitPaul").src,stephenSrc=p.el("portraitStephen").src;
-  const timerCount=p.timeouts.size;
-  for(const [mode,suffix] of [
-    ["neutral","neutral-v01.webp"],["confident","confident-v01.webp?v=4"],
-    ["serious","serious-v01.webp?v=1"],["frustrated","frustrated-v01.webp?v=1"],
-    ["shocked","shocked-v01.webp?v=1"],["systems-expert","systems-expert-v01.webp?v=1"]
-  ]){
-    p.el("davidProofButton").click();
-    assert.equal(p.el("castDavid").dataset.seatedSprite,mode);
-    assert.ok(p.el("portraitDavid").src.endsWith("david-office-seated-"+suffix),mode);
-    assert.equal(saved(p).beatId,"office.006");
-    assert.equal(p.timeouts.size,timerCount);
-    assert.equal(p.el("portraitPaul").src,paulSrc);
-    assert.equal(p.el("portraitStephen").src,stephenSrc);
-  }
-  assert.equal(p.el("davidProofButton").textContent,"David: Systems Expert ↻");
-  p.el("davidProofButton").click();
-  assert.equal(p.el("castDavid").dataset.seatedSprite,"confident","Auto reuses current beat");
   p.el("nextButton").click();
   assert.equal(p.el("castDavid").dataset.expression,"systems-expert");
   assert.equal(p.el("castDavid").dataset.seatedSprite,"systems-expert");
-  assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
+  assert.match(p.el("portraitDavid").src,/david-office-seated-systems-expert-v01\.webp\?v=1$/);
+  assert.equal(p.el("portraitPaul").src,paulSrc);
+  assert.equal(p.el("portraitStephen").src,stephenSrc);
+  p.el("backButton").click();
+  assert.equal(saved(p).beatId,"office.006");
+  assert.equal(p.el("castDavid").dataset.seatedSprite,"confident");
+  assert.match(p.el("portraitDavid").src,/david-office-seated-confident-v01\.webp\?v=4$/);
 });
-
 test("Paul Confused and Pleased use approved seated sprites; Blank stays Neutral",()=>{
   const p=preview();p.start();
   p.at("office.002");
@@ -294,29 +289,22 @@ test("Paul Confused and Pleased use approved seated sprites; Blank stays Neutral
   assert.ok(p.el("portraitPaul").src.endsWith("paul-office-seated-pleased-v01.webp?v=1"));
 });
 
-test("Paul proof cycles Auto, Neutral, Confused and Pleased without affecting the other actors",()=>{
+test("Paul's expressions follow Confused, Blank fallback and Pleased automatically",()=>{
   const p=preview();p.start();p.at("office.002");
-  const stephenSrc=p.el("portraitStephen").src;
-  const davidSrc=p.el("portraitDavid").src;
-  const timerCount=p.timeouts.size;
-  p.el("paulProofButton").click();
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"confused");
+  assert.match(p.el("portraitPaul").src,/paul-office-seated-confused-v01\.webp\?v=1$/);
+  p.el("nextButton").click();
+  assert.equal(saved(p).beatId,"office.003");
+  assert.equal(p.el("castPaul").dataset.expression,"blank");
   assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
-  assert.ok(p.el("portraitPaul").src.endsWith("paul-office-seated-neutral-v01.webp"));
-  p.el("paulProofButton").click();
-  assert.equal(p.el("castPaul").dataset.seatedSprite,"confused");
-  assert.ok(p.el("portraitPaul").src.endsWith("paul-office-seated-confused-v01.webp?v=1"));
-  p.el("paulProofButton").click();
+  assert.match(p.el("portraitPaul").src,/paul-office-seated-neutral-v01\.webp$/);
+  p.el("nextButton").click();
+  assert.equal(saved(p).beatId,"office.004");
   assert.equal(p.el("castPaul").dataset.seatedSprite,"pleased");
-  assert.ok(p.el("portraitPaul").src.endsWith("paul-office-seated-pleased-v01.webp?v=1"));
-  p.el("paulProofButton").click();
-  assert.equal(p.el("paulProofButton").textContent,"Paul: Auto ↻");
-  assert.equal(p.el("castPaul").dataset.seatedSprite,"confused");
-  assert.equal(saved(p).beatId,"office.002");
-  assert.equal(p.timeouts.size,timerCount);
-  assert.equal(p.el("portraitStephen").src,stephenSrc);
-  assert.equal(p.el("portraitDavid").src,davidSrc);
+  assert.match(p.el("portraitPaul").src,/paul-office-seated-pleased-v01\.webp\?v=1$/);
+  p.el("backButton").click();
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
 });
-
 test("Paul's scripted reactions select Confused/Pleased and Blank resolves to Neutral across the intro",()=>{
   const p=preview();p.start();
   for(let i=0;i<all.length;i++){
@@ -3291,4 +3279,17 @@ test("GAME-SP4.1C Summit entrance retains full daylight and uses local contrast 
   assert.ok(css.includes("summit-throne-room-v01.webp"),"Original throne-room artwork remains present");
   assert.ok(!stageRules.includes('data-route="detention"')&&!stageRules.includes('data-route="reassemble"'),
     "The outdoor colour correction must not change other ending routes");
+});
+
+test("GAME-SP4.1D0 retires proof switches without removing approved acting or playback",()=>{
+  assert.doesNotMatch(html,/expression-proof-controls|stephenProofButton|davidProofButton|paulProofButton|Stephen: Auto|David: Auto|Paul: Auto/);
+  assert.doesNotMatch(engine,/ProofMode|proofModes|ProofButton|cycleStephenProof|cycleDavidProof|cyclePaulProof/);
+  assert.doesNotMatch(css,/d2-proof-button|expression-proof-controls/);
+  assert.ok(engine.includes('const requested = reaction;'),"Automatic authored cues remain the sole source of portrait expressions");
+  assert.match(engine,/for \(const name of Object\.keys\(cast\)\) applySeatedExpression\(name\)/);
+  assert.match(engine,/cast\[name\]\.dataset\.seatedSprite = sprite/);
+  for(const id of ["playPauseButton","backButton","nextButton","soundButton","storyProgress"]){
+    assert.ok(html.includes('id="'+id+'"'),"Playback/progress control must remain: "+id);
+  }
+  assert.ok(css.includes('data-seated-sprite="confident"'),"Keep calibrated seated portraits");
 });
