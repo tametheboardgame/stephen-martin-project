@@ -3815,8 +3815,9 @@ test("GAME-SP4.1C2 Ending B uses approved original colours at briefing, puzzle a
     "No full-scene gradient, dimming or desaturation may be introduced");
   // Approved artwork is unchanged, and the independent foreground actors
   // retain their precisely staged positions.
+  assert.ok(css.includes("ending-b-bureau-office-v01.webp"),
+    "Approved room remains the CSS background");
   for(const file of [
-    "ending-b-bureau-office-v01.webp",
     "ending-b-ceremonial-official-neutral-v01.webp",
     "ending-b-release-permit-canonical-portrait-proof-v01.webp"
   ])assert.ok(html.includes(file),file+" remains in the build");
