@@ -70,7 +70,7 @@ The established phase flow is:
 5. Cover Sound On/Off, Pause/Play, Skip to choice/investigation, Next, saves/Resume, late onended cancellation, hidden tab, missing MP3, loading curtain and mobile cropped artwork. The existing skip must never bypass an unresolved decision. Keep existing approved text and speech.
 6. Obtain actual Cloudflare scene review with each approved image and voice track. Commit in bounded incremental draft PRs, not one art-heavy megapatch. Finish asset-proof documents and merge only after owner approval.
 
-**Audio timing caution:** Twelve clips played only along a single path yield approximately **7–9** narrations on a playthrough (initial title, zero–two time jumps, one route card, England, four travel, arrival). Target roughly 3–6 seconds per clip, avoid duplicate long caption holds and keep the overall 15–25-minute game limit. Record final speech lengths after files exist; never assume a precise duration.
+**Audio timing caution:** Twelve clips played only along a single path yield approximately **8–10** narrations on a playthrough (initial title, zero–two time jumps, one route card, England, four travel beats and arrival). Target roughly 3–6 seconds per clip, avoid duplicate long caption holds and keep the overall 15–25-minute game limit. Record final speech lengths after files exist; never assume a precise duration.
 
 ## Approval checklist for F0
 
