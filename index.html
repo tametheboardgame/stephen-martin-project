@@ -452,12 +452,18 @@
               <button id="summitNextButton" class="btn btn-primary" type="button" hidden>Continue →</button>
             </section>
             <section id="detentionPaperwork" class="detention-paperwork" hidden aria-label="The Great Stamp Catastrophe">
-              <span class="detention-eyebrow">OFFICE OF CEREMONIAL MISUNDERSTANDINGS · FORM 001</span>
-              <h2 id="detentionRoundTitle">Visitor Release Authorisation</h2>
-              <p id="detentionRoundProgress" class="detention-progress"></p>
-              <p id="detentionRoundPrompt" class="detention-prompt"></p>
-              <p id="detentionRoundClue" class="detention-clue"></p>
-              <div class="detention-art-display" aria-label="Approved illustrated bureaucracy puzzle props">
+              <div class="detention-form-header">
+                <span class="detention-eyebrow">OFFICE OF CEREMONIAL MISUNDERSTANDINGS · FORM 001</span>
+                <div class="detention-title-row">
+                  <h2 id="detentionRoundTitle">Visitor Release Authorisation</h2>
+                  <p id="detentionRoundProgress" class="detention-progress"></p>
+                </div>
+              </div>
+              <div class="detention-form-columns">
+                <div class="detention-reading-column">
+                  <p id="detentionRoundPrompt" class="detention-prompt"></p>
+                  <p id="detentionRoundClue" class="detention-clue"></p>
+                  <div class="detention-art-display" aria-label="Approved illustrated bureaucracy puzzle props">
                 <img class="detention-desk-art" src="./public/assets/generated/game/ending-b-puzzle-desk-v01.webp" alt="Approved desk artwork: bear classification paperwork, Stephen's release permit and Paul’s takeaway cup">
                 <a id="detentionBearArtLink" class="detention-art-bear" href="./public/assets/generated/game/ending-b-bear-classification-v01.webp" target="_blank" rel="noopener" hidden aria-label="View the full bear classification document">
                   <img src="./public/assets/generated/game/ending-b-bear-classification-v01.webp" alt="Official bear classification assessment, marked CONFUSING">
@@ -466,8 +472,10 @@
                   <img src="./public/assets/generated/game/ending-b-pauls-takeaway-cup-alpha-v01.webp" alt="Paul's official takeaway coffee cup, resting suspiciously on the desk">
                   <span>Paul's drink · inspect it</span>
                 </div>
-              </div>
-              <div id="detentionChoiceCards" class="detention-cards" role="group" aria-label="Select the answer for the fictional form">
+                  </div>
+                </div>
+                <div class="detention-answer-column">
+                  <div id="detentionChoiceCards" class="detention-cards" role="group" aria-label="Select the answer for the fictional form">
                 <button id="detentionChoice0" class="detention-card" type="button"></button>
                 <button id="detentionChoice1" class="detention-card" type="button"></button>
                 <button id="detentionChoice2" class="detention-card" type="button"></button>
@@ -497,7 +505,9 @@
               </div>
               <p id="detentionFeedback" class="detention-feedback" aria-live="polite" hidden></p>
               <p id="detentionHint" class="detention-hint" aria-live="polite" hidden></p>
-              <button id="detentionNextButton" class="btn btn-primary" type="button" hidden>Continue →</button>
+                  <button id="detentionNextButton" class="btn btn-primary" type="button" hidden>Continue →</button>
+                </div>
+              </div>
             </section>
             <section id="reassembleWorkshop" class="assembly-workshop" hidden aria-label="Assemble the cardboard Stephen display">
               <span class="assembly-eyebrow">TOTAL RENEWAL SPA · PROMOTIONAL DISPLAY WORKSHOP</span>
