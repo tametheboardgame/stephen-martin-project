@@ -3791,7 +3791,7 @@ test("GAME-SP4.1E actor selectors stay tied to the approved art, no extra sprite
     "assemblyEndingDavidActor","assemblyEndingStephenActor",
     "assemblyEndingCardboardActor","assemblyEndingPaulActor"
   ];
-  for(const id of ids)assert.match(html,new RegExp('id="'+id+'"[^>]*speaker-focus-actor'),
+  for(const id of ids)assert.match(html,new RegExp('id="'+id+'"[^>]*data-speaker-focus'),
     id+" must target its existing sprite");
   assert.match(css,/GAME-SP4\.1E — the actor speaking gets the same restrained warm focus/);
   assert.match(css,/prefers-reduced-motion:reduce/);
