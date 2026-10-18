@@ -2,6 +2,15 @@
 
 **Updated:** 18 October 2026
 
+## GAME-SP4.1E — Shared speaking-character highlighting (active)
+
+- **D2 merged:** Approved PR #55 into main at `3c7bb32398238bd55ad98929389bf7e96c5b3175`, after 154/154 checks and a successful Cloudflare preview.
+- **E development branch:** `agent/game-sp41e-speaking-character-highlight` from this exact main commit. Shared actor mapping and subtle warm sprite glow across office, sightseeing, alarm, hotel, three route intros and three endings.
+- Speaker state clears on narrators, silent cards, unresolved choices/puzzles, pause, tab-hide, menu and route change. Existing approved sprite sizes and placements are unchanged. Real Stephen and Cardboard Stephen are independently addressed.
+- **Next gate:** exact-head CI, Cloudflare preview and owner laptop/tablet/mobile visual acceptance. The PR must remain draft and unmerged until acceptance. Work package: `docs/story/GAME-SP4.1E-SPEAKER-FOCUS.md`.
+- **Separate known defect:** Over-dark Ending B background is tracked as [issue #56](https://github.com/tametheboardgame/stephen-martin-project/issues/56), unaffected by E.
+
+
 ## GAME-SP4.1D2 — Contextual story skips (started 18 October 2026)
 
 - **D1 owner approved and merged:** PR #54 at `2e8347b7f6828e9af94e3e1eb813fd1c50c93f69` following **147/147** CI and Cloudflare success. The approved shared top controls and external blue name tabs are now the baseline.

@@ -717,7 +717,7 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 #### GAME-SP4.1E — Speaking-character glow/backlight throughout the story
 
-**Priority:** P1; **status:** Not started; **dependencies:** D speaker presentation semantics and stable B calibration.  
+**Priority:** P1; **status:** Implementation started 18 October 2026 on `agent/game-sp41e-speaking-character-highlight`, pending CI and owner visual approval. D2 approved/merged via PR #55 at `3c7bb32`. See `docs/story/GAME-SP4.1E-SPEAKER-FOCUS.md`. **Dependencies:** D speaker presentation semantics and stable B calibration.  
 **Owner observation:** Only ending sequences and selected route entrances emphasise the current speaker.
 
 **Implementation tasks**

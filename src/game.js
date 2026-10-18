@@ -494,6 +494,7 @@
       playVoice(voice, voiceToken);
     }
     scheduleAdvance();
+    refreshSpeakerFocus();
   }
 
 
@@ -973,6 +974,7 @@
   function setHolidayAutoplay(enabled) {
     holidayAutoPlaying = Boolean(enabled);
     scheduleHolidayAdvance();
+    refreshSpeakerFocus();
   }
 
   function nextHolidayStoryBeat() {
@@ -1103,6 +1105,7 @@
     // outside the visible laptop viewport. Reset only on actual screen changes,
     // not on every spoken line, Back, or Next.
     if (entering && typeof window.scrollTo === "function") window.scrollTo(0, 0);
+    if (screenName === "menu") clearSpeakerFocus();
   }
 
   function setSound(enabled, rememberChoice = false) {
@@ -1222,12 +1225,14 @@
       el.hidden = expression === "absent";
     }
     for (const name of Object.keys(cast)) applySeatedExpression(name);
+    refreshSpeakerFocus();
     // GAME-SP4.1A: reveal each illustrated set only after its visible images
     // and CSS backgrounds have decoded. Alternate expressions retain the
     // current scene and are not allowed to restart the loading curtain.
     const officeArtworkKey = "office:" + (cutaway || (beat.id === "intro.exterior" ? "exterior" : "interior"));
     const officeArtworkPending = window.SMP_ASSET_LOADER?.present(officeArtworkKey, $("stage"), () => {
       if (screens.office.hidden || state.beatId !== beat.id) return;
+      refreshSpeakerFocus();
       startVoice(beat);
       scheduleAdvance();
     }) || false;
@@ -1329,6 +1334,98 @@
     $(textId).hidden = !copy;
     $(speakerId).textContent = prefix ? prefix[1].toUpperCase() : "RESPONSE";
     $(textId).textContent = prefix ? copy.slice(prefix[0].length) : copy;
+  }
+
+
+  // GAME-SP4.1E: visible speaker-to-actor map, shared by every illustrated
+  // scene. It annotates existing sprite elements; no position/scale/image
+  // changes and never treats a narrator or unseen person as a visible actor.
+  const speakerFocusActors = {
+    office: {stephen:"castStephen",david:"castDavid",paul:"castPaul"},
+    wall: {stephen:"wallStephen",promoter:"wallPromoter"},
+    palace: {stephen:"palaceStephen",attendant:"palaceAttendant"},
+    market: {stephen:"marketStephen","spa representative":"marketSpaRep"},
+    alarm: {david:"rescueAlarmDavid",paul:"rescueAlarmPaul"},
+    hotel: {david:"rescueHotelDavid",paul:"rescueHotelPaul"},
+    cultIntro: {david:"summitEntranceDavid",paul:"summitEntrancePaul",gatekeeper:"summitEntranceGatekeeper"},
+    detentionIntro: {david:"detentionIntroDavid",paul:"detentionIntroPaul",official:"detentionIntroOfficial"},
+    reassembleIntro: {david:"spaIntroDavid",paul:"spaIntroPaul"},
+    summitEnding: {stephen:"summitThroneStephen",david:"summitThroneDavid",paul:"summitThronePaul"},
+    detentionEnding: {stephen:"detentionEndingStephenActor",david:"detentionEndingDavidActor",
+      paul:"detentionEndingPaulActor",official:"detentionEndingOfficialActor"},
+    reassembleEnding: {stephen:"assemblyEndingStephenActor",david:"assemblyEndingDavidActor",
+      paul:"assemblyEndingPaulActor","cardboard stephen":"assemblyEndingCardboardActor"}
+  };
+
+  // Previous-scene and narrator glow must be cleared first. Native image
+  // elements cannot use pseudo-elements, so CSS uses their own subtle shadow.
+  function clearSpeakerFocus() {
+    // The office's older speaking/listening classes also need resetting.
+    // Otherwise Pause hides the new glow but leaves the old emphasis behind.
+    for (const el of Object.values(cast)) {
+      el.classList.toggle("is-speaking",false);
+      el.classList.toggle("is-listening",false);
+    }
+    for (const actors of Object.values(speakerFocusActors)) {
+      for (const id of Object.values(actors)) $(id).dataset.speaking = "false";
+    }
+    for (const id of ["rescueRouteIntro","summitEndingScene",
+                       "detentionEndingScene","reassembleEndingScene"])
+      $(id).dataset.speaker = "";
+  }
+
+  function setActiveSpeaker(scene, speaker) {
+    const actors = speakerFocusActors[scene] || {};
+    const key = typeof speaker === "string" ? speaker.trim().toLowerCase() : "";
+    const id = Object.hasOwn(actors,key) ? actors[key] : null;
+    if (!id || $(id).hidden) return;
+    $(id).dataset.speaking = "true";
+    const root = {
+      cultIntro:"rescueRouteIntro",detentionIntro:"rescueRouteIntro",
+      reassembleIntro:"rescueRouteIntro",summitEnding:"summitEndingScene",
+      detentionEnding:"detentionEndingScene",reassembleEnding:"reassembleEndingScene"
+    }[scene];
+    if (root) $(root).dataset.speaker = key;
+  }
+
+  function refreshSpeakerFocus() {
+    clearSpeakerFocus();
+    const visible = !document.hidden && !window.SMP_ASSET_LOADER?.busy();
+    if (!visible) return;
+    if (!screens.office.hidden) {
+      const beat = beats[beatIndexById.get(state.beatId)];
+      if (autoPlaying && beat?.type === "dialogue") {
+        for (const [name,el] of Object.entries(cast)) {
+          el.classList.toggle("is-speaking",beat.speaker === name && !el.hidden);
+          el.classList.toggle("is-listening",beat.speaker in cast && beat.speaker !== name);
+        }
+        setActiveSpeaker("office",beat.speaker);
+      }
+      return;
+    }
+    if (screens.holiday.hidden || !holidayAutoPlaying) return;
+    const phase = state.holidayPhase;
+    const speech = (box,speaker) => $(box).hidden ? "" : $(speaker).textContent;
+    if (phase === "wall") setActiveSpeaker("wall",speech("wallDialogue","wallSpeakerName"));
+    else if (phase === "palace") setActiveSpeaker("palace",speech("palaceDialogue","palaceSpeakerName"));
+    else if (phase === "market") setActiveSpeaker("market",speech("marketDialogue","marketSpeakerName"));
+    else if (phase === "rescue-alarm" && state.rescueAlarmStep < rescueAlarm.lines.length)
+      setActiveSpeaker("alarm",$("rescueAlarmSpeaker").textContent);
+    else if (phase === "rescue-hotel")
+      setActiveSpeaker("hotel",speech("rescueHotelDialogue","hotelSpeaker"));
+    else if (phase === "rescue-route-intro") {
+      const route = state.route === "cult" ? "cultIntro" :
+        state.route === "detention" ? "detentionIntro" :
+        state.route === "reassemble" ? "reassembleIntro" : null;
+      if (route) setActiveSpeaker(route,speech("routeIntroDialogue","routeIntroSpeaker"));
+    } else if (phase === "rescue-route-ending") {
+      const ending = state.route === "cult" ? ["summitEnding","summitEndingSpeaker"] :
+        state.route === "detention" ? ["detentionEnding","detentionEndingSpeaker"] :
+        state.route === "reassemble" ? ["reassembleEnding","assemblyEndingSpeaker"] : null;
+      if (ending) setActiveSpeaker(ending[0],$(ending[1]).textContent);
+    }
+    // Intermissions, phone, travel, puzzles and the end summary have no
+    // active on-stage spoken character. Their visuals remain unhighlighted.
   }
 
   function renderHoliday() {
@@ -1902,12 +1999,14 @@
       $(visibleHolidayScene), () => {
         if (!screens.holiday.hidden && state.holidayPhase === phase) {
           scheduleHolidayAdvance();
+          refreshSpeakerFocus();
           focusSkippedCheckpoint();
         }
       });
     state.holidayFlowVersion = 2;
     persist();
     scheduleHolidayAdvance();
+    refreshSpeakerFocus();
   }
 
   function showHoliday() {
@@ -2562,6 +2661,7 @@
         try { song.pause(); } catch (_) { /* Tab remains paused. */ }
       }
       syncPlaybackControls();
+      refreshSpeakerFocus();
     }
   });
   $("dialogueBox").addEventListener("click", (event) => {

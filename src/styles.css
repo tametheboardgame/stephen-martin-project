@@ -4330,3 +4330,31 @@ body:has(#menuScreen:not([hidden])) main {
     padding:5px 7px !important;
   }
 }
+
+
+/* GAME-SP4.1E — the actor speaking gets the same restrained warm focus in
+   every illustrated scene. This affects only the pre-existing sprite itself;
+   it never scales/translates the actor, lightens scenery or covers hit areas. */
+#officeScreen #stage .cast-actor[data-speaking="true"] {
+  filter:saturate(1.07) brightness(1.05)
+    drop-shadow(0 0 7px rgba(255,221,148,.66));
+}
+#holidayScreen [data-speaker-focus][data-speaking="true"],
+#holidayScreen #summitEndingScene [data-speaker-focus][data-speaking="true"],
+#holidayScreen #detentionEndingScene [data-speaker-focus][data-speaking="true"],
+#holidayScreen #reassembleEndingScene [data-speaker-focus][data-speaking="true"] {
+  filter:brightness(1.055) saturate(1.045)
+    drop-shadow(2px 4px 4px rgba(4,24,38,.40))
+    drop-shadow(0 0 8px rgba(255,218,143,.75));
+}
+/* A distinct cardboard character speaks in Ending C; never transfer its
+   focus to the real Stephen. Same intensity, independent element state. */
+#holidayScreen #reassembleEndingScene #assemblyEndingCardboardActor[data-speaking="true"] {
+  filter:brightness(1.05)
+    drop-shadow(3px 5px 5px rgba(18,28,27,.55))
+    drop-shadow(0 0 8px rgba(245,218,126,.8));
+}
+@media (prefers-reduced-motion:reduce) {
+  #officeScreen #stage .cast-actor,
+  #holidayScreen [data-speaker-focus] {transition:none !important;}
+}

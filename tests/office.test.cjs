@@ -3608,3 +3608,194 @@ test("GAME-SP4.1D2 skip cancels voiced line and any old pending onended callback
   assert.equal(saved(p).wallStep,story().SMP_CHINA_WALL.lines.length);
   assert.equal(p.timeouts.size,0,"Cancelled callback cannot enqueue new beats");
 });
+
+
+test("GAME-SP4.1E office focus follows active character and clears on exterior, pause and menu",()=>{
+  const p=preview();p.start();
+  const speaking=id=>p.el(id).dataset.speaking;
+  assert.equal(speaking("castDavid"),"false","Non-dialogue exterior is silent");
+  assert.equal(speaking("castStephen"),"false");
+  p.el("nextButton").click();
+  assert.equal(speaking("castStephen"),"true");
+  assert.equal(speaking("castDavid"),"false");
+  assert.equal(speaking("castPaul"),"false");
+  p.el("playPauseButton").click();
+  assert.equal(speaking("castStephen"),"false","Pause clears the warm focus");
+  p.el("playPauseButton").click();
+  assert.equal(speaking("castStephen"),"true","Play restores current speaker");
+  p.el("nextButton").click();
+  assert.equal(speaking("castPaul"),"true","Paul owns the next line");
+  assert.equal(speaking("castStephen"),"false");
+  p.el("homeButton").click(); // Holiday-only Menu handler is safely inert here.
+  p.el("skipButton").click();
+  assert.equal(speaking("castPaul"),"false","Holiday transition clears office focus");
+  p.el("homeButton").click();
+  assert.equal(speaking("castStephen"),"false","Menu has no surviving glow");
+});
+
+test("GAME-SP4.1E China focus follows visible Stephen and promoter, never a choice or absent cast",()=>{
+  const p=preview();p.start();p.el("skipButton").click();
+  p.el("chinaStartButton").click();
+  assert.equal(p.el("wallStephen").dataset.speaking,"true");
+  assert.equal(p.el("wallPromoter").dataset.speaking,"false","Promoter is not visible yet");
+  p.el("wallNextButton").click();
+  assert.equal(p.el("wallStephen").dataset.speaking,"false");
+  assert.equal(p.el("wallPromoter").dataset.speaking,"true");
+  for(let i=1;i<5;i++)p.el("wallNextButton").click();
+  assert.equal(p.el("wallChoices").hidden,false);
+  assert.equal(p.el("wallPromoter").dataset.speaking,"false");
+  assert.equal(p.el("wallStephen").dataset.speaking,"false","Unanswered choice glows no actor");
+  p.el("wallDeclineButton").click();
+  assert.equal(p.el("wallStephen").dataset.speaking,"true","Spoken post-choice reply belongs to Stephen");
+  p.el("wallGoPalaceButton").click();p.el("intermissionContinueButton").click();
+  assert.equal(p.el("palaceAttendant").dataset.speaking,"true");
+  p.el("palaceNextButton").click();
+  assert.equal(p.el("palaceStephen").dataset.speaking,"true");
+  p.el("palaceDeclineButton").click(); // Cannot decide before all four lines.
+  assert.equal(saved(p).palaceDecision,null);
+  for(let i=1;i<4;i++)p.el("palaceNextButton").click();
+  assert.equal(p.el("palaceAttendant").dataset.speaking,"false");
+  assert.equal(p.el("palaceStephen").dataset.speaking,"false");
+  p.el("palaceDeclineButton").click();
+  assert.equal(p.el("palaceStephen").dataset.speaking,"true");
+  p.el("palaceGoMarketButton").click();p.el("intermissionContinueButton").click();
+  assert.equal(p.el("marketStephen").dataset.speaking,"true");
+  p.el("marketNextButton").click();p.el("marketNextButton").click();
+  assert.equal(p.el("marketSpaRep").dataset.speaking,"true");
+  assert.equal(p.el("marketStephen").dataset.speaking,"false");
+});
+
+test("GAME-SP4.1E office alarm and hotel speaker focus cleanly switch and pause",()=>{
+  const p=toRescueAlarm("detention");
+  assert.equal(p.el("rescueAlarmDavid").dataset.speaking,"true");
+  p.el("rescueAlarmNextButton").click();
+  assert.equal(p.el("rescueAlarmPaul").dataset.speaking,"true");
+  assert.equal(p.el("rescueAlarmDavid").dataset.speaking,"false");
+  p.el("holidayPauseButton").click();
+  assert.equal(p.el("rescueAlarmPaul").dataset.speaking,"false");
+  p.el("holidayPauseButton").click();
+  assert.equal(p.el("rescueAlarmPaul").dataset.speaking,"true");
+  for(let i=1;i<10;i++)p.el("rescueAlarmNextButton").click();
+  assert.equal(p.el("rescueAlarmPaul").dataset.speaking,"false");
+  assert.equal(p.el("rescueAlarmDavid").dataset.speaking,"false","Completed alarm has no active speech");
+  const q=toHotelInvestigation("cult");
+  assert.equal(q.el("rescueHotelDavid").dataset.speaking,"true");
+  q.el("hotelNextButton").click();
+  assert.equal(q.el("rescueHotelPaul").dataset.speaking,"true");
+  completeHotelIntro(q);
+  assert.equal(q.el("rescueHotelDavid").dataset.speaking,"false");
+  assert.equal(q.el("rescueHotelPaul").dataset.speaking,"false","Unresolved clues are not dialogue");
+  q.el("hotelDeskButton").click();
+  assert.equal(q.el("rescueHotelDavid").dataset.speaking,"false");
+  q.el("hotelEvidenceCloseButton").click();
+  q.el("hotelDetentionButton").click();
+  assert.equal(q.el("rescueHotelPaul").dataset.speaking,"true","Wrong guess uses recorded Paul response");
+});
+
+test("GAME-SP4.1E each route introduction only highlights its own physical actors",()=>{
+  for(const [route,correct,expected,other] of [
+    ["cult","hotelCultButton","summitEntranceGatekeeper","detentionIntroOfficial"],
+    ["detention","hotelDetentionButton","detentionIntroOfficial","summitEntranceGatekeeper"],
+    ["reassemble","hotelReassembleButton","spaIntroDavid","summitEntranceGatekeeper"]
+  ]){
+    const p=toHotelInvestigation(route);
+    completeHotelIntro(p);
+    p.el(correct).click();
+    for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+    assert.equal(p.el(expected).dataset.speaking,"true",route+" opening speaker");
+    assert.equal(p.el(other).dataset.speaking,"false","Wrong-route sprite cannot glow");
+    p.el("routeIntroNextButton").click();
+    assert.equal(p.el(route==="cult"?"summitEntranceDavid":
+       route==="detention"?"detentionIntroDavid":"spaIntroPaul").dataset.speaking,"true");
+    p.el("holidayPauseButton").click();
+    assert.equal(p.el(expected).dataset.speaking,"false");
+    assert.equal(p.el("rescueRouteIntro").dataset.speaker,"");
+    p.el("homeButton").click();p.el("resumeButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+    assert.equal(p.el(route==="cult"?"summitEntranceDavid":
+      route==="detention"?"detentionIntroDavid":"spaIntroPaul").dataset.speaking,"true");
+  }
+});
+
+test("GAME-SP4.1E every ending maps only its real current speaker; cardboard and Stephen stay independent",()=>{
+  const cases=[
+    {route:"cult",make:toSummitAdmissions,finish:p=>{
+      for(const idx of [2,1,2]){p.el("summitChoice"+idx).click();p.el("summitNextButton").click();}
+    },current:"summitThroneStephen",next:"summitThroneDavid",step:"summitEndingNextButton"},
+    {route:"detention",make:toDetentionPaperwork,finish:p=>{
+      finishDetentionForms(p);p.el("detentionChoice2").click();
+      p.el("detentionStampButton").click();p.el("detentionPermitButton").click();
+      p.el("detentionNextButton").click();
+    },current:"detentionEndingStephenActor",next:"detentionEndingDavidActor",step:"detentionEndingNextButton"},
+    {route:"reassemble",make:toAssemblyWorkshop,finish:p=>{
+      for(let i=0;i<6;i++){p.el("assemblyPiece"+i).click();p.el("assemblySlot"+i).click();}
+      p.el("assemblyPowerButton").click();
+    },current:"assemblyEndingStephenActor",next:"assemblyEndingDavidActor",step:"assemblyEndingNextButton"}
+  ];
+  for(const c of cases){
+    const p=c.make();
+    assert.equal(p.el("holidaySkipButton").hidden,true,"Unsolved puzzle still blocks skip");
+    c.finish(p);
+    assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+    assert.equal(p.el(c.current).dataset.speaking,"true",c.route+" opening");
+    p.el(c.step).click();
+    assert.equal(p.el(c.current).dataset.speaking,"false");
+    assert.equal(p.el(c.next).dataset.speaking,"true",c.route+" second speaker");
+    if(c.route==="reassemble"){
+      for(let i=1;i<12;i++)p.el(c.step).click();
+      assert.equal(p.el("assemblyEndingCardboardActor").dataset.speaking,"true");
+      assert.equal(p.el("assemblyEndingStephenActor").dataset.speaking,"false",
+        "Cardboard Stephen cannot light up real Stephen");
+      p.el(c.step).click();
+      assert.equal(p.el("assemblyEndingCardboardActor").dataset.speaking,"false");
+    }
+    p.el("holidaySkipButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-ending-summary");
+    assert.equal(p.el(c.current).dataset.speaking,"false");
+    assert.equal(p.el(c.next).dataset.speaking,"false");
+  }
+});
+
+test("GAME-SP4.1E no actor highlighting survives tab hide, skip or a changed route",()=>{
+  const p=toWallChoice();
+  p.el("wallAcceptButton").click();
+  assert.equal(p.el("wallStephen").dataset.speaking,"true");
+  p.document.hidden=true;p.listeners.get("visibilitychange")();
+  assert.equal(p.el("wallStephen").dataset.speaking,"false");
+  p.document.hidden=false;
+  assert.equal(p.el("wallStephen").dataset.speaking,"false","Visibility does not auto-resume");
+  p.el("holidayPauseButton").click();
+  assert.equal(p.el("wallStephen").dataset.speaking,"true");
+  p.el("holidaySkipButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-hotel");
+  assert.equal(p.el("wallStephen").dataset.speaking,"false");
+  assert.equal(p.el("rescueHotelDavid").dataset.speaking,"false",
+    "Skipped arrival is waiting on manual clue work");
+  p.el("holidayRouteButton").click();
+  assert.equal(saved(p).holidayPhase,"wall");
+  assert.equal(saved(p).wallDecision,null);
+  assert.equal(p.el("wallStephen").dataset.speaking,"false","Unanswered choice resets all actors");
+});
+
+test("GAME-SP4.1E actor selectors stay tied to the approved art, no extra sprites",()=>{
+  const ids=[
+    "wallStephen","wallPromoter","palaceStephen","palaceAttendant",
+    "marketStephen","marketSpaRep","rescueAlarmDavid","rescueAlarmPaul",
+    "rescueHotelDavid","rescueHotelPaul","summitEntranceDavid",
+    "summitEntrancePaul","summitEntranceGatekeeper","detentionIntroOfficial",
+    "detentionIntroDavid","detentionIntroPaul","spaIntroDavid","spaIntroPaul",
+    "summitThroneStephen","summitThroneDavid","summitThronePaul",
+    "detentionEndingOfficialActor","detentionEndingStephenActor",
+    "detentionEndingDavidActor","detentionEndingPaulActor",
+    "assemblyEndingDavidActor","assemblyEndingStephenActor",
+    "assemblyEndingCardboardActor","assemblyEndingPaulActor"
+  ];
+  for(const id of ids)assert.match(html,new RegExp('id="'+id+'"[^>]*data-speaker-focus'),
+    id+" must target its existing sprite");
+  assert.match(css,/GAME-SP4\.1E — the actor speaking gets the same restrained warm focus/);
+  assert.match(css,/prefers-reduced-motion:reduce/);
+  assert.match(engine,/function refreshSpeakerFocus\(\)/);
+  assert.match(engine,/function clearSpeakerFocus\(\)/);
+  assert.match(engine,/"cardboard stephen":"assemblyEndingCardboardActor"/);
+});
