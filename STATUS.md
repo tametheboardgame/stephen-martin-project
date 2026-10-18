@@ -2,6 +2,15 @@
 
 **Updated:** 18 October 2026
 
+## GAME-SP4.1C2 — Brighten Ending B background (active)
+
+- **SP4.1E approved and merged:** PR #57 at `827610da9edb69a00ba970e3e60e6bb30c41e151`. **161/161** CI tests and Cloudflare successful before merge.
+- **Current branch:** `agent/game-sp41c2-ending-b-daylight` from merged main. Corrects a shared full-stage navy gradient over the existing approved Ending B bureaucratic-office background across route briefing, paperwork puzzle and ending; no actor, script, puzzle or sound modifications.
+- **Issue/technical notes:** [#56](https://github.com/tametheboardgame/stephen-martin-project/issues/56); `docs/story/GAME-SP4.1C2-ENDING-B-DAYLIGHT.md`.
+- **Next gate:** exact-head CI, Cloudflare preview and owner's laptop/tablet/mobile inspection. Keep draft and unmerged until visual approval.
+- **Following package:** GAME-SP4.1F, illustrated transitions, after this bounded lighting issue.
+
+
 ## GAME-SP4.1E — Shared speaking-character highlighting (active)
 
 - **D2 merged:** Approved PR #55 into main at `3c7bb32398238bd55ad98929389bf7e96c5b3175`, after 154/154 checks and a successful Cloudflare preview.
