@@ -59,6 +59,26 @@ const officeImages = [
   "public/assets/generated/locations/summit-entrance-v01.webp",
   "public/assets/generated/locations/summit-throne-room-v01.webp"
 ];
+// GAME-SP4.1F: these four exact owner-approved, versioned backgrounds are
+// required in every playable build. Do not package the raw Drive PNGs.
+const transitionImages = [
+  "transition-china-passing-time-v01.webp",
+  "transition-operation-flight-luggage-v01.webp",
+  "transition-operation-map-expenses-v01.webp",
+  "transition-stephen-route-handoff-v01.webp"
+];
+for (const filename of transitionImages) {
+  const relative = "public/assets/generated/locations/" + filename;
+  const bytes = await readFile(path.join(root,relative));
+  if (bytes.length < 20000 || bytes.length > 2 * 1024 * 1024 ||
+      bytes.toString("ascii",0,4) !== "RIFF" ||
+      bytes.toString("ascii",8,12) !== "WEBP") {
+    throw new Error("Invalid/missing locked F transition background: " + filename);
+  }
+  await mkdir(path.dirname(path.join(output,relative)), {recursive:true});
+  await copyFile(path.join(root,relative),path.join(output,relative));
+}
+console.log("Approved transition artworks packaged: " + transitionImages.length + "/4.");
 // Fail the public preview build if the independent desk accidentally becomes an
 // opaque image: a black/solid rectangle would cover all three actors.
 const foregroundPath = path.join(root, "public/assets/generated/locations/office-foreground-01-v01.webp");
@@ -348,6 +368,29 @@ if (hubVoiceIds.length !== 22 || new Set(hubVoiceIds).size !== 22 ||
 }
 hubVoiceIds.forEach(id => permitted.add(id + ".mp3"));
 if (permitted.size !== 112) throw new Error("Duplicate approved dialogue voice ID.");
+// GAME-SP4.1F: the owner records the existing narrator voice later. These
+// reserved IDs must already be permitted so future MP3 uploads bundle with
+// no rebuild code changes or weakening of the strict voice allow-list.
+const narratorIds = [
+  "transition.china.chapter-two.001",
+  "transition.china.to-palace.001",
+  "transition.china.to-market.001",
+  "transition.route.summit.001",
+  "transition.route.banquet.001",
+  "transition.route.spa.001",
+  "transition.england.back.001",
+  "transition.travel.001",
+  "transition.travel.002",
+  "transition.travel.003",
+  "transition.travel.004",
+  "transition.hotel.arrival.001"
+];
+if (narratorIds.length !== 12 || new Set(narratorIds).size !== 12 ||
+    narratorIds.some(id => !/^transition\.[a-z0-9.-]+$/.test(id))) {
+  throw new Error("Invalid/duplicate narrator audio IDs.");
+}
+narratorIds.forEach(id => permitted.add(id + ".mp3"));
+if (permitted.size !== 124) throw new Error("Narration filename overlaps an existing voice ID.");
 await mkdir(path.join(output, audioSource), { recursive: true });
 let voiceCount = 0;
 for (const filename of await readdir(audioFolder)) {
@@ -363,7 +406,8 @@ for (const filename of await readdir(audioFolder)) {
   await copyFile(original, path.join(output, audioSource, filename));
   voiceCount++;
 }
-console.log("Approved dialogue MP3s packaged: " + voiceCount + "/112 (55 office + 25 holiday + 10 rescue alarm + 22 visitor information).");
+console.log("Approved dialogue MP3s packaged: " + voiceCount +
+  "/124 maximum (112 established voices + 12 optional transition narrator recordings).");
 
 // Optional owner-supplied songs are uploaded directly to this exact folder
 // on the song PR branch. Builds work before upload; once present, the MP3s
