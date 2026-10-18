@@ -3514,3 +3514,132 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen .detention-paperwork .detention-art-display {height:clamp(125px,20vh,190px);}
   #holidayScreen .detention-paperwork .detention-card {min-height:48px;}
 }
+
+
+/* GAME-SP4C.1: approved EMPTY spa lounge and independently approved
+ * Stephen/David/Paul assets. Preserve the live captions and actual puzzle. */
+#holidayScreen #rescueRouteIntro .spa-intro-label,
+#holidayScreen #rescueRouteIntro .spa-intro-actor {display:none;}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-route-intro-stage,
+#holidayScreen #reassembleEndingScene .assembly-ending-stage {
+  position:relative;isolation:isolate;overflow:hidden;
+  display:block;padding:0;
+  background:linear-gradient(to top,rgba(8,29,36,.25),transparent 52%),
+    url("../public/assets/generated/locations/ending-c-spa-lounge-background-v01.webp") center/cover no-repeat;
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .spa-intro-label,
+#holidayScreen #reassembleEndingScene .spa-ending-label {
+  position:absolute;z-index:4;top:3%;left:2.7%;
+  display:grid;gap:3px;max-width:45%;padding:9px 12px;
+  border:2px solid rgba(241,214,159,.92);border-radius:9px;
+  background:rgba(6,34,45,.86);color:#fff1d8;pointer-events:none;
+}
+#holidayScreen .spa-intro-label span,
+#holidayScreen .spa-ending-label span {
+  color:#aae4d1;font-size:clamp(10px,1vw,13px);
+  letter-spacing:.09em;font-weight:850;
+}
+#holidayScreen .spa-intro-label strong,
+#holidayScreen .spa-ending-label strong {
+  font-size:clamp(15px,1.8vw,24px);letter-spacing:.045em;
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .spa-intro-actor,
+#holidayScreen #reassembleEndingScene .spa-ending-actor {
+  display:block;position:absolute;z-index:2;pointer-events:none;
+  object-fit:contain;object-position:center bottom;
+  width:auto;transform-origin:center bottom;
+  filter:drop-shadow(3px 7px 5px rgba(12,31,34,.47));
+  transition:filter 160ms ease;
+}
+/* At the briefing Stephen has not appeared yet: only his two rescuers
+ * inhabit the foreground. Both are in their normal clothes, not robes. */
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .spa-intro-david {
+  left:15%;bottom:20%;height:55%;max-width:33%;
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .spa-intro-paul {
+  right:14%;bottom:20%;height:51%;max-width:33%;
+}
+/* The post-puzzle reveal adds Stephen in the centre; his robe is the
+ * only robe in this tableau. Similar feet baseline; slightly recessed. */
+#holidayScreen #reassembleEndingScene .spa-ending-david {
+  left:7%;bottom:23%;height:49%;max-width:28%;
+}
+#holidayScreen #reassembleEndingScene .spa-ending-stephen {
+  left:50%;bottom:24%;height:48%;max-width:27%;
+  transform:translateX(-50%);
+}
+#holidayScreen #reassembleEndingScene .spa-ending-paul {
+  right:7%;bottom:23%;height:47%;max-width:28%;
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-travel-panel {
+  position:absolute;z-index:6;left:3%;right:3%;bottom:11%;
+  width:94%;max-width:none;max-height:27%;margin:0;padding:0;
+  display:block;overflow:visible;text-align:left;
+  background:transparent;border:none;box-shadow:none;
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-travel-panel > span,
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-travel-panel > h2,
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-travel-panel > p:not(#routeIntroStatus),
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-travel-panel > small {display:none;}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-intro-dialogue,
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] #routeIntroStatus,
+#holidayScreen #reassembleEndingScene .assembly-ending-content {
+  box-sizing:border-box;width:100%;max-width:none;margin:0;
+  padding:11px 18px;border:3px solid #f0cf89;border-radius:11px;
+  color:#fff5dd;text-align:left;background:rgba(5,25,48,.94);
+  box-shadow:4px 5px 0 rgba(0,0,0,.4);
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-intro-dialogue strong,
+#holidayScreen #reassembleEndingScene .assembly-ending-speaker {
+  color:#ffdb87;font-size:clamp(13px,1.25vw,18px);font-weight:900;
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-intro-dialogue p,
+#holidayScreen #reassembleEndingScene .assembly-ending-line {
+  margin:5px 0 3px;font-size:clamp(16px,1.8vw,25px);
+  line-height:1.35;font-weight:800;color:#fff5dd;
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] #routeIntroStatus {
+  font-size:clamp(14px,1.5vw,20px);font-weight:800;
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] #routeIntroDialogue[hidden] {display:none !important;}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"]:has(#routeIntroDialogue:not([hidden])) #routeIntroStatus {display:none;}
+#holidayScreen #reassembleEndingScene .assembly-ending-content {
+  position:absolute;z-index:5;left:3%;right:3%;bottom:8%;
+  width:94%;max-height:28%;overflow-y:auto;
+}
+#holidayScreen #reassembleEndingScene .assembly-reveal {
+  display:none;
+}
+#holidayScreen #reassembleEndingScene .assembly-ending-progress {
+  margin:2px 0 0;text-align:right;font-size:clamp(11px,1vw,13px);
+}
+#holidayScreen #reassembleEndingScene .assembly-progress {
+  margin:2px 0 0;text-align:right;color:#b5e6d6;font-size:clamp(11px,1vw,13px);
+}
+#holidayScreen #rescueRouteIntro[data-route="reassemble"][data-speaker="david"] .spa-intro-david,
+#holidayScreen #rescueRouteIntro[data-route="reassemble"][data-speaker="paul"] .spa-intro-paul,
+#holidayScreen #reassembleEndingScene[data-speaker="david"] .spa-ending-david,
+#holidayScreen #reassembleEndingScene[data-speaker="paul"] .spa-ending-paul,
+#holidayScreen #reassembleEndingScene[data-speaker="stephen"] .spa-ending-stephen {
+  filter:drop-shadow(3px 7px 5px rgba(12,31,34,.47))
+    drop-shadow(0 0 7px rgba(255,224,155,.78));
+}
+@media (max-width:800px) {
+  #holidayScreen #rescueRouteIntro[data-route="reassemble"] .spa-intro-david {left:9%;bottom:28%;height:43%;max-width:39%;}
+  #holidayScreen #rescueRouteIntro[data-route="reassemble"] .spa-intro-paul {right:8%;bottom:28%;height:40%;max-width:39%;}
+  #holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-travel-panel {bottom:16%;max-height:32%;}
+  #holidayScreen #reassembleEndingScene .spa-ending-david {left:2%;bottom:30%;height:35%;max-width:34%;}
+  #holidayScreen #reassembleEndingScene .spa-ending-stephen {bottom:30%;height:36%;max-width:34%;}
+  #holidayScreen #reassembleEndingScene .spa-ending-paul {right:2%;bottom:30%;height:34%;max-width:34%;}
+  #holidayScreen #reassembleEndingScene .assembly-ending-content {bottom:13%;max-height:32%;padding:9px 12px;}
+}
+@media (max-width:450px) {
+  #holidayScreen #rescueRouteIntro[data-route="reassemble"] .spa-intro-david {left:2%;bottom:32%;height:34%;max-width:48%;}
+  #holidayScreen #rescueRouteIntro[data-route="reassemble"] .spa-intro-paul {right:2%;bottom:32%;height:32%;max-width:48%;}
+  #holidayScreen #reassembleEndingScene .spa-ending-david {left:0;bottom:34%;height:28%;max-width:39%;}
+  #holidayScreen #reassembleEndingScene .spa-ending-stephen {bottom:34%;height:29%;max-width:40%;}
+  #holidayScreen #reassembleEndingScene .spa-ending-paul {right:0;bottom:34%;height:27%;max-width:39%;}
+  #holidayScreen #reassembleEndingScene .assembly-ending-content {bottom:15%;max-height:34%;padding:8px 10px;}
+  #holidayScreen #rescueRouteIntro[data-route="reassemble"] .rescue-intro-dialogue p,
+  #holidayScreen #reassembleEndingScene .assembly-ending-line {font-size:clamp(14px,3.6vw,17px);}
+}
