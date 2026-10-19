@@ -3249,7 +3249,7 @@ test("GAME-SP4.1B London David uses the already approved opening optical registr
   const opening=css.slice(css.indexOf("/* GAME-SP4.0D: optically register David"),
     css.indexOf("/* Listening actors retain"));
   const london=css.slice(css.indexOf("/* GAME-SP4.1B: use the already-approved opening David"),
-    css.indexOf("#holidayScreen .rescue-alarm-paul {right:14%;}"));
+    css.indexOf("#holidayScreen .rescue-alarm-paul {right:16%;}"));
   assert.ok(london.length>750,"Must keep focused London-only actor CSS");
   assert.match(london,/#rescueAlarmScene #rescueAlarmDavid\s*\{[^}]*width:32%;[^}]*height:64%;[^}]*object-fit:contain;[^}]*transform-origin:center bottom;[^}]*transition:none;/);
   for(const [pose,scale] of Object.entries(expected)){
