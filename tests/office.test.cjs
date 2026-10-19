@@ -4450,29 +4450,28 @@ test("GAME-SP4.1G1B approved postcard collage is versioned, materialised and inc
 
 test("GAME-SP4.1G1B all three routes retain the existing England narrator and rescue-alarm handoff",()=>{
   for(const route of ["cult","detention","reassemble"]){
-    const p=toRescueAlarm(route);
-    // Separate fresh preview confirms the existing England title before the alarm.
-    const q=preview();q.start();
-    q.el("skipButton").click();
+    let p;
     if(route==="cult"){
-      for(let i=0;i<5;i++)q.el("wallNextButton").click();
-      q.el("wallAcceptButton").click();
-      q.el("wallGoIncidentButton").click();
+      p=toWallChoice();p.el("wallAcceptButton").click();p.el("wallGoIncidentButton").click();
+    }else if(route==="detention"){
+      p=toPalaceChoice();p.el("palaceAcceptButton").click();
+      for(let i=0;i<5;i++)p.el("palaceNextButton").click();
+      p.el("palaceGoIncidentButton").click();
     }else{
-      // Cross-route data reaches the same final-message stage. Existing helper
-      // already covers each route, and the title/narrator is shared by design.
-      assert.equal(saved(p).route,route);
-      continue;
+      p=toMarket();finishMarket(p);p.el("marketGoIncidentButton").click();
     }
-    q.el("handoffContinueButton").click();
-    q.el("chinaFinalNextButton").click();
-    q.el("chinaFinalNextButton").click();
-    assert.equal(saved(q).finalStep,2);
-    assert.equal(q.el("chinaFinalEngland").hidden,false);
-    assert.equal(q.el("transitionNarration").dataset.cue,"transition.england.back.001");
-    assert.match(q.el("transitionNarrationLine").textContent,/back in England/);
-    assert.match(q.el("chinaFinalEngland").hidden,false);
-    q.el("chinaFinalNextButton").click();
-    assert.equal(saved(q).holidayPhase,"rescue-alarm");
+    p.el("handoffContinueButton").click();
+    p.el("chinaFinalNextButton").click();
+    p.el("chinaFinalNextButton").click();
+    assert.equal(saved(p).finalStep,2);
+    assert.equal(saved(p).route,route);
+    assert.equal(p.el("chinaFinalEngland").hidden,false);
+    assert.equal(p.el("transitionNarration").hidden,false);
+    assert.equal(p.el("transitionNarration").dataset.cue,"transition.england.back.001");
+    assert.match(p.el("transitionNarrationLine").textContent,/back in England/);
+    p.el("homeButton").click();p.el("resumeButton").click();
+    assert.equal(p.el("chinaFinalEngland").hidden,false,"England collage survives save/resume");
+    p.el("chinaFinalNextButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-alarm");
   }
 });
