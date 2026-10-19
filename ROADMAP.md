@@ -1,7 +1,7 @@
 # The Stephen Martin Project: Master Roadmap
 
 **Version:** 1.0 (approved 12 October 2026)  
-**Status:** Three-ending first-version baseline merged 18 October 2026; GAME-SP4.1 refinement planning in progress  
+**Status:** Chapter 2 G1A–C merged 19 October 2026; G3A/G3B Summit approach polish active on draft branch  
 **Primary deliverable:** Rescue Stephen Martin from China, a **15–25 minute comedy adventure**  
 **Companion deliverables:** One comedy song; optional illustrated comic pilot  
 **Audience:** Adults  
@@ -853,7 +853,7 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 #### GAME-SP4.1G3 — Chapter 4 Ending A staging and shared post-ending hub (owner feedback, 19 October 2026)
 
-**Priority:** P1. **Status:** Planned, pending separate visual approvals. **Baseline:** approved Summit exterior, admissions puzzle and four-attendant throne room; existing shared `#rescueEndingSummary` ending state. **Scope split:** G3A–E are Ending A improvements; G3F/G are **cross-ending** features. The owner is still reviewing Ending B, so future B feedback gets its own scoped backlog entries rather than being presumed resolved.
+**Priority:** P1. **Status:** G3A/G3B active in `agent/game-sp41g3a-g3b-summit-approach`, awaiting regression and owner visual approval; G3C–G still planned. **Baseline:** approved Summit exterior, admissions puzzle and four-attendant throne room; existing shared `#rescueEndingSummary` ending state. **Scope split:** G3A–E are Ending A improvements; G3F/G are **cross-ending** features. The owner is still reviewing Ending B, so future B feedback gets its own scoped backlog entries rather than being presumed resolved.
 
 **Owner findings:**
 - Outside Summit, **move David and Paul significantly left**; David currently appears to stand on a retaining wall.
