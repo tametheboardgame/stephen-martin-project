@@ -4133,13 +4133,13 @@ test("GAME-SP4.1G0A replacement Paul pleased WebP is packaged, versioned and fre
   assert.equal(p.el("castPaul").dataset.seatedSprite,"pleased");
 });
 
-test("GAME-SP4.1G0A clip seam is hidden by stable Paul/Stephen staging across all seated reactions",()=>{
-  // The user's 'Is China far?' screenshot is office.002 = PAUL confused, not
-  // office.004 = PAUL pleased. The actual PNG has opaque pixels at its left
-  // side: portrait overflow is visible, so scaling an unrelated sprite did
-  // not resolve the vertical cut visible between the actors.
-  assert.match(css,/#officeScreen \.cast-seated #castPaul \{ right: 7\.25%; z-index: 1; \}/);
-  assert.match(css,/#officeScreen \.cast-seated #castStephen \{ left: 35%; width: 30%; z-index: 2; \}/);
+test("GAME-SP4.1G0A keeps Paul separated from Stephen across seated reactions",()=>{
+  // office.002 is Paul confused and still needs source-art edge remediation.
+  // A previous 7.25% inset put Paul's left shoulder over Stephen's sleeve.
+  // The original positions leave 1.5% clear stage width between the actor boxes.
+  assert.match(css,/#officeScreen \.cast-seated #castPaul \{ right: 3\.5%; \}/);
+  assert.match(css,/#officeScreen \.cast-seated #castStephen \{ left: 35%; width: 30%; \}/);
+  assert.doesNotMatch(css,/#officeScreen \.cast-seated #castPaul \{[^}]*z-index:/);
   assert.match(css,/#officeScreen \.cast-seated \.actor-portrait \{[\s\S]*?overflow: visible;/);
   assert.doesNotMatch(css,/#castPaul\[data-seated-sprite="(?:pleased|confused)"\] .actor-portrait img \{[^}]*transform:/);
   const p=preview();p.start();
