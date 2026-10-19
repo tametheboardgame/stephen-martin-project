@@ -2,7 +2,11 @@
 
 **Updated:** 19 October 2026
 
-## CURRENT — GAME-SP4.1G0/G1/G2/G3 Chapter 1–4 polish plan (19 October 2026)
+## CURRENT — GAME-SP4.1G0/G1/G2/G3/G4 Chapter and ending polish plan (19 October 2026)
+
+- **New Ending B owner feedback (G4A–H):** match Chapter 2 banquet bear picture exactly to Chapter 1 printer original; explicitly reuse the G1 shared battery-off and illustrated England transition; add **distinct narrated illustration handoffs for all three routes after investigation**; remove inaccurate B briefing labels; show a readable stamped APPROVED permit and eliminate the small top-right permit during the following dialogue; ground/scale all B actors correctly when Stephen arrives; create an approved **“Detained by the Administration”** concluding illustration and lead into G3F's common ending/album menu. Full B and A/C cross-transition QA after visual reviews.
+- **Ending C:** owner feedback is forthcoming and will be planned separately before final all-route acceptance.
+
 
 - **Roadmap planning commit:** GAME-SP4.1G0 (six Chapter 1 packages), G1 (Chapter 2 phone, England art), **G2 (Chapter 3 double desk)** and **G3 (Chapter 4 Summit/Ending A and universal end hub)** added to `ROADMAP.md` in branch `agent/game-sp41g0-g1-chapter-polish-plan`. **Planning only:** no gameplay CSS/JS changes and no unapproved artwork or sound files.
 - **Owner’s Chapter 1 screenshots:** slightly clipped Paul satisfied-arm sprite; optimistic song overlay showing old underlying lyrics pane; cramped pessimistic/full-song modal and imperfect lyric scroll; optional muted-chat *ding* and bear-print SFX; illustrated David “final-final 2” laptop/risk-plan prop and “Rescue Stephen Martin from China” mission card.
