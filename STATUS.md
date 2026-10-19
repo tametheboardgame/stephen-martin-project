@@ -17,6 +17,8 @@
 
 ## CURRENT — GAME-SP4.1G0/G1/G2/G3/G4 Chapter and ending polish plan (19 October 2026)
 
+- **GAME-SP4.1G0A owner overlap rejection:** Draft PR #62 has the approved-for-trial revised Paul pleased asset, but the 7.25% positioning workaround exposed an unacceptable Paul/Stephen shirt overlap. Restored original 3.5% Paul positioning/no z-layer override on 19 October; confused portrait edge still requires an illustrated source repair and separate visual sign-off. Do not merge #62 until fixed and approved.
+
 - **New Ending B owner feedback (G4A–H):** match Chapter 2 banquet bear picture exactly to Chapter 1 printer original; explicitly reuse the G1 shared battery-off and illustrated England transition; add **distinct narrated illustration handoffs for all three routes after investigation**; remove inaccurate B briefing labels; show a readable stamped APPROVED permit and eliminate the small top-right permit during the following dialogue; ground/scale all B actors correctly when Stephen arrives; create an approved **“Detained by the Administration”** concluding illustration and lead into G3F's common ending/album menu. Full B and A/C cross-transition QA after visual reviews.
 - **Ending C:** owner feedback is forthcoming and will be planned separately before final all-route acceptance.
 
