@@ -2024,24 +2024,30 @@ body:has(#menuScreen:not([hidden])) main {
   background: linear-gradient(rgba(5,15,29,.75),rgba(3,13,24,.9)),
     url("../public/assets/generated/locations/china-night-market-background-v01.webp") center/cover;
   color: #f5f0e3;
-  display: grid;
-  place-items: center;
-  padding: 5% 8%;
+  /* The original grid auto-track plus percentage-sized handset allowed
+   * intrinsic image height to push the phone below the playable stage.
+   * Contain the stage and anchor the handset independently of grid tracks. */
+  box-sizing: border-box;
+  display: block;
+  overflow: hidden;
+  padding: 0;
 }
 /* GAME-SP4.1G1A: owner-approved new handset art. The three canonical
  * fragments, 1% battery and power-off state are live HTML, not pixels;
  * no abandoned Chapter 1 phone component or photo cutaway is reused. */
 #holidayScreen .china-final-phone {
-  position: relative;
+  position: absolute;
   z-index: 2;
-  height: min(78%, 670px);
+  top: 8%;
+  left: 36%;
+  height: min(70%, 650px);
   width: auto;
   aspect-ratio: 1088 / 1600;
   max-width: 76%;
   padding: 0;
   border: 0;
   background: transparent;
-  transform: translateX(-23%);
+  transform: translateX(-50%);
   filter: drop-shadow(12px 14px 11px rgba(0,0,0,.65));
 }
 #holidayScreen .china-final-phone-shell {
@@ -2189,6 +2195,7 @@ body:has(#menuScreen:not([hidden])) main {
 }
 @media (max-width:800px) {
   #holidayScreen .market-scene .wall-stage {aspect-ratio:4/3;}
+  #holidayScreen .china-final-stage {aspect-ratio:4/3;}
   #holidayScreen .market-spa-sign {top:20%;left:41%;width:27%;padding:6px;}
   #holidayScreen .china-final-phone {height:min(73%,520px);max-width:65%;}
   #holidayScreen .market-fallback-options {grid-template-columns:1fr;}
@@ -2197,7 +2204,7 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen .market-scene .wall-stage {aspect-ratio:3/4;}
   #holidayScreen .china-final-stage {aspect-ratio:3/4;}
   #holidayScreen .market-spa-sign {top:24%;left:43%;width:37%;}
-  #holidayScreen .china-final-phone {height:61%;max-width:90%;transform:none;align-self:start;margin-top:3%;}
+  #holidayScreen .china-final-phone {top:5%;left:50%;height:54%;max-width:90%;transform:translateX(-50%);margin:0;}
   #holidayScreen .china-final-phone-screen {padding:6px;gap:6px;}
   #holidayScreen .china-final-phone-top > strong {font-size:10px;}
   #holidayScreen .china-final-low-battery {padding:3px 4px;font-size:10px;gap:5px;}
@@ -4793,7 +4800,7 @@ body:has(#menuScreen:not([hidden])) main {
 /* G1A portrait and small tablets: keep the phone above the two external
  * shutdown/reaction captions rather than allowing all three to overlap. */
 @media (min-width:451px) and (max-width:580px) {
-  #holidayScreen .china-final-phone {height:63%;max-width:88%;transform:none;align-self:start;margin-top:3%;}
+  #holidayScreen .china-final-phone {top:5%;left:50%;height:56%;max-width:88%;transform:translateX(-50%);margin:0;}
   #holidayScreen .china-final-power-notice {top:auto;bottom:25%;left:5%;right:5%;width:auto;padding:8px 10px;gap:5px;}
   #holidayScreen .china-final-reaction {bottom:7%;left:5%;right:5%;width:auto;padding:7px 10px;}
 }
