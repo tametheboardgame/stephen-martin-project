@@ -2976,16 +2976,17 @@ body:has(#menuScreen:not([hidden])) main {
   filter:drop-shadow(3px 7px 5px rgba(5,20,32,.5));
   transition:filter 160ms ease;
 }
-/* Deliberately smaller mid-ground figures with a clear view of the gates.
-   Guard addresses the pair from the left, Paul is centre-right, David is right. */
+/* The Summit rescuers stand on the paved approach, clear of the right wall.
+   Retain their approved mirrored sprites, mid-ground sizes and common groundline.
+   Gatekeeper stays left; Paul is centre, David to his right. */
 #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-gatekeeper {
   left:16%;right:auto;bottom:20%;height:48%;max-width:26%;
 }
 #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-paul {
-  left:auto;right:25%;bottom:20%;height:40%;max-width:23%;
+  left:auto;right:40%;bottom:20%;height:40%;max-width:23%;
 }
 #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-david {
-  left:auto;right:9%;bottom:20%;height:48%;max-width:26%;
+  left:auto;right:22%;bottom:20%;height:48%;max-width:26%;
 }
 #holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-travel-panel {
   position:absolute;z-index:6;left:3%;right:3%;bottom:11%;width:94%;
@@ -3032,10 +3033,10 @@ body:has(#menuScreen:not([hidden])) main {
     left:8%;right:auto;bottom:27%;height:43%;max-width:31%;
   }
   #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-paul {
-    left:auto;right:27%;bottom:27%;height:36%;max-width:28%;
+    left:auto;right:39%;bottom:27%;height:36%;max-width:28%;
   }
   #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-david {
-    left:auto;right:5%;bottom:27%;height:43%;max-width:32%;
+    left:auto;right:20%;bottom:27%;height:43%;max-width:32%;
   }
   #holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-travel-panel {
     left:3%;right:3%;bottom:15%;width:94%;max-height:31%;
@@ -3049,10 +3050,10 @@ body:has(#menuScreen:not([hidden])) main {
     left:0%;right:auto;bottom:31%;height:36%;max-width:38%;
   }
   #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-paul {
-    left:auto;right:29%;bottom:31%;height:30%;max-width:33%;
+    left:auto;right:39%;bottom:31%;height:30%;max-width:33%;
   }
   #holidayScreen #rescueRouteIntro[data-route="cult"] .summit-entrance-david {
-    left:auto;right:-1%;bottom:31%;height:36%;max-width:40%;
+    left:auto;right:8%;bottom:31%;height:36%;max-width:40%;
   }
   #holidayScreen #rescueRouteIntro[data-route="cult"] .rescue-travel-panel {
     bottom:16%;max-height:33%;
