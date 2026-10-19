@@ -1,5 +1,12 @@
 # Project status
 
+## GAME-SP4.1H-B — 45 Ending B actor voice recordings (19 October 2026)
+
+- Main baseline `18491bc`; the work lives separately on `agent/game-sp41h-ending-b-voices`. Complete all fixed, spoken official rescue beats: six route-intro lines, 3 official form questions, 17 per-actor wrong/correct answer reactions, 3 one-time Paul hints, 2 stamp selection replies, 1 official permit approval, and 13 actor ending lines = **45 new MP3s**. The recorded narrator (`detention.ending.014.mp3`) remains unchanged.
+- Original choice text, stamp paper/printer visual cue, correctness, save flow, and artwork are preserved. Natural-duration playback, response order, replay reset, hint suppression, and text-timed missing-file fallback use the existing shared voice engine. The form stamp must still be selected and applied by the player.
+- Strict build allow-list grows from 170 to 215, with no new placeholder recordings. Grouped ElevenLabs copy sheet: `docs/ENDING-B-VOICE-IMPORT.md`. Await all 45 MP3 uploads and owner listening before merge.
+
+
 ## CURRENT — GAME-SP4.1G1C Chapter 2 handoff QA (19 October 2026)
 
 - **G1B approved and merged:** PR #67 merged into `main` as `8641923c93c1867db0608f4bf9ed869891677fe2`. Owner approved both the England postcard art and early background loading.
