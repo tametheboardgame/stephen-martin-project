@@ -2207,16 +2207,19 @@ body:has(#menuScreen:not([hidden])) main {
   position:relative;isolation:isolate;overflow:hidden;
   width:100%;aspect-ratio:1672/941;
 }
-#holidayScreen .rescue-alarm-background,#holidayScreen .rescue-alarm-foreground {
-  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+/* G2A: office-clean already contains the complete wooden desk. Remove
+ * the duplicate transparent table in Chapter 3, not the Chapter 1 layer. */
+#holidayScreen .rescue-alarm-background {
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;
 }
-#holidayScreen .rescue-alarm-background {z-index:0;}
+/* The two seated cutouts rest on the baked-in tabletop (~73% of the art).
+ * Separate fixed frames prevent pose-to-pose position jumps. */
 #holidayScreen .rescue-alarm-actor {
-  position:absolute;z-index:2;bottom:0;height:79%;width:auto;max-width:42%;
+  position:absolute;z-index:2;bottom:24%;height:64%;width:32%;max-width:none;
   object-fit:contain;object-position:center bottom;
   filter:drop-shadow(5px 6px 5px rgba(0,0,0,.3));
 }
-#holidayScreen .rescue-alarm-david {left:17%;}
+#holidayScreen .rescue-alarm-david {left:16%;}
 
 /* GAME-SP4.1B: use the already-approved opening David expression calibration
  * in Back in England. These are the SAME source WebPs, not re-illustrations.
@@ -2224,7 +2227,7 @@ body:has(#menuScreen:not([hidden])) main {
  * scale, so differing source canvas margins cannot resize his layout box. */
 #holidayScreen #rescueAlarmScene #rescueAlarmDavid {
   width:32%;
-  height:79%;
+  height:64%;
   max-width:none;
   object-fit:contain;
   object-position:center bottom;
@@ -2243,23 +2246,22 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen #rescueAlarmScene #rescueAlarmDavid[data-sprite="systems-expert"] {
   transform:scale(.94);
 }
-/* Keep David at the same desk baseline as Paul and the foreground, allowing
- * the existing breakpoints to alter the overall frame, not the pose ratios. */
+/* Both alarm actors share the same hand baseline at each breakpoint;
+ * keep David's previously approved per-expression optical transforms. */
 @media (max-width:800px) {
   #holidayScreen #rescueAlarmScene #rescueAlarmDavid {
     width:42%;
-    height:67%;
+    height:64%;
   }
 }
 @media (max-width:450px) {
   #holidayScreen #rescueAlarmScene #rescueAlarmDavid {
-    width:55%;
-    height:57%;
+    width:43%;
+    height:60%;
   }
 }
 
-#holidayScreen .rescue-alarm-paul {right:14%;}
-#holidayScreen .rescue-alarm-foreground {z-index:3;pointer-events:none;}
+#holidayScreen .rescue-alarm-paul {right:16%;}
 #holidayScreen .rescue-alarm-dialogue {bottom:11%;left:3%;width:min(73%,850px);z-index:7;}
 #holidayScreen .rescue-alarm-phone {
   position:absolute;z-index:6;top:15%;right:3%;width:min(34%,360px);
@@ -2314,20 +2316,20 @@ body:has(#menuScreen:not([hidden])) main {
 @media (max-width:800px) {
   #holidayScreen .rescue-alarm-stage,#holidayScreen .rescue-travel-stage,
   #holidayScreen .rescue-hub-arrival-stage {aspect-ratio:4/3;}
-  #holidayScreen .rescue-alarm-actor {height:67%;max-width:48%;}
+  #holidayScreen .rescue-alarm-actor {height:64%;width:42%;max-width:none;}
   #holidayScreen .rescue-alarm-david {left:7%;}
-  #holidayScreen .rescue-alarm-paul {right:4%;}
-  #holidayScreen .rescue-alarm-phone {top:13%;right:2%;width:45%;padding:8px;}
+  #holidayScreen .rescue-alarm-paul {right:7%;}
+  #holidayScreen .rescue-alarm-phone {top:3%;right:2%;width:40%;padding:8px;}
   #holidayScreen .rescue-alarm-dialogue {width:95%;left:2%;bottom:2%;}
   #holidayScreen .rescue-travel-panel {width:96%;padding:18px 12px;}
 }
 @media (max-width:450px) {
   #holidayScreen .rescue-alarm-stage,#holidayScreen .rescue-travel-stage,
   #holidayScreen .rescue-hub-arrival-stage {aspect-ratio:3/4;}
-  #holidayScreen .rescue-alarm-actor {height:57%;max-width:65%;}
-  #holidayScreen .rescue-alarm-david {left:-5%;}
-  #holidayScreen .rescue-alarm-paul {right:-5%;}
-  #holidayScreen .rescue-alarm-phone {top:18%;width:54%;}
+  #holidayScreen .rescue-alarm-actor {height:60%;width:43%;max-width:none;}
+  #holidayScreen .rescue-alarm-david {left:4%;}
+  #holidayScreen .rescue-alarm-paul {right:4%;}
+  #holidayScreen .rescue-alarm-phone {top:3%;right:2%;width:44%;}
 }
 
 
