@@ -1,5 +1,13 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G1C Chapter 2 handoff QA (19 October 2026)
+
+- **G1B approved and merged:** PR #67 merged into `main` as `8641923c93c1867db0608f4bf9ed869891677fe2`. Owner approved both the England postcard art and early background loading.
+- **G1C work branch:** `agent/game-sp41g1c-chapter-two-handoff-qa`. No new illustrations, narration or gameplay routes. Regress the existing Summit, Forbidden City banquet and spa handoffs through the delivered partial message (1%), switched-off phone (0%), live England title and separated narrator, and all 10 David/Paul rescue alarm beats.
+- Added tests for all three genuine route choices, Save/Resume on phone steps 0/1/2, correct received fragment, paused manual Next, late Stephen/narrator MP3 callbacks, optional failed England recording fallback, Sound Off and contextual Skip to Investigation without autocompleting clues, plus narrow-device style contracts.
+- **Owner review gate:** run CI on draft PR, inspect Cloudflare game on laptop/tablet/phone, confirm all three routes' transition layout (especially title vs top toolbar and subtitles vs controls), Save/Resume and pause/sound. Track any defect in G1C and correct before merging. No production code/art was changed at the initial audit stage.
+- **Next:** resolve CI and manual visual issues if present, then owner acceptance/merge before later G1 packages.
+
 ## CURRENT — GAME-SP4.1G1B approved “Back in England” collage (19 October 2026)
 
 - **Owner visual review:** the actual England postcard collage and heading/subtitle layout were approved (“apart from that it was great”). The only open issue was slow first loading of the image.
