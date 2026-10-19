@@ -192,13 +192,12 @@ test("silent reactions hide captions and do not generate fake narration",()=>{
   assert.equal(p.el("speakerName").textContent,"DAVID");
 });
 
-test("six scripted cutaways are visible, readable and return to the same office",()=>{
+test("five illustrated cutaways remain, and the song uses only its dedicated player",()=>{
   const p=preview();p.start();
   for(const [beat,fragment] of [
     ["office.v02","office-david-risk-cutaway-v01.webp"],
     ["office.v04","office-printer-bear-cutaway-v01.webp"],
     ["office.v05","office-phone-group-chat-cutaway-v01.webp"],
-    ["office.v07","STEPHEN’S GOODBYE SONG"],
     ["office.v09","office-phone-group-muted-cutaway-v01.webp"],
     ["office.v11","RESCUE PLAN - FINAL - FINAL 2"]
   ]){
@@ -209,8 +208,16 @@ test("six scripted cutaways are visible, readable and return to the same office"
     assert.ok(p.el("cutawayContent").innerHTML.includes(fragment),beat);
     assert.equal(p.el("stage").dataset.location,"interior");
   }
+  const songView=preview();songView.start();songView.at("office.v07");
+  assert.equal(songView.el("cutawayPanel").hidden,true,"Retired song card is not painted underneath");
+  assert.equal(songView.el("cutawayContent").innerHTML,"","No obsolete song/lyrics duplicate");
+  assert.equal(songView.el("stage").dataset.cutaway,"none");
+  assert.equal(songView.el("stage").dataset.songActive,"true");
+  assert.equal(songView.el("officeSongOverlay").hidden,false);
+  assert.equal(songView.el("officeSongLyricsScroll").hidden,false);
   p.at("office.v12");
   assert.equal(p.el("cutawayPanel").hidden,true);
+  assert.equal(p.el("stage").dataset.songActive,"false");
   assert.ok(p.el("sceneEffect").innerHTML.includes("RESCUE"));
 });
 
@@ -2240,7 +2247,8 @@ test("SP4.0D pessimistic choice appears after post-mortem line and plays full so
   p.el("nextButton").click(); // End the post-mortem line manually.
   assert.equal(p.el("officeSongOverlay").hidden,false);
   assert.equal(p.el("officeSongOverlay").dataset.mode,"offer");
-  assert.equal(p.el("officeSongLyricsScroll").hidden,true,"Don't display lyrics before opting in");
+  assert.equal(p.el("officeSongLyricsScroll").hidden,false,"Both offers share the large accessible lyrics area");
+  assert.match(p.el("officeSongLyrics").innerHTML,/Massive final orchestral chord/i);
   assert.match(p.el("songListenButton").textContent,/pessimistic version/);
   assert.equal(speaking.paused,true);
   p.el("songListenButton").click();
@@ -2292,7 +2300,7 @@ test("SP4.0D full user-supplied lyrics scroll against real playback progress",as
   await Promise.resolve();
   clip.currentTime=10;clip.duration=120;
   clip.ontimeupdate();
-  assert.equal(p.el("officeSongLyricsScroll").scrollTop,50,"Preview scroll tracks audio time");
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,16,"First verse stays in view as audio begins");
   p.el("songListenButton").click();
   assert.equal(p.el("officeSongOverlay").dataset.mode,"full");
   assert.equal(p.voices.at(-1),clip,"Full track continues without seeking back");
@@ -2380,22 +2388,29 @@ test("SP4.0D David expression scales are bottom-anchored to neutral",()=>{
   assert.ok(!chunk.includes('data-seated-sprite="neutral"'),"Neutral sprite remains the visual baseline");
 });
 
-test("SP4.0D pessimistic lyrics lead early and still reach the last line",async()=>{
+test("GAME-SP4.1G0B pessimistic lyrics advance faster and finish two seconds before the MP3 ends",async()=>{
   const p=preview({audio:true});p.start();p.at("office.041");
   p.el("nextButton").click();
   p.el("songListenButton").click();
   const clip=p.voices.at(-1);
   await Promise.resolve();
-  clip.duration=120;clip.currentTime=12;
-  clip.ontimeupdate();
+  clip.duration=120;
+  clip.currentTime=0;clip.ontimeupdate();
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,0,"First line starts in view");
+  clip.currentTime=12;clip.ontimeupdate();
   const early=p.el("officeSongLyricsScroll").scrollTop;
-  assert.ok(early>60&&early<150,"Faster initial progression than the 60px linear baseline");
-  clip.currentTime=60;
-  clip.ontimeupdate();
-  assert.ok(p.el("officeSongLyricsScroll").scrollTop>300,"Still slightly ahead at half time");
-  clip.currentTime=120;
-  clip.ontimeupdate();
-  assert.equal(p.el("officeSongLyricsScroll").scrollTop,600,"No skipped end section");
+  assert.ok(early>90&&early<160,"Pessimistic lyrics move ahead of the original slow progression");
+  clip.currentTime=60;clip.ontimeupdate();
+  const middle=p.el("officeSongLyricsScroll").scrollTop;
+  assert.ok(middle>360&&middle<420,"Song advances past halfway during its middle verses");
+  clip.currentTime=117;clip.ontimeupdate();
+  assert.ok(p.el("officeSongLyricsScroll").scrollTop<600,"Scrolling has not ended prematurely");
+  clip.currentTime=118;clip.ontimeupdate();
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,600,"Final lyrics arrive two seconds before audio end");
+  clip.currentTime=119.5;clip.ontimeupdate();
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,600,"Final lyrics stay in view through instrumental");
+  clip.currentTime=120;clip.ontimeupdate();
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,600,"Final position is clamped");
 });
 
 
@@ -4172,4 +4187,47 @@ test("GAME-SP4.1G0A keeps Paul separated from Stephen across seated reactions",(
   p.at("office.004");
   assert.equal(p.el("castPaul").dataset.seatedSprite,"pleased");
   assert.match(p.el("portraitPaul").src,/paul-office-seated-pleased-v01\.webp\?v=2$/);
+});
+
+
+test("GAME-SP4.1G0B both songs share a responsive large lyric panel without ghost cutaways",async()=>{
+  assert.doesNotMatch(engine,/song: '<div class="cutaway-heading">THE OPTIMISTIC VERSION/);
+  assert.match(engine,/return beat\.visual === "song" \? null : beat\.visual \|\| null/);
+  assert.match(css,/#officeScreen \.office-song-overlay \{[\s\S]*?height: 92%;[\s\S]*?display: flex;/);
+  assert.match(css,/#officeScreen \.office-song-lyrics-scroll \{[\s\S]*?flex: 1 1 0;[\s\S]*?max-height: none;/);
+  assert.doesNotMatch(css,/office-song-overlay\[data-mode="offer"\] \{[^}]*width:/);
+  assert.match(css,/#officeScreen \.stage\[data-song-active="true"\] \{[\s\S]*?height: clamp\(390px, 76dvh, 620px\)/);
+  assert.match(html,/id="officeSongLyricsScroll"[^>]*tabindex="0"/);
+  const p=preview({audio:true});p.start();p.at("office.v07");
+  assert.equal(p.el("cutawayPanel").hidden,true);
+  assert.equal(p.el("stage").dataset.songActive,"true");
+  assert.equal(p.el("officeSongOverlay").dataset.kind,"optimistic");
+  assert.equal(p.el("officeSongLyricsScroll").attributes["aria-label"],"Optimistic song lyrics");
+  const clip=p.voices.at(-1);
+  await Promise.resolve();
+  p.el("songListenButton").click();
+  assert.equal(p.voices.at(-1),clip,"Preview upgrades to full without replacing the clip");
+  clip.currentTime=0;clip.duration=120;clip.ontimeupdate();
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,0);
+  clip.currentTime=120;clip.ontimeupdate();
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,600,"Last chorus remains reachable");
+  p.el("nextButton").click();
+  assert.equal(p.el("stage").dataset.songActive,"false");
+  p.at("office.041");p.el("nextButton").click();
+  assert.equal(p.el("officeSongOverlay").dataset.kind,"pessimistic");
+  assert.equal(p.el("officeSongOverlay").dataset.mode,"offer");
+  assert.equal(p.el("officeSongLyricsScroll").hidden,false);
+  assert.equal(p.el("officeSongLyricsScroll").attributes["aria-label"],"Pessimistic song lyrics");
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,0,"Offer starts at the first line");
+  p.el("songListenButton").click();
+  const music=p.voices.at(-1);await Promise.resolve();
+  music.duration=120;music.currentTime=60;music.ontimeupdate();
+  const scrolled=p.el("officeSongLyricsScroll").scrollTop;
+  assert.ok(scrolled>360&&scrolled<420,"Pessimistic scroll advances faster than optimistic");
+  p.document.activeElement=p.el("officeSongLyricsScroll");
+  music.currentTime=115;music.ontimeupdate();
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,scrolled,"Keyboard/manual lyric reading is not overwritten");
+  p.el("songStopButton").click();
+  assert.equal(saved(p).beatId,"office.042");
+  assert.equal(p.el("stage").dataset.songActive,"false");
 });

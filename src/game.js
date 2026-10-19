@@ -232,12 +232,17 @@
     const viewport = $("officeSongLyricsScroll");
     const duration = Number(clip.duration), time = Number(clip.currentTime);
     if (!Number.isFinite(duration) || duration <= 0 || !Number.isFinite(time)) return;
-    const space = Number(viewport.scrollHeight) - Number(viewport.clientHeight);
-    const position = Math.min(1,Math.max(0,time/duration));
-    // Pessimistic lyrics lead gently at the start and align by the ending.
-    const visualProgress = songKind === "pessimistic" ? Math.pow(position,0.78) : position;
-    if (Number.isFinite(space))
-      viewport.scrollTop = Math.round(Math.max(0,space)*visualProgress);
+    if (viewport.hidden || document.activeElement === viewport) return;
+    const space = Math.max(0,Number(viewport.scrollHeight) - Number(viewport.clientHeight));
+    if (!Number.isFinite(space)) return;
+    // The pessimistic version finishes its sung lyrics before an instrumental
+    // tail. Progress faster through its verses and reach the final lyric position
+    // a full two seconds before the MP3 ends, then hold it in view. Preserve the
+    // calmer, opening-verse hold on the optimistic version.
+    const progress = songKind === "pessimistic"
+      ? Math.pow(Math.min(1,Math.max(0,time/Math.max(1,duration-2))),0.72)
+      : Math.min(1,Math.max(0,(time/duration-0.06)/0.88));
+    viewport.scrollTop = Math.round(space*progress);
   }
   function offerPessimisticSong() {
     if (state.beatId !== "office.041" || screens.office.hidden || pessimisticOffer) return;
@@ -283,6 +288,7 @@
     overlay.dataset.kind = kind;
     overlay.dataset.mode = songMode === "full" ? "full"
       : songMode === "preview" ? "preview" : offer ? "offer" : "ready";
+    $("stage").dataset.songActive = String(available);
     $("officeSongActions").hidden = !available;
     $("songListenButton").hidden = !available || songMode === "full";
     $("songStopButton").hidden = songMode !== "full";
@@ -296,8 +302,12 @@
         : "20-second preview · Want the entire ridiculous song?"
       : songMode === "full" ? "A completely unnecessary musical catastrophe."
         : "David has a second version. Care to hear it? The story continues shortly.";
-    const showLyrics = optimistic || Boolean(song && songMode === "full");
+    // The same large, readable lyrics area is available in both versions,
+    // including the optional pessimistic offer before playback starts.
+    const showLyrics = available;
     $("officeSongLyricsScroll").hidden = !showLyrics;
+    $("officeSongLyricsScroll").setAttribute("aria-label", optimistic
+      ? "Optimistic song lyrics" : "Pessimistic song lyrics");
     if (showLyrics && $("officeSongLyrics").dataset.kind !== kind) {
       $("officeSongLyrics").dataset.kind = kind;
       $("officeSongLyrics").innerHTML = songLyricsMarkup(kind);
@@ -1229,13 +1239,14 @@
     risk: '<img class="cutaway-approved-art cutaway-approved-risk" src="./public/assets/generated/game/office-david-risk-cutaway-v01.webp" width="1672" height="941" alt="David’s laptop showing his over-detailed pre-holiday risk assessment for Stephen’s China trip: 97% likely to be fine, with exaggerated dangers and David’s absurd contingency planning.">',
     printer: '<img class="cutaway-approved-art cutaway-approved-printer" src="./public/assets/generated/game/office-printer-bear-cutaway-v01.webp" width="1672" height="941" alt="In the office, the multifunction printer is producing large cartoon pictures of a smiling Chinese leader with a honey-loving bear. Several printed bear pictures are visible, with no separate page animation yet.">',
     chat: '<img class="cutaway-approved-art cutaway-approved-chat" src="./public/assets/generated/game/office-phone-group-chat-cutaway-v01.webp" width="1672" height="940" alt="An office phone displays a new group called Operation: Save Stephen. The group portrait is a honey-loving cartoon bear, and the only notification reads: Paul added David and Stephen to the group. There are no chat messages yet.">',
-    song: '<div class="cutaway-heading">THE OPTIMISTIC VERSION · STEPHEN’S GOODBYE SONG</div><div class="cutaway-special cutaway-song"><div class="song-notes">♫ ♪ ♫</div><strong>STEPHEN’S GOODBYE SONG</strong><p>♪ Stephen’s off to China, he’ll probably be fine!</p><p>♪ Unless he gets kidnapped, then that’s a bad sign!</p></div>',
     muted: '<img class="cutaway-approved-art cutaway-approved-muted" src="./public/assets/generated/game/office-phone-group-muted-cutaway-v01.webp" width="1672" height="940" alt="The Operation: Save Stephen group on an office phone. Beneath Paul’s earlier group-creation notice, a crossed-out bell marks a new system notification: Stephen Martin has muted the group. The honey-loving bear remains the group picture.">',
     folder: '<div class="cutaway-heading">DAVID’S LAPTOP · FILE EXPLORER</div><div class="cutaway-special cutaway-folder"><strong>📁 RESCUE PLAN - FINAL - FINAL 2</strong><p>📄 Backup rescue plan · 📄 Alternative rescue plan · 📄 Risk matrix · 📄 Final final final</p></div>'
   };
 
   function cutawayFor(beat) {
-    return beat.visual || null;
+    // GAME-SP4.1G0B: the dedicated song modal replaces the obsolete
+    // optimistic cutaway; never render two lyric/song cards simultaneously.
+    return beat.visual === "song" ? null : beat.visual || null;
   }
 
   // Approved, individually cropped game portraits. Reaction aliases map the
@@ -1265,6 +1276,10 @@
     $("cutawayPanel").setAttribute("aria-hidden", String(!cutaway));
     $("cutawayContent").innerHTML = cutaway ? cutaways[cutaway] : "";
     $("stage").dataset.cutaway = cutaway || "none";
+    // A revisit must start at the first verse, but a preview-to-full switch
+    // on the same beat must retain its current scroll and audio position.
+    $("officeSongLyrics").dataset.kind = "";
+    $("officeSongLyricsScroll").scrollTop = 0;
     $("stage").dataset.location = beat.id === "intro.exterior" ? "exterior" : "interior";
     $("stage").dataset.moment = beat.type === "title" ? "title" : "office";
     $("stage").dataset.visual = beat.type;
