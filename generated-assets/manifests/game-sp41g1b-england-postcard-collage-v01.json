@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1dhu_9fDVe9K_7XqMDzN2m95Oq7qp9euU"
+  },
+  "expectedSourceName": "transition-back-in-england-postcard-collage-v01.png",
+  "destination": "public/assets/generated/locations/transition-back-in-england-postcard-collage-v01.webp",
+  "transform": {
+    "maxWidth": 1672,
+    "maxHeight": 941,
+    "quality": 88
+  },
+  "revision": 1
+}
