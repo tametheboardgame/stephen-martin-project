@@ -1,18 +1,25 @@
 # GAME-SP4.1G0A — Paul pleased arm clip correction
 
-**Baseline:** merged roadmap PR #61, `394aeb79c07ec4b051ea515dd5c1299a39832a21`. **Scope:** Chapter 1 Paul *pleased/satisfied* seated pose only.
+**Baseline:** PR #61 merge `394aeb79c07ec4b051ea515dd5c1299a39832a21`. Active draft PR #62 on `agent/game-sp41g0a-paul-pleased-registration`.
 
-## Cause and bounded first pass
+## Diagnosis and actual replacement
 
-The owner noticed a small flat/clipped edge on one side of Paul's arm when his happy/satisfied expression displays. The project's locked original `paul-office-seated-pleased-locked-v01(1).png` was inspected: **1086×1448 transparent pixels; nonzero alpha touches both lateral edges and the bottom**. That shows that the art itself is tightly cropped, not merely a clipped CSS stage. A CSS-only change cannot reconstruct any lost source pixels.
+Owner's first preview proved that the 3.5% CSS optical inset **did not restore the missing black outline on the left of Paul's arm**. This is an issue within the tightly cropped source image, not general desk geometry. That scale-only workaround has been **removed**.
 
-The current stage already has `overflow:visible` on the portrait wrapper and Paul is individually registered at `right:3.5%` as an actor with `width:30%`. The first-pass conservative correction is a **0.965 optical scale, origin centre-bottom**, only when `#castPaul[data-seated-sprite="pleased"]`. That gives the tightly bounded pose a little extra stage margin without shifting his feet or moving/altering the neutral and confused poses. The approved WebP and story expressions remain byte-for-byte unchanged.
+Owner supplied and explicitly requested trial integration of the new, corrected **Paul pleased / satisfied** image `paul_s_pleased_portrait_sticker.png`. This is the only reworked expression. For safe transparent margin without altering the supplied illustrated pixels, the full RGBA picture was placed on a slightly wider transparent canvas: original **1086×1448**, revised **1130×1448**, with **22 transparent pixels** added on each horizontal side. The bottom remains anchored as before. This conservatively preserves approximately the same on-stage apparent figure size as the previous 0.965 test while eliminating the CSS per-expression transform.
 
-**Owner visual gate:** compare happy Paul with neutral/confused at the same dialogue checkpoint; check his side arm against the office foreground desk and the stage edge. If the **hard crop inside the source** is still visible despite the inset, an owner-approved re-canvas of *only this one expression* is required (regenerate the missing fabric/arm edge while retaining face, polo, glasses and canonical proportions). Do not simply scale the entire cast or create a different-looking Paul.
+- **Approved-for-trial source staged to Drive:** [`paul-office-seated-pleased-recanvas-v02.png`](https://drive.google.com/file/d/15eJA-wLRl_lsWvCnYh1kgAYV894S_C7B/view)
+- **Source SHA-256:** `0b5694a880f0ad5f1bb216b8ab3389beae7e7b584fd069838fd9816c851eb03d`
+- **Optimised production WebP:** `public/assets/generated/characters/paul-office-seated-pleased-v01.webp`, quality 90, **1130×1448**, 176,114 bytes, SHA-256 `d534edb74731d855354b60399b1b0a99c8fdd750775b553004899e038d7cb143`.
+- **Drive WebP backup:** [`paul-office-seated-pleased-recanvas-v02.webp`](https://drive.google.com/file/d/1gjyWIFzsPKL5yX_02Rtf_6abjNXu-oNZ/view).
+- **Versioned manifest:** `generated-assets/manifests/paul-office-seated-pleased-v01.json` revision 2, pointing to the new original.
+- **Cache bust:** `seatedExpressionSources.Paul.pleased` now requests `?v=2`, keeping other office sprites untouched.
 
-## Verification
+Asset materialisation's existing Google OIDC length issue #60 remains an unrelated pipeline defect; the verified production WebP is committed as a Git binary blob through the same proven source-backed path used by SP4.1F.
 
-- Exact-head `npm run verify` and Cloudflare preview must succeed.
-- Test switching neutral → pleased → neutral without expression ID/voice changes.
-- Inspect at desktop 1440×900, 1366×768, tablet and mobile; the existing top toolbar, white dialogue box, desk mask and speaker glow must be unaffected.
-- Keep draft PR until screenshot acceptance. Only then merge, and proceed to G0B song interludes.
+## Visual and functional gate
+
+- First compare Paul's pleased expression to neutral/confused, with particular attention to the **left outer upper-arm contour** and the right arm, not just the general sprite size. Confirm the newly illustrated outline actually reads cleanly against the office background.
+- Confirm seated desk/forearm alignment, Stephen and David stability, speaking highlight and scene dialogue controls. Check desktop and mobile crops.
+- Exact-head tests and Cloudflare preview required. **Keep PR #62 draft/unmerged until owner approves this specific replacement.** If the contour is still visually cut within the new artwork, further outpainting of that one sprite would be required; do not attempt another blind CSS zoom.
+- Once accepted, merge PR #62 and proceed to G0B song-panel fixes.

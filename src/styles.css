@@ -654,17 +654,6 @@ button:active:not(:disabled) { transform: translateY(1px); }
   transform: scale(.94) !important;
 }
 
-/* GAME-SP4.1G0A: Paul's approved pleased image is tightly cut at both
- * side edges of its 1086×1448 transparent source. Give ONLY this expression
- * a restrained inset, anchored at the bottom with the other seated poses.
- * No changes to neutral/confused, David, Stephen or the common figure scale.
- * A future owner-approved re-canvas is needed if source-edge crop remains
- * conspicuous at review size. */
-#officeScreen .cast-seated #castPaul[data-seated-sprite="pleased"] .actor-portrait img {
-  transform-origin: center bottom;
-  transform: scale(.965) !important;
-}
-
 /* Listening actors retain the scene's colour treatment, but never fade
    their entire bodies: that made the bright office floor visible through them. */
 #officeScreen .cast-seated .cast-actor.is-listening {

@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "source": {
     "provider": "google-drive",
-    "fileId": "1rzLKSR1qyORp1JCYMGraShA5xcxV9f3L"
+    "fileId": "15eJA-wLRl_lsWvCnYh1kgAYV894S_C7B"
   },
-  "expectedSourceName": "paul-office-seated-pleased-locked-v01.png",
+  "expectedSourceName": "paul-office-seated-pleased-recanvas-v02.png",
   "destination": "public/assets/generated/characters/paul-office-seated-pleased-v01.webp",
   "transform": {
     "maxWidth": 1200,
     "maxHeight": 1600,
     "quality": 90
   },
-  "revision": 1
+  "revision": 2
 }

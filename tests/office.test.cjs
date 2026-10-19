@@ -4109,18 +4109,21 @@ test("GAME-SP4.1F.2 Chapter Two narrator avoids printed title and continue butto
   assert.equal(p.el("transitionNarration").hidden,true);
 });
 
-test("GAME-SP4.1G0A Paul pleased pose has its own tiny inset, other cast registration remains untouched",()=>{
-  const cssStart=css.indexOf("GAME-SP4.1G0A: Paul's approved pleased image");
-  assert.ok(cssStart>0);
-  const rule=css.slice(cssStart,css.indexOf("}",cssStart)+1);
-  assert.match(rule,/#officeScreen \.cast-seated #castPaul\[data-seated-sprite="pleased"\] \.actor-portrait img/);
-  assert.match(rule,/transform-origin:\s*center bottom;/);
-  assert.match(rule,/transform:\s*scale\(\.965\) !important;/);
-  assert.doesNotMatch(rule,/data-seated-sprite="(?:neutral|confused)"/);
-  assert.doesNotMatch(rule,/#castStephen|#castDavid/);
+test("GAME-SP4.1G0A replacement Paul pleased WebP is packaged, versioned and free of temporary CSS scaling",()=>{
+  const manifest=JSON.parse(read("generated-assets/manifests/paul-office-seated-pleased-v01.json"));
+  assert.equal(manifest.source.provider,"google-drive");
+  assert.equal(manifest.source.fileId,"15eJA-wLRl_lsWvCnYh1kgAYV894S_C7B");
+  assert.equal(manifest.expectedSourceName,"paul-office-seated-pleased-recanvas-v02.png");
+  assert.equal(manifest.revision,2);
+  assert.equal(manifest.destination,"public/assets/generated/characters/paul-office-seated-pleased-v01.webp");
+  const bytes=fs.readFileSync(path.join(root,manifest.destination));
+  assert.equal(bytes.toString("ascii",0,4),"RIFF");
+  assert.equal(bytes.toString("ascii",8,12),"WEBP");
+  assert.ok(bytes.length>100_000&&bytes.length<400_000);
+  assert.doesNotMatch(css,/#castPaul\[data-seated-sprite="pleased"\][^\{]*\{[^}]*transform:/);
   const p=preview();p.start();p.at("office.004");
   assert.equal(p.el("castPaul").dataset.seatedSprite,"pleased");
-  assert.match(p.el("portraitPaul").src,/paul-office-seated-pleased-v01\.webp\?v=1$/);
+  assert.match(p.el("portraitPaul").src,/paul-office-seated-pleased-v01\.webp\?v=2$/);
   p.el("backButton").click();
   assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
   p.el("nextButton").click();

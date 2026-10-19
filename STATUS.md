@@ -2,12 +2,13 @@
 
 **Updated:** 19 October 2026
 
-## GAME-SP4.1G0A — Paul pleased sprite optical inset (in development)
+## GAME-SP4.1G0A — New Paul pleased image replacement (awaiting visual acceptance)
 
 - **Planning PR #61 merged:** `394aeb79c07ec4b051ea515dd5c1299a39832a21`; G0–G4 roadmap now on main. The wider Chapter 4 Ending C review remains pending.
 - **Active feature branch:** `agent/game-sp41g0a-paul-pleased-registration`. Inspected approved original Paul pleased PNG (1086×1448); source alpha reaches both lateral edges, so this is partly **source artwork crop**, not a generic stage overflow defect.
-- **Bounded first pass:** scale the seated pleased artwork to 96.5% around its bottom centre, without changing approved WebP, other Paul expressions, office geometry or story data. Regression tests cover expression-only selection and Back/Next.
-- **Human gate:** inspect current Cloudflare build for whether the arm now clears the edge naturally. If a hard cut remains in the actual asset, approve a dedicated recanvas instead of adding more transforms. No merge until owner visually accepts. **Next G0B:** shared optimistic/pessimistic song modal cleanup.
+- **Owner retest:** A 0.965 CSS scale did not fix missing left-side arm outline; scale workaround removed. New owner-supplied Paul pleased image staged as Drive PNG revision 2, with 22px transparent side safety margins. Corresponding optimised WebP replaces **only** the seated pleased file; `?v=2` cache-bust. Full source IDs, SHA-256 provenance and acceptance gate documented below.
+- **Human gate:** examine the revised pleased sprite at full game scale against neutral/confused. If the outline is now continuous, approve/merge PR #62. If still cut in the replacement art, re-edit that one source, not office-wide layout. G0B song modals follow.
+
 - Documentation: `docs/story/GAME-SP4.1G0A-PAUL-REGISTRATION.md`.
 
 ## CURRENT — GAME-SP4.1G0/G1/G2/G3/G4 Chapter and ending polish plan (19 October 2026)
