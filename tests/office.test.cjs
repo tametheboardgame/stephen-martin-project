@@ -4675,3 +4675,185 @@ test("Missing Summit voice falls back to text-timed progression; skipped respons
   assert.equal(wrong.paused,true);
   assert.ok(p.voices.at(-1).src.endsWith("summit.check.001.charger.001.mp3"));
 });
+
+
+
+/* GAME-SP4.1G1C — Three-route Chapter 2 handoff QA.
+ * Drive the real scene handlers, never mutate saves to fabricate a route.
+ * Keep this suite isolated from artwork, dialogue and the separate voice work.
+ */
+function g1cToHandoff(route,{audio=false}={}) {
+  const p=preview({audio});p.start();p.el("skipButton").click();
+  p.el("chinaStartButton").click();
+  for(let i=0;i<5;i++)p.el("wallNextButton").click();
+  if(route==="cult"){
+    p.el("wallAcceptButton").click();
+    p.el("wallGoIncidentButton").click();
+  } else {
+    p.el("wallDeclineButton").click();p.el("wallGoPalaceButton").click();
+    p.el("intermissionContinueButton").click();
+    for(let i=0;i<4;i++)p.el("palaceNextButton").click();
+    if(route==="detention"){
+      p.el("palaceAcceptButton").click();
+      for(let i=0;i<5;i++)p.el("palaceNextButton").click();
+      p.el("palaceGoIncidentButton").click();
+    } else {
+      assert.equal(route,"reassemble","Unknown route is not a valid handoff");
+      p.el("palaceDeclineButton").click();p.el("palaceGoMarketButton").click();
+      p.el("intermissionContinueButton").click();
+      for(let i=0;i<6;i++)p.el("marketNextButton").click();
+      p.el("marketGoIncidentButton").click();
+    }
+  }
+  assert.equal(saved(p).holidayPhase,"route-handoff");
+  assert.equal(saved(p).route,route);
+  return p;
+}
+
+test("GAME-SP4.1G1C all three endings preserve received fragments, checkpoint saves and the real David/Paul alarm",()=>{
+  const routes=["cult","detention","reassemble"];
+  const canonical=story().SMP_CHINA_FINAL.messageByRoute;
+  for(const route of routes){
+    const p=g1cToHandoff(route);
+    p.el("handoffContinueButton").click();
+    assert.equal(saved(p).finalStep,0);
+    assert.equal(saved(p).route,route);
+    assert.equal(p.el("chinaFinalPhone").dataset.power,"low");
+    assert.equal(p.el("chinaPhoneMessage").textContent,canonical[route]);
+    assert.equal(p.el("chinaPhoneStatus").textContent,"Partial message delivered");
+    assert.equal(p.el("chinaFinalEngland").hidden,true);
+    p.el("homeButton").click();p.el("resumeButton").click();
+    assert.equal(saved(p).finalStep,0,"Full 1%-message checkpoint resumes without skipping a beat");
+    assert.equal(p.el("chinaPhoneMessage").textContent,canonical[route]);
+    p.el("chinaFinalNextButton").click();
+    assert.equal(saved(p).finalStep,1);
+    assert.equal(p.el("chinaFinalPhone").dataset.power,"off");
+    assert.equal(p.el("chinaPhonePowerNotice").hidden,false);
+    assert.equal(p.el("chinaFinalReaction").hidden,false);
+    assert.equal(p.el("chinaPhoneMessage").textContent,canonical[route]);
+    p.el("homeButton").click();p.el("resumeButton").click();
+    assert.equal(saved(p).finalStep,1,"Dead phone must stay dead after resume");
+    assert.equal(p.el("chinaFinalPhone").dataset.power,"off");
+    assert.equal(p.el("chinaPhonePowerNotice").hidden,false);
+    p.el("chinaFinalNextButton").click();
+    assert.equal(saved(p).finalStep,2);
+    assert.equal(p.el("chinaFinalEngland").hidden,false);
+    assert.equal(p.el("chinaFinalPhone").hidden,true);
+    assert.equal(p.el("chinaPhonePowerNotice").hidden,true);
+    assert.equal(p.el("transitionNarration").hidden,false);
+    assert.equal(p.el("transitionNarration").dataset.cue,"transition.england.back.001");
+    assert.equal(p.el("chinaFinalNextButton").textContent,"Back to David and Paul →");
+    p.el("homeButton").click();p.el("resumeButton").click();
+    assert.equal(saved(p).finalStep,2,"Back in England checkpoint resumes unchanged");
+    assert.equal(saved(p).route,route);
+    assert.equal(p.el("transitionNarration").dataset.cue,"transition.england.back.001");
+    p.el("chinaFinalNextButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-alarm");
+    assert.equal(saved(p).rescueAlarmStep,0);
+    assert.equal(p.el("transitionNarration").hidden,true,"England subtitle clears once alarm starts");
+    assert.equal(p.el("rescueAlarmScene").hidden,false);
+    assert.equal(p.el("rescueAlarmSpeaker").textContent,"DAVID");
+    assert.equal(p.el("rescueAlarmPhoneText").textContent,canonical[route]);
+    for(let n=0;n<5;n++)p.el("rescueAlarmNextButton").click();
+    assert.equal(p.el("rescueAlarmPhone").hidden,false,"David and Paul can examine the delivered partial message");
+    assert.equal(p.el("rescueAlarmPhoneText").textContent,canonical[route]);
+    p.el("rescueAlarmNextButton").click();
+    assert.match(p.el("rescueAlarmLine").textContent,/battery/i,"Paul's benign battery explanation survives all routes");
+    assert.equal(saved(p).route,route);
+  }
+});
+
+test("GAME-SP4.1G1C paused/manual Next invalidates Stephen's old voice before England narration",async()=>{
+  const p=g1cToHandoff("cult",{audio:true});
+  p.el("handoffContinueButton").click();
+  assert.equal(saved(p).finalStep,0);
+  p.el("chinaFinalNextButton").click();
+  assert.equal(saved(p).finalStep,1);
+  const stephen=p.voices.at(-1);
+  assert.match(stephen.src,/china\.final\.001\.mp3$/);
+  await Promise.resolve();
+  assert.equal(typeof stephen.onended,"function");
+  const stale=stephen.onended;
+  p.el("holidayPauseButton").click();
+  assert.equal(stephen.paused,true);
+  assert.equal(p.el("holidayScreen").dataset.autoAdvance,"paused");
+  p.el("holidayNextButton").click();
+  assert.equal(saved(p).finalStep,2);
+  assert.equal(stephen.onended,null,"The old Stephen cue is detached on Next");
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.england.back.001");
+  stale(); // Simulate a late recorded completion from the prior beat.
+  assert.equal(saved(p).finalStep,2,"Stale voice must not skip the illustrated England shot");
+  assert.equal(p.timeouts.size,0,"Stale callback must not enqueue an autoplay step while paused");
+  p.el("holidayPauseButton").click();
+  await Promise.resolve();
+  const narrator=p.voices.at(-1);
+  assert.match(narrator.src,/transition\.england\.back\.001\.mp3$/);
+  assert.equal(typeof narrator.onended,"function");
+  const oldEngland=narrator.onended;
+  p.el("chinaFinalNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-alarm");
+  assert.equal(narrator.onended,null,"England narration cannot continue over the alarm");
+  oldEngland();
+  assert.equal(saved(p).rescueAlarmStep,0,"Late narrator must not skip David's first line");
+  assert.equal(p.el("transitionNarration").hidden,true);
+});
+
+test("GAME-SP4.1G1C optional England MP3 failure keeps subtitles and follows the timed fallback",async()=>{
+  const p=g1cToHandoff("detention",{audio:true});
+  p.el("handoffContinueButton").click();
+  p.el("chinaFinalNextButton").click();
+  p.el("chinaFinalNextButton").click();
+  assert.equal(saved(p).finalStep,2);
+  await Promise.resolve();
+  const clip=p.voices.at(-1);
+  assert.match(clip.src,/transition\.england\.back\.001\.mp3$/);
+  assert.equal(p.el("transitionNarration").hidden,false);
+  clip.fail();
+  assert.equal(p.el("transitionNarration").dataset.audio,"text-fallback");
+  assert.equal(p.el("chinaFinalEngland").hidden,false);
+  assert.equal(p.timeouts.size,1,"England still has a safe fallback duration");
+  assert.equal(Array.from(p.timeouts.values())[0].delay,3600);
+  p.tick();
+  assert.equal(saved(p).holidayPhase,"rescue-alarm");
+  assert.equal(p.el("rescueAlarmPhoneText").textContent,story().SMP_CHINA_FINAL.messageByRoute.detention);
+  assert.equal(p.el("transitionNarration").hidden,true);
+});
+
+test("GAME-SP4.1G1C Sound Off and contextual Skip preserve a locked route without completing a puzzle",()=>{
+  for(const route of ["cult","detention","reassemble"]){
+    const p=g1cToHandoff(route,{audio:true});
+    p.el("handoffContinueButton").click();
+    p.el("holidaySoundButton").click();
+    assert.equal(p.el("holidaySoundButton").textContent,"Sound: Off");
+    assert.equal(p.el("chinaPhoneMessage").textContent,story().SMP_CHINA_FINAL.messageByRoute[route]);
+    p.el("chinaFinalNextButton").click();
+    p.el("chinaFinalNextButton").click();
+    assert.equal(p.el("transitionNarration").hidden,false,"Sound Off cannot remove live narrator text");
+    assert.match(p.el("holidaySkipButton").textContent,/Skip to investigation/);
+    p.el("holidaySkipButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-hotel");
+    assert.equal(saved(p).route,route);
+    assert.notEqual(saved(p).hubMatched,true);
+    assert.equal(saved(p).hubWrongGuesses,0);
+    assert.equal(saved(p).hubActiveClue,null);
+    assert.equal(p.el("transitionNarration").hidden,true);
+    assert.equal(p.el("rescueHotelScene").hidden,false);
+  }
+});
+
+test("GAME-SP4.1G1C England/phone layout retains distinct title, captions and responsive boundaries",()=>{
+  const phone=html.slice(html.indexOf('id="chinaFinalScene"'),html.indexOf('id="rescueAlarmScene"'));
+  const england=phone.slice(phone.indexOf('id="chinaFinalEngland"'),phone.indexOf('id="chinaFinalEngland"')+150);
+  assert.match(england,/>BACK IN ENGLAND…<\/h2>/);
+  assert.doesNotMatch(england,/NARRATOR|Meanwhile/);
+  assert.match(phone,/id="chinaPhonePowerNotice"[^>]*aria-live="polite"/);
+  assert.match(phone,/id="chinaFinalReaction"/);
+  assert.match(css,/#holidayScreen \.china-final-phone\[data-power="off"\] \{[^}]*left: 34%;/);
+  assert.match(css,/#holidayScreen \.china-final-england \{[\s\S]*?transition-back-in-england-postcard-collage-v01\.webp/);
+  assert.match(css,/#holidayScreen \.china-final-controls \{position:absolute;z-index:8;bottom:0;/);
+  assert.match(css,/#holidayScreen \.transition-narration \{[\s\S]*?z-index:22;/);
+  assert.match(css,/@media \(max-width:800px\) \{[\s\S]*?china-final-england h2/);
+  assert.match(css,/@media \(max-width:450px\) \{[\s\S]*?china-final-england h2/);
+  assert.match(css,/@media \(prefers-reduced-motion:reduce\) \{[\s\S]*?china-final-phone-screen \{transition:none !important;\}/);
+  assert.doesNotMatch(engine,/Message interrupted — not delivered/);
+});
