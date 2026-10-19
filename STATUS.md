@@ -3,10 +3,10 @@
 ## CURRENT — GAME-SP4.1G1A phone-battery storyboard (19 October 2026)
 
 - **G2A approved/merged:** PR #64, `main` commit `d99b474a688c2116d449285f9a65c1d0654693e9`. Chapter 3 desk fix accepted by owner.
-- **G1A active planning branch:** `agent/game-sp41g1a-phone-storyboard`. Audited the three canonical incomplete messages, the existing finalStep 0/1/2 save/audio contract and the existing illustrated CSS phone frame. Storyboard committed in `docs/story/GAME-SP4.1G1A-PHONE-STORYBOARD.md`.
-- **Proposed, pending owner approval:** one reusable CSS-drawn portrait smartphone with red 1% warning; the display visibly goes black with an external battery-flat/message-not-sent notice; Stephen's approved reaction and England handoff remain the existing beats. No new raster files or new script steps proposed.
-- **Next:** owner signs off sequence and asset strategy, then implement and test G1A on this draft branch across all three routes, Save/Resume and mobile. G1B England artwork is separate.
-
+- **G1A storyboard review branch:** `agent/game-sp41g1a-phone-storyboard`; draft PR #65. Audited the canonical finalStep 0/1/2 save/audio contract and all three route-specific partial messages.
+- **Owner correction 19 October:** Stephen's fragment **is received by David and Paul** and drives the investigation. **Never show “MESSAGE NOT SENT”**. Current game status “Message interrupted — not delivered” needs correction in G1A implementation, while the exact fragments in Chapter 3 and hotel evidence remain unchanged. Revised storyboard: display a partial message confirmed sent with prominent red 1%; phone visibly powers off at 0% with battery-flat caption, then Stephen's existing line and England handoff.
+- **Art correction:** old intro proof selectors `.cutaway-phone`, `.phone-notch`, `.phone-screen` are not used by current intro; do **not** revive them. Current opening uses separately approved illustrated group-chat/mute cutaways which also must not be repurposed. Proposal: **one NEW purpose-made transparent phone shell**, no baked-in UI text, with accessible live overlays, requiring owner's visual approval before integration.
+- **Next gate:** confirm revised storyboard, then approve one new source artwork before G1A implementation/working preview and three-route regression. No playable files modified yet. G1B England artwork is separate.
 
 ## CURRENT — GAME-SP4.1G2A Chapter 3 alarm office registration (19 October 2026)
 
