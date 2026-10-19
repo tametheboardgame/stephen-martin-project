@@ -17,6 +17,16 @@ Owner supplied and explicitly requested trial integration of the new, corrected 
 
 Asset materialisation's existing Google OIDC length issue #60 remains an unrelated pipeline defect; the verified production WebP is committed as a Git binary blob through the same proven source-backed path used by SP4.1F.
 
+## Second owner screenshot — real cause of the still-visible vertical seam
+
+The owner supplied a fresh screenshot at **“Is China far?”**, not the expected pleased checkpoint. This is **`office.002`**, a **Paul confused** cue (`paul-office-seated-confused-v01.webp`). Hence altering the pleased source could not affect this screenshot.
+
+Inspection of the exact approved confused source PNG (`1086×1448`) shows that its alpha touches the **left image boundary** over the sleeve and lower arm: the edge is genuinely straight/opaque, not hidden by a CSS `overflow:hidden` parent. Current scene CSS explicitly sets `.actor-portrait { overflow: visible }`, but Paul's actor was positioned too far to the right, exposing a vertical gap between this source edge and Stephen's sleeve.
+
+**Current attempted solution:** leave the other actor images and approved paints alone; register **all** seated Paul expressions at `right:7.25%` instead of `3.5%` and paint Paul beneath Stephen (`z-index:1` vs Stephen's `2`). The closer composition should hide the unnatural asset boundary **behind Stephen's sleeve**, giving an intentional natural overlap rather than a vertical cut in open space. This is a composition workaround, **not a claim to have created missing arm pixels**. No image of the confused pose is changed. A genuine recanvas/outpaint of its source is an alternative if the human preview still shows the artefact.
+
+Regression now explicitly checks `office.002` confused and `office.004` pleased, shared registration and old inset removal. Human acceptance required for Paul/Stephen separation, sleeve layering, neutral pose, speaker glow, white dialogue, desk seam and small-screen crops. Do not merge before visual sign-off.
+
 ## Visual and functional gate
 
 - First compare Paul's pleased expression to neutral/confused, with particular attention to the **left outer upper-arm contour** and the right arm, not just the general sprite size. Confirm the newly illustrated outline actually reads cleanly against the office background.
