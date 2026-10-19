@@ -1,5 +1,13 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G1A phone-battery storyboard (19 October 2026)
+
+- **G2A approved/merged:** PR #64, `main` commit `d99b474a688c2116d449285f9a65c1d0654693e9`. Chapter 3 desk fix accepted by owner.
+- **G1A active planning branch:** `agent/game-sp41g1a-phone-storyboard`. Audited the three canonical incomplete messages, the existing finalStep 0/1/2 save/audio contract and the existing illustrated CSS phone frame. Storyboard committed in `docs/story/GAME-SP4.1G1A-PHONE-STORYBOARD.md`.
+- **Proposed, pending owner approval:** one reusable CSS-drawn portrait smartphone with red 1% warning; the display visibly goes black with an external battery-flat/message-not-sent notice; Stephen's approved reaction and England handoff remain the existing beats. No new raster files or new script steps proposed.
+- **Next:** owner signs off sequence and asset strategy, then implement and test G1A on this draft branch across all three routes, Save/Resume and mobile. G1B England artwork is separate.
+
+
 ## CURRENT — GAME-SP4.1G2A Chapter 3 alarm office registration (19 October 2026)
 
 - **G0B completed:** PR #63 merged into `main` as `31eb2d2c23e44b8aca3d06815f1a8a56e21c9c8d` after owner approval of both song panels and accelerated pessimistic scrolling.
