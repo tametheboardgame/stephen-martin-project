@@ -404,6 +404,45 @@ if (narratorIds.length !== 12 || new Set(narratorIds).size !== 12 ||
 }
 narratorIds.forEach(id => permitted.add(id + ".mp3"));
 if (permitted.size !== 124) throw new Error("Narration filename overlaps an existing voice ID.");
+// Summit route: 7 gate lines, 3 gatekeeper prompts, 17 distinct speaker
+// responses to all 9 choices, 3 optional Paul hints and 14 ending beats.
+// Preserve every existing sentence, choice, save checkpoint and prop.
+const frameworkSandbox = { window:{} };
+vm.runInNewContext(await readFile(path.join(root,"src/rescue-framework.js"),"utf8"),frameworkSandbox);
+vm.runInNewContext(await readFile(path.join(root,"src/summit-data.js"),"utf8"),frameworkSandbox);
+const summitIntro = frameworkSandbox.window.SMP_RESCUE_FRAMEWORK.routes.cult.intro;
+const summit = frameworkSandbox.window.SMP_SUMMIT;
+const summitIds = [
+  ...summitIntro.map(b => b.id),
+  ...summit.rounds.flatMap((round,i) => [
+    round.promptId,
+    ...round.options.flatMap(option => option.voices.map(b => b.id)),
+    round.hintId
+  ]),
+  ...summit.ending.map(b => b.id)
+];
+if (summitIds.length !== 44 || new Set(summitIds).size !== 44 ||
+    summitIntro.length !== 7 ||
+    summitIntro.some((b,i) => b.id !== "summit.intro."+String(i+1).padStart(3,"0")) ||
+    summit.rounds.length !== 3 ||
+    summit.rounds.some((round,i) => {
+      const n = String(i+1).padStart(3,"0");
+      return round.promptId !== "summit.check."+n+".prompt" ||
+        round.hintId !== "summit.check."+n+".hint" ||
+        !round.prompt.startsWith("GATEKEEPER: ") ||
+        !round.hint.startsWith("Paul: ") ||
+        round.options.length !== 3 ||
+        round.options.some(option =>
+          !option.voices?.length ||
+          option.voices.some((b,j)=>b.id !== "summit.check."+n+"."+option.id+"."+String(j+1).padStart(3,"0")) ||
+          option.response !== option.voices.map(b=>b.speaker+": "+b.text).join(" "));
+    }) ||
+    summit.ending.length !== 14 ||
+    summit.ending.some((b,i) => b.id !== "summit.ending."+String(i+1).padStart(3,"0"))) {
+  throw new Error("Summit voice contract changed: expected 44 canonical spoken beats.");
+}
+summitIds.forEach(id => permitted.add(id + ".mp3"));
+if (permitted.size !== 168) throw new Error("Duplicate Summit or transition narration voice ID.");
 await mkdir(path.join(output, audioSource), { recursive: true });
 let voiceCount = 0;
 for (const filename of await readdir(audioFolder)) {
@@ -420,7 +459,7 @@ for (const filename of await readdir(audioFolder)) {
   voiceCount++;
 }
 console.log("Approved dialogue MP3s packaged: " + voiceCount +
-  "/124 maximum (112 established voices + 12 optional transition narrator recordings).");
+  "/168 maximum (112 established voices + 44 Summit + 12 optional transition narrator recordings).");
 
 // Optional owner-supplied songs are uploaded directly to this exact folder
 // on the song PR branch. Builds work before upload; once present, the MP3s

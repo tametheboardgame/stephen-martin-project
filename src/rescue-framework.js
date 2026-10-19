@@ -13,13 +13,13 @@
       kind: "choices",
       stages: 3,
       intro: Object.freeze([
-        { speaker:"Gatekeeper", text:"Welcome to The Summit. Have you come to honour our radiant new chairman?" },
-        { speaker:"David", text:"We've come for Stephen Martin." },
-        { speaker:"Gatekeeper", text:"Then yes." },
-        { speaker:"Paul", text:"Does he know he's a chairman?" },
-        { speaker:"Gatekeeper", text:"He didn't yesterday." },
-        { speaker:"David", text:"We've infiltrated the inner circle." },
-        { speaker:"Paul", text:"We're standing outside the gate." }
+        { id:"summit.intro.001", speaker:"Gatekeeper", text:"Welcome to The Summit. Have you come to honour our radiant new chairman?" },
+        { id:"summit.intro.002", speaker:"David", text:"We've come for Stephen Martin." },
+        { id:"summit.intro.003", speaker:"Gatekeeper", text:"Then yes." },
+        { id:"summit.intro.004", speaker:"Paul", text:"Does he know he's a chairman?" },
+        { id:"summit.intro.005", speaker:"Gatekeeper", text:"He didn't yesterday." },
+        { id:"summit.intro.006", speaker:"David", text:"We've infiltrated the inner circle." },
+        { id:"summit.intro.007", speaker:"Paul", text:"We're standing outside the gate." }
       ])
     }),
     detention: Object.freeze({
