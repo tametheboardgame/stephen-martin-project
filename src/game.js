@@ -677,14 +677,14 @@
       const p = rescueFramework.normalise(state.rescueProgress,"cult");
       return summit.ending[p.endingStep] || null; // End card remains silent.
     }
-    // Endings B/C are not yet fully voiced, but their two existing narrator
-    // stingers may play now; other unrecorded character lines remain text-timed.
+    // Ending B now has 13 actor MP3s and the existing narrator stinger;
+    // Ending C still has only its own final narrator line.
     if (state.holidayPhase === "rescue-route-ending" &&
         (state.route === "detention" || state.route === "reassemble")) {
       const p = rescueFramework.normalise(state.rescueProgress,state.route);
       const lines = state.route === "detention" ? detention.ending : assembly.ending;
       const beat = lines[p.endingStep];
-      return beat?.speaker === "Narrator" ? beat : null;
+      return beat?.id ? beat : null;
     }
     return null;
   }
