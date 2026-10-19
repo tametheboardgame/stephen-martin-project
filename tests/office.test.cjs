@@ -4350,20 +4350,58 @@ test("GAME-SP4.1G1A phone stays independently anchored above the visible action 
   assert.doesNotMatch(stage,/display:\s*grid|place-items:\s*center/);
   const phone=css.slice(css.indexOf("#holidayScreen .china-final-phone {"),css.indexOf("#holidayScreen .china-final-phone-shell {"));
   assert.match(phone,/position: absolute;/);
-  assert.match(phone,/top: 8%;/);
-  assert.match(phone,/left: 36%;/);
-  assert.match(phone,/height: min\(70%, 650px\);/);
+  assert.match(phone,/top: 14%;/);
+  assert.match(phone,/left: 50%;/);
+  assert.match(phone,/height: min\(72%, 680px\);/);
   assert.match(phone,/transform: translateX\(-50%\);/);
   assert.doesNotMatch(phone,/position: relative|height:\s*min\(78%/);
   const tablet=css.slice(css.indexOf("@media (max-width:800px) {",css.indexOf(".china-final-england small")),css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")));
   assert.match(tablet,/#holidayScreen \.china-final-stage \{aspect-ratio:4\/3;\}/);
   const mobile=css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")),css.indexOf("/* GAME-SP2.3C",css.indexOf(".china-final-england small")));
   assert.match(mobile,/#holidayScreen \.china-final-stage \{aspect-ratio:3\/4;\}/);
-  assert.match(mobile,/#holidayScreen \.china-final-phone \{top:5%;left:50%;height:54%;max-width:90%;transform:translateX\(-50%\);margin:0;\}/);
+  assert.match(mobile,/#holidayScreen \.china-final-phone \{top:5%;left:50%;height:70%;max-width:90%;transform:translateX\(-50%\);margin:0;\}/);
   assert.match(css, /@media \(min-width:451px\) and \(max-width:580px\)/);
-  assert.match(css, /china-final-phone \{top:5%;left:50%;height:56%;max-width:88%;transform:translateX\(-50%\);margin:0;\}/);
+  assert.match(css, /china-final-phone \{top:5%;left:50%;height:70%;max-width:88%;transform:translateX\(-50%\);margin:0;\}/);
   assert.match(css,/#holidayScreen \.china-final-controls \{position:absolute;z-index:8;bottom:0;/);
   // The stage's final-message state and route-sensitive text are unaffected.
   assert.match(engine,/\$\("chinaFinalPhone"\)\.dataset\.power = step === 0 \? "low" : "off"/);
   assert.match(engine,/\$\("chinaPhoneMessage"\)\.textContent = route \? chinaFinal\.messageByRoute\[route\] : ""/);
+});
+
+
+test("GAME-SP4.1G1A two-step cinematography centres the delivered phone, then slides it left",()=>{
+  const main=css.slice(css.indexOf("#holidayScreen .china-final-phone {"),css.indexOf("#holidayScreen .china-final-phone-shell {"));
+  const hero=main.slice(0,main.indexOf('#holidayScreen .china-final-phone[data-power="off"] {'));
+  const dead=main.slice(main.indexOf('#holidayScreen .china-final-phone[data-power="off"] {'));
+  assert.match(hero,/position: absolute;/);
+  assert.match(hero,/top: 14%;/);
+  assert.match(hero,/left: 50%;/,"Received message gets full centre stage");
+  assert.match(hero,/height: min\(72%, 680px\);/);
+  assert.match(hero,/transform: translateX\(-50%\);/);
+  assert.match(hero,/transition: left 220ms ease, top 220ms ease, height 220ms ease;/);
+  assert.match(dead,/left: 34%;/,"Dead phone shifts left to make room for supporting cards");
+  assert.match(dead,/top: 15%;/);
+  assert.match(dead,/height: min\(62%, 580px\);/,"Dead phone shrinks slightly");
+  assert.match(css,/#holidayScreen \.china-final-power-notice \{[\s\S]*?top: 22%;[\s\S]*?right: 6%;/);
+  assert.match(css,/#holidayScreen \.china-final-reaction \{[^}]*right:6%;left:auto;width:min\(34%,440px\)/);
+  // Both composition states remain wholly within the stage, above bottom controls.
+  assert.ok(14+72<=88,"Hero phone leaves at least 12% of stage clear at bottom");
+  assert.ok(15+62<=85,"Off-state phone leaves more room for the reaction");
+  assert.match(css, /@media \(prefers-reduced-motion:reduce\) \{[\s\S]*?\.china-final-phone-screen \{transition:none !important;\}/);
+});
+
+test("GAME-SP4.1G1A narrow stages use centred hero and shrink upwards for stacked dead-phone notices",()=>{
+  const tablet=css.slice(css.indexOf("@media (max-width:800px) {",css.indexOf(".china-final-england small")),css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")));
+  assert.match(tablet,/china-final-phone \{height:min\(72%,520px\);max-width:65%;\}/);
+  assert.match(tablet,/china-final-phone\[data-power="off"\] \{top:14%;left:30%;height:min\(60%,450px\);\}/);
+  const portrait=css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")),css.indexOf("/* GAME-SP2.3C",css.indexOf(".china-final-england small")));
+  assert.match(portrait,/china-final-phone \{top:5%;left:50%;height:70%;max-width:90%;transform:translateX\(-50%\);margin:0;\}/);
+  assert.match(portrait,/china-final-phone\[data-power="off"\] \{top:5%;left:50%;height:46%;\}/);
+  assert.match(portrait,/china-final-power-notice \{[\s\S]*?bottom:25%;/);
+  assert.match(portrait,/china-final-reaction \{[\s\S]*?bottom:8%;/);
+  const narrow=css.slice(css.indexOf("@media (min-width:451px) and (max-width:580px) {"));
+  assert.match(narrow,/china-final-phone \{top:5%;left:50%;height:70%;max-width:88%;transform:translateX\(-50%\);margin:0;\}/);
+  assert.match(narrow,/china-final-phone\[data-power="off"\] \{top:5%;left:50%;height:48%;\}/);
+  assert.match(narrow,/china-final-power-notice \{top:auto;bottom:25%;/);
+  assert.doesNotMatch(engine,/Message interrupted — not delivered/);
 });
