@@ -4691,7 +4691,7 @@ test("Narration audit finds exactly 14 remaining narrator IDs with distinct appr
   assert.match(c.at(-1).text,/cardboard display/);
   assert.equal(d.filter(line=>line.speaker==="Narrator").length,1);
   assert.equal(c.filter(line=>line.speaker==="Narrator").length,1);
-  assert.ok(d.slice(0,-1).every(line=>!line.id));
+  assert.ok(d.slice(0,-1).every((line,i)=>line.id === "detention.ending."+String(i+1).padStart(3,"0")),"Ending B now has all its actor voice IDs");
   assert.ok(c.slice(0,-1).every(line=>!line.id));
   const src=read("scripts/build.mjs");
   assert.ok(src.includes('closingNarrators.forEach(({id})=>permitted.add(id+".mp3"))'));
