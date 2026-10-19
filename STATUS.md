@@ -2,6 +2,8 @@
 
 ## CURRENT — GAME-SP4.1G1A phone-battery storyboard (19 October 2026)
 
+- **G1A owner screenshot fix:** handset on first PR #65 preview fell below visible stage, obscuring message. Root cause: grid auto-track sizing with percentage-height phone and scene padding. Replaced G1A stage grid with contained block, absolutely anchored phone at top 8% / left 36%, height max 70% capped 650px and centre-translated to leave room for the lower controls; tablet stage uses 4:3 and phone portrait 3:4 framing, with dedicated mobile/small tablet centring. The asset and story/audio are unchanged. A local headless Chromium layout probe checked phone and message rectangles against action bar at 1616×932, 1366×768, 800×740, 580×900, 390×850; GitHub smoke and a new Cloudflare preview are required for owner review.
+
 - **G2A approved/merged:** PR #64, `main` commit `d99b474a688c2116d449285f9a65c1d0654693e9`. Chapter 3 desk fix accepted by owner.
 - **G1A storyboard review branch:** `agent/game-sp41g1a-phone-storyboard`; draft PR #65. Audited the canonical finalStep 0/1/2 save/audio contract and all three route-specific partial messages.
 - **Owner correction 19 October:** Stephen's fragment **is received by David and Paul** and drives the investigation. **Never show “MESSAGE NOT SENT”**. Current game status “Message interrupted — not delivered” needs correction in G1A implementation, while the exact fragments in Chapter 3 and hotel evidence remain unchanged. Revised storyboard: display a partial message confirmed sent with prominent red 1%; phone visibly powers off at 0% with battery-flat caption, then Stephen's existing line and England handoff.
