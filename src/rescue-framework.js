@@ -30,12 +30,12 @@
       kind: "choices",
       stages: 3,
       intro: Object.freeze([
-        { speaker:"Official", text:"You are here for the International Specialist?" },
-        { speaker:"David", text:"We're here to extract Stephen Martin." },
-        { speaker:"Official", text:"Form?" },
-        { speaker:"David", text:"No, rescue." },
-        { speaker:"Official", text:"Form." },
-        { speaker:"Paul", text:"I knew we should've brought a printer." }
+        { id:"detention.intro.001", speaker:"Official", text:"You are here for the International Specialist?" },
+        { id:"detention.intro.002", speaker:"David", text:"We're here to extract Stephen Martin." },
+        { id:"detention.intro.003", speaker:"Official", text:"Form?" },
+        { id:"detention.intro.004", speaker:"David", text:"No, rescue." },
+        { id:"detention.intro.005", speaker:"Official", text:"Form." },
+        { id:"detention.intro.006", speaker:"Paul", text:"I knew we should've brought a printer." }
       ])
     }),
     reassemble: Object.freeze({
