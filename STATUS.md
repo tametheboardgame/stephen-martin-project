@@ -1,5 +1,13 @@
 # Project status
 
+## GAME-SP4 Summit voice integration against latest main (19 October 2026)
+
+- Integrating approved PR #45 against the much newer `main` line (281 commits advanced since the Summit audio branch). **Do not copy its older game controller wholesale.** This integration starts from the newer main source, artwork, full asset loader, transitions, contextual skips and updated office/character UI, then adds precisely the Summit audio ID and playback additions.
+- Brings across all **44 uploaded Summit MP3s**, the unchanged canonical 7-line gate / 3 spoken prompts / 17 responses / 3 hints / 14 throne-room lines, and the recording guide, without touching newer images or interactive layout. The build allow-list now covers 156 voice files plus 12 optional transition narrator clips (168 maximum).
+- Six additional Summit voice tests cover recorded line sequencing, spoken choice reactions, Paul hint timing, save/replay, pause/fallback and the ending; existing tests are updated for two-speaker correct-answer replies.
+- **Quality gate:** verify full GitHub tests, Cloudflare preview, audio count and current main mergeability; merge only after green. Original PR #45 is superseded by this conflict-resolved integration branch.
+
+
 ## CURRENT — GAME-SP4.1G1A phone-battery storyboard (19 October 2026)
 
 - **G1A scene-composition refinement (owner review, 19 October):** owner liked the repaired phone art and full message but rejected the off-centre composition before shutdown. Step 0 `data-power="low"` now uses the **centred 72%-height hero handset** (top 14%, left 50%), while Step 1 `data-power="off"` shrinks to 62%, shifts left 34% and reveals the existing right-side battery-flat notice and Stephen reaction. CSS animates only left/top/height over 220ms, disabled under reduced-motion. At <=800px the two-column composition scales down; at <=580px the phone remains centred and retreats upwards when off, leaving vertically stacked notices clear of the bottom controls. No asset, route, voice or state-machine edits. Added regression coverage and checked geometry in headless Chromium at 1420×834, 1366×768, 800×740, 580×900 and 390×850. **Draft PR #65 stays unmerged pending owner's new visual approval.**

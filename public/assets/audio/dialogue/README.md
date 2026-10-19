@@ -4,7 +4,7 @@ This folder is the exact upload destination for the project's ElevenLabs MP3
 voice clips. The static build automatically packages files whose names match
 the canonical dialogue script IDs.
 
-## Supported recordings — 112 existing, 12 optional new narrator clips
+## Supported recordings — 156 dialogue recordings, 12 optional transition narrator clips
 
 - Original office: `intro.exterior.mp3`, `office.001.mp3` to `office.054.mp3` (55).
 - Stephen's Great Wall, Forbidden City, Night Market and final phone line:
@@ -15,6 +15,10 @@ the canonical dialogue script IDs.
 - Visitor Information: 22 spoken lines across the opening, incorrect
   destinations, Paul's three possible hints and the correct deduction.
   See [Visitor Information voice guide](../../../../docs/VISITOR-INFORMATION-VOICE-IMPORT.md).
+- The Summit: **44 MP3s** for gatekeeper introductions, all admissions prompts,
+  branch-specific reactions, Paul's hints, and the fourteen-line throne-room
+  ending. See the [Summit ElevenLabs guide](../../../../docs/SUMMIT-VOICE-IMPORT.md).
+  All 44 are uploaded and included in the approved development recordings.
 - **GAME-SP4.1F illustrated transitions — up to 12 optional narrator recordings**:
   `transition.*.mp3`, exact names below. The game already displays each
   line as a subtitle. Without files it plays on normal text timing.
@@ -38,7 +42,7 @@ the canonical dialogue script IDs.
 
 ## Upload
 
-For the new narrator clips, upload to the current F review branch:
+For the optional narrator clips, use the relevant active F review branch:
 `agent/game-sp41f0-transition-storyboard-narration` (or its active
 successor). Earlier recordings remain unchanged.
 
