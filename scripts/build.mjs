@@ -442,7 +442,23 @@ if (summitIds.length !== 44 || new Set(summitIds).size !== 44 ||
   throw new Error("Summit voice contract changed: expected 44 canonical spoken beats.");
 }
 summitIds.forEach(id => permitted.add(id + ".mp3"));
-if (permitted.size !== 168) throw new Error("Duplicate Summit or transition narration voice ID.");
+// The remaining two narrator stingers close Endings B and C. The rest of those
+// endings remain intentionally text-timed until separate voice work is approved.
+vm.runInNewContext(await readFile(path.join(root,"src/detention-data.js"),"utf8"),frameworkSandbox);
+vm.runInNewContext(await readFile(path.join(root,"src/reassemble-data.js"),"utf8"),frameworkSandbox);
+const closingNarrators = [
+  {scene:frameworkSandbox.window.SMP_DETENTION, id:"detention.ending.014",length:14},
+  {scene:frameworkSandbox.window.SMP_REASSEMBLE,id:"reassemble.ending.015",length:15}
+];
+if (closingNarrators.some(({scene,id,length})=>
+    scene.ending.length !== length ||
+    scene.ending.at(-1)?.speaker !== "Narrator" ||
+    scene.ending.at(-1)?.id !== id ||
+    scene.ending.filter(line=>line.speaker === "Narrator").length !== 1)) {
+  throw new Error("Ending B/C closing narrator script changed unexpectedly.");
+}
+closingNarrators.forEach(({id})=>permitted.add(id+".mp3"));
+if (permitted.size !== 170) throw new Error("Duplicate narrator or dialogue voice ID.");
 await mkdir(path.join(output, audioSource), { recursive: true });
 let voiceCount = 0;
 for (const filename of await readdir(audioFolder)) {
@@ -459,7 +475,7 @@ for (const filename of await readdir(audioFolder)) {
   voiceCount++;
 }
 console.log("Approved dialogue MP3s packaged: " + voiceCount +
-  "/168 maximum (112 established voices + 44 Summit + 12 optional transition narrator recordings).");
+  "/170 maximum (112 established voices + 44 Summit + 12 transition narrations + 2 ending narrators).");
 
 // Optional owner-supplied songs are uploaded directly to this exact folder
 // on the song PR branch. Builds work before upload; once present, the MP3s

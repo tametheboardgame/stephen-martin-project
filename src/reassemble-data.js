@@ -34,7 +34,7 @@
     {speaker:"Stephen",text:"WHY?"},
     {speaker:"Cardboard Stephen",text:"Have you tried turning me off and on again?"},
     {speaker:"David",text:"Technical triumph. I knew the framework would work."},
-    {speaker:"Narrator",text:"Stephen walks away. David congratulates the cardboard display."}
+    {id:"reassemble.ending.015",speaker:"Narrator",text:"Stephen walks away. David congratulates the cardboard display."}
   ]);
   function reaction(part,slot) {
     if(part === "wifi-heart") return "David: Upgradeable. Excellent. Paul: Not a real organ, though.";
