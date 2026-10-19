@@ -1,12 +1,18 @@
 # Project status
 
-## CURRENT — GAME-SP4.1G1C Chapter 2 handoff QA (19 October 2026)
+## CURRENT — GAME-SP4.1G3A + G3B Summit approach staging and wording (19 October 2026)
 
-- **G1B approved and merged:** PR #67 merged into `main` as `8641923c93c1867db0608f4bf9ed869891677fe2`. Owner approved both the England postcard art and early background loading.
-- **G1C work branch:** `agent/game-sp41g1c-chapter-two-handoff-qa`. No new illustrations, narration or gameplay routes. Regress the existing Summit, Forbidden City banquet and spa handoffs through the delivered partial message (1%), switched-off phone (0%), live England title and separated narrator, and all 10 David/Paul rescue alarm beats.
-- Added tests for all three genuine route choices, Save/Resume on phone steps 0/1/2, correct received fragment, paused manual Next, late Stephen/narrator MP3 callbacks, optional failed England recording fallback, Sound Off and contextual Skip to Investigation without autocompleting clues, plus narrow-device style contracts.
-- **Owner review gate:** run CI on draft PR, inspect Cloudflare game on laptop/tablet/phone, confirm all three routes' transition layout (especially title vs top toolbar and subtitles vs controls), Save/Resume and pause/sound. Track any defect in G1C and correct before merging. No production code/art was changed at the initial audit stage.
-- **Next:** resolve CI and manual visual issues if present, then owner acceptance/merge before later G1 packages.
+- **Branch:** `agent/game-sp41g3a-g3b-summit-approach`, based on G1C-merged `main` commit `18491bc0097f43e8dddc7ddf2d380c1051afea37`. Draft PR and owner visual review required.
+- **G3A:** CSS-only Summit exterior sprite positioning: move the approved David and Paul cut-outs appreciably left onto the approach path at desktop, tablet and phone widths. Keep gatekeeper, image pixels, sprite sizes, bottom anchors, speaker focus, and all other routes/locations unchanged.
+- **G3B:** The Summit action-strip and in-scene progress must read *Summit approach* / *Rescue attempt · Summit entrance* / *Approach complete · The Summit Admissions Test next*, instead of calling an active rescue attempt a briefing. Leave detention/spa route labels for the separately agreed Ending B/C reviews.
+- **Gate:** new focused regression assertions, GitHub CI, real Cloudflare preview and owner desktop/mobile approval before merging. No new art or recorded/spoken dialogue; no alterations to puzzle, save data or navigation.
+- **Next:** after G3A/B acceptance, G3C admissions pictographic answer tiles and G3D throne-room scale/grounding review.
+
+## COMPLETED — GAME-SP4.1G1C Chapter 2 handoff QA (19 October 2026)
+
+- PR #69 merged to `main` at `18491bc0097f43e8dddc7ddf2d380c1051afea37`. G1A dead-battery phone and G1B approved England postcard/loading remain unchanged.
+- Automated QA: all three genuine route decisions, delivered partial message, powered-off phone, Back in England narration, David/Paul alarm, Save/Resume at three checkpoints, pause/manual Next, stale MP3, missing narrator fallback, Sound Off, contextual Skip, and responsive/reduced-motion CSS contracts. **203/203 GitHub Actions tests passed**, Cloudflare preview deployed.
+- Manual desktop/mobile acceptance was listed in PR #69 but not explicitly confirmed; retain this as a V1 whole-game visual QA task rather than incorrectly claiming hands-on verification.
 
 ## GAME-SP4 — Remaining narration merged on latest main (19 October 2026)
 
