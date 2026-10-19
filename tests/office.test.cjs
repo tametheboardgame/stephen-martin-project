@@ -2715,7 +2715,7 @@ test("Back in England has ten unique whitelisted voice IDs and no spoken travel 
   assert.equal(new Set(ids).size,10);
   assert.ok(alarm.montage.every(card=>card.id.startsWith("rescue.travel.")));
   assert.ok(read("scripts/build.mjs").includes('alarmIds.forEach(id => permitted.add(id + ".mp3"))'));
-  assert.ok(read("scripts/build.mjs").includes('permitted.size !== 168'),"Original ten alarm IDs remain included in expanded voice whitelist");
+  assert.ok(read("scripts/build.mjs").includes('permitted.size !== 170'),"Original ten alarm IDs remain included in expanded voice whitelist");
   assert.ok(fs.existsSync(path.join(root,"docs/RESCUE-ALARM-VOICE-IMPORT.md")));
 });
 
@@ -2832,7 +2832,7 @@ test("Visitor Information 22 voice IDs match screenplay and automatic file white
   assert.ok(ids.every(id=>/^rescue\.hub\.[a-z0-9.]+$/.test(id)));
   assert.equal(h.correct[4].id,"rescue.hub.correct.005");
   assert.ok(read("scripts/build.mjs").includes("hubVoiceIds.forEach(id => permitted.add(id +"));
-  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 168"));
+  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 170"));
   assert.ok(fs.existsSync(path.join(root,"docs/VISITOR-INFORMATION-VOICE-IMPORT.md")));
 });
 
@@ -4457,7 +4457,7 @@ test("Summit audio has exactly 44 unique approved IDs with unchanged comic dialo
   assert.equal(summit.ending[13].speaker,"Narrator");
   assert.equal(summit.ending[13].id,"summit.ending.014");
   assert.ok(read("scripts/build.mjs").includes("summitIds.forEach(id => permitted.add"));
-  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 168"),"44 Summit voices plus 12 reserved narrator clips are whitelisted");
+  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 170"),"44 Summit voices plus 12 reserved narrator clips are whitelisted");
   assert.ok(fs.existsSync(path.join(root,"docs/SUMMIT-VOICE-IMPORT.md")));
 });
 
