@@ -1,5 +1,14 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G2A Chapter 3 alarm office registration (19 October 2026)
+
+- **G0B completed:** PR #63 merged into `main` as `31eb2d2c23e44b8aca3d06815f1a8a56e21c9c8d` after owner approval of both song panels and accelerated pessimistic scrolling.
+- **G2A review branch:** `agent/game-sp41g2a-alarm-office-desk`, not merged. Root cause found in the actual approved assets: the office background already contains the complete wooden desk, but Chapter 3 separately drew a duplicate desk from `office-foreground-01-v01.webp`, creating two misaligned tabletop edges.
+- Removed the redundant foreground <img> from **Chapter 3 only**, leaving the background, all Chapter 1 and menu foreground art, and every cast expression untouched. Regrounded David and Paul at a shared `bottom:24%` stage anchor and `height:64%` for the 1672×941 office painting, with left/right 16% and responsive tablet/phone adjustments. This puts the cutout hands onto the baked-in desk rather than behind a masking foreground.
+- Retains G4.1B-approved per-expression David optical calibration, all 10 authored alarm lines, phone message, pause/autoplay/save/resume, travel navigation, and shared speaker highlight. Added targeted regression coverage.
+- **Human gate:** visually approve desk continuity, two-person scaling and hand contact at desktop and mobile, including phone bubble and external-name dialogue. Keep draft PR unmerged until accepted; next G1A phone battery storyboard.
+
+
 ## GAME-SP4.1G0B — Song modal clean-up (19 October 2026, active review)
 
 - **19 October owner refinement:** after the first successful G0B preview, the pessimistic lyrics need faster progression because the recording has an instrumental ending. The pessimistic track now uses an accelerated 0.72-power scroll curve against live MP3 progress, reaches the final lyric position at `duration - 2 seconds`, and holds there for the outro. Optimistic timing is deliberately unchanged. Audio length is read dynamically, so no fixed track duration is assumed; responsive layout, focus/manual reading, and song controls remain unchanged. Updated regression tests cover opening/middle/final two-second boundary and the lyric-reading focus override.
