@@ -235,9 +235,13 @@
     if (viewport.hidden || document.activeElement === viewport) return;
     const space = Math.max(0,Number(viewport.scrollHeight) - Number(viewport.clientHeight));
     if (!Number.isFinite(space)) return;
-    // Leave the opening verse in view before scrolling, then reach the last
-    // lyric before the track ends. Bounds automatically adapt to larger panels.
-    const progress = Math.min(1,Math.max(0,(time/duration - 0.06)/0.88));
+    // The pessimistic version finishes its sung lyrics before an instrumental
+    // tail. Progress faster through its verses and reach the final lyric position
+    // a full two seconds before the MP3 ends, then hold it in view. Preserve the
+    // calmer, opening-verse hold on the optimistic version.
+    const progress = songKind === "pessimistic"
+      ? Math.pow(Math.min(1,Math.max(0,time/Math.max(1,duration-2))),0.72)
+      : Math.min(1,Math.max(0,(time/duration-0.06)/0.88));
     viewport.scrollTop = Math.round(space*progress);
   }
   function offerPessimisticSong() {
