@@ -2225,13 +2225,13 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen .china-final-phone-screen #chinaPhoneMessage {font-size:12px;}
   #holidayScreen .china-final-phone-screen #chinaPhoneStatus {font-size:9px;padding-top:5px;}
   #holidayScreen .china-final-power-notice {
-    top:auto;bottom:25%;left:5%;right:5%;width:auto;
+    top:auto;bottom:33%;left:5%;right:5%;width:auto;
     padding:7px 10px;gap:4px;border-width:2px;
   }
   #holidayScreen .china-final-power-notice strong {font-size:15px;}
   #holidayScreen .china-final-power-notice span {font-size:11px;}
   #holidayScreen .china-final-reaction {
-    left:5%;right:5%;bottom:8%;width:auto;
+    left:5%;right:5%;bottom:17%;width:auto;
     padding:7px 10px;
   }
   #holidayScreen .china-final-reaction p {font-size:18px;}
@@ -4815,9 +4815,9 @@ body:has(#menuScreen:not([hidden])) main {
  * shutdown/reaction captions rather than allowing all three to overlap. */
 @media (min-width:451px) and (max-width:580px) {
   #holidayScreen .china-final-phone {top:5%;left:50%;height:70%;max-width:88%;transform:translateX(-50%);margin:0;}
-  #holidayScreen .china-final-phone[data-power="off"] {top:5%;left:50%;height:48%;}
-  #holidayScreen .china-final-power-notice {top:auto;bottom:25%;left:5%;right:5%;width:auto;padding:8px 10px;gap:5px;}
-  #holidayScreen .china-final-reaction {bottom:7%;left:5%;right:5%;width:auto;padding:7px 10px;}
+  #holidayScreen .china-final-phone[data-power="off"] {top:5%;left:50%;height:44%;}
+  #holidayScreen .china-final-power-notice {top:auto;bottom:39%;left:5%;right:5%;width:auto;padding:8px 10px;gap:5px;}
+  #holidayScreen .china-final-reaction {bottom:17%;left:5%;right:5%;width:auto;padding:7px 10px;}
 }
 @media (prefers-reduced-motion:reduce) {
   #holidayScreen .china-final-phone,
