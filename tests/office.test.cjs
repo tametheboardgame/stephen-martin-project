@@ -4696,7 +4696,7 @@ test("Narration audit finds exactly 14 remaining narrator IDs with distinct appr
   const src=read("scripts/build.mjs");
   assert.ok(src.includes('closingNarrators.forEach(({id})=>permitted.add(id+".mp3"))'));
   assert.ok(src.includes("permitted.size !== 215"));
-  assert.ok(src.includes('"/170 maximum (112 established voices + 44 Summit + 12 transition narrations + 2 ending narrators)."'));
+  assert.ok(src.includes('"/215 maximum (170 existing voices + 45 Ending B recordings)."'));
   assert.ok(fs.existsSync(path.join(root,"docs/REMAINING-NARRATION-VOICE-IMPORT.md")));
 });
 
