@@ -1905,7 +1905,7 @@ test("SP4.0B Summit briefing uses lower dialogue and highlights the correct spea
     p.el("routeIntroNextButton").click();
   }
   assert.equal(p.el("routeIntroDialogue").hidden,true);
-  assert.match(p.el("routeIntroStatus").textContent,/Briefing complete/);
+  assert.match(p.el("routeIntroStatus").textContent,/Approach complete · The Summit Admissions Test next/);
   p.el("routeIntroNextButton").click();
   assert.equal(saved(p).holidayPhase,"rescue-minigame");
   assert.equal(p.el("summitAdmissions").hidden,false);
@@ -4939,4 +4939,61 @@ test("GAME-SP4.1G1C England/phone layout retains distinct title, captions and re
   assert.match(css,/@media \(max-width:450px\) \{[\s\S]*?china-final-england h2/);
   assert.match(css,/@media \(prefers-reduced-motion:reduce\) \{[\s\S]*?china-final-phone-screen \{transition:none !important;\}/);
   assert.doesNotMatch(engine,/Message interrupted — not delivered/);
+});
+
+test("GAME-SP4.1G3A Summit pair stands left of the wall at desktop, tablet and phone widths",()=>{
+  const start=css.indexOf("/* SP4.0B — Owner-approved Summit entrance cast");
+  const end=css.indexOf("/* GAME-SP4.0C",start);
+  assert.ok(start>=0 && end>start,"Summit style section is present");
+  const summitCss=css.slice(start,end);
+  const desktop=summitCss.split("@media (max-width:800px)")[0];
+  const tablet=summitCss.split("@media (max-width:800px)")[1].split("@media (max-width:450px)")[0];
+  const phone=summitCss.split("@media (max-width:450px)")[1];
+  const rule=(part,actor)=>{
+    const marker='.summit-entrance-'+actor+' {';
+    const i=part.indexOf(marker);
+    assert.ok(i>=0,actor+" CSS present");
+    return part.slice(i+marker.length,part.indexOf("}",i));
+  };
+  const percent=(block,name)=>{
+    const match=block.match(new RegExp(name+":(-?\\d+)%"));
+    assert.ok(match,name+" must have a percent position");
+    return Number(match[1]);
+  };
+  for(const [name,part,paulRight,davidRight,bottom] of [
+    ["desktop",desktop,40,22,20],["tablet",tablet,39,20,27],["phone",phone,39,8,31]
+  ]){
+    const paul=rule(part,"paul"),david=rule(part,"david"),keeper=rule(part,"gatekeeper");
+    assert.equal(percent(paul,"right"),paulRight,name+" Paul moves left");
+    assert.equal(percent(david,"right"),davidRight,name+" David moves left");
+    assert.equal(percent(paul,"bottom"),bottom,name+" Paul stays grounded");
+    assert.equal(percent(david,"bottom"),bottom,name+" David shares groundline");
+    assert.ok(percent(paul,"right")>percent(david,"right"),"Paul remains to David's left");
+    assert.ok(percent(keeper,"left")>=0,"Gatekeeper stays on left side");
+  }
+  assert.match(summitCss,/transform:scaleX\\(-1\\)/,"Approved sprite mirroring remains");
+  assert.doesNotMatch(summitCss,/summit-throne/,"Do not restage throne-room actors");
+});
+
+test("GAME-SP4.1G3B Summit status reflects a rescue attempt, leaving B/C copy untouched",()=>{
+  const p=toHotelInvestigation("cult");
+  completeHotelIntro(p);
+  p.el("hotelCultButton").click();
+  for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
+  const intro=story().SMP_RESCUE_FRAMEWORK.routes.cult.intro;
+  assert.equal(p.el("routeIntroPhaseLabel").textContent,"Investigation complete · Summit approach");
+  assert.equal(p.el("routeIntroStatus").textContent,"Rescue attempt · Summit entrance · 1 of "+intro.length);
+  for(let i=0;i<intro.length;i++)p.el("routeIntroNextButton").click();
+  assert.equal(p.el("routeIntroStatus").textContent,"Approach complete · The Summit Admissions Test next.");
+  p.el("routeIntroNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  assert.equal(p.el("summitAdmissions").hidden,false);
+  for(const route of ["detention","reassemble"]){
+    const q=toHotelInvestigation(route);
+    completeHotelIntro(q);
+    q.el("hotel"+route[0].toUpperCase()+route.slice(1)+"Button").click();
+    for(let i=0;i<6;i++)q.el("hotelFinishButton").click();
+    assert.equal(q.el("routeIntroPhaseLabel").textContent,"Investigation complete · Rescue briefing");
+    assert.match(q.el("routeIntroStatus").textContent,/^Rescue briefing · 1 of /);
+  }
 });
