@@ -4397,11 +4397,27 @@ test("GAME-SP4.1G1A narrow stages use centred hero and shrink upwards for stacke
   const portrait=css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")),css.indexOf("/* GAME-SP2.3C",css.indexOf(".china-final-england small")));
   assert.match(portrait,/china-final-phone \{top:5%;left:50%;height:70%;max-width:90%;transform:translateX\(-50%\);margin:0;\}/);
   assert.match(portrait,/china-final-phone\[data-power="off"\] \{top:5%;left:50%;height:46%;\}/);
-  assert.match(portrait,/china-final-power-notice \{[\s\S]*?bottom:25%;/);
-  assert.match(portrait,/china-final-reaction \{[\s\S]*?bottom:8%;/);
+  assert.match(portrait,/china-final-power-notice \{[\s\S]*?bottom:33%;/);
+  assert.match(portrait,/china-final-reaction \{[\s\S]*?bottom:17%;/);
   const narrow=css.slice(css.indexOf("@media (min-width:451px) and (max-width:580px) {"));
   assert.match(narrow,/china-final-phone \{top:5%;left:50%;height:70%;max-width:88%;transform:translateX\(-50%\);margin:0;\}/);
-  assert.match(narrow,/china-final-phone\[data-power="off"\] \{top:5%;left:50%;height:48%;\}/);
-  assert.match(narrow,/china-final-power-notice \{top:auto;bottom:25%;/);
+  assert.match(narrow,/china-final-phone\[data-power="off"\] \{top:5%;left:50%;height:44%;\}/);
+  assert.match(narrow,/china-final-power-notice \{top:auto;bottom:39%;/);
+  assert.match(narrow,/china-final-reaction \{bottom:17%;/);
   assert.doesNotMatch(engine,/Message interrupted — not delivered/);
+});
+
+
+test("GAME-SP4.1G1A narrow phone layout keeps shutdown/reaction blocks above controls",()=>{
+  // The two supported portrait breakpoints reserve a 17% bottom strip for
+  // controls, and keep the flat-battery announcement higher up.
+  for(const [width,offHeight,noticeBottom] of [[390,46,33],[580,44,39]]){
+    const source=width<451
+      ? css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")),css.indexOf("/* GAME-SP2.3C",css.indexOf(".china-final-england small")))
+      : css.slice(css.indexOf("@media (min-width:451px) and (max-width:580px) {"));
+    assert.match(source,new RegExp('phone\\[data-power="off"\\] \\{top:5%;left:50%;height:'+offHeight+'%;\\}'));
+    assert.match(source,new RegExp('power-notice \\{[^}]*bottom:'+noticeBottom+'%;'));
+    assert.match(source,/china-final-reaction \{[^}]*bottom:17%;/);
+    assert.ok(5+offHeight<100-noticeBottom-9,"Off phone leaves a gap above the warning");
+  }
 });
