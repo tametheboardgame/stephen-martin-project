@@ -1,5 +1,14 @@
 # Project status
 
+## GAME-SP4 — Remaining narrator recordings (19 October 2026)
+
+- Audited all current narrator-speaker beats: the office opening (`intro.exterior.mp3`) and the Summit final joke (`summit.ending.014.mp3`) are recorded. The remaining set consists of **12 route-aware transition narrations and 2 B/C ending narrator stingers** (14 MP3s).
+- The 12 transition cues already have live subtitles, stable MP3 names, the shared natural-duration voice player, route-specific selection, mute/skip/pause/fallback and strict static-build allow-list. No rewrite or re-recording of previous character dialogue required.
+- Added stable IDs `detention.ending.014` and `reassemble.ending.015` to existing narrator closing lines, without touching other Endings B/C dialogue or puzzle mechanics. Audio engine now optionally plays these two final beats only; their end cards stay silent.
+- Strict MP3 allow-list supports **170 total** = 156 previously recorded voices + 12 optional transition narration clips + 2 optional ending narrator clips. ElevenLabs production sheet: `docs/REMAINING-NARRATION-VOICE-IMPORT.md`.
+- **Owner gate:** Upload 14 files to branch `agent/game-sp4-remaining-narration`, listen to all transitions and both ending stingers on the Cloudflare preview, then explicitly approve the draft PR for merging.
+
+
 ## GAME-SP4 Summit voice integration against latest main (19 October 2026)
 
 - Integrating approved PR #45 against the much newer `main` line (281 commits advanced since the Summit audio branch). **Do not copy its older game controller wholesale.** This integration starts from the newer main source, artwork, full asset loader, transitions, contextual skips and updated office/character UI, then adds precisely the Summit audio ID and playback additions.
