@@ -4292,7 +4292,7 @@ test("GAME-SP4.1G1A new approved phone artwork is packaged and old intro proof i
   assert.match(read("scripts/build.mjs"),/approvedFinalPhoneShell = "public\/assets\/generated\/game\/stephen-phone-shell-g1a-v01\.webp"/);
   const htmlPhone=html.slice(html.indexOf('id="chinaFinalScene"'),html.indexOf('id="rescueAlarmScene"'));
   assert.match(htmlPhone,/class="china-final-phone-shell"[^>]*stephen-phone-shell-g1a-v01\.webp/);
-  assert.doesNotMatch(htmlPhone,/cutaway-phone|phone-notch|phone-screen|office-phone-group-chat-cutaway|office-phone-group-muted-cutaway/);
+  assert.doesNotMatch(htmlPhone,/(?:class="|class="[^"]* )cutaway-phone\b|(?:class="|class="[^"]* )phone-notch\b|(?:class="|class="[^"]* )phone-screen\b|office-phone-group-chat-cutaway|office-phone-group-muted-cutaway/);
   assert.match(htmlPhone,/class="china-final-phone-screen"/);
   assert.match(htmlPhone,/id="chinaPhonePowerNotice"[^>]*aria-live="polite"/);
   assert.match(css,/#holidayScreen \.china-final-phone\[data-power="off"\] \.china-final-phone-screen \{\s*visibility: hidden;/);
