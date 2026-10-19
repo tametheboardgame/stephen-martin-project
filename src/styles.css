@@ -2024,23 +2024,161 @@ body:has(#menuScreen:not([hidden])) main {
   background: linear-gradient(rgba(5,15,29,.75),rgba(3,13,24,.9)),
     url("../public/assets/generated/locations/china-night-market-background-v01.webp") center/cover;
   color: #f5f0e3;
-  display: grid;
-  place-items: center;
-  padding: 5% 8%;
+  /* The original grid auto-track plus percentage-sized handset allowed
+   * intrinsic image height to push the phone below the playable stage.
+   * Contain the stage and anchor the handset independently of grid tracks. */
+  box-sizing: border-box;
+  display: block;
+  overflow: hidden;
+  padding: 0;
 }
+/* GAME-SP4.1G1A: owner-approved new handset art. The three canonical
+ * fragments, 1% battery and power-off state are live HTML, not pixels;
+ * no abandoned Chapter 1 phone component or photo cutaway is reused. */
 #holidayScreen .china-final-phone {
-  width: min(82%,640px);
-  border: 3px solid #6098b9;
-  border-radius: 17px;
-  background: #102b42;
-  box-shadow: 8px 10px 0 rgba(0,0,0,.35);
-  padding: clamp(15px,2.4vw,30px);
+  position: absolute;
+  z-index: 2;
+  /* G1A: the delivered-message beat is a centred hero composition.
+   * The same handset becomes a smaller left-column actor when power fails. */
+  top: 14%;
+  left: 50%;
+  height: min(72%, 680px);
+  width: auto;
+  aspect-ratio: 1088 / 1600;
+  max-width: 76%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  transform: translateX(-50%);
+  transition: left 220ms ease, top 220ms ease, height 220ms ease;
+  filter: drop-shadow(12px 14px 11px rgba(0,0,0,.65));
 }
-#holidayScreen .china-final-phone-top {display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#ffd56e;font-size:clamp(10px,1.2vw,14px);}
-#holidayScreen .china-final-phone p {font-size:clamp(19px,2.6vw,35px);font-weight:900;line-height:1.3;margin:18px 0 22px;color:white;}
-#holidayScreen .china-final-phone > strong {color:#e9b1a7;font-size:clamp(12px,1.2vw,16px);}
+#holidayScreen .china-final-phone[data-power="off"] {
+  /* Two-column reveal: the dark handset slides to the left while the
+   * external battery-flat notice and Stephen reaction appear on the right. */
+  left: 34%;
+  top: 15%;
+  height: min(62%, 580px);
+}
+#holidayScreen .china-final-phone-shell {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+#holidayScreen .china-final-phone-screen {
+  position: absolute;
+  top: 11%;
+  left: 20%;
+  width: 60%;
+  height: 78%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(7px, 1vw, 15px);
+  box-sizing: border-box;
+  padding: clamp(7px, .9vw, 12px);
+  overflow: hidden;
+  border-radius: 13px 13px 19px 19px;
+  background: linear-gradient(155deg, rgba(22,70,99,.97),rgba(8,28,49,.98));
+  color: #f9fbff;
+  box-shadow: inset 0 0 0 1px rgba(201,230,245,.26);
+}
+#holidayScreen .china-final-phone-top {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: clamp(6px,.65vw,10px);
+  flex: 0 0 auto;
+}
+#holidayScreen .china-final-phone-top > strong {
+  font: 900 clamp(10px,.95vw,14px)/1.15 "Trebuchet MS",sans-serif;
+  letter-spacing: .035em;
+  color: #c9edfa;
+}
+#holidayScreen .china-final-low-battery {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 7px;
+  border: 2px solid #ff6169;
+  border-radius: 6px;
+  background: #3d1522;
+  color: #fff;
+  font: 900 clamp(10px,1vw,15px)/1.1 "Trebuchet MS",sans-serif;
+}
+#holidayScreen .china-final-battery-icon {
+  display: inline-block;
+  position: relative;
+  flex: 0 0 22px;
+  width: 22px;
+  height: 11px;
+  border: 2px solid #ff777e;
+  border-radius: 2px;
+}
+#holidayScreen .china-final-battery-icon::before {
+  content: "";
+  position: absolute;
+  inset: 2px auto 2px 2px;
+  width: 3px;
+  background: #ff646b;
+}
+#holidayScreen .china-final-battery-icon::after {
+  content: "";
+  position: absolute;
+  right: -5px;
+  top: 2px;
+  height: 5px;
+  width: 2px;
+  background: #ff777e;
+}
+#holidayScreen .china-final-phone-screen #chinaPhoneMessage {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  overflow-wrap: anywhere;
+  margin: 0;
+  color: #fff7dc;
+  font: 850 clamp(13px,1.45vw,21px)/1.23 "Trebuchet MS",sans-serif;
+  min-height: 0;
+}
+#holidayScreen .china-final-phone-screen #chinaPhoneStatus {
+  display: block;
+  flex: 0 0 auto;
+  border-top: 1px solid #5c93a9;
+  padding-top: 8px;
+  color: #b6f7c8;
+  font: 850 clamp(10px,.95vw,14px)/1.25 "Trebuchet MS",sans-serif;
+}
+#holidayScreen .china-final-phone[data-power="off"] .china-final-phone-screen {
+  visibility: hidden;
+}
+#holidayScreen #chinaPhonePowerNotice[hidden] { display: none !important; }
+#holidayScreen .china-final-power-notice {
+  position: absolute;
+  z-index: 4;
+  top: 22%;
+  right: 6%;
+  width: min(34%,440px);
+  display: grid;
+  gap: 11px;
+  padding: 19px;
+  border: 3px solid #fa8f93;
+  border-radius: 12px;
+  color: #fff4ee;
+  background: rgba(37,9,26,.94);
+  box-shadow: 7px 8px 0 rgba(0,0,0,.35);
+  text-align: center;
+}
+#holidayScreen .china-final-power-notice strong {
+  color: #ffbec1;
+  font: 900 clamp(15px,1.65vw,25px)/1.15 Impact,"Arial Black",sans-serif;
+  letter-spacing: .055em;
+}
+#holidayScreen .china-final-power-notice span {
+  font: 750 clamp(11px,1.1vw,16px)/1.3 "Trebuchet MS",sans-serif;
+}
 #holidayScreen .china-final-reaction {
-  position:absolute;bottom:19%;left:20%;right:20%;
+  position:absolute;z-index:5;bottom:19%;right:6%;left:auto;width:min(34%,440px);
   padding:12px 20px;border:3px solid #347ea0;border-radius:10px;
   background:#fff3d6;color:#17354b;text-align:center;
 }
@@ -2067,15 +2205,36 @@ body:has(#menuScreen:not([hidden])) main {
 }
 @media (max-width:800px) {
   #holidayScreen .market-scene .wall-stage {aspect-ratio:4/3;}
+  #holidayScreen .china-final-stage {aspect-ratio:4/3;}
   #holidayScreen .market-spa-sign {top:20%;left:41%;width:27%;padding:6px;}
-  #holidayScreen .china-final-phone {width:100%;}
+  #holidayScreen .china-final-phone {height:min(72%,520px);max-width:65%;}
+  #holidayScreen .china-final-phone[data-power="off"] {top:14%;left:30%;height:min(60%,450px);}
   #holidayScreen .market-fallback-options {grid-template-columns:1fr;}
 }
 @media (max-width:450px) {
   #holidayScreen .market-scene .wall-stage {aspect-ratio:3/4;}
   #holidayScreen .china-final-stage {aspect-ratio:3/4;}
   #holidayScreen .market-spa-sign {top:24%;left:43%;width:37%;}
-  #holidayScreen .china-final-reaction {left:5%;right:5%;bottom:18%;}
+  /* Portrait: full-screen message is centred and large, while the powered-
+   * off phone retreats upwards to leave space for stacked notices below. */
+  #holidayScreen .china-final-phone {top:5%;left:50%;height:70%;max-width:90%;transform:translateX(-50%);margin:0;}
+  #holidayScreen .china-final-phone[data-power="off"] {top:5%;left:50%;height:46%;}
+  #holidayScreen .china-final-phone-screen {padding:6px;gap:6px;}
+  #holidayScreen .china-final-phone-top > strong {font-size:10px;}
+  #holidayScreen .china-final-low-battery {padding:3px 4px;font-size:10px;gap:5px;}
+  #holidayScreen .china-final-phone-screen #chinaPhoneMessage {font-size:12px;}
+  #holidayScreen .china-final-phone-screen #chinaPhoneStatus {font-size:9px;padding-top:5px;}
+  #holidayScreen .china-final-power-notice {
+    top:auto;bottom:33%;left:5%;right:5%;width:auto;
+    padding:7px 10px;gap:4px;border-width:2px;
+  }
+  #holidayScreen .china-final-power-notice strong {font-size:15px;}
+  #holidayScreen .china-final-power-notice span {font-size:11px;}
+  #holidayScreen .china-final-reaction {
+    left:5%;right:5%;bottom:17%;width:auto;
+    padding:7px 10px;
+  }
+  #holidayScreen .china-final-reaction p {font-size:18px;}
 }
 
 
@@ -4650,4 +4809,17 @@ body:has(#menuScreen:not([hidden])) main {
     margin:6px auto 10px;
     padding:6px 8px;
   }
+}
+
+/* G1A portrait and small tablets: keep the phone above the two external
+ * shutdown/reaction captions rather than allowing all three to overlap. */
+@media (min-width:451px) and (max-width:580px) {
+  #holidayScreen .china-final-phone {top:5%;left:50%;height:70%;max-width:88%;transform:translateX(-50%);margin:0;}
+  #holidayScreen .china-final-phone[data-power="off"] {top:5%;left:50%;height:44%;}
+  #holidayScreen .china-final-power-notice {top:auto;bottom:39%;left:5%;right:5%;width:auto;padding:8px 10px;gap:5px;}
+  #holidayScreen .china-final-reaction {bottom:17%;left:5%;right:5%;width:auto;padding:7px 10px;}
+}
+@media (prefers-reduced-motion:reduce) {
+  #holidayScreen .china-final-phone,
+  #holidayScreen .china-final-phone-screen {transition:none !important;}
 }

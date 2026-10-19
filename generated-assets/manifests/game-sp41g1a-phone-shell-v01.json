@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1ybwzoz01UyHzV0-QmqFue1Hsmf0yfe2F"
+  },
+  "expectedSourceName": "stephen-phone-shell-g1a-v01.png",
+  "destination": "public/assets/generated/game/stephen-phone-shell-g1a-v01.webp",
+  "transform": {
+    "maxWidth": 1088,
+    "maxHeight": 1600,
+    "quality": 88
+  },
+  "revision": 1
+}

@@ -277,11 +277,21 @@
           </div>
         </div>
         <div id="chinaFinalScene" class="china-final-scene" hidden>
-          <div class="china-final-stage" aria-label="Stephen's phone runs out of charge before his last message is complete">
-            <div id="chinaFinalPhone" class="china-final-phone">
-              <div class="china-final-phone-top"><strong>STEPHEN RESCUE GROUP</strong><span id="chinaBatteryLabel">1% battery</span></div>
-              <p id="chinaPhoneMessage" aria-live="polite"></p>
-              <strong id="chinaPhoneStatus">Sending…</strong>
+          <div class="china-final-stage" aria-label="Stephen's partial message reaches the rescue group before his phone runs out of battery">
+            <div id="chinaFinalPhone" class="china-final-phone" data-power="low">
+              <img class="china-final-phone-shell" src="./public/assets/generated/game/stephen-phone-shell-g1a-v01.webp" width="1088" height="1600" alt="" aria-hidden="true" loading="lazy">
+              <div class="china-final-phone-screen">
+                <div class="china-final-phone-top">
+                  <strong>STEPHEN RESCUE GROUP</strong>
+                  <span class="china-final-low-battery"><span class="china-final-battery-icon" aria-hidden="true"></span><span id="chinaBatteryLabel">1% · LOW BATTERY</span></span>
+                </div>
+                <p id="chinaPhoneMessage" aria-live="polite"></p>
+                <strong id="chinaPhoneStatus" role="status">Partial message delivered</strong>
+              </div>
+            </div>
+            <div id="chinaPhonePowerNotice" class="china-final-power-notice" aria-live="polite" hidden>
+              <strong>0% · PHONE SWITCHED OFF</strong>
+              <span>The incomplete message reached the rescue group.</span>
             </div>
             <div id="chinaFinalReaction" class="china-final-reaction" hidden><strong>STEPHEN</strong><p>Oh, for fuck's sake.</p></div>
             <div id="chinaFinalEngland" class="china-final-england" hidden><h2>BACK IN ENGLAND…</h2></div>

@@ -585,9 +585,9 @@ test("Accepting Summit commits cult handoff, bypasses Palace and Market, then us
   assert.equal(p.el("routeHandoffArt").dataset.route,"cult");
   p.el("handoffContinueButton").click();
   assert.match(p.el("chinaPhoneMessage").textContent,/asked me to be their/);
-  assert.equal(p.el("chinaBatteryLabel").textContent,"1% battery");
+  assert.equal(p.el("chinaBatteryLabel").textContent,"1% · LOW BATTERY");
   p.el("chinaFinalNextButton").click();
-  assert.equal(p.el("chinaBatteryLabel").textContent,"0% · Battery depleted");
+  assert.equal(p.el("chinaBatteryLabel").textContent,"0% · Battery flat");
   assert.equal(p.el("chinaFinalReaction").hidden,false);
   p.el("chinaFinalNextButton").click();
   assert.equal(p.el("chinaFinalEngland").hidden,false);
@@ -4273,5 +4273,151 @@ test("GAME-SP4.1G2A all rescue alarm dialogue, phone cues and travel remain inta
     assert.equal(p.el("rescueAlarmTravelButton").hidden,false);
     p.el("rescueAlarmTravelButton").click();
     assert.equal(saved(p).holidayPhase,"rescue-travel");
+  }
+});
+
+
+test("GAME-SP4.1G1A new approved phone artwork is packaged and old intro proof is unused",()=>{
+  const dest="public/assets/generated/game/stephen-phone-shell-g1a-v01.webp";
+  const manifest=JSON.parse(read("generated-assets/manifests/game-sp41g1a-phone-shell-v01.json"));
+  assert.equal(manifest.schemaVersion,1);
+  assert.equal(manifest.source.provider,"google-drive");
+  assert.equal(manifest.source.fileId,"1ybwzoz01UyHzV0-QmqFue1Hsmf0yfe2F");
+  assert.equal(manifest.expectedSourceName,"stephen-phone-shell-g1a-v01.png");
+  assert.equal(manifest.destination,dest);
+  const bytes=fs.readFileSync(path.join(root,dest));
+  assert.ok(bytes.length>20000&&bytes.length<2*1024*1024);
+  assert.equal(bytes.toString("ascii",0,4),"RIFF");
+  assert.equal(bytes.toString("ascii",8,12),"WEBP");
+  assert.match(read("scripts/build.mjs"),/approvedFinalPhoneShell = "public\/assets\/generated\/game\/stephen-phone-shell-g1a-v01\.webp"/);
+  const htmlPhone=html.slice(html.indexOf('id="chinaFinalScene"'),html.indexOf('id="rescueAlarmScene"'));
+  assert.match(htmlPhone,/class="china-final-phone-shell"[^>]*stephen-phone-shell-g1a-v01\.webp/);
+  assert.doesNotMatch(htmlPhone,/(?:class="|class="[^"]* )cutaway-phone\b|(?:class="|class="[^"]* )phone-notch\b|(?:class="|class="[^"]* )phone-screen\b|office-phone-group-chat-cutaway|office-phone-group-muted-cutaway/);
+  assert.match(htmlPhone,/class="china-final-phone-screen"/);
+  assert.match(htmlPhone,/id="chinaPhonePowerNotice"[^>]*aria-live="polite"/);
+  assert.match(css,/#holidayScreen \.china-final-phone\[data-power="off"\] \.china-final-phone-screen \{\s*visibility: hidden;/);
+  assert.doesNotMatch(engine,/Message interrupted — not delivered|MESSAGE NOT SENT/);
+  assert.match(css,/@media \(max-width:450px\)/);
+  assert.match(css,/prefers-reduced-motion:reduce/);
+});
+
+test("GAME-SP4.1G1A each canonical partial message is received before the phone switches off",()=>{
+  for(const route of ["cult","detention","reassemble"]){
+    let p;
+    if(route==="cult"){ p=toWallChoice();p.el("wallAcceptButton").click();p.el("wallGoIncidentButton").click(); }
+    else if(route==="detention"){ p=toPalaceChoice();p.el("palaceAcceptButton").click();for(let i=0;i<5;i++)p.el("palaceNextButton").click();p.el("palaceGoIncidentButton").click(); }
+    else { p=toMarket();finishMarket(p);p.el("marketGoIncidentButton").click(); }
+    assert.equal(saved(p).route,route);
+    p.el("handoffContinueButton").click();
+    assert.equal(saved(p).holidayPhase,"final-message");
+    assert.equal(saved(p).finalStep,0);
+    const message=story().SMP_CHINA_FINAL.messageByRoute[route];
+    assert.equal(p.el("chinaPhoneMessage").textContent,message);
+    assert.equal(p.el("chinaFinalPhone").dataset.power,"low");
+    assert.equal(p.el("chinaBatteryLabel").textContent,"1% · LOW BATTERY");
+    assert.equal(p.el("chinaPhoneStatus").textContent,"Partial message delivered");
+    assert.equal(p.el("chinaPhonePowerNotice").hidden,true);
+    p.el("chinaFinalNextButton").click();
+    assert.equal(saved(p).finalStep,1);
+    assert.equal(p.el("chinaFinalPhone").dataset.power,"off");
+    assert.equal(p.el("chinaPhonePowerNotice").hidden,false);
+    assert.equal(p.el("chinaPhoneStatus").textContent,"Last partial message delivered · phone switched off");
+    assert.equal(p.el("chinaBatteryLabel").textContent,"0% · Battery flat");
+    assert.equal(p.el("chinaPhoneMessage").textContent,message,"Delivered fragment stays in data");
+    assert.equal(p.el("chinaFinalReaction").hidden,false);
+    assert.match(html,/Oh, for fuck's sake\./,"Stephen's original spoken reaction is untouched");
+    p.el("homeButton").click();p.el("resumeButton").click();
+    assert.equal(p.el("chinaFinalPhone").dataset.power,"off","Resume must not light the dead screen");
+    assert.equal(saved(p).finalStep,1);
+    p.el("chinaFinalNextButton").click();
+    assert.equal(saved(p).finalStep,2);
+    assert.equal(p.el("chinaFinalPhone").hidden,true);
+    assert.equal(p.el("chinaPhonePowerNotice").hidden,true);
+    p.el("chinaFinalNextButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-alarm");
+    for(let i=0;i<6;i++)p.el("rescueAlarmNextButton").click();
+    assert.equal(p.el("rescueAlarmPhoneText").textContent,message,"David and Paul received the partial message");
+  }
+});
+
+
+test("GAME-SP4.1G1A phone stays independently anchored above the visible action bar",()=>{
+  const stage=css.slice(css.indexOf("#holidayScreen .china-final-stage {"),css.indexOf("/* GAME-SP4.1G1A: owner-approved new handset art."));
+  assert.match(stage,/box-sizing: border-box;/);
+  assert.match(stage,/display: block;/);
+  assert.match(stage,/overflow: hidden;/);
+  assert.match(stage,/padding: 0;/);
+  assert.doesNotMatch(stage,/display:\s*grid|place-items:\s*center/);
+  const phone=css.slice(css.indexOf("#holidayScreen .china-final-phone {"),css.indexOf("#holidayScreen .china-final-phone-shell {"));
+  assert.match(phone,/position: absolute;/);
+  assert.match(phone,/top: 14%;/);
+  assert.match(phone,/left: 50%;/);
+  assert.match(phone,/height: min\(72%, 680px\);/);
+  assert.match(phone,/transform: translateX\(-50%\);/);
+  assert.doesNotMatch(phone,/position: relative|height:\s*min\(78%/);
+  const tablet=css.slice(css.indexOf("@media (max-width:800px) {",css.indexOf(".china-final-england small")),css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")));
+  assert.match(tablet,/#holidayScreen \.china-final-stage \{aspect-ratio:4\/3;\}/);
+  const mobile=css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")),css.indexOf("/* GAME-SP2.3C",css.indexOf(".china-final-england small")));
+  assert.match(mobile,/#holidayScreen \.china-final-stage \{aspect-ratio:3\/4;\}/);
+  assert.match(mobile,/#holidayScreen \.china-final-phone \{top:5%;left:50%;height:70%;max-width:90%;transform:translateX\(-50%\);margin:0;\}/);
+  assert.match(css, /@media \(min-width:451px\) and \(max-width:580px\)/);
+  assert.match(css, /china-final-phone \{top:5%;left:50%;height:70%;max-width:88%;transform:translateX\(-50%\);margin:0;\}/);
+  assert.match(css,/#holidayScreen \.china-final-controls \{position:absolute;z-index:8;bottom:0;/);
+  // The stage's final-message state and route-sensitive text are unaffected.
+  assert.match(engine,/\$\("chinaFinalPhone"\)\.dataset\.power = step === 0 \? "low" : "off"/);
+  assert.match(engine,/\$\("chinaPhoneMessage"\)\.textContent = route \? chinaFinal\.messageByRoute\[route\] : ""/);
+});
+
+
+test("GAME-SP4.1G1A two-step cinematography centres the delivered phone, then slides it left",()=>{
+  const main=css.slice(css.indexOf("#holidayScreen .china-final-phone {"),css.indexOf("#holidayScreen .china-final-phone-shell {"));
+  const hero=main.slice(0,main.indexOf('#holidayScreen .china-final-phone[data-power="off"] {'));
+  const dead=main.slice(main.indexOf('#holidayScreen .china-final-phone[data-power="off"] {'));
+  assert.match(hero,/position: absolute;/);
+  assert.match(hero,/top: 14%;/);
+  assert.match(hero,/left: 50%;/,"Received message gets full centre stage");
+  assert.match(hero,/height: min\(72%, 680px\);/);
+  assert.match(hero,/transform: translateX\(-50%\);/);
+  assert.match(hero,/transition: left 220ms ease, top 220ms ease, height 220ms ease;/);
+  assert.match(dead,/left: 34%;/,"Dead phone shifts left to make room for supporting cards");
+  assert.match(dead,/top: 15%;/);
+  assert.match(dead,/height: min\(62%, 580px\);/,"Dead phone shrinks slightly");
+  assert.match(css,/#holidayScreen \.china-final-power-notice \{[\s\S]*?top: 22%;[\s\S]*?right: 6%;/);
+  assert.match(css,/#holidayScreen \.china-final-reaction \{[^}]*right:6%;left:auto;width:min\(34%,440px\)/);
+  // Both composition states remain wholly within the stage, above bottom controls.
+  assert.ok(14+72<=88,"Hero phone leaves at least 12% of stage clear at bottom");
+  assert.ok(15+62<=85,"Off-state phone leaves more room for the reaction");
+  assert.match(css, /@media \(prefers-reduced-motion:reduce\) \{[\s\S]*?\.china-final-phone-screen \{transition:none !important;\}/);
+});
+
+test("GAME-SP4.1G1A narrow stages use centred hero and shrink upwards for stacked dead-phone notices",()=>{
+  const tablet=css.slice(css.indexOf("@media (max-width:800px) {",css.indexOf(".china-final-england small")),css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")));
+  assert.match(tablet,/china-final-phone \{height:min\(72%,520px\);max-width:65%;\}/);
+  assert.match(tablet,/china-final-phone\[data-power="off"\] \{top:14%;left:30%;height:min\(60%,450px\);\}/);
+  const portrait=css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")),css.indexOf("/* GAME-SP2.3C",css.indexOf(".china-final-england small")));
+  assert.match(portrait,/china-final-phone \{top:5%;left:50%;height:70%;max-width:90%;transform:translateX\(-50%\);margin:0;\}/);
+  assert.match(portrait,/china-final-phone\[data-power="off"\] \{top:5%;left:50%;height:46%;\}/);
+  assert.match(portrait,/china-final-power-notice \{[\s\S]*?bottom:33%;/);
+  assert.match(portrait,/china-final-reaction \{[\s\S]*?bottom:17%;/);
+  const narrow=css.slice(css.indexOf("@media (min-width:451px) and (max-width:580px) {"));
+  assert.match(narrow,/china-final-phone \{top:5%;left:50%;height:70%;max-width:88%;transform:translateX\(-50%\);margin:0;\}/);
+  assert.match(narrow,/china-final-phone\[data-power="off"\] \{top:5%;left:50%;height:44%;\}/);
+  assert.match(narrow,/china-final-power-notice \{top:auto;bottom:39%;/);
+  assert.match(narrow,/china-final-reaction \{bottom:17%;/);
+  assert.doesNotMatch(engine,/Message interrupted — not delivered/);
+});
+
+
+test("GAME-SP4.1G1A narrow phone layout keeps shutdown/reaction blocks above controls",()=>{
+  // The two supported portrait breakpoints reserve a 17% bottom strip for
+  // controls, and keep the flat-battery announcement higher up.
+  for(const [width,offHeight,noticeBottom] of [[390,46,33],[580,44,39]]){
+    const source=width<451
+      ? css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")),css.indexOf("/* GAME-SP2.3C",css.indexOf(".china-final-england small")))
+      : css.slice(css.indexOf("@media (min-width:451px) and (max-width:580px) {"));
+    assert.match(source,new RegExp('phone\\[data-power="off"\\] \\{top:5%;left:50%;height:'+offHeight+'%;\\}'));
+    assert.match(source,new RegExp('power-notice \\{[^}]*bottom:'+noticeBottom+'%;'));
+    assert.match(source,/china-final-reaction \{[^}]*bottom:17%;/);
+    assert.ok(5+offHeight<100-noticeBottom-9,"Off phone leaves a gap above the warning");
   }
 });
