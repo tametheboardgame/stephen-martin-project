@@ -23,9 +23,16 @@ The owner supplied a fresh screenshot at **“Is China far?”**, not the expect
 
 Inspection of the exact approved confused source PNG (`1086×1448`) shows that its alpha touches the **left image boundary** over the sleeve and lower arm: the edge is genuinely straight/opaque, not hidden by a CSS `overflow:hidden` parent. Current scene CSS explicitly sets `.actor-portrait { overflow: visible }`, but Paul's actor was positioned too far to the right, exposing a vertical gap between this source edge and Stephen's sleeve.
 
-**Current attempted solution:** leave the other actor images and approved paints alone; register **all** seated Paul expressions at `right:7.25%` instead of `3.5%` and paint Paul beneath Stephen (`z-index:1` vs Stephen's `2`). The closer composition should hide the unnatural asset boundary **behind Stephen's sleeve**, giving an intentional natural overlap rather than a vertical cut in open space. This is a composition workaround, **not a claim to have created missing arm pixels**. No image of the confused pose is changed. A genuine recanvas/outpaint of its source is an alternative if the human preview still shows the artefact.
+**Owner rejected overlap workaround (19 October 2026):** the latest screenshot showed that moving Paul to `right:7.25%` and lowering his stacking order made Paul's torso/sleeve visibly overlap Stephen. This is **not acceptable** and has been removed. All three expressions are again anchored at the original `right:3.5%` alongside Stephen at `left:35%; width:30%`, restoring their original 1.5% stage-width actor-box gap with no per-actor z-index manipulation. The source-edge defect on Paul **confused** remains an explicit outstanding image task. The original PNG is cropped flush to the left over the sleeve: the proper corrective action is a dedicated approved confused-sprite outpaint with real illustrated continuation of the missing outline, not a CSS overlap, arbitrary shrinking or blank transparent padding. The pleased v2 replacement remains intact. Do not merge PR #62 until the confused art and three expressions are visually approved.
 
-Regression now explicitly checks `office.002` confused and `office.004` pleased, shared registration and old inset removal. Human acceptance required for Paul/Stephen separation, sleeve layering, neutral pose, speaker glow, white dialogue, desk seam and small-screen crops. Do not merge before visual sign-off.
+Regression now explicitly checks `office.002` confused and `office.004` pleased, the restored separated registration and old CSS inset removal. Human acceptance required for Paul/Stephen separation, sleeve layering, neutral pose, speaker glow, white dialogue, desk seam and small-screen crops. Do not merge before visual sign-off.
+
+## 19 October 2026 owner screenshot: Paul/Stephen overlapping
+
+- The owner's 1515px-wide Chapter 1 screenshot exposed Paul and Stephen's shirts overlapping in the neutral opening pose after the 7.25% Paul inset.
+- The staging workaround has been reverted to the approved 3.5% Paul right margin, 35% Stephen left margin/30% width, with no forced z-order. This restores actor separation for the entire seated expression set.
+- The dedicated v2 pleased WebP remains installed; the *confused* source remains cropped and needs approved artwork repair rather than another positioning trick.
+- Run CI and preview all three expressions. **PR #62 stays draft/unmerged.**
 
 ## Visual and functional gate
 
