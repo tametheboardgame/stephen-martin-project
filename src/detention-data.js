@@ -62,7 +62,7 @@
     {speaker:"Paul",text:"What's that?"},
     {speaker:"Official",text:"None of you may bring the printer."},
     {speaker:"Paul",text:"It's still in my suitcase."},
-    {speaker:"Narrator",text:"David proudly frames his government-issued PLEASE LEAVE certificate."}
+    {id:"detention.ending.014",speaker:"Narrator",text:"David proudly frames his government-issued PLEASE LEAVE certificate."}
   ]);
   window.SMP_DETENTION = Object.freeze({
     rounds,ending,endCard:"ENDING B: DETAINED BY ADMINISTRATION",
