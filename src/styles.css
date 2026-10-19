@@ -609,6 +609,9 @@ button:active:not(:disabled) { transform: translateY(1px); }
 }
 #officeScreen .cast-seated #castDavid { left: 3.5%; }
 #officeScreen .cast-seated #castStephen { left: 35%; width: 30%; }
+/* GAME-SP4.1G0A: keep approved seated cast spacing. Insetting Paul by 7.25%
+ * overlapped his shirt with Stephen's sleeve, so do not mask a source-art
+ * crop by moving one actor on top of another. */
 #officeScreen .cast-seated #castPaul { right: 3.5%; }
 #officeScreen .cast-seated .actor-portrait {
   width: 100%;

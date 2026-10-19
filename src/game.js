@@ -75,8 +75,8 @@
     },
     Paul: {
       neutral: "./public/assets/generated/characters/paul-office-seated-neutral-v01.webp",
-      confused: "./public/assets/generated/characters/paul-office-seated-confused-v01.webp?v=1",
-      pleased: "./public/assets/generated/characters/paul-office-seated-pleased-v01.webp?v=1"
+      confused: "./public/assets/generated/characters/paul-office-seated-confused-v01.webp?v=2",
+      pleased: "./public/assets/generated/characters/paul-office-seated-pleased-v01.webp?v=2"
     }
   };
 

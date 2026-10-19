@@ -2,7 +2,26 @@
 
 **Updated:** 19 October 2026
 
+## CURRENT — Paul confused portrait repaired, PR #62 awaiting visual approval
+
+- **GAME-SP4.1G0A:** Replaced the actually clipped Paul **confused** production WebP with a generated 1130×1448 image with complete drawn outline and fully transparent outer edges. Exact asset 169,190 bytes, SHA-256 `3f7133bf3037a97fc7a315d4a2841d730561bc56bf8ba15290145db2e168adfd`; source PNG backed up in the project's Google Drive staging folder. Manifest rev 2, `?v=2`, width/version/integrity regression; previous Paul/Stephen overlap workaround remains reverted. Await the owner's live visual check at `office.002` and approve only if likeness and layout are right. PR #62 is draft/unmerged; G0B song panel fixes follow.
+
+## GAME-SP4.1G0A — Paul confused/pleased crop and staging (awaiting visual acceptance)
+
+- **19 October additional owner screenshot:** the visibly clipped arm was on `office.002` (“Is China far?”) **Paul confused**, not `office.004` Paul pleased. The approved confused PNG itself touches the left canvas edge over the arm, while the portrait wrapper already permits overflow. The exposed gap between Paul and Stephen makes that edge obvious.
+- **Current review branch correction:** register all seated Paul poses at `right:7.25%` and below Stephen's stacking layer to hide that source edge at a natural sleeve overlap. This is a staging workaround without a new confused image; check actual image rendering before merge. Earlier pleaded/pleased v2 trial asset remains and there is no temporary CSS scale rule.
+
+
+- **Planning PR #61 merged:** `394aeb79c07ec4b051ea515dd5c1299a39832a21`; G0–G4 roadmap now on main. The wider Chapter 4 Ending C review remains pending.
+- **Active feature branch:** `agent/game-sp41g0a-paul-pleased-registration`. Inspected approved original Paul pleased PNG (1086×1448); source alpha reaches both lateral edges, so this is partly **source artwork crop**, not a generic stage overflow defect.
+- **Owner retest:** A 0.965 CSS scale did not fix missing left-side arm outline; scale workaround removed. New owner-supplied Paul pleased image staged as Drive PNG revision 2, with 22px transparent side safety margins. Corresponding optimised WebP replaces **only** the seated pleased file; `?v=2` cache-bust. Full source IDs, SHA-256 provenance and acceptance gate documented below.
+- **Human gate:** examine the revised pleased sprite at full game scale against neutral/confused. If the outline is now continuous, approve/merge PR #62. If still cut in the replacement art, re-edit that one source, not office-wide layout. G0B song modals follow.
+
+- Documentation: `docs/story/GAME-SP4.1G0A-PAUL-REGISTRATION.md`.
+
 ## CURRENT — GAME-SP4.1G0/G1/G2/G3/G4 Chapter and ending polish plan (19 October 2026)
+
+- **GAME-SP4.1G0A owner overlap rejection:** Draft PR #62 has the approved-for-trial revised Paul pleased asset, but the 7.25% positioning workaround exposed an unacceptable Paul/Stephen shirt overlap. Restored original 3.5% Paul positioning/no z-layer override on 19 October; confused portrait edge still requires an illustrated source repair and separate visual sign-off. Do not merge #62 until fixed and approved.
 
 - **New Ending B owner feedback (G4A–H):** match Chapter 2 banquet bear picture exactly to Chapter 1 printer original; explicitly reuse the G1 shared battery-off and illustrated England transition; add **distinct narrated illustration handoffs for all three routes after investigation**; remove inaccurate B briefing labels; show a readable stamped APPROVED permit and eliminate the small top-right permit during the following dialogue; ground/scale all B actors correctly when Stephen arrives; create an approved **“Detained by the Administration”** concluding illustration and lead into G3F's common ending/album menu. Full B and A/C cross-transition QA after visual reviews.
 - **Ending C:** owner feedback is forthcoming and will be planned separately before final all-route acceptance.

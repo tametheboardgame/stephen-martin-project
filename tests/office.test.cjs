@@ -280,7 +280,7 @@ test("Paul Confused and Pleased use approved seated sprites; Blank stays Neutral
   p.at("office.002");
   assert.equal(p.el("castPaul").dataset.expression,"confused");
   assert.equal(p.el("castPaul").dataset.seatedSprite,"confused");
-  assert.ok(p.el("portraitPaul").src.endsWith("paul-office-seated-confused-v01.webp?v=1"));
+  assert.ok(p.el("portraitPaul").src.endsWith("paul-office-seated-confused-v01.webp?v=2"));
   p.el("backButton").click();
   assert.equal(saved(p).beatId,"office.001");
   assert.equal(p.el("castPaul").dataset.expression,"blank");
@@ -288,13 +288,13 @@ test("Paul Confused and Pleased use approved seated sprites; Blank stays Neutral
   p.at("office.004");
   assert.equal(p.el("castPaul").dataset.expression,"pleased");
   assert.equal(p.el("castPaul").dataset.seatedSprite,"pleased");
-  assert.ok(p.el("portraitPaul").src.endsWith("paul-office-seated-pleased-v01.webp?v=1"));
+  assert.ok(p.el("portraitPaul").src.endsWith("paul-office-seated-pleased-v01.webp?v=2"));
 });
 
 test("Paul's expressions follow Confused, Blank fallback and Pleased automatically",()=>{
   const p=preview();p.start();p.at("office.002");
   assert.equal(p.el("castPaul").dataset.seatedSprite,"confused");
-  assert.match(p.el("portraitPaul").src,/paul-office-seated-confused-v01\.webp\?v=1$/);
+  assert.match(p.el("portraitPaul").src,/paul-office-seated-confused-v01\.webp\?v=2$/);
   p.el("nextButton").click();
   assert.equal(saved(p).beatId,"office.003");
   assert.equal(p.el("castPaul").dataset.expression,"blank");
@@ -303,7 +303,7 @@ test("Paul's expressions follow Confused, Blank fallback and Pleased automatical
   p.el("nextButton").click();
   assert.equal(saved(p).beatId,"office.004");
   assert.equal(p.el("castPaul").dataset.seatedSprite,"pleased");
-  assert.match(p.el("portraitPaul").src,/paul-office-seated-pleased-v01\.webp\?v=1$/);
+  assert.match(p.el("portraitPaul").src,/paul-office-seated-pleased-v01\.webp\?v=2$/);
   p.el("backButton").click();
   assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
 });
@@ -405,7 +405,10 @@ test("existing artwork remains present with original alpha and dimensions",()=>{
     assert.equal(file.toString("ascii",12,16),"VP8X");
     assert.ok((file[20]&0x10)!==0,"alpha lost "+asset);
     const w=1+file.readUIntLE(24,3),h=1+file.readUIntLE(27,3);
-    assert.equal(w,1086);assert.equal(h,1448);
+    // G0A revised Paul's confused and pleased sprites with safe lateral margins.
+    // The remaining seated portraits retain their approved 1086px widths.
+    assert.equal(w,["paul-office-seated-confused-v01.webp","paul-office-seated-pleased-v01.webp"].includes(asset)?1130:1086);
+    assert.equal(h,1448);
     assert.ok(read("scripts/build.mjs").includes(asset));
   }
   for(const asset of ["office-clean-01-v01.webp","office-foreground-01-v01.webp","office-exterior-opening-v01.webp"])
@@ -4107,4 +4110,66 @@ test("GAME-SP4.1F.2 Chapter Two narrator avoids printed title and continue butto
   p.el("chinaStartButton").click();
   assert.equal(saved(p).holidayPhase,"wall");
   assert.equal(p.el("transitionNarration").hidden,true);
+});
+
+test("GAME-SP4.1G0A replacement Paul pleased WebP is packaged, versioned and free of temporary CSS scaling",()=>{
+  const manifest=JSON.parse(read("generated-assets/manifests/paul-office-seated-pleased-v01.json"));
+  assert.equal(manifest.source.provider,"google-drive");
+  assert.equal(manifest.source.fileId,"15eJA-wLRl_lsWvCnYh1kgAYV894S_C7B");
+  assert.equal(manifest.expectedSourceName,"paul-office-seated-pleased-recanvas-v02.png");
+  assert.equal(manifest.revision,2);
+  assert.equal(manifest.destination,"public/assets/generated/characters/paul-office-seated-pleased-v01.webp");
+  const bytes=fs.readFileSync(path.join(root,manifest.destination));
+  assert.equal(bytes.toString("ascii",0,4),"RIFF");
+  assert.equal(bytes.toString("ascii",8,12),"WEBP");
+  assert.ok(bytes.length>100_000&&bytes.length<400_000);
+  assert.doesNotMatch(css,/#castPaul\[data-seated-sprite="pleased"\][^\{]*\{[^}]*transform:/);
+  const p=preview();p.start();p.at("office.004");
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"pleased");
+  assert.match(p.el("portraitPaul").src,/paul-office-seated-pleased-v01\.webp\?v=2$/);
+  p.el("backButton").click();
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
+  p.el("nextButton").click();
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"pleased");
+});
+
+test("GAME-SP4.1G0A repaired confused sprite is versioned and matches the verified non-clipped WebP",()=>{
+  const manifest=JSON.parse(read("generated-assets/manifests/paul-office-seated-confused-v01.json"));
+  assert.equal(manifest.schemaVersion,1);
+  assert.equal(manifest.source.provider,"google-drive");
+  assert.equal(manifest.source.fileId,"1z8x-Cn24crE0hHbPwgneb2HGLyuWuhIN");
+  assert.equal(manifest.expectedSourceName,"paul-office-seated-confused-replacement-v02.png");
+  assert.equal(manifest.revision,2);
+  assert.equal(manifest.destination,"public/assets/generated/characters/paul-office-seated-confused-v01.webp");
+  const bytes=fs.readFileSync(path.join(root,manifest.destination));
+  assert.equal(bytes.length,169190);
+  assert.equal(bytes.toString("ascii",0,4),"RIFF");
+  assert.equal(bytes.toString("ascii",8,12),"WEBP");
+  const digest=require("node:crypto").createHash("sha256").update(bytes).digest("hex");
+  assert.equal(digest,"3f7133bf3037a97fc7a315d4a2841d730561bc56bf8ba15290145db2e168adfd");
+  assert.doesNotMatch(css,/#castPaul\[data-seated-sprite="confused"\][^\{]*\{[^}]*transform:/);
+  const p=preview();p.start();p.at("office.002");
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"confused");
+  assert.match(p.el("portraitPaul").src,/paul-office-seated-confused-v01\.webp\?v=2$/);
+});
+
+test("GAME-SP4.1G0A keeps Paul separated from Stephen across seated reactions",()=>{
+  // office.002 uses the v2 confused portrait with a repaired outer outline.
+  // A previous 7.25% inset put Paul's left shoulder over Stephen's sleeve.
+  // The original positions leave 1.5% clear stage width between the actor boxes.
+  assert.match(css,/#officeScreen \.cast-seated #castPaul \{ right: 3\.5%; \}/);
+  assert.match(css,/#officeScreen \.cast-seated #castStephen \{ left: 35%; width: 30%; \}/);
+  assert.doesNotMatch(css,/#officeScreen \.cast-seated #castPaul \{[^}]*z-index:/);
+  assert.match(css,/#officeScreen \.cast-seated \.actor-portrait \{[\s\S]*?overflow: visible;/);
+  assert.doesNotMatch(css,/#castPaul\[data-seated-sprite="(?:pleased|confused)"\] .actor-portrait img \{[^}]*transform:/);
+  const p=preview();p.start();
+  p.at("office.002");
+  assert.equal(saved(p).beatId,"office.002");
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"confused");
+  assert.match(p.el("portraitPaul").src,/paul-office-seated-confused-v01\.webp\?v=2$/);
+  p.at("office.003");
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
+  p.at("office.004");
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"pleased");
+  assert.match(p.el("portraitPaul").src,/paul-office-seated-pleased-v01\.webp\?v=2$/);
 });
