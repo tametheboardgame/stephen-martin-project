@@ -4108,3 +4108,21 @@ test("GAME-SP4.1F.2 Chapter Two narrator avoids printed title and continue butto
   assert.equal(saved(p).holidayPhase,"wall");
   assert.equal(p.el("transitionNarration").hidden,true);
 });
+
+test("GAME-SP4.1G0A Paul pleased pose has its own tiny inset, other cast registration remains untouched",()=>{
+  const cssStart=css.indexOf("GAME-SP4.1G0A: Paul's approved pleased image");
+  assert.ok(cssStart>0);
+  const rule=css.slice(cssStart,css.indexOf("}",cssStart)+1);
+  assert.match(rule,/#officeScreen \.cast-seated #castPaul\[data-seated-sprite="pleased"\] \.actor-portrait img/);
+  assert.match(rule,/transform-origin:\s*center bottom;/);
+  assert.match(rule,/transform:\s*scale\(\.965\) !important;/);
+  assert.doesNotMatch(rule,/data-seated-sprite="(?:neutral|confused)"/);
+  assert.doesNotMatch(rule,/#castStephen|#castDavid/);
+  const p=preview();p.start();p.at("office.004");
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"pleased");
+  assert.match(p.el("portraitPaul").src,/paul-office-seated-pleased-v01\.webp\?v=1$/);
+  p.el("backButton").click();
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
+  p.el("nextButton").click();
+  assert.equal(p.el("castPaul").dataset.seatedSprite,"pleased");
+});
