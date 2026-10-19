@@ -4457,7 +4457,7 @@ test("Summit audio has exactly 44 unique approved IDs with unchanged comic dialo
   assert.equal(summit.ending[13].speaker,"Narrator");
   assert.equal(summit.ending[13].id,"summit.ending.014");
   assert.ok(read("scripts/build.mjs").includes("summitIds.forEach(id => permitted.add"));
-  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 156"));
+  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 168"),"44 Summit voices plus 12 reserved narrator clips are whitelisted");
   assert.ok(fs.existsSync(path.join(root,"docs/SUMMIT-VOICE-IMPORT.md")));
 });
 
