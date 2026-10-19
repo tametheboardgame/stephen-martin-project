@@ -1768,6 +1768,10 @@ test("SP3.4 pause, hidden-tab and route choice guard do not advance puzzle",()=>
   p.document.hidden=false;
   assert.equal(p.timeouts.size,0,"Return from hidden tab never skips a line");
   p.el("holidayNextButton").click();
+  assert.equal(saved(p).summitVoiceStep,1,"Paused Next advances to the second speaker");
+  p.el("holidayNextButton").click();
+  assert.equal(saved(p).summitVoiceStep,null,"Paused Next skips the second speaker");
+  p.el("holidayNextButton").click();
   assert.equal(saved(p).rescueProgress.miniGameStage,1);
   assert.equal(p.el("summitRoundTitle").textContent,"Recite the highest compliment");
   assert.equal(p.timeouts.size,0,"Remains paused until Play is explicitly pressed");
@@ -1782,7 +1786,8 @@ test("SP3.4 all three fully-earned finales autoplay their lines but stop at summ
       const p=toSummitAdmissions();
       for(const index of [2,1,2]){
         p.el("summitChoice"+index).click();
-        assert.equal(p.tick(),true,"Correct answer acknowledgment advances automatically");
+        for(let line=0;line<3;line++)
+          assert.equal(p.tick(),true,"Each correct answer speaks two actors before advancing");
       }
       return p;
     },lines:story().SMP_SUMMIT.ending.length},
@@ -2710,7 +2715,7 @@ test("Back in England has ten unique whitelisted voice IDs and no spoken travel 
   assert.equal(new Set(ids).size,10);
   assert.ok(alarm.montage.every(card=>card.id.startsWith("rescue.travel.")));
   assert.ok(read("scripts/build.mjs").includes('alarmIds.forEach(id => permitted.add(id + ".mp3"))'));
-  assert.ok(read("scripts/build.mjs").includes('permitted.size !== 112'),"Original ten alarm IDs remain included in expanded voice whitelist");
+  assert.ok(read("scripts/build.mjs").includes('permitted.size !== 168'),"Original ten alarm IDs remain included in expanded voice whitelist");
   assert.ok(fs.existsSync(path.join(root,"docs/RESCUE-ALARM-VOICE-IMPORT.md")));
 });
 
@@ -2827,7 +2832,7 @@ test("Visitor Information 22 voice IDs match screenplay and automatic file white
   assert.ok(ids.every(id=>/^rescue\.hub\.[a-z0-9.]+$/.test(id)));
   assert.equal(h.correct[4].id,"rescue.hub.correct.005");
   assert.ok(read("scripts/build.mjs").includes("hubVoiceIds.forEach(id => permitted.add(id +"));
-  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 112"));
+  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 168"));
   assert.ok(fs.existsSync(path.join(root,"docs/VISITOR-INFORMATION-VOICE-IMPORT.md")));
 });
 
@@ -4420,4 +4425,145 @@ test("GAME-SP4.1G1A narrow phone layout keeps shutdown/reaction blocks above con
     assert.match(source,/china-final-reaction \{[^}]*bottom:17%;/);
     assert.ok(5+offHeight<100-noticeBottom-9,"Off phone leaves a gap above the warning");
   }
+});
+
+// GAME-SP4 — voiced Summit gate, per-speaker responses, hints, and ending.
+// Existing playable mechanics and save/resume continue to use the same states.
+function voicedSummitAdmissions() {
+  const p=voicedHotel("cult");
+  for(let i=0;i<8;i++)p.el("hotelNextButton").click();
+  p.el("hotelCultButton").click();
+  for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+  return p;
+}
+
+test("Summit audio has exactly 44 unique approved IDs with unchanged comic dialogue",()=>{
+  const f=story().SMP_RESCUE_FRAMEWORK.routes.cult;
+  const summit=story().SMP_SUMMIT;
+  const ids=[...Array.from(f.intro,x=>x.id)];
+  for(let i=0;i<summit.rounds.length;i++){
+    const round=summit.rounds[i];
+    ids.push(round.promptId,round.hintId);
+    for(const option of round.options){
+      assert.equal(option.voices.map(x=>x.speaker+": "+x.text).join(" "),option.response);
+      ids.push(...Array.from(option.voices,x=>x.id));
+    }
+  }
+  ids.push(...Array.from(summit.ending,x=>x.id));
+  assert.equal(ids.length,44);
+  assert.equal(new Set(ids).size,44);
+  assert.ok(ids.every(x=>/^summit\.[a-z0-9.]+$/.test(x)));
+  assert.equal(summit.ending[13].speaker,"Narrator");
+  assert.equal(summit.ending[13].id,"summit.ending.014");
+  assert.ok(read("scripts/build.mjs").includes("summitIds.forEach(id => permitted.add"));
+  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 156"));
+  assert.ok(fs.existsSync(path.join(root,"docs/SUMMIT-VOICE-IMPORT.md")));
+});
+
+test("Summit gate voices use natural clip timing then introduce check one's spoken prompt",async()=>{
+  const p=voicedSummitAdmissions();
+  const gate=p.voices.at(-1);
+  assert.ok(gate.src.endsWith("summit.intro.001.mp3"));
+  await Promise.resolve();
+  assert.equal(p.timeouts.size,0);
+  gate.finish();
+  assert.equal(Array.from(p.timeouts.values())[0].delay,260);
+  p.tick();
+  assert.ok(p.voices.at(-1).src.endsWith("summit.intro.002.mp3"));
+  for(let i=1;i<=7;i++)p.el("routeIntroNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  const prompt=p.voices.at(-1);
+  assert.ok(prompt.src.endsWith("summit.check.001.prompt.mp3"));
+  prompt.finish();
+  assert.equal(p.el("holidayNextButton").hidden,true,"A question never chooses an answer automatically");
+  assert.equal(p.timeouts.size,0);
+});
+
+test("Summit answer plays both speakers, pauses naturally and waits on wrong choice",async()=>{
+  const p=voicedSummitAdmissions();
+  for(let i=0;i<=7;i++)p.el("routeIntroNextButton").click();
+  p.el("summitChoice0").click();
+  const gatekeeper=p.voices.at(-1);
+  assert.ok(gatekeeper.src.endsWith("summit.check.001.vase.001.mp3"));
+  await Promise.resolve();
+  p.el("holidayPauseButton").click();
+  assert.equal(gatekeeper.paused,true);
+  p.el("holidayPauseButton").click();
+  await Promise.resolve();
+  assert.equal(gatekeeper.playCount,2);
+  gatekeeper.finish();p.tick();
+  assert.ok(p.voices.at(-1).src.endsWith("summit.check.001.vase.002.mp3"));
+  p.el("holidayNextButton").click();
+  assert.equal(saved(p).summitVoiceStep,null);
+  assert.equal(saved(p).rescueProgress.miniGameStage,0);
+  assert.equal(p.el("holidayNextButton").hidden,true);
+  const total=p.voices.length;
+  p.el("summitChoice0").click();
+  assert.ok(p.voices.at(-1).src.endsWith("summit.check.001.vase.001.mp3"));
+  assert.equal(p.voices.length,total+1,"Selecting the same wrong choice restarts its first MP3");
+});
+
+test("Summit hints play once per round and correct answer reaches check two only after voice completion",async()=>{
+  const p=voicedSummitAdmissions();
+  for(let i=0;i<=7;i++)p.el("routeIntroNextButton").click();
+  p.el("summitChoice0").click();
+  p.el("holidayNextButton").click();p.el("holidayNextButton").click();
+  p.el("summitChoice1").click();
+  p.el("holidayNextButton").click();p.el("holidayNextButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("summit.check.001.hint.mp3"));
+  p.el("holidayNextButton").click();
+  assert.equal(saved(p).summitHintHeard,true);
+  p.el("summitChoice0").click();
+  p.el("holidayNextButton").click();p.el("holidayNextButton").click();
+  assert.equal(p.el("holidayNextButton").hidden,true,"Round hint must not repeat");
+  p.el("summitChoice2").click();
+  assert.ok(p.voices.at(-1).src.endsWith("summit.check.001.charger.001.mp3"));
+  await Promise.resolve();
+  const first=p.voices.at(-1);first.finish();p.tick();
+  assert.ok(p.voices.at(-1).src.endsWith("summit.check.001.charger.002.mp3"));
+  assert.equal(saved(p).rescueProgress.miniGameStage,1);
+  assert.equal(p.el("summitRoundTitle").textContent,"Offer a sacred object");
+  const second=p.voices.at(-1);second.finish();p.tick();
+  assert.equal(saved(p).summitVoiceStep,null);
+  assert.equal(p.voices.at(-1).paused,true);
+  p.tick();
+  assert.equal(p.el("summitRoundTitle").textContent,"Recite the highest compliment");
+  assert.ok(p.voices.at(-1).src.endsWith("summit.check.002.prompt.mp3"));
+  assert.equal(saved(p).summitHintHeard,false,"Hint reset for next admission check");
+});
+
+test("Summit ending voices all fourteen lines including Narrator; summary title stays silent",()=>{
+  const p=voicedSummitAdmissions();
+  for(let i=0;i<=7;i++)p.el("routeIntroNextButton").click();
+  for(const idx of [2,1,2]){
+    p.el("summitChoice"+idx).click();
+    p.el("summitNextButton").click();
+  }
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+  for(let i=1;i<=14;i++){
+    assert.ok(p.voices.at(-1).src.endsWith("summit.ending."+String(i).padStart(3,"0")+".mp3"));
+    p.el("summitEndingNextButton").click();
+  }
+  const last=p.voices.at(-1);
+  assert.equal(last.paused,true);
+  assert.equal(p.el("summitEndingLine").textContent,"ENDING A: HEAVEN WAS A PLACE ON EARTH");
+  assert.equal(p.el("holidayNextButton").hidden,false);
+  p.el("summitEndingNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-ending-summary");
+});
+
+test("Missing Summit voice falls back to text-timed progression; skipped response cancels prior clip",async()=>{
+  const p=voicedSummitAdmissions();
+  const first=p.voices.at(-1);
+  await Promise.resolve();first.fail();
+  assert.equal(p.timeouts.size,1);
+  p.tick();
+  assert.ok(p.voices.at(-1).src.endsWith("summit.intro.002.mp3"));
+  for(let i=1;i<=7;i++)p.el("routeIntroNextButton").click();
+  p.el("summitChoice0").click();
+  const wrong=p.voices.at(-1);
+  p.el("summitChoice2").click();
+  assert.equal(wrong.paused,true);
+  assert.ok(p.voices.at(-1).src.endsWith("summit.check.001.charger.001.mp3"));
 });
