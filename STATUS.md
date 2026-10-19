@@ -1,5 +1,13 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G1B approved “Back in England” collage (19 October 2026)
+
+- **G1A merged:** the owner's approved phone sequence was merged into `main` via PR #65, merge commit `b8fb6ecc1e4a53a5b0e564e61bdaadcda301178b`.
+- **G1B owner-approved art direction:** **no David/Paul portraits** and no attempt at a single geographically coherent London panorama. Instead the approved 1672×941 illustration is an obviously **spliced, torn-postcard collage**: Westminster/Big Ben, separate Tower Bridge, separate red phone box/bus, with tea, map, pinboard/postal elements. Source original `transition-back-in-england-postcard-collage-v01.png` staged in dedicated Stephen Martin Google Drive folder, file ID `1dhu_9fDVe9K_7XqMDzN2m95Oq7qp9euU`. Manifest `generated-assets/manifests/game-sp41g1b-england-postcard-collage-v01.json` materialises production `public/assets/generated/locations/transition-back-in-england-postcard-collage-v01.webp`.
+- **G1B draft branch:** `agent/game-sp41g1b-england-postcard-transition`. The approved image replaces only the blank navy `#chinaFinalEngland` background. The heading stays **live** in a compact positioned title plate; existing separated narrator subtitle and `transition.england.back.001` voice/fallback are unchanged. Responsive positioning avoids headline/topbar collision without a blanket dark wash. Build and regression checks included. **Owner must approve live Cloudflare preview before PR merge.**
+- **Next:** G1C three-route QA, then subsequent roadmap packages.
+
+
 ## CURRENT — GAME-SP4.1G1A phone-battery storyboard (19 October 2026)
 
 - **G1A scene-composition refinement (owner review, 19 October):** owner liked the repaired phone art and full message but rejected the off-centre composition before shutdown. Step 0 `data-power="low"` now uses the **centred 72%-height hero handset** (top 14%, left 50%), while Step 1 `data-power="off"` shrinks to 62%, shifts left 34% and reveals the existing right-side battery-flat notice and Stephen reaction. CSS animates only left/top/height over 220ms, disabled under reduced-motion. At <=800px the two-column composition scales down; at <=580px the phone remains centred and retreats upwards when off, leaving vertically stacked notices clear of the bottom controls. No asset, route, voice or state-machine edits. Added regression coverage and checked geometry in headless Chromium at 1420×834, 1366×768, 800×740, 580×900 and 390×850. **Draft PR #65 stays unmerged pending owner's new visual approval.**
