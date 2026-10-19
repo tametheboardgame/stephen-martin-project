@@ -4,6 +4,7 @@
 
 - **Branch:** `agent/game-sp41g3a-g3b-summit-approach`, based on G1C-merged `main` commit `18491bc0097f43e8dddc7ddf2d380c1051afea37`. Draft PR and owner visual review required.
 - **G3A:** CSS-only Summit exterior sprite positioning: move the approved David and Paul cut-outs appreciably left onto the approach path at desktop, tablet and phone widths. Keep gatekeeper, image pixels, sprite sizes, bottom anchors, speaker focus, and all other routes/locations unchanged.
+- **Owner refinement (19 October):** Narrow-screen preview needed David and Paul a little farther left, but not as far as the illustrative mock-up. Added an intermediate <=1500px rule moving both 5 percentage points left; tablet and phone have smaller offsets to preserve spacing. The base wide-desktop staging remains approved unchanged. Await owner confirmation of the new in-game preview.
 - **G3B:** The Summit action-strip and in-scene progress must read *Summit approach* / *Rescue attempt · Summit entrance* / *Approach complete · The Summit Admissions Test next*, instead of calling an active rescue attempt a briefing. Leave detention/spa route labels for the separately agreed Ending B/C reviews.
 - **Gate:** new focused regression assertions, GitHub CI, real Cloudflare preview and owner desktop/mobile approval before merging. No new art or recorded/spoken dialogue; no alterations to puzzle, save data or navigation.
 - **Next:** after G3A/B acceptance, G3C admissions pictographic answer tiles and G3D throne-room scale/grounding review.
