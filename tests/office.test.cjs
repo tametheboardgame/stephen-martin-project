@@ -4971,7 +4971,7 @@ test("GAME-SP4.1G3A Summit pair stands left of the wall at desktop, tablet and p
     assert.ok(percent(paul,"right")>percent(david,"right"),"Paul remains to David's left");
     assert.ok(percent(keeper,"left")>=0,"Gatekeeper stays on left side");
   }
-  assert.match(summitCss,/transform:scaleX\\(-1\\)/,"Approved sprite mirroring remains");
+  assert.ok(summitCss.includes("transform:scaleX(-1);"),"Approved sprite mirroring remains");
   assert.doesNotMatch(summitCss,/summit-throne/,"Do not restage throne-room actors");
 });
 
