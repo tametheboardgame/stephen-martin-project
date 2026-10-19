@@ -4977,7 +4977,7 @@ test("GAME-SP4.1G3A Summit staging makes a moderate left shift on smaller screen
       assert.equal(percent(david,"bottom"),bottom,name+" David shares groundline");
       assert.ok(percent(rule(part,"gatekeeper"),"left")>=0,"Gatekeeper stays on left side");
     }else{
-      assert.doesNotMatch(laptop,/height:|bottom:|gatekeeper/,"Laptop override changes positions only");
+      assert.doesNotMatch(paul+" "+david,/height:|bottom:|left:/,"Laptop actor overrides change horizontal placement only");
     }
   }
   assert.ok(summitCss.includes("transform:scaleX(-1);"),"Approved sprite mirroring remains");
