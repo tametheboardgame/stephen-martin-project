@@ -909,7 +909,29 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 **G3 non-goals:** new ending/route, unsolved puzzle bypass, wholesale art repaint, replacing existing spoken dialogue, unapproved album artwork or unverified listening/store links.
 
-#### GAME-SP4.1G0/G1/G2/G3 — Sequenced chapter polish
+#### GAME-SP4.1G4 — Ending B correction and cross-ending handoffs (owner feedback, 19 October 2026)
+
+**Priority:** P1; **status:** Planned, awaiting Ending C feedback. **Dependencies:** G1A/B shared battery and Back-in-England assets; G3F universal post-ending hub; approved Ending B bureaucratic art, permit/stamp puzzle and three-route rescue framework. G4C specifically covers **all A/B/C route transitions**, not just Ending B.
+
+**G4A — Canonical printed bear continuity:** Audit the actual Chapter 1 printer-picture asset and its late Chapter 2/Forbidden City banquet reference. Use the **same canonical image** when Paul's bear photograph becomes Stephen's event photo. Avoid an emoji, a generic bear or an off-model substitute. Keep the bear/image gag consistent in any permit/presentation reference.
+
+**G4B — Shared battery and England handoff on the banquet route:** The user confirms the dead-battery sequence and illustrated Back-in-England card from **G1A/G1B** must explicitly work for this Ending B path, too. **Do not create another copy**; verify route-specific actual phone content, low battery, phone shutdown, Stephen's existing reaction, then a single narrated England transition.
+
+**G4C — Three illustrated transitions between investigation and route ending:** Current hotel conclusion jumps too abruptly into the chosen A/B/C route. Add **one short, distinct illustrated handoff asset and off-stage narrator cue per ending** (A Summit rescue escalation, B procedural/diplomatic extraction, C wellness/reassembly intervention). Use the established F compact title + single NARRATOR overlay, optional MP3 filename/time fallback, sound/mute/pause/skip, safe resume and route gating. **Artwork and narration lines individually require owner approval before generation/recording.** Never fabricate completed investigation or bypass admissions/forms/assembly puzzle. Make transitions brief, not new cinematics.
+
+**G4D — Ending B misleading “briefing” labels:** Audit B route intro and its status/progress footer. Replace inaccurate “briefing” / “briefing complete” with contextually correct terms (e.g. **administrative approach**, **release office**, **ceremonial release process**). Spoken canonical dialogue remains unchanged; other legitimate briefing screens unaffected.
+
+**G4E — Full-size stamped permit reveal, no residual overlay:** After the existing **APPROVED** stamp/paperwork is legitimately completed, show a **readable full-size permit/proof image or accessible inspect modal**, with adequate time and Next/Continue control. Remove the small floating **top-right permit overlay** from the subsequent Ending B dialogue/arrival staging. The finished official permit is still the same locked approved asset, not an invented replacement. Respect mobile viewport, assistive text, replay and audio state.
+
+**G4F — Ending B arrival cast grounding:** When Stephen joins the official, David and Paul, correct all four sprite **scales, foot grounding, spacing, z-order and perspective** against the office floor and text/permit layout. No floating bodies, characters embedded in the environment, or covering the white dialogue box. Preserve their locked likenesses and current speaker glow. Compare approach/puzzle/arrival shots on desktop/tablet/mobile; owner sign-off.
+
+**G4G — “Detained by the Administration” illustrated ending:** Generate one specifically approved bureaucratic-comedy **Ending B finale image**, with heading and ending summary as readable live text, no obsolete art-deferral disclaimer. Drive original → manifest → WebP, consistent with G3E (Ending A), and hand off into the **same shared final menu G3F** rather than creating a competing B menu.
+
+**G4H — Ending B & shared route-transition QA:** Run the full banquet/phone/battery/England/hotel/investigation → B-specific narrated handoff → permit puzzle/reveal → actor dialogue/grounding → illustrated conclusion → universal end hub. Also verify distinct **A/C** handoffs do not cross-route, do not autoplay answers and do not break V3 saves. Mute/pause/Next/Skip/Change route/Resume, delayed voice callbacks, 15–25-minute pacing and responsive layouts are acceptance gates. Keep PR draft until owner approval.
+
+**Cross-package discipline:** G4B **inherits G1A/B**, G4C is a **shared A/B/C** work item, and G4G/H **inherit G3F** end-menu behaviour. Do not duplicate implementation. Ending C-specific review is still forthcoming and will be added as G5 or another expressly scoped package before final all-ending QA.
+
+#### GAME-SP4.1G0/G1/G2/G3/G4 — Sequenced chapter polish
 
 | Order | Package | Dependency / review gate |
 | --- | --- | --- |
@@ -931,7 +953,7 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 #### GAME-SP4.1G — Limited extra expressions, reactions and movement
 
-**Priority:** P2; **status:** Deferred until newly scoped G0/G1/G2/G3 Chapter 1–4 polish is completed or explicitly waived; B and E are merged. **Dependencies:** approved expression registration and speaker focus.  
+**Priority:** P2; **status:** Deferred until newly scoped G0/G1/G2/G3/G4 chapter and ending polish is completed or explicitly waived; B and E are merged. **Dependencies:** approved expression registration and speaker focus.  
 **Owner idea:** Add some personality through extra reactions and motion without bloating the project.
 
 **Implementation tasks**
@@ -999,12 +1021,13 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 | 7b | SP4.1G1 | Approved F and three route handoffs | Phone battery failure clear on all routes; illustrated Back in England; state/audio intact |
 | 7c | SP4.1G2 | Approved alarm-stage office art | Double-desk fix and David/Paul two-person registration |
 | 7d | SP4.1G3 | Approved Summit art and ending summaries | Summit entrance, admissions, throne, Heaven image, shared end hub and album covers |
-| 7e | SP4.1G | G0/G1/G2/G3 delivered or explicitly deferred | Limited additional expression work; no framing jumps |
+| 7e | SP4.1G4 | Approved Ending B permit and route system | Canonical bear, shared route handoffs/narration, permit reveal, cast grounding, detained art, common hub |
+| 7f | SP4.1G | G0/G1/G2/G3/G4 delivered or explicitly deferred | Limited additional expression work; no framing jumps |
 | Parallel | SP4.1H | Approved user-supplied clips | Each voice batch individually listened to and previewed |
 | Final | SP4.1I | Approved A–E and explicit F/G/H deferrals if needed | Timed full-game acceptance, release candidate ready for owner |
 | Deferred | SP4.1J | Owner reschedules | Precision board geometry, no puzzle regression |
 
-**Current implementation next (19 October 2026):** SP4.1A–F including both daylight corrections, speaker glow and four illustrated transitions are owner-approved and merged. Before broad GAME-SP4.1G extra expressions, deliver **G0 Chapter 1**, **G1 Chapter 2**, **G2 Chapter 3** and **G3 Chapter 4/shared end hub** packages above. **Start G0A**, then **G0B**, then **G2A**; storyboard G1A battery-phone states and G3C Summit admissions visuals before generating assets. Ending B feedback is still in progress and will be captured separately. GAME-SP4.1H voice recording proceeds **independently in a separate strand**. This roadmap-only update does not change playable scenes or authorise unapproved artwork generation.
+**Current implementation next (19 October 2026):** SP4.1A–F including both daylight corrections, speaker glow and four illustrated transitions are owner-approved and merged. Before broad GAME-SP4.1G extra expressions, deliver **G0 Chapter 1**, **G1 Chapter 2**, **G2 Chapter 3**, **G3 Chapter 4/Ending A/common end hub** and **G4 Ending B/cross-ending transitions** packages above. **Start G0A**, then **G0B**, then **G2A**; storyboard G1A battery-phone states and G3C Summit admissions visuals before generating assets. Ending B feedback is still in progress and will be captured separately. GAME-SP4.1H voice recording proceeds **independently in a separate strand**. This roadmap-only update does not change playable scenes or authorise unapproved artwork generation.
 
 **Historical note:** SP4.0 and SP4C entries above describe past development stages and may mention draft branches from their original dates. For current work, this SP4.1 plan and top of `STATUS.md` take precedence. No package being listed here means its artwork, code or audio is already produced.
 
