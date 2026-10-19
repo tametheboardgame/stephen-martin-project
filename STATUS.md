@@ -2,6 +2,8 @@
 
 ## GAME-SP4.1G0B — Song modal clean-up (19 October 2026, active review)
 
+- **19 October owner refinement:** after the first successful G0B preview, the pessimistic lyrics need faster progression because the recording has an instrumental ending. The pessimistic track now uses an accelerated 0.72-power scroll curve against live MP3 progress, reaches the final lyric position at `duration - 2 seconds`, and holds there for the outro. Optimistic timing is deliberately unchanged. Audio length is read dynamically, so no fixed track duration is assumed; responsive layout, focus/manual reading, and song controls remain unchanged. Updated regression tests cover opening/middle/final two-second boundary and the lyric-reading focus override.
+
 - **G0A merged:** PR #62 into `main` as `8bbb25cdb301d0ba18f0e87d480b7b2b12d7438a`, after owner acceptance of both repaired Paul expressions.
 - **G0B development branch:** `agent/game-sp41g0b-song-modal-polish` from that merge. Remove the obsolete optimistic `cutaways.song` backing card; retain all other Chapter 1 cutaways.
 - Use one large flex song overlay for optimistic and pessimistic offer/full, with the lyrics area occupying the remaining modal height, an accessible keyboard-focusable scroll viewport, sound state/preview/full control unchanged and short-device stage height only during song.
