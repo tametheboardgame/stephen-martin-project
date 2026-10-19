@@ -837,25 +837,101 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 **G1 non-goals:** Additional playable routes, invented phone conversations, replacing the existing holiday scene art, new long cinematics, or taking ownership of the separate voice-recording strand.
 
-#### GAME-SP4.1G0/G1 — Work order before the remaining GAME-SP4.1G
+#### GAME-SP4.1G2 — Chapter 3 rescue-alarm double-desk correction (owner feedback, 19 October 2026)
 
-| Order | Scope | Gate |
+**Priority:** P1 composition defect. **Status:** Planned, not implemented. **Evidence:** owner screenshot of “THE RESCUE ALARM” shows a foreground overlay desk superimposed on the desk already present in the office background. The Chapter 1 desk placement does not scale/register correctly with **only David and Paul** in Chapter 3 (Stephen absent).
+
+**G2A — Background, desk and two-person composition (small independent PR)**
+
+1. Audit actual `#rescueAlarmScene` layering, background furniture already baked into the approved office art, inherited Chapter 1 foreground desk/overlay, David/Paul sprite bounds, relative scale, z-index and scene crop. Determine which layer causes the duplicated desktop rather than assuming both desks are required.
+2. **Preferred:** suppress/remove redundant foreground desk **for Chapter 3 only**. If this exposes broken lower-body edges, build a minimal alarm-scene-specific mask/desk alignment. Preserve the **approved Chapter 1 three-character table** unchanged; no newly generated office background unless technically necessary and separately approved.
+3. Retune **David and Paul** size/positions/feet/eyelines for the two-person scene only. Avoid floating arms, cut-off torsos, mismatched tabletop perspective or covering the external-name-tab speech bubble. Keep their script expressions and shared speaking glow.
+4. Regression: ten alarm lines, message/phone graphic, travel launch, autoplay/Pause, Save/Resume, next/skip, 1366×768, 1440×900, tablet and narrow mobile.
+5. **Acceptance:** one coherent background/foreground table plane, correct grounded actor scale, no double desk, unaffected Chapter 1 layout and voice/navigation. Owner approves screenshot and build before merge.
+
+**G2 non-goals:** office repaint, third character, changed script, broad actor system rewrite.
+
+#### GAME-SP4.1G3 — Chapter 4 Ending A staging and shared post-ending hub (owner feedback, 19 October 2026)
+
+**Priority:** P1. **Status:** Planned, pending separate visual approvals. **Baseline:** approved Summit exterior, admissions puzzle and four-attendant throne room; existing shared `#rescueEndingSummary` ending state. **Scope split:** G3A–E are Ending A improvements; G3F/G are **cross-ending** features. The owner is still reviewing Ending B, so future B feedback gets its own scoped backlog entries rather than being presumed resolved.
+
+**Owner findings:**
+- Outside Summit, **move David and Paul significantly left**; David currently appears to stand on a retaining wall.
+- Labels such as **“Investigation complete · Rescue briefing”** and **“Briefing complete”** misrepresent a **rescue attempt**.
+- Summit admissions test needs pictographic / illustrated choices, not only buttons with text.
+- Throne room attendants are **too small and incorrectly positioned**; David and Paul may also be staged/scaled wrongly.
+- Ending A “HEAVEN WAS A PLACE ON EARTH” needs a **proper ending illustration** rather than the placeholder hotel art/disclaimer.
+- After **all three endings**, show an **end menu** with chapter/scene jumps and space for two **Berserk Llama Syndrome** album covers. Proposed visible invitation: **“If you liked this, you might also enjoy Steve, Paul and Dave’s albums.”**
+
+**G3A — Summit exterior cast staging (small code/CSS PR)**
+
+- Inspect `#rescueRouteIntro[data-route="cult"]`, the gatekeeper, `#summitEntranceDavid`, `#summitEntrancePaul`, masonry edge/ground plane and actor contact shadows. Move **both men left** and re-evaluate scale, perspective, eye contact and dialogue clearance. David must not appear perched on the wall; Paul must read as grounded on the same approach.
+- Acceptance: believable two-person approach, correct feet/stone seam, no overlap with gatekeeper, title cards or white speech bubble; verify desktop/tablet/mobile and seek owner screenshot approval. Retain approved background and sprites.
+
+**G3B — Accurate route-stage status wording (with G3A or another tiny PR)**
+
+- Audit current `src/game.js` footer/progress labels around hotel completion, Summit entrance and transition to admissions. Remove misleading **“rescue briefing” / “briefing complete”** specifically where the characters are actively undertaking a rescue attempt. Examples to approve: **“Rescue attempt · Summit approach”**, **“Summit entrance · n of N”** and **“Approach complete · Admissions test next”**.
+- Do **not** perform indiscriminate global string replacements, rewrite spoken dialogue or mislabel genuinely separate briefing stages. Acceptance: all visible route labels match what players are doing.
+
+**G3C — Pictographic Summit admissions choices**
+
+- Inventory all three existing questions, choices and their correct/incorrect responses, including the first check's vase, airline ticket and charger. Produce a compact **prop/icon inventory** before generating anything.
+- Present answer choices as consistent **image + readable text** tiles with comparable size and prominence. Reuse appropriate existing icons where possible; create only the **minimum** approved matching illustrations, staged as Drive source → versioned manifest → optimised WebP.
+- Retain choice IDs and scoring, feedback, keyboard/touch/screen-reader equivalents, hints and current progression. Avoid accidental answer clues via differing art emphasis or converting it into a new mini-game.
+- Acceptance: three visually playful accessible checks, correct answer mechanics, no option clipping or unintended extra time.
+
+**G3D — Throne room attendant/actor scale and position**
+
+- Audit the locked room art, throne Stephen, David, Paul and **four existing attendants** (`summitThroneAttendantFan`, `Tray`, `Ewer`, `Towel`). Use perspective markers and staging overlays before moving anything.
+- **Increase attendants to believable scale** and place them intentionally: **one standing and one kneeling on each side**, facing inward to Stephen. Kneeling figures should not seem miniature or too far in the foreground. Preserve the intended separate fan/tray/ewer/towel roles and layering.
+- Reposition/resize David and Paul as necessary for a clear confrontation with correctly grounded feet, eye lines and adequate white-dialogue-box clearance. Do not overwrite or regenerate approved throne/background unless the actual source proves unusable.
+- Check speaking-glow registration, all 14 ending lines, mobile crops and Skip to End. Acceptance: convincing balanced foreground, visible hierarchy towards Stephen, no unnaturally small attendants. Owner before/after approval.
+
+**G3E — “Heaven Was a Place on Earth” dedicated Ending A art**
+
+- Generate **one bespoke owner-approved ending illustration** showing Stephen happy at the Summit and David/Paul's entirely unnecessary intervention as the comic payoff. Use canonical cast likenesses and approved graphics style; avoid merely reusing the existing visitor-information background.
+- Show heading and summary as **live accessible text** on a restrained contrast panel wherever possible. Remove **“new illustrations deferred”** placeholder wording only when the final image actually ships.
+- Stage source in Google Drive, versioned manifest, optimised WebP, responsive preview. Acceptance: deliberate Ending A final payoff, heading remains readable, no unnecessary full-frame darkness, ending mechanics unchanged.
+
+**G3F — Universal end menu, safe jumps and album covers (all endings)**
+
+- Extend the current `#rescueEndingSummary` to a shared post-Ending **menu** after **A, B and C**. Keep route-specific ending identity and summary visible, plus **Play from start**, **Play another ending** and a usable **Jump to chapter/scene** selector.
+- Explicit checkpoint contract: jumps to opening/China/office alarm/hotel/route intro/game/ending must be **safe and state-aware**. Direct jumps must initialise valid prerequisite route choices, fresh unanswered decisions and unsolved puzzles; no simulated puzzle success, invented earlier story decisions, corrupt V3 saves or jumps into inaccessible scenes. Hide/disable destinations requiring unresolved prerequisites or restart from a safe real checkpoint. Preserve D2 contextual Skip behaviour.
+- Separate promotional region: **“If you liked this, you might also enjoy Steve, Paul and Dave’s albums”**; reserve **two portrait cover slots** for the owner's existing **Berserk Llama Syndrome** album covers with correct aspect ratio, captions and alt text. Reuse approved project covers only after checking source/usage; owner supplies/approves any listening/purchase URLs. **Do not invent commerce links**, make ads interrupt gameplay or require album interaction to replay.
+- Layout must work with keyboard, touch and small screens without stacked/nested scrolling. Sound, save/resume and replay remain intact. Acceptance: all three endings reach the same functional hub, safe jumps respect route/puzzle gates, two album covers can display properly, no placeholder promotion mistaken for a purchase option.
+- **Dependency/ownership:** implementation must account for subsequent Ending B feedback; no premature completion claim for universal functionality based only on Ending A.
+
+**G3G — Ending A and all-ending hub regression**
+
+- Full Ending A from Summit exterior → admissions (all right/wrong answers) → throne → Ending A art → hub; separately confirm **Ending B and C** also reach and use the shared hub without skipped challenges.
+- Test change route, fresh and resumed saves, Next/Play/Pause/Sound, Skip to Game/End, return to opening, chapter jumps, album covers with/without URLs, mobile, tablet, laptop, reduced motion and accessibility. Verify no loss of voice or artwork state and 15–25-minute first-playthrough pacing.
+- Owner reviews separate staging, labels, pictographic art, throne staging, end illustration and end-hub PRs; each requires green CI and real Cloudflare preview before merge.
+
+**G3 non-goals:** new ending/route, unsolved puzzle bypass, wholesale art repaint, replacing existing spoken dialogue, unapproved album artwork or unverified listening/store links.
+
+#### GAME-SP4.1G0/G1/G2/G3 — Sequenced chapter polish
+
+| Order | Package | Dependency / review gate |
 | --- | --- | --- |
-| **Start first** | **G0A** Paul satisfied arm clipping | Audit source vs CSS, smallest one-expression correction, visual comparison |
-| 2 | **G0B** both song modal layouts and lyric scrolling | One shared sizeable lyric panel; no optimistic legacy overlay |
-| 3 | **G1A** phone sequence storyboard/state design | Decide reusable phone assets/low-battery/dead-phone states before generating |
-| 4 | **G0C** two SFX hooks | Check for pre-existing printer beep; SFX source/approval can happen in parallel |
-| 5 | **Art batch:** G0D final risk-plan, G0E rescue title, G1B England card, **only approved G1A phone art** | Individual illustration likeness approval; Drive → manifest → WebP provenance |
-| 6 | **G0F + G1C** integrated QA | Chapter 1 plus all three Chapter 2 routes, responsive checks and owner sign-off |
-| After these | Existing **GAME-SP4.1G** limited expressions/reactions | Target only remaining high-value jokes; do not start large sprite production |
-| **Parallel** | **GAME-SP4.1H** user-recorded character and transition narrator audio | Separate chat/branch; do not block visual work while MP3s are absent |
-| Final | **GAME-SP4.1I** full game acceptance | Three-ending QA, pacing and release-candidate approval |
+| **1 — start** | **G0A** Paul's satisfied arm | Diagnose tight asset vs CSS and correct only that expression |
+| 2 | **G0B** optimistic/pessimistic song windows | One large modal; correct lyric scrolling and no underlying legacy panel |
+| 3 | **G2A** rescue-alarm double desk | Short scene-specific staging/CSS correction, no blanket office changes |
+| 4 | **G1A** three-route dying-phone storyboard | Approve state order and reusable asset count before art |
+| 5 | **G3A + G3B** Summit outside character positions and status copy | Both men grounded left, rescue attempt terminology instead of briefing |
+| 6 | **G3C + G3D** admissions illustrations and throne cast perspective | Pictographic choice inventory and actor staging before new artwork |
+| 7 | **G0C** muted-group/printer SFX hooks | Audit existing beeps; optional owner-approved recordings |
+| 8 | **Approved art batch** G0D risk plan, G0E opening rescue card, G1B England illustration, G3E Heaven finale, only necessary G1A/G3C pictures | Approve each illustration/canonical likeness, stage PNG → manifest → WebP |
+| 9 | **G3F** shared ending menu and Berserk Llama Syndrome album-cover slots | Chapter jumps preserve route/puzzle gates; common hub on A/B/C |
+| 10 | **G0F + G1C + G3G** integration/three-ending QA | Desktop/tablet/mobile, complete story, save/voice/skip and owner sign-off |
+| Afterwards | Existing **SP4.1G** restrained expressions and reactions | Only remaining high-value acting improvements |
+| **Parallel** | **SP4.1H** voice/narrator coverage | Recorded in another strand; not blocked by visual changes |
+| Final | **SP4.1I** full V1 qualification | All three endings timed and known issues documented |
 
-**Development rules:** Small short-lived `agent/*` branches and draft PRs based on the latest `main`; preserve V3 saves and all approved dialogue, photo privacy requirements and route logic. User approval of this **plan** does not mean any ungenerated artwork or audio is approved for the game.
+**Branch/review discipline:** separate `agent/*` draft PRs from latest `main`; owner approves all visual edits and new art before merging. This roadmap commit does not change gameplay or authorise image generation/audio uploads. Ending B feedback remains pending and will be added as its own scoped package.
 
 #### GAME-SP4.1G — Limited extra expressions, reactions and movement
 
-**Priority:** P2; **status:** Deferred until newly scoped G0/G1 Chapter 1/2 polish is completed or explicitly waived; B and E are merged. **Dependencies:** approved expression registration and speaker focus.  
+**Priority:** P2; **status:** Deferred until newly scoped G0/G1/G2/G3 Chapter 1–4 polish is completed or explicitly waived; B and E are merged. **Dependencies:** approved expression registration and speaker focus.  
 **Owner idea:** Add some personality through extra reactions and motion without bloating the project.
 
 **Implementation tasks**
@@ -921,12 +997,14 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 | 6 | SP4.1F | A/D presentation patterns; artwork approval | Each transition illustration packet previewed and signed off |
 | 7a | SP4.1G0 | Approved F and Chapter 1 owner screenshots | Paul, song modals, two SFX cues and two owner-approved prop/title illustrations |
 | 7b | SP4.1G1 | Approved F and three route handoffs | Phone battery failure clear on all routes; illustrated Back in England; state/audio intact |
-| 7c | SP4.1G | G0/G1 delivered or explicitly deferred | Limited additional expression work; no framing jumps |
+| 7c | SP4.1G2 | Approved alarm-stage office art | Double-desk fix and David/Paul two-person registration |
+| 7d | SP4.1G3 | Approved Summit art and ending summaries | Summit entrance, admissions, throne, Heaven image, shared end hub and album covers |
+| 7e | SP4.1G | G0/G1/G2/G3 delivered or explicitly deferred | Limited additional expression work; no framing jumps |
 | Parallel | SP4.1H | Approved user-supplied clips | Each voice batch individually listened to and previewed |
 | Final | SP4.1I | Approved A–E and explicit F/G/H deferrals if needed | Timed full-game acceptance, release candidate ready for owner |
 | Deferred | SP4.1J | Owner reschedules | Precision board geometry, no puzzle regression |
 
-**Current implementation next (19 October 2026):** SP4.1A–F including both daylight corrections, speaker glow and four illustrated transitions are owner-approved and merged. Before broad GAME-SP4.1G extra expressions, deliver the newly scoped **G0 Chapter 1** and **G1 Chapter 2** polish packets above. **Start G0A** (Paul’s satisfied sprite arm clipping), then **G0B** (song overlay and lyric scrolling); storyboard G1A battery-phone states before image generation. GAME-SP4.1H voice recording proceeds **independently in a separate strand**. This roadmap-only update does not change playable scenes or authorise unapproved artwork generation.
+**Current implementation next (19 October 2026):** SP4.1A–F including both daylight corrections, speaker glow and four illustrated transitions are owner-approved and merged. Before broad GAME-SP4.1G extra expressions, deliver **G0 Chapter 1**, **G1 Chapter 2**, **G2 Chapter 3** and **G3 Chapter 4/shared end hub** packages above. **Start G0A**, then **G0B**, then **G2A**; storyboard G1A battery-phone states and G3C Summit admissions visuals before generating assets. Ending B feedback is still in progress and will be captured separately. GAME-SP4.1H voice recording proceeds **independently in a separate strand**. This roadmap-only update does not change playable scenes or authorise unapproved artwork generation.
 
 **Historical note:** SP4.0 and SP4C entries above describe past development stages and may mention draft branches from their original dates. For current work, this SP4.1 plan and top of `STATUS.md` take precedence. No package being listed here means its artwork, code or audio is already produced.
 
