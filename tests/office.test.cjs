@@ -52,7 +52,9 @@ function preview({audio=false,assetLoader=null,saveData=false}={}) {
     getItem:key=>stored.get(key)||null,
     setItem:(key,value)=>stored.set(key,value)
   },scrollTo() {}};
-  if(assetLoader) window.SMP_ASSET_LOADER=assetLoader;
+  if(assetLoader) window.SMP_ASSET_LOADER={
+    present(){return false;},busy(){return false;},cancel(){},...assetLoader
+  };
   if(saveData) window.navigator={connection:{saveData:true}};
   if(audio) window.Audio=class {
     constructor(){this.src="";this.preload="";this.paused=true;this.pauseCount=0;this.playCount=0;this.currentTime=0;this.duration=120;voices.push(this);}
