@@ -1,61 +1,72 @@
-# GAME-SP4.1G1A — Stephen's dying phone: storyboard and asset audit
+# GAME-SP4.1G1A — Stephen's dying phone: revised storyboard and art audit
 
-**Status:** storyboard proposed for owner approval; no game/UI art change authorised yet.
+**Status:** revised following owner narrative/art feedback, 19 October 2026. Storyboard for owner sign-off; **no playable game changes or newly generated imagery yet**.
 
-**Baseline:** G2A merge `d99b474a688c2116d449285f9a65c1d0654693e9`. Scope is the existing final-message scene across the three mutually exclusive Chapter 2 routes, ending immediately before G1B's separate illustrated "Back in England" work.
+**Baseline:** G2A approved merge `d99b474a688c2116d449285f9a65c1d0654693e9`. Scope is the existing 3-step phone-to-England sequence across all three Chapter 2 routes. G1B's England illustration is a separate package.
 
-## Actual implementation audit
+## Canonical story rule: the incomplete message WAS received
 
-- The existing end-of-route state machine is `holidayPhase === "final-message"` with `finalStep` 0, 1 and 2. `continueRouteHandoff()` sets 0, and `advanceFinalMessage()` advances 0→1→2→rescue-alarm. The same steps are persisted/resumed in save V3. **Do not add steps or migrate saves.**
-- `src/china-data.js` owns three canonical, incomplete messages:
-  - `cult` (Summit): **This place is unreal. They've asked me to be their...**
-  - `detention` (Forbidden City banquet): **I've just been introduced as the official...**
-  - `reassemble` (Night Market spa): **This spa is incredible. They're taking my entire...**
-- The shared `chinaFinalPhone` currently looks like a wide rectangular notice, not a physical phone. On finalStep 0 the small inline label says `1% battery`; on step 1 it changes to `0% · Battery depleted` but the display **remains on**, while `chinaFinalReaction` overlays it. Result: no convincing phone shutdown.
-- Stephen's owner-approved dialogue **“Oh, for fuck's sake.”** is `china.final.001` at finalStep 1, with its existing optional voice and fallback. Preserve the exact text, cue ID and beat.
-- The existing `chinaFinalEngland` step 2 and spoken `backEngland` transition are out of scope for this package's painting; G1B is the separate artwork work package.
-- The old project CSS already includes a reusable comic-illustrated phone silhouette (`.cutaway-phone`, `.phone-notch`, `.phone-screen`) from the earlier opening proof. We can share its **design vocabulary**, not copy an entire obsolete cutaway scene or depend on unrelated CSS selectors. `chinaFinalPhone` already has reusable live elements `chinaBatteryLabel`, `chinaPhoneMessage`, `chinaPhoneStatus`.
+**Important owner correction:** David and Paul **receive and subsequently read the partial message** during the Chapter 3 rescue alarm (and the shared hotel investigation). A phone-screen notice saying **"MESSAGE NOT SENT"** is categorically incorrect. The phone dies **after the partial message has reached the group**, preventing Stephen from finishing his thought or sending any further explanation. David and Paul mistake the ominous-looking fragment and Stephen's subsequent silence for an international incident.
 
-## Proposed 3-frame storyboard (same for all three routes)
+- `rescueAlarmPhoneText` and the hotel phone evidence already read `chinaFinal.messageByRoute[route]`. Do not alter their content or remove them.
+- `src/china-data.js` remains the single source for all three exact, canonical incomplete messages:
+  - `cult` / Summit: **This place is unreal. They've asked me to be their...**
+  - `detention` / Forbidden City banquet: **I've just been introduced as the official...**
+  - `reassemble` / spa: **This spa is incredible. They're taking my entire...**
+- Existing code at finalStep 1 says **"Message interrupted — not delivered"**, and finalStep 0 says **"Sending…"**. Both must be replaced during the G1A implementation so the visual/accessible status correctly communicates that the **partial message was delivered** and the battery cut off **further** contact. Existing recipient scenes must continue to show the fragment.
+- Stephen's approved line **"Oh, for fuck's sake."** remains `china.final.001` with its existing timing and voice, at finalStep 1. The existing narrator says the battery was mistaken for an incident; preserve that.
+- Don't write new chats, add messages or change the unfinished fragment to a complete message.
 
-### Frame 1 — “About to send” (existing finalStep 0)
+## Legacy phone artwork and why it must NOT return
 
-- Existing illustrated destination background, with **one large, recognisable smartphone in portrait orientation** centred towards the right. Dark navy comic bezel, earpiece/notch and luminous screen, consistent with approved game palette.
-- Screen heading: existing **STEPHEN RESCUE GROUP**.
-- Screen text: **the actual route-specific unfinished message** from `messageByRoute`, as live, selectable, accessible HTML text. No screenshots of text and no new chat messages.
-- Prominent red battery glyph, red **1%** marker and clear non-dialogue warning **LOW BATTERY** high on the phone; `chinaPhoneStatus` still says **Sending…**.
-- Preserve Stephen's background/portrait if he is present in the existing stage; don't create a second portrait. Preserve narrator and top control bar.
-- Player sees both what Stephen typed *and* why it probably will not send.
+**Second owner correction:** The CSS classes `.cutaway-phone`, `.phone-notch` and `.phone-screen` are **vestiges of an early intro proof that the team stopped using**. The current `src/game.js` and `index.html` do not instantiate those classes. They should **not be reused, resurrected, or presented as the approved visual language for G1A**.
 
-### Frame 2 — “Dead phone” and Stephen's existing reaction (existing finalStep 1)
+The opening now uses **separately owner-approved illustration assets**, with different purpose and context:
+- `public/assets/generated/game/office-phone-group-chat-cutaway-v01.webp` for `office.v05`;
+- `public/assets/generated/game/office-phone-group-muted-cutaway-v01.webp` for `office.v09`.
 
-- Pressing Continue, or existing autoplay advancing, makes the **same phone** visibly power down. Phone screen goes almost-black, screen content and sending animation disappear; bezel/earpiece/reflective sheen remain, so it reads unmistakably as a *switched-off phone*, not a missing UI.
-- An external, high-contrast comic status ribbon outside the dead screen communicates **0% · BATTERY FLAT** and **MESSAGE NOT SENT**. Use `aria-live` for the status; expose route context for screen-reader users without leaving visible messages on a supposedly powered-off display.
-- Place the existing **STEPHEN: “Oh, for fuck's sake.”** speech overlay away from the phone/glow and navigation, preserving its exact recorded cue at finalStep 1.
-- No generic “signal lost” mystery, no fabricated chat bubbles, and no extra voice or animation dependency. A short power-down transition is optional, but must respect reduced motion and be instantly complete after navigation/resume.
+**Do not reuse these two opening phone paintings as G1A art either**: they already depict specific group-creation and muted notifications, not Stephen's final battery failure. Leave Chapter 1 cutaways unchanged. Existing generic `chinaFinalPhone` HTML is a wide text panel rather than an accepted final-art handset.
 
-### Frame 3 — “Back in England” (existing finalStep 2)
+**Revised art recommendation:** Design **one NEW purpose-built, independently owner-approved transparent phone-shell image**, portrait oriented, comic-painted to match the current game. It must be empty of message text, battery numerals and screen-state lettering, which remain live, accessible, route-specific HTML. Then overlay screen content and a reusable dark/power-off state in this one G1A scene. If CSS must supply glass/reflection/low battery warning, use **new G1A-scoped selectors**, not the abandoned intro classes. No new images should be generated before a separate owner visual approval of the planned appearance.
 
-- Existing England handoff with its established narrator cue and Continue to the real David/Paul alarm; G1B will add approved art to this step separately.
-- The phone is hidden, with no retained battery or message overlay. Route choice and saved game remain unchanged.
+## Revised three-frame storyboard (all three routes, existing saves/steps)
 
-## Asset count and implementation plan after owner storyboard sign-off
+### Frame 1 — Message RECEIVED, low battery (existing finalStep 0)
 
-**Recommended new image files: ZERO.** Build the visual handset from lightweight CSS and existing text elements, reusing the pre-existing comic phone framing as a design reference. A single reusable phone for all three routes is more reliable and accessible than three rendered screenshots. If the owner specifically wants a more painted handset, request **one** reusable transparent illustrated shell for separate approval; never burn route messages into pixels. No owner reference art is required for the phone UI.
+- Place the **new dedicated illustrated smartphone shell** in front of the approved existing destination background. Screen shows **STEPHEN RESCUE GROUP**, the route-specific *partial* message from `messageByRoute`, and a legible successful-delivery status such as **"PARTIAL MESSAGE SENT"** or **"Sent to rescue group"**.
+- The same screen also shows **prominent red 1% · LOW BATTERY**, with a recognisable low-charge glyph. Make clear that the fragment has already reached David and Paul, and Stephen cannot continue.
+- Keep the actual typed message as selectable live HTML, never baked into an image. Only one reusable phone-screen implementation is needed for three routes.
+- Keep the existing stage, top controls, subtitle and existing actor composition untouched.
 
-- Implement state via `#chinaFinalPhone[data-power="low"|"off"]` or an equivalent **derived from existing finalStep**; do not introduce persistent state.
-- Preserve `finalStep` 0/1/2, IDs, saved-state and `china.final.001` sound cue, voice auto-advance, Next, Pause, contextual Skip, replay, and navigation.
-- On resumed finalStep 1, the screen must already be off; don't replay a misleading power-on frame.
-- On route switch, render `messageByRoute[route]` only; no stale previous message.
-- Fit the phone to 1366×768 desktop and narrow portrait devices, ensure full text and battery marker fit, and keep a separate, readable Stephen speech bubble, narrator subtitle and controls.
+### Frame 2 — Phone powered off, Stephen reacts (existing finalStep 1)
 
-## Visual and functional acceptance
+- Press Continue / existing autoplay to **visibly power down the same handset**. The actual display turns black, with the distinct physical shell visible; no ghost messages glowing beneath it.
+- An **external** caption or simple battery warning reads **"0% · PHONE SWITCHED OFF"** or **"BATTERY FLAT"**. It must **never** say "Message not sent", "Message failed", "Delivery failed" or imply that the already-received fragment disappeared. Where useful for accessibility, the status can clarify **"Last partial message delivered; phone now off."**
+- Stephen delivers the **existing** line **"Oh, for fuck's sake."**, still at its existing beat and with the same audio asset. Place the speech bubble where it does not obscure the phone and controls.
+- Optional brief display-blackout transition, instant on resume/reduced motion. No new voice or sound dependency.
 
-1. Owner approves this storyboard and **zero-raster-asset** approach (or requests one painted phone-shell illustration) **before art/code visual design is locked**.
-2. Draft PR working preview: all 3 routes show exactly their existing incomplete message plus RED 1%, then a screen that *actually goes dark* with **MESSAGE NOT SENT**, then Stephen's existing reaction, then England.
-3. Test Sound On/Off, voice missing/fails, Pause/Continue, Next/Skip, Save/Resume at all three `finalStep` values, switch endings, real rescue-alarm transition, desktop/tablet/mobile widths, reduced motion and readable live regions.
-4. Owner separately approves the rendered preview before merge. Do not expand this package into G1B's England painting.
+### Frame 3 — Back in England (existing finalStep 2)
 
-## Explicit non-goals
+- Hide Stephen's handset and transition to the current England narrator card; G1B will add separate approved art later.
+- Chapter 3 David/Paul alarm **must still display and analyse the route-specific received fragment**. Paul's pre-existing "Could just be his battery" line is the intended ironic explanation; David's alarm remains mistaken.
+- Keep the same route, saved checkpoint, and genuine rescue game transition.
 
-No additional dialogue or route, no re-illustration of Stephen, no extra narrative step, no version migration, no duplicate battery artwork per route, no invented messages or new voice audio, and no England illustration (G1B).
+## Technical constraints for the later implementation
+
+- Existing phase `holidayPhase === "final-message"` and persisted `finalStep` 0 → 1 → 2 → rescue-alarm are unchanged: **no new step or save migration**. On reload at finalStep 1, show the dead screen directly.
+- Render power state derived from `finalStep` in dedicated G1A selectors. Preserve `chinaBatteryLabel`, `chinaPhoneMessage`, `chinaPhoneStatus` IDs where feasible for established tests and accessibility. The live text can become visually hidden only during the powered-off display; it is still canonically available in England.
+- All three ending routes use the same approved phone-shell art, with live route text, battery and off-state overlays. No story route/cue, narrator, Pause/Next/Skip, Sound Off, resume or three-endings functionality is changed.
+- Test 1366×768, tablet and portrait phone for full message readability and correct separation from Stephen's speech, chapter controls and subtitles.
+- The old intro CSS proof (`.cutaway-phone` etc.) and the approved `office-phone-group-*` WebPs are **not** implementation dependencies.
+
+## Gates and tests
+
+1. **This revised storyboard:** owner confirms delivered partial message and the one-*new*-shell approach.
+2. **Artwork:** generate or design ONE transparent, blank-screen new handset image and obtain explicit owner approval before adding it to the playable build; stage approved original PNG in dedicated Stephen Martin Drive folder; materialise and version the optimised WebP using the project asset pipeline.
+3. **Code and preview:** make 1% red and the actual sent fragment visible, then genuinely dark/off at 0%, with Stephen's recorded line and an external **battery-flat** caption. Validate all three routes still reveal that same fragment to David/Paul.
+4. **Automated regression:** per-route exact received text, status never says not delivered, Sound On/Off, missing MP3, Pause/Next/Skip, Save/Resume at all three steps, leaving final scene, focus/a11y, device widths and reduced motion.
+5. **Human review:** approve the rendered phone sequence and running preview separately before merge. G1B England artwork follows independently.
+
+## Non-goals
+
+No legacy intro-art revival, no reused group-chat/muted paintings, no new conversations, no complete messages, no extra dialogue, no changed Chapter 1 assets, no expanded gameplay, no new final steps or saving format, no new voice clips, and no G1B England illustration.
