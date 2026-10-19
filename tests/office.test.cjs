@@ -4339,3 +4339,31 @@ test("GAME-SP4.1G1A each canonical partial message is received before the phone 
     assert.equal(p.el("rescueAlarmPhoneText").textContent,message,"David and Paul received the partial message");
   }
 });
+
+
+test("GAME-SP4.1G1A phone stays independently anchored above the visible action bar",()=>{
+  const stage=css.slice(css.indexOf("#holidayScreen .china-final-stage {"),css.indexOf("/* GAME-SP4.1G1A: owner-approved new handset art."));
+  assert.match(stage,/box-sizing: border-box;/);
+  assert.match(stage,/display: block;/);
+  assert.match(stage,/overflow: hidden;/);
+  assert.match(stage,/padding: 0;/);
+  assert.doesNotMatch(stage,/display:\s*grid|place-items:\s*center/);
+  const phone=css.slice(css.indexOf("#holidayScreen .china-final-phone {"),css.indexOf("#holidayScreen .china-final-phone-shell {"));
+  assert.match(phone,/position: absolute;/);
+  assert.match(phone,/top: 8%;/);
+  assert.match(phone,/left: 36%;/);
+  assert.match(phone,/height: min\(70%, 650px\);/);
+  assert.match(phone,/transform: translateX\(-50%\);/);
+  assert.doesNotMatch(phone,/position: relative|height:\s*min\(78%/);
+  const tablet=css.slice(css.indexOf("@media (max-width:800px) {",css.indexOf(".china-final-england small")),css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")));
+  assert.match(tablet,/#holidayScreen \.china-final-stage \{aspect-ratio:4\/3;\}/);
+  const mobile=css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")),css.indexOf("/* GAME-SP2.3C",css.indexOf(".china-final-england small")));
+  assert.match(mobile,/#holidayScreen \.china-final-stage \{aspect-ratio:3\/4;\}/);
+  assert.match(mobile,/#holidayScreen \.china-final-phone \{top:5%;left:50%;height:54%;max-width:90%;transform:translateX\(-50%\);margin:0;\}/);
+  assert.match(css, /@media \(min-width:451px\) and \(max-width:580px\)/);
+  assert.match(css, /china-final-phone \{top:5%;left:50%;height:56%;max-width:88%;transform:translateX\(-50%\);margin:0;\}/);
+  assert.match(css,/#holidayScreen \.china-final-controls \{position:absolute;z-index:8;bottom:0;/);
+  // The stage's final-message state and route-sensitive text are unaffected.
+  assert.match(engine,/\$\("chinaFinalPhone"\)\.dataset\.power = step === 0 \? "low" : "off"/);
+  assert.match(engine,/\$\("chinaPhoneMessage"\)\.textContent = route \? chinaFinal\.messageByRoute\[route\] : ""/);
+});
