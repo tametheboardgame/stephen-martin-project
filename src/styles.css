@@ -2183,10 +2183,60 @@ body:has(#menuScreen:not([hidden])) main {
   background:#fff3d6;color:#17354b;text-align:center;
 }
 #holidayScreen .china-final-reaction p {font-size:clamp(20px,2.1vw,31px);font-weight:900;margin:5px 0;}
-#holidayScreen .china-final-england {position:absolute;inset:0;display:grid;align-content:center;justify-items:center;text-align:center;background:#090e18;padding:20px;}
-#holidayScreen .china-final-england h2 {font-size:clamp(28px,4.5vw,67px);margin:0;color:#fff0c7;}
-#holidayScreen .china-final-england p {font-size:clamp(15px,2vw,29px);font-style:italic;margin:14px 0;color:#d8c1a1;}
-#holidayScreen .china-final-england small {color:#9aa6ba;font-size:11px;margin-top:20px;}
+/* GAME-SP4.1G1B: single owner-approved England postcard collage. Landmarks
+ * occupy visibly SEPARATE torn-photo frames, not one impossible London
+ * panorama. Existing topbar, narrator box and audio remain live/independent. */
+#holidayScreen .china-final-england {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: block;
+  box-sizing: border-box;
+  padding: 0;
+  overflow: hidden;
+  background: #0b1c31 url("../public/assets/generated/locations/transition-back-in-england-postcard-collage-v01.webp") center / cover no-repeat;
+}
+#holidayScreen .china-final-england h2 {
+  position: absolute;
+  left: 3.5%;
+  top: 16%;
+  box-sizing: border-box;
+  margin: 0;
+  width: max-content;
+  max-width: 46%;
+  padding: 10px 16px;
+  border: 2px solid rgba(253,221,153,.83);
+  border-radius: 12px;
+  background: rgba(7,27,47,.85);
+  box-shadow: 5px 6px 0 rgba(4,12,25,.44);
+  color: #fff0c7;
+  font: 900 clamp(25px,3.2vw,44px)/1.04 Impact,"Arial Black",sans-serif;
+  letter-spacing: .07em;
+  text-align: left;
+  text-shadow: 2px 3px 0 #06192c;
+}
+@media (max-width:800px) {
+  #holidayScreen .china-final-england {
+    background-position: 48% center;
+  }
+  #holidayScreen .china-final-england h2 {
+    left: 5%;
+    top: 19%;
+    max-width: 88%;
+    padding: 8px 12px;
+    font-size: clamp(22px,4.6vw,31px);
+  }
+}
+@media (max-width:450px) {
+  #holidayScreen .china-final-england {
+    background-position: 46% center;
+  }
+  #holidayScreen .china-final-england h2 {
+    top: 22%;
+    font-size: clamp(20px,5vw,25px);
+    padding: 7px 9px;
+  }
+}
 @media (min-width:801px) {
   #holidayScreen #marketScene,#holidayScreen #chinaFinalScene {position:absolute;inset:0;width:100%;height:100%;}
   #holidayScreen .market-scene .wall-stage {position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;}
