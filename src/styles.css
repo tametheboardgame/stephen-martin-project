@@ -608,8 +608,15 @@ button:active:not(:disabled) { transform: translateY(1px); }
   transition: filter 140ms ease;
 }
 #officeScreen .cast-seated #castDavid { left: 3.5%; }
-#officeScreen .cast-seated #castStephen { left: 35%; width: 30%; }
-#officeScreen .cast-seated #castPaul { right: 3.5%; }
+#officeScreen .cast-seated #castStephen { left: 35%; width: 30%; z-index: 2; }
+/* GAME-SP4.1G0A: Paul's seated PNGs have a straight cut through the
+ * outer sleeve at their left canvas boundary. The source art is already
+ * fully visible (portrait overflow: visible); the *staging gap* exposes
+ * that edge as an unnatural vertical seam. Register the entire Paul actor
+ * consistently closer to Stephen, with Paul's image underneath Stephen
+ * where their near-side sleeves overlap, so the edge is naturally occluded.
+ * Use the same position for neutral/confused/pleased to prevent pose jumps. */
+#officeScreen .cast-seated #castPaul { right: 7.25%; z-index: 1; }
 #officeScreen .cast-seated .actor-portrait {
   width: 100%;
   height: auto;
