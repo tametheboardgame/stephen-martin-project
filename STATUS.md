@@ -1,5 +1,14 @@
 # Project status
 
+## GAME-SP4.1G0B — Song modal clean-up (19 October 2026, active review)
+
+- **G0A merged:** PR #62 into `main` as `8bbb25cdb301d0ba18f0e87d480b7b2b12d7438a`, after owner acceptance of both repaired Paul expressions.
+- **G0B development branch:** `agent/game-sp41g0b-song-modal-polish` from that merge. Remove the obsolete optimistic `cutaways.song` backing card; retain all other Chapter 1 cutaways.
+- Use one large flex song overlay for optimistic and pessimistic offer/full, with the lyrics area occupying the remaining modal height, an accessible keyboard-focusable scroll viewport, sound state/preview/full control unchanged and short-device stage height only during song.
+- Auto-scroll is now bounded with opening-verse hold and reaches the last lines before audio completion. Paused audio and manually focused lyric viewport are not force-scrolled. Reentering a song resets to the top, upgrading the 20-second preview to full keeps its current audio and lyrics position.
+- **Review gate:** verify Cloudflare preview at 1366×768, smaller laptop, phone portrait; both tracks, previews, offers, Sound Off, pause/resume, Skip/Next/Back/replay and end-of-song. Draft PR pending owner approval; do not merge into main yet. Next approved package G2A.
+
+
 **Updated:** 19 October 2026
 
 ## CURRENT — Paul confused portrait repaired, PR #62 awaiting visual approval

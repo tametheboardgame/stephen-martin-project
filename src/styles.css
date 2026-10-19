@@ -429,80 +429,139 @@ button:active:not(:disabled) { transform: translateY(1px); }
   background: #051d3d;
 }
 .dialogue-hint { color:#40cfff; font-size:11px; display:inline-block; }
-/* GAME-SP4.0D: comic song player is an actual stage overlay. */
+/* GAME-SP4.1G0B: one shared, large song player for both versions.
+ * Only the approved office art appears behind this panel: the obsolete
+ * optimistic cutaway card is retired in game.js. */
 #officeScreen .office-song-overlay {
-  position:absolute;z-index:16;top:10%;left:50%;transform:translateX(-50%);
-  box-sizing:border-box;width:min(76%,850px);max-height:82%;padding:15px 21px;
-  display:flex;flex-direction:column;gap:7px;align-items:stretch;
-  color:#fff5d6;background:linear-gradient(145deg,#18436b,#071b34 72%);
-  border:4px solid #f6ca64;border-radius:17px;
-  box-shadow:9px 10px 0 rgba(3,14,29,.85),inset 0 0 0 2px #4d91b5;
+  position: absolute;
+  z-index: 16;
+  top: 4%;
+  left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+  width: min(91%, 1040px);
+  height: 92%;
+  min-height: 0;
+  max-height: none;
+  padding: clamp(10px, 1.5vw, 19px) clamp(13px, 2vw, 26px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: clamp(5px, .7vw, 10px);
+  overflow: hidden;
+  color: #fff5d6;
+  background: linear-gradient(145deg, #18436b, #071b34 72%);
+  border: 4px solid #f6ca64;
+  border-radius: 17px;
+  box-shadow: 9px 10px 0 rgba(3,14,29,.85), inset 0 0 0 2px #4d91b5;
 }
 #officeScreen .office-song-overlay[hidden],
 #officeScreen .office-song-actions[hidden],
-#officeScreen .office-song-overlay [hidden] {display:none!important;}
-#officeScreen .office-song-overlay[data-mode="offer"] {
-  top:16%;left:auto;right:6%;transform:none;width:min(50%,610px);
-  padding:21px 23px;border-color:#f5a7b4;
-}
+#officeScreen .office-song-overlay [hidden] { display: none !important; }
+/* Offer and playback share the same dimensions, avoiding a jarring resize. */
 #officeScreen .office-song-overlay[data-kind="pessimistic"] {
-  background:linear-gradient(145deg,#40263f,#101b30 78%);
-  border-color:#f5a7b4;
+  background: linear-gradient(145deg, #40263f, #101b30 78%);
+  border-color: #f5a7b4;
 }
 #officeScreen .office-song-eyebrow {
-  color:#aeeeff;font:800 clamp(10px,1vw,14px) "Trebuchet MS",sans-serif;
-  letter-spacing:.11em;text-align:center;
+  color: #aeeeff;
+  font: 800 clamp(10px, 1vw, 14px) "Trebuchet MS", sans-serif;
+  letter-spacing: .11em;
+  text-align: center;
 }
 #officeScreen .office-song-overlay h3 {
-  margin:0;text-align:center;color:#ffe299;
-  font:900 clamp(19px,2.4vw,32px) Impact,"Arial Black",sans-serif;
-  letter-spacing:.07em;text-shadow:2px 3px 0 #031325;
+  margin: 0;
+  text-align: center;
+  color: #ffe299;
+  font: 900 clamp(19px, 2.4vw, 32px) Impact, "Arial Black", sans-serif;
+  letter-spacing: .07em;
+  text-shadow: 2px 3px 0 #031325;
 }
-#officeScreen .office-song-intro {margin:0;text-align:center;font:700 clamp(11px,1.1vw,15px) "Trebuchet MS",sans-serif;}
+#officeScreen .office-song-intro {
+  margin: 0;
+  text-align: center;
+  font: 700 clamp(11px, 1.1vw, 15px) "Trebuchet MS", sans-serif;
+}
 #officeScreen .office-song-lyrics-scroll {
-  min-height:70px;max-height:clamp(90px,22vw,255px);overflow-y:auto;
-  scrollbar-color:#ecc15f #123252;scrollbar-width:thin;
-  border:2px solid #5da2c1;border-radius:11px;
-  background:rgba(0,11,28,.75);padding:10px 15px;overscroll-behavior:contain;
+  flex: 1 1 0;
+  min-height: 0;
+  max-height: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: #ecc15f #123252;
+  scrollbar-width: thin;
+  border: 2px solid #5da2c1;
+  border-radius: 11px;
+  background: rgba(0,11,28,.75);
+  padding: clamp(6px, 1vw, 12px) clamp(8px, 1.2vw, 16px);
 }
-#officeScreen .office-song-lyrics {display:grid;gap:7px;text-align:center;padding:8px 3px 25px;}
+#officeScreen .office-song-lyrics:focus-visible,
+#officeScreen .office-song-lyrics-scroll:focus-visible {
+  outline: 3px solid #f6ca64;
+  outline-offset: -3px;
+}
+#officeScreen .office-song-lyrics { display: grid; gap: 7px; text-align: center; padding: 8px 3px 25px; }
 #officeScreen .office-song-lyrics .song-lyrics-heading {
-  margin:14px 0 4px;color:#ffd57a;letter-spacing:.08em;
-  font:900 clamp(11px,1vw,15px) Impact,"Arial Black",sans-serif;
+  margin: 14px 0 4px;
+  color: #ffd57a;
+  letter-spacing: .08em;
+  font: 900 clamp(11px, 1vw, 15px) Impact, "Arial Black", sans-serif;
 }
 #officeScreen .office-song-lyrics .song-lyrics-line {
-  margin:0;color:#f5fbff;font:750 clamp(12px,1.25vw,18px)/1.4 "Trebuchet MS",sans-serif;
+  margin: 0;
+  color: #f5fbff;
+  font: 750 clamp(12px, 1.25vw, 18px)/1.4 "Trebuchet MS", sans-serif;
 }
-#officeScreen .office-song-actions {display:flex;flex-wrap:wrap;justify-content:center;gap:9px;align-items:center;}
+#officeScreen .office-song-actions {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 9px;
+  align-items: center;
+}
 #officeScreen .office-song-button {
-  cursor:pointer;min-height:43px;padding:9px 17px;
-  border:3px solid #2a3e5d;border-radius:12px;
-  color:#091c30;background:#ffda73;
-  font:900 clamp(12px,1.2vw,17px) "Trebuchet MS",sans-serif;
-  box-shadow:3px 4px 0 #04172a;
+  cursor: pointer;
+  min-height: 42px;
+  padding: 8px 17px;
+  border: 3px solid #2a3e5d;
+  border-radius: 12px;
+  color: #091c30;
+  background: #ffda73;
+  font: 900 clamp(12px, 1.2vw, 17px) "Trebuchet MS", sans-serif;
+  box-shadow: 3px 4px 0 #04172a;
 }
-#officeScreen .office-song-button:hover {background:#fff0a6;}
-#officeScreen .office-song-secondary {color:#fff;background:#325276;border-color:#7f9fb3;}
-#officeScreen .office-song-secondary:hover {background:#446a8e;}
+#officeScreen .office-song-button:hover { background: #fff0a6; }
+#officeScreen .office-song-secondary { color: #fff; background: #325276; border-color: #7f9fb3; }
+#officeScreen .office-song-secondary:hover { background: #446a8e; }
 #officeScreen .office-song-status {
-  min-height:16px;margin:0;text-align:center;
-  font:650 11px "Trebuchet MS",sans-serif;color:#aeeeff;
+  flex: 0 0 auto;
+  min-height: 16px;
+  margin: 0;
+  text-align: center;
+  font: 650 11px "Trebuchet MS", sans-serif;
+  color: #aeeeff;
 }
-@media(max-width:800px) {
-  #officeScreen .office-song-overlay {top:10%;width:88%;max-height:86%;padding:10px 12px;gap:5px;}
-  #officeScreen .office-song-overlay[data-mode="offer"] {top:18%;right:4%;width:64%;padding:12px;}
-  #officeScreen .office-song-lyrics-scroll {max-height:clamp(76px,24vw,160px);padding:6px;}
-  #officeScreen .office-song-button {min-height:34px;padding:5px 9px;}
+@media (max-width: 800px) {
+  /* A landscape office stage becomes too shallow on narrow devices. Give the
+   * song modal a taller stage only while it is open; other scenes are intact. */
+  #officeScreen .stage[data-song-active="true"] {
+    aspect-ratio: auto;
+    height: clamp(390px, 76dvh, 620px);
+  }
+  #officeScreen .office-song-overlay { width: 94%; padding: 11px 13px; }
+  #officeScreen .office-song-button { min-height: 36px; padding: 5px 10px; }
 }
-@media(max-width:490px) {
-  #officeScreen .office-song-overlay {width:95%;top:7%;max-height:89%;padding:6px 9px;}
-  #officeScreen .office-song-overlay[data-mode="offer"] {top:16%;right:3%;width:91%;}
-  #officeScreen .office-song-eyebrow {font-size:9px;}
-  #officeScreen .office-song-overlay h3 {font-size:18px;}
-  #officeScreen .office-song-intro {font-size:10px;}
-  #officeScreen .office-song-lyrics-scroll {max-height:92px;min-height:48px;}
-  #officeScreen .office-song-lyrics .song-lyrics-line {font-size:11px;}
-  #officeScreen .office-song-status {font-size:10px;}
+@media (max-width: 490px) {
+  #officeScreen .stage[data-song-active="true"] { height: clamp(390px, 78dvh, 590px); }
+  #officeScreen .office-song-overlay { width: 96%; top: 3%; height: 94%; padding: 8px 9px; gap: 5px; border-width: 3px; }
+  #officeScreen .office-song-eyebrow { font-size: 9px; }
+  #officeScreen .office-song-overlay h3 { font-size: 19px; }
+  #officeScreen .office-song-intro { font-size: 11px; }
+  #officeScreen .office-song-lyrics-scroll { padding: 6px 8px; }
+  #officeScreen .office-song-lyrics .song-lyrics-line { font-size: 12px; }
+  #officeScreen .office-song-status { font-size: 10px; }
+  #officeScreen .office-song-button { font-size: 12px; min-height: 34px; }
 }
 
 .dialogue-buttons {display:flex; flex-wrap:wrap; gap:9px; align-items:center; }
