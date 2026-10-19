@@ -4567,3 +4567,5 @@ test("Missing Summit voice falls back to text-timed progression; skipped respons
   assert.equal(wrong.paused,true);
   assert.ok(p.voices.at(-1).src.endsWith("summit.check.001.charger.001.mp3"));
 });
+
+// QA-only smoke trigger: identical Summit voice integration with a comment-only tail.
