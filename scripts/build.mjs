@@ -108,6 +108,18 @@ if (riskBytes.length < 50000 || riskBytes.length > 2 * 1024 * 1024 ||
 await mkdir(path.dirname(path.join(output, approvedRiskCutaway)), { recursive: true });
 await copyFile(riskSource, path.join(output, approvedRiskCutaway));
 
+// GAME-SP4.1G1A: one new owner-approved transparent handset, with live
+// route-specific message/1%/shutdown UI. Materialised from Drive on this PR.
+const approvedFinalPhoneShell = "public/assets/generated/game/stephen-phone-shell-g1a-v01.webp";
+const finalPhoneBytes = await readFile(path.join(root,approvedFinalPhoneShell));
+if (finalPhoneBytes.length < 20000 || finalPhoneBytes.length > 2 * 1024 * 1024 ||
+    finalPhoneBytes.toString("ascii",0,4) !== "RIFF" ||
+    finalPhoneBytes.toString("ascii",8,12) !== "WEBP") {
+  throw new Error("Approved G1A handset missing or invalid: " + approvedFinalPhoneShell);
+}
+await mkdir(path.dirname(path.join(output,approvedFinalPhoneShell)), { recursive: true });
+await copyFile(path.join(root,approvedFinalPhoneShell),path.join(output,approvedFinalPhoneShell));
+
 // Printer printout remains a single approved still for this work package.
 // The original PNG lives only in project Drive; copy the materialised WebP.
 const approvedPrinterCutaway = "public/assets/generated/game/office-printer-bear-cutaway-v01.webp";

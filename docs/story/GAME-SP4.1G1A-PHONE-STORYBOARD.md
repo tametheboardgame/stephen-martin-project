@@ -1,6 +1,6 @@
 # GAME-SP4.1G1A — Stephen's dying phone: revised storyboard and art audit
 
-**Status:** revised following owner narrative/art feedback, 19 October 2026. Storyboard for owner sign-off; **no playable game changes or newly generated imagery yet**.
+**Status:** owner-approved phone-shell artwork integrated on draft PR #65; awaiting deployed visual review before merge (19 October 2026).
 
 **Baseline:** G2A approved merge `d99b474a688c2116d449285f9a65c1d0654693e9`. Scope is the existing 3-step phone-to-England sequence across all three Chapter 2 routes. G1B's England illustration is a separate package.
 
@@ -70,3 +70,9 @@ The opening now uses **separately owner-approved illustration assets**, with dif
 ## Non-goals
 
 No legacy intro-art revival, no reused group-chat/muted paintings, no new conversations, no complete messages, no extra dialogue, no changed Chapter 1 assets, no expanded gameplay, no new final steps or saving format, no new voice clips, and no G1B England illustration.
+
+## Implementation handoff (19 October 2026)
+
+The owner approved the purpose-made dark illustrated portrait phone. Source in Drive staging: [stephen-phone-shell-g1a-v01.png](https://drive.google.com/file/d/1ybwzoz01UyHzV0-QmqFue1Hsmf0yfe2F/view), 1088×1600 RGBA with transparent 32px margins and no baked text or battery graphics. GitHub's approved OIDC/Drive materialiser produced the versioned WebP into `public/assets/generated/game/stephen-phone-shell-g1a-v01.webp`; its manifest is `generated-assets/manifests/game-sp41g1a-phone-shell-v01.json`. Build copies only this optimised WebP, never the source PNG.
+
+The phone now has live `chinaPhoneMessage`, `chinaBatteryLabel` and `chinaPhoneStatus` elements. `finalStep=0` gives **Partial message delivered / 1% · LOW BATTERY**; `finalStep=1` turns off the displayed screen and shows **0% · PHONE SWITCHED OFF** outside it, while the received fragment stays intact in game state and is read by David/Paul. Stephen's exact recorded reaction remains `china.final.001`. No extra scene steps or voice clips; no rejected intro phone styles or artworks are used. Owner's next gate is a visual review of the running preview, including mobile.

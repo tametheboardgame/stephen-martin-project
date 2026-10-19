@@ -585,9 +585,9 @@ test("Accepting Summit commits cult handoff, bypasses Palace and Market, then us
   assert.equal(p.el("routeHandoffArt").dataset.route,"cult");
   p.el("handoffContinueButton").click();
   assert.match(p.el("chinaPhoneMessage").textContent,/asked me to be their/);
-  assert.equal(p.el("chinaBatteryLabel").textContent,"1% battery");
+  assert.equal(p.el("chinaBatteryLabel").textContent,"1% · LOW BATTERY");
   p.el("chinaFinalNextButton").click();
-  assert.equal(p.el("chinaBatteryLabel").textContent,"0% · Battery depleted");
+  assert.equal(p.el("chinaBatteryLabel").textContent,"0% · Battery flat");
   assert.equal(p.el("chinaFinalReaction").hidden,false);
   p.el("chinaFinalNextButton").click();
   assert.equal(p.el("chinaFinalEngland").hidden,false);
@@ -4273,5 +4273,69 @@ test("GAME-SP4.1G2A all rescue alarm dialogue, phone cues and travel remain inta
     assert.equal(p.el("rescueAlarmTravelButton").hidden,false);
     p.el("rescueAlarmTravelButton").click();
     assert.equal(saved(p).holidayPhase,"rescue-travel");
+  }
+});
+
+
+test("GAME-SP4.1G1A new approved phone artwork is packaged and old intro proof is unused",()=>{
+  const dest="public/assets/generated/game/stephen-phone-shell-g1a-v01.webp";
+  const manifest=JSON.parse(read("generated-assets/manifests/game-sp41g1a-phone-shell-v01.json"));
+  assert.equal(manifest.schemaVersion,1);
+  assert.equal(manifest.source.provider,"google-drive");
+  assert.equal(manifest.source.fileId,"1ybwzoz01UyHzV0-QmqFue1Hsmf0yfe2F");
+  assert.equal(manifest.expectedSourceName,"stephen-phone-shell-g1a-v01.png");
+  assert.equal(manifest.destination,dest);
+  const bytes=fs.readFileSync(path.join(root,dest));
+  assert.ok(bytes.length>20000&&bytes.length<2*1024*1024);
+  assert.equal(bytes.toString("ascii",0,4),"RIFF");
+  assert.equal(bytes.toString("ascii",8,12),"WEBP");
+  assert.match(read("scripts/build.mjs"),/approvedFinalPhoneShell = "public\/assets\/generated\/game\/stephen-phone-shell-g1a-v01\.webp"/);
+  const htmlPhone=html.slice(html.indexOf('id="chinaFinalScene"'),html.indexOf('id="rescueAlarmScene"'));
+  assert.match(htmlPhone,/class="china-final-phone-shell"[^>]*stephen-phone-shell-g1a-v01\.webp/);
+  assert.doesNotMatch(htmlPhone,/cutaway-phone|phone-notch|phone-screen|office-phone-group-chat-cutaway|office-phone-group-muted-cutaway/);
+  assert.match(htmlPhone,/class="china-final-phone-screen"/);
+  assert.match(htmlPhone,/id="chinaPhonePowerNotice"[^>]*aria-live="polite"/);
+  assert.match(css,/#holidayScreen \.china-final-phone\[data-power="off"\] \.china-final-phone-screen \{\s*visibility: hidden;/);
+  assert.doesNotMatch(engine,/Message interrupted — not delivered|MESSAGE NOT SENT/);
+  assert.match(css,/@media \(max-width:450px\)/);
+  assert.match(css,/prefers-reduced-motion:reduce/);
+});
+
+test("GAME-SP4.1G1A each canonical partial message is received before the phone switches off",()=>{
+  for(const route of ["cult","detention","reassemble"]){
+    let p;
+    if(route==="cult"){ p=toWallChoice();p.el("wallAcceptButton").click();p.el("wallGoIncidentButton").click(); }
+    else if(route==="detention"){ p=toPalaceChoice();p.el("palaceAcceptButton").click();for(let i=0;i<5;i++)p.el("palaceNextButton").click();p.el("palaceGoIncidentButton").click(); }
+    else { p=toMarket();finishMarket(p);p.el("marketGoIncidentButton").click(); }
+    assert.equal(saved(p).route,route);
+    p.el("handoffContinueButton").click();
+    assert.equal(saved(p).holidayPhase,"final-message");
+    assert.equal(saved(p).finalStep,0);
+    const message=story().SMP_CHINA_FINAL.messageByRoute[route];
+    assert.equal(p.el("chinaPhoneMessage").textContent,message);
+    assert.equal(p.el("chinaFinalPhone").dataset.power,"low");
+    assert.equal(p.el("chinaBatteryLabel").textContent,"1% · LOW BATTERY");
+    assert.equal(p.el("chinaPhoneStatus").textContent,"Partial message delivered");
+    assert.equal(p.el("chinaPhonePowerNotice").hidden,true);
+    p.el("chinaFinalNextButton").click();
+    assert.equal(saved(p).finalStep,1);
+    assert.equal(p.el("chinaFinalPhone").dataset.power,"off");
+    assert.equal(p.el("chinaPhonePowerNotice").hidden,false);
+    assert.equal(p.el("chinaPhoneStatus").textContent,"Last partial message delivered · phone switched off");
+    assert.equal(p.el("chinaBatteryLabel").textContent,"0% · Battery flat");
+    assert.equal(p.el("chinaPhoneMessage").textContent,message,"Delivered fragment stays in data");
+    assert.equal(p.el("chinaFinalReaction").hidden,false);
+    assert.match(html,/Oh, for fuck's sake\./,"Stephen's original spoken reaction is untouched");
+    p.el("homeButton").click();p.el("resumeButton").click();
+    assert.equal(p.el("chinaFinalPhone").dataset.power,"off","Resume must not light the dead screen");
+    assert.equal(saved(p).finalStep,1);
+    p.el("chinaFinalNextButton").click();
+    assert.equal(saved(p).finalStep,2);
+    assert.equal(p.el("chinaFinalPhone").hidden,true);
+    assert.equal(p.el("chinaPhonePowerNotice").hidden,true);
+    p.el("chinaFinalNextButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-alarm");
+    for(let i=0;i<6;i++)p.el("rescueAlarmNextButton").click();
+    assert.equal(p.el("rescueAlarmPhoneText").textContent,message,"David and Paul received the partial message");
   }
 });

@@ -1680,14 +1680,20 @@
       const step = Number.isInteger(state.finalStep) ? Math.max(0, Math.min(2,state.finalStep)) : 0;
       state.finalStep = step;
       $("chinaFinalPhone").hidden = step === 2;
+      $("chinaFinalPhone").dataset.power = step === 0 ? "low" : "off";
+      $("chinaPhonePowerNotice").hidden = step !== 1;
       $("chinaFinalReaction").hidden = step !== 1;
       $("chinaFinalEngland").hidden = step !== 2;
       $("chinaFinalNextButton").hidden = false;
       $("chinaFinalNextButton").textContent = step === 2
         ? "Back to David and Paul →" : "Continue →";
       $("chinaAnotherEndingButton").hidden = step !== 2;
-      $("chinaBatteryLabel").textContent = step ? "0% · Battery depleted" : "1% battery";
-      $("chinaPhoneStatus").textContent = step ? "Message interrupted — not delivered" : "Sending…";
+      // The incomplete message has ALREADY reached David and Paul.
+      // Only Stephen's ability to continue is cut short by a flat battery.
+      $("chinaBatteryLabel").textContent = step ? "0% · Battery flat" : "1% · LOW BATTERY";
+      $("chinaPhoneStatus").textContent = step
+        ? "Last partial message delivered · phone switched off"
+        : "Partial message delivered";
       $("chinaPhoneMessage").textContent = route ? chinaFinal.messageByRoute[route] : "";
       $("chinaFinalProgress").textContent = step === 2 ? "Stephen's holiday chapter complete"
         : step === 1 ? "No signal from Stephen" : "Stephen's last message";
