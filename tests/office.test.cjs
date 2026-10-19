@@ -2388,22 +2388,29 @@ test("SP4.0D David expression scales are bottom-anchored to neutral",()=>{
   assert.ok(!chunk.includes('data-seated-sprite="neutral"'),"Neutral sprite remains the visual baseline");
 });
 
-test("SP4.1G0B pessimistic lyrics hold the opening and still reach the last line",async()=>{
+test("GAME-SP4.1G0B pessimistic lyrics advance faster and finish two seconds before the MP3 ends",async()=>{
   const p=preview({audio:true});p.start();p.at("office.041");
   p.el("nextButton").click();
   p.el("songListenButton").click();
   const clip=p.voices.at(-1);
   await Promise.resolve();
-  clip.duration=120;clip.currentTime=12;
-  clip.ontimeupdate();
+  clip.duration=120;
+  clip.currentTime=0;clip.ontimeupdate();
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,0,"First line starts in view");
+  clip.currentTime=12;clip.ontimeupdate();
   const early=p.el("officeSongLyricsScroll").scrollTop;
-  assert.ok(early>=0&&early<60,"Opening verse remains visible rather than jumping far ahead");
-  clip.currentTime=60;
-  clip.ontimeupdate();
-  assert.equal(p.el("officeSongLyricsScroll").scrollTop,300,"Song progresses steadily at half time");
-  clip.currentTime=120;
-  clip.ontimeupdate();
-  assert.equal(p.el("officeSongLyricsScroll").scrollTop,600,"No skipped end section");
+  assert.ok(early>90&&early<160,"Pessimistic lyrics move ahead of the original slow progression");
+  clip.currentTime=60;clip.ontimeupdate();
+  const middle=p.el("officeSongLyricsScroll").scrollTop;
+  assert.ok(middle>360&&middle<420,"Song advances past halfway during its middle verses");
+  clip.currentTime=117;clip.ontimeupdate();
+  assert.ok(p.el("officeSongLyricsScroll").scrollTop<600,"Scrolling has not ended prematurely");
+  clip.currentTime=118;clip.ontimeupdate();
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,600,"Final lyrics arrive two seconds before audio end");
+  clip.currentTime=119.5;clip.ontimeupdate();
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,600,"Final lyrics stay in view through instrumental");
+  clip.currentTime=120;clip.ontimeupdate();
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,600,"Final position is clamped");
 });
 
 
@@ -4215,10 +4222,11 @@ test("GAME-SP4.1G0B both songs share a responsive large lyric panel without ghos
   p.el("songListenButton").click();
   const music=p.voices.at(-1);await Promise.resolve();
   music.duration=120;music.currentTime=60;music.ontimeupdate();
-  assert.equal(p.el("officeSongLyricsScroll").scrollTop,300,"Pessimistic full track uses the same bounded scroll");
+  const scrolled=p.el("officeSongLyricsScroll").scrollTop;
+  assert.ok(scrolled>360&&scrolled<420,"Pessimistic scroll advances faster than optimistic");
   p.document.activeElement=p.el("officeSongLyricsScroll");
   music.currentTime=115;music.ontimeupdate();
-  assert.equal(p.el("officeSongLyricsScroll").scrollTop,300,"Keyboard/manual lyric reading is not overwritten");
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,scrolled,"Keyboard/manual lyric reading is not overwritten");
   p.el("songStopButton").click();
   assert.equal(saved(p).beatId,"office.042");
   assert.equal(p.el("stage").dataset.songActive,"false");
