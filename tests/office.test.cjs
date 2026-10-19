@@ -3251,7 +3251,7 @@ test("GAME-SP4.1B London David uses the already approved opening optical registr
   const london=css.slice(css.indexOf("/* GAME-SP4.1B: use the already-approved opening David"),
     css.indexOf("#holidayScreen .rescue-alarm-paul {right:14%;}"));
   assert.ok(london.length>750,"Must keep focused London-only actor CSS");
-  assert.match(london,/#rescueAlarmScene #rescueAlarmDavid\s*\{[^}]*width:32%;[^}]*height:79%;[^}]*object-fit:contain;[^}]*transform-origin:center bottom;[^}]*transition:none;/);
+  assert.match(london,/#rescueAlarmScene #rescueAlarmDavid\s*\{[^}]*width:32%;[^}]*height:64%;[^}]*object-fit:contain;[^}]*transform-origin:center bottom;[^}]*transition:none;/);
   for(const [pose,scale] of Object.entries(expected)){
     const openRule=opening.match(new RegExp('data-seated-sprite="'+pose.replace("-","\\-")+'"[^}]*transform: scale\\((\\.[0-9]+)\\) !important;'));
     const alarmRule=london.match(new RegExp('data-sprite="'+pose.replace("-","\\-")+'"[^}]*transform:scale\\((\\.[0-9]+)\\);'));
@@ -3261,7 +3261,7 @@ test("GAME-SP4.1B London David uses the already approved opening optical registr
   }
   assert.match(london,/@media \(max-width:800px\)/);
   assert.match(london,/@media \(max-width:450px\)/);
-  assert.doesNotMatch(london,/#rescueAlarmPaul|\.rescue-alarm-paul/,"Do not adjust Paul's pose/geometry");
+  assert.doesNotMatch(london,/#rescueAlarmPaul|\.rescue-alarm-paul/,"Paul's sprites remain independently positioned");
 });
 test("GAME-SP4.1B all ten alarm beats use the unchanged pose assets and checkpoint",()=>{
   const p=toRescueAlarm();
@@ -4230,4 +4230,48 @@ test("GAME-SP4.1G0B both songs share a responsive large lyric panel without ghos
   p.el("songStopButton").click();
   assert.equal(saved(p).beatId,"office.042");
   assert.equal(p.el("stage").dataset.songActive,"false");
+});
+
+
+test("GAME-SP4.1G2A uses one baked-in desk, keeps Chapter 1 layers and registers both alarm actors",()=>{
+  const alarmHtml=html.slice(html.indexOf('id="rescueAlarmScene"'),html.indexOf('id="rescueTravelScene"'));
+  assert.ok(alarmHtml.length>1000,"Alarm scene markup exists");
+  assert.match(alarmHtml,/class="rescue-alarm-background"[^>]*office-clean-01-v01\.webp/);
+  assert.doesNotMatch(alarmHtml,/rescue-alarm-foreground|office-foreground-01-v01\.webp/);
+  assert.match(html,/class="office-foreground"/,"Chapter 1 has its original foreground layer");
+  assert.match(css,/#officeScreen \.office-foreground \{[^}]*office-foreground-01-v01\.webp/);
+  const alarmCSS=css.slice(css.indexOf("/* GAME-SP2.4A — OFFICE-ALARM"),css.indexOf("/* GAME-SP2.4B"));
+  assert.doesNotMatch(alarmCSS,/rescue-alarm-foreground/);
+  assert.match(alarmCSS,/#holidayScreen \.rescue-alarm-actor \{[^}]*bottom:24%;height:64%;width:32%;max-width:none;/);
+  assert.match(alarmCSS,/#holidayScreen \.rescue-alarm-david \{left:16%;\}/);
+  assert.match(alarmCSS,/#holidayScreen \.rescue-alarm-paul \{right:16%;\}/);
+  assert.match(alarmCSS,/#rescueAlarmScene #rescueAlarmDavid \{[^}]*width:32%;[^}]*height:64%;/);
+  assert.match(alarmCSS,/#holidayScreen \.rescue-alarm-actor \{height:64%;width:42%;max-width:none;\}/);
+  assert.match(alarmCSS,/#holidayScreen \.rescue-alarm-actor \{height:60%;width:43%;max-width:none;\}/);
+  assert.match(alarmCSS,/#holidayScreen \.rescue-alarm-dialogue \{bottom:11%;left:3%;width:min\(73%,850px\);z-index:7;\}/);
+  assert.equal((alarmHtml.match(/data-speaker-focus/g)||[]).length,2,"Only David and Paul are active actors");
+  for(const id of ["rescueAlarmPhone","rescueAlarmNextButton","rescueAlarmTravelButton"])
+    assert.match(alarmHtml,new RegExp('id="'+id+'"'));
+  assert.match(alarmCSS,/rescue-alarm-phone \{top:3%;right:2%;width:44%;\}/);
+});
+
+test("GAME-SP4.1G2A all rescue alarm dialogue, phone cues and travel remain intact",()=>{
+  for(const route of ["hotel","cult","detention"]){
+    const p=toRescueAlarm(route);
+    assert.equal(p.el("rescueAlarmScene").hidden,false);
+    assert.equal(saved(p).rescueAlarmStep,0);
+    const lines=story().SMP_RESCUE_ALARM.lines;
+    assert.equal(lines.length,10);
+    for(let i=0;i<lines.length;i++){
+      const line=lines[i];
+      assert.equal(p.el("rescueAlarmSpeaker").textContent,line.speaker.toUpperCase());
+      assert.equal(p.el("rescueAlarmLine").textContent,line.text);
+      assert.equal(p.el("rescueAlarmPhone").hidden,!line.showPhone);
+      if(i<lines.length-1)p.el("rescueAlarmNextButton").click();
+    }
+    p.el("rescueAlarmNextButton").click();
+    assert.equal(p.el("rescueAlarmTravelButton").hidden,false);
+    p.el("rescueAlarmTravelButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-travel");
+  }
 });
