@@ -825,7 +825,7 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 **G1B — Illustrated “Back in England” transition (one new approved artwork asset)**
 
-- Replace the blank navy background with a strong illustrated return to England, preferably **David and Paul in a deliberately over-serious rescue/office-panic composition**, matching approved cast likeness and current graphic-novel direction.
+- **Approved owner art decision (19 October 2026):** replace the blank navy England background with one **clearly spliced torn-postcard London montage** showing separate Big Ben/Westminster, Tower Bridge and telephone box/bus postcards plus tea/maps/flags. No David/Paul portraits in this transition. The intentional collage avoids falsely suggesting geographically distant landmarks share one physical riverside view.
 - Reuse F’s **compact live heading + one separate NARRATOR subtitle box**, not duplicated prose in a huge centre panel; check no overlap with image lettering, mobile crops, top bar or the next rescue-alarm beat.
 - One owner-approved original PNG staged in Drive, versioned manifest and optimised WebP in its own preview PR. No unrelated new cutscenes or changes to existing twelve narrator audio IDs.
 - **Acceptance:** transition feels like a proper illustrated scene, heading/narrator readable and distinct, no new dark whole-stage wash or character identity drift.

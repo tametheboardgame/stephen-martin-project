@@ -65,7 +65,8 @@ const transitionImages = [
   "transition-china-passing-time-v01.webp",
   "transition-operation-flight-luggage-v01.webp",
   "transition-operation-map-expenses-v01.webp",
-  "transition-stephen-route-handoff-v01.webp"
+  "transition-stephen-route-handoff-v01.webp",
+  "transition-back-in-england-postcard-collage-v01.webp"
 ];
 for (const filename of transitionImages) {
   const relative = "public/assets/generated/locations/" + filename;
@@ -78,7 +79,7 @@ for (const filename of transitionImages) {
   await mkdir(path.dirname(path.join(output,relative)), {recursive:true});
   await copyFile(path.join(root,relative),path.join(output,relative));
 }
-console.log("Approved transition artworks packaged: " + transitionImages.length + "/4.");
+console.log("Approved transition artworks packaged: " + transitionImages.length + "/5.");
 // Fail the public preview build if the independent desk accidentally becomes an
 // opaque image: a black/solid rectangle would cover all three actors.
 const foregroundPath = path.join(root, "public/assets/generated/locations/office-foreground-01-v01.webp");

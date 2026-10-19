@@ -42,6 +42,20 @@
     }
   };
   const validHolidayRoutes = ["cult", "detention", "reassemble"];
+  // G1B: the England postcard is shown late in Chapter Two. CSS backgrounds
+  // hidden until finalStep 2 otherwise wait until the transition itself to
+  // fetch/decode, creating a visible pause. Warm only this one approved image
+  // as Chapter Two starts, via the existing asset loader (not a page preload).
+  const englandCollageSrc = "./public/assets/generated/locations/transition-back-in-england-postcard-collage-v01.webp";
+  let englandCollageWarmRequested = false;
+  function warmEnglandCollage() {
+    if (englandCollageWarmRequested) return;
+    const loader = window.SMP_ASSET_LOADER;
+    if (!loader || typeof loader.warm !== "function") return;
+    if (window.navigator?.connection?.saveData) return;
+    englandCollageWarmRequested = true;
+    loader.warm(englandCollageSrc);
+  }
   const travelStephenHonoured = "./public/assets/generated/characters/stephen-holiday-forbidden-city-pleased-v01.webp";
   const planLabels = {
     cult: "The Summit",
@@ -1551,6 +1565,9 @@
 
   function renderHoliday() {
     clearHolidayAdvanceTimer();
+    // Request and decode the distant England transition now, several scenes
+    // before it appears; no waiting or delay to gameplay/audio.
+    warmEnglandCollage();
     reveal("holiday");
     if (["rescue-route-intro", "rescue-minigame", "rescue-route-ending", "rescue-ending-summary"].includes(state.holidayPhase) &&
         (!rescueFramework.validRoute(state.route) || state.hubMatched !== true)) {

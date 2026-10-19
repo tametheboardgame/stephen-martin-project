@@ -43,7 +43,7 @@ class Element {
   closest(){return "button";}
   focus(){this.focusCount=(this.focusCount||0)+1;}
 }
-function preview({audio=false}={}) {
+function preview({audio=false,assetLoader=null,saveData=false}={}) {
   const elements=new Map(),stored=new Map(),timeouts=new Map(),listeners=new Map(),voices=[];
   const el=id=>{if(!elements.has(id))elements.set(id,new Element(id));return elements.get(id);};
   const document={getElementById:el,body:new Element("body"),hidden:false,
@@ -52,6 +52,10 @@ function preview({audio=false}={}) {
     getItem:key=>stored.get(key)||null,
     setItem:(key,value)=>stored.set(key,value)
   },scrollTo() {}};
+  if(assetLoader) window.SMP_ASSET_LOADER={
+    present(){return false;},busy(){return false;},cancel(){},...assetLoader
+  };
+  if(saveData) window.navigator={connection:{saveData:true}};
   if(audio) window.Audio=class {
     constructor(){this.src="";this.preload="";this.paused=true;this.pauseCount=0;this.playCount=0;this.currentTime=0;this.duration=120;voices.push(this);}
     play(){this.paused=false;this.playCount++;return Promise.resolve();}
@@ -4360,9 +4364,9 @@ test("GAME-SP4.1G1A phone stays independently anchored above the visible action 
   assert.match(phone,/height: min\(72%, 680px\);/);
   assert.match(phone,/transform: translateX\(-50%\);/);
   assert.doesNotMatch(phone,/position: relative|height:\s*min\(78%/);
-  const tablet=css.slice(css.indexOf("@media (max-width:800px) {",css.indexOf(".china-final-england small")),css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")));
+  const tablet=css.slice(css.indexOf("@media (max-width:800px) {",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")),css.indexOf("@media (max-width:450px) {",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")));
   assert.match(tablet,/#holidayScreen \.china-final-stage \{aspect-ratio:4\/3;\}/);
-  const mobile=css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")),css.indexOf("/* GAME-SP2.3C",css.indexOf(".china-final-england small")));
+  const mobile=css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")),css.indexOf("/* GAME-SP2.3C",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")));
   assert.match(mobile,/#holidayScreen \.china-final-stage \{aspect-ratio:3\/4;\}/);
   assert.match(mobile,/#holidayScreen \.china-final-phone \{top:5%;left:50%;height:70%;max-width:90%;transform:translateX\(-50%\);margin:0;\}/);
   assert.match(css, /@media \(min-width:451px\) and \(max-width:580px\)/);
@@ -4396,10 +4400,10 @@ test("GAME-SP4.1G1A two-step cinematography centres the delivered phone, then sl
 });
 
 test("GAME-SP4.1G1A narrow stages use centred hero and shrink upwards for stacked dead-phone notices",()=>{
-  const tablet=css.slice(css.indexOf("@media (max-width:800px) {",css.indexOf(".china-final-england small")),css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")));
+  const tablet=css.slice(css.indexOf("@media (max-width:800px) {",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")),css.indexOf("@media (max-width:450px) {",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")));
   assert.match(tablet,/china-final-phone \{height:min\(72%,520px\);max-width:65%;\}/);
   assert.match(tablet,/china-final-phone\[data-power="off"\] \{top:14%;left:30%;height:min\(60%,450px\);\}/);
-  const portrait=css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")),css.indexOf("/* GAME-SP2.3C",css.indexOf(".china-final-england small")));
+  const portrait=css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")),css.indexOf("/* GAME-SP2.3C",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")));
   assert.match(portrait,/china-final-phone \{top:5%;left:50%;height:70%;max-width:90%;transform:translateX\(-50%\);margin:0;\}/);
   assert.match(portrait,/china-final-phone\[data-power="off"\] \{top:5%;left:50%;height:46%;\}/);
   assert.match(portrait,/china-final-power-notice \{[\s\S]*?bottom:33%;/);
@@ -4418,13 +4422,117 @@ test("GAME-SP4.1G1A narrow phone layout keeps shutdown/reaction blocks above con
   // controls, and keep the flat-battery announcement higher up.
   for(const [width,offHeight,noticeBottom] of [[390,46,33],[580,44,39]]){
     const source=width<451
-      ? css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")),css.indexOf("/* GAME-SP2.3C",css.indexOf(".china-final-england small")))
+      ? css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")),css.indexOf("/* GAME-SP2.3C",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")))
       : css.slice(css.indexOf("@media (min-width:451px) and (max-width:580px) {"));
     assert.match(source,new RegExp('phone\\[data-power="off"\\] \\{top:5%;left:50%;height:'+offHeight+'%;\\}'));
     assert.match(source,new RegExp('power-notice \\{[^}]*bottom:'+noticeBottom+'%;'));
     assert.match(source,/china-final-reaction \{[^}]*bottom:17%;/);
     assert.ok(5+offHeight<100-noticeBottom-9,"Off phone leaves a gap above the warning");
   }
+});
+
+
+test("GAME-SP4.1G1B approved postcard collage is versioned, materialised and included in the preview build",()=>{
+  const img="transition-back-in-england-postcard-collage-v01.webp";
+  const file="public/assets/generated/locations/"+img;
+  const manifest=JSON.parse(read("generated-assets/manifests/game-sp41g1b-england-postcard-collage-v01.json"));
+  assert.equal(manifest.schemaVersion,1);
+  assert.equal(manifest.source.provider,"google-drive");
+  assert.equal(manifest.source.fileId,"1dhu_9fDVe9K_7XqMDzN2m95Oq7qp9euU");
+  assert.equal(manifest.expectedSourceName,"transition-back-in-england-postcard-collage-v01.png");
+  assert.equal(manifest.destination,file);
+  assert.equal(manifest.revision,1);
+  const bytes=fs.readFileSync(path.join(root,file));
+  assert.ok(bytes.length>20000&&bytes.length<=2*1024*1024);
+  assert.equal(bytes.toString("ascii",0,4),"RIFF");
+  assert.equal(bytes.toString("ascii",8,12),"WEBP");
+  assert.match(read("scripts/build.mjs"),/"transition-back-in-england-postcard-collage-v01\.webp"/);
+  assert.match(css,/#holidayScreen \.china-final-england \{[\s\S]*?transition-back-in-england-postcard-collage-v01\.webp/);
+  assert.match(css,/#holidayScreen \.china-final-england h2 \{[\s\S]*?position: absolute;[\s\S]*?background: rgba\(7,27,47,\.85\);/);
+  assert.doesNotMatch(css,/#holidayScreen \.china-final-england \{[^}]*background:#090e18/);
+  assert.match(css,/@media \(max-width:800px\) \{[\s\S]*?\.china-final-england h2 \{/);
+  assert.match(css,/@media \(max-width:450px\) \{[\s\S]*?\.china-final-england h2 \{/);
+  const scene=html.slice(html.indexOf('id="chinaFinalEngland"'),html.indexOf('id="chinaFinalEngland"')+185);
+  assert.match(scene,/>BACK IN ENGLAND…<\/h2>/);
+  assert.doesNotMatch(scene,/NARRATOR|Meanwhile, back in England/,"Narration stays in a separate subtitle");
+});
+
+test("GAME-SP4.1G1B all three routes retain the existing England narrator and rescue-alarm handoff",()=>{
+  for(const route of ["cult","detention","reassemble"]){
+    let p;
+    if(route==="cult"){
+      p=toWallChoice();p.el("wallAcceptButton").click();p.el("wallGoIncidentButton").click();
+    }else if(route==="detention"){
+      p=toPalaceChoice();p.el("palaceAcceptButton").click();
+      for(let i=0;i<5;i++)p.el("palaceNextButton").click();
+      p.el("palaceGoIncidentButton").click();
+    }else{
+      p=toMarket();finishMarket(p);p.el("marketGoIncidentButton").click();
+    }
+    p.el("handoffContinueButton").click();
+    p.el("chinaFinalNextButton").click();
+    p.el("chinaFinalNextButton").click();
+    assert.equal(saved(p).finalStep,2);
+    assert.equal(saved(p).route,route);
+    assert.equal(p.el("chinaFinalEngland").hidden,false);
+    assert.equal(p.el("transitionNarration").hidden,false);
+    assert.equal(p.el("transitionNarration").dataset.cue,"transition.england.back.001");
+    assert.match(p.el("transitionNarrationLine").textContent,/back in England/);
+    p.el("homeButton").click();p.el("resumeButton").click();
+    assert.equal(p.el("chinaFinalEngland").hidden,false,"England collage survives save/resume");
+    p.el("chinaFinalNextButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-alarm");
+  }
+});
+
+
+test("GAME-SP4.1G1B prewarms the approved England postcard once as Chapter Two begins",()=>{
+  const calls=[];
+  const src="./public/assets/generated/locations/transition-back-in-england-postcard-collage-v01.webp";
+  const p=preview({assetLoader:{warm(url){calls.push(url);}}});
+  p.start();
+  assert.deepEqual(calls,[],"Do not download distant Chapter Two scenery at menu/Chapter One startup");
+  p.el("skipButton").click();
+  assert.equal(saved(p).scene,"holiday");
+  assert.equal(saved(p).holidayPhase,"transition");
+  assert.deepEqual(calls,[src],"Predecode the England illustration as Chapter Two starts");
+  p.el("chinaStartButton").click();
+  for(let i=0;i<5;i++)p.el("wallNextButton").click();
+  assert.deepEqual(calls,[src],"Do not issue duplicate downloads on successive dialogue renders");
+  assert.match(read("src/asset-loader.js"),/function warm\(url\)/);
+  assert.match(engine,/loader\.warm\(englandCollageSrc\)/);
+  assert.doesNotMatch(html,/<link rel="preload"[^>]*transition-back-in-england-postcard-collage/);
+});
+
+test("GAME-SP4.1G1B honours Save-Data and still permits a valid late England scene",()=>{
+  const calls=[];
+  const p=preview({saveData:true,assetLoader:{warm(url){calls.push(url);}}});
+  p.start();
+  p.el("skipButton").click();
+  assert.deepEqual(calls,[],"Data-saving users are not forced to prefetch distant artwork");
+  p.el("chinaStartButton").click();
+  for(let i=0;i<5;i++)p.el("wallNextButton").click();
+  p.el("wallAcceptButton").click();
+  p.el("wallGoIncidentButton").click();
+  p.el("handoffContinueButton").click();
+  p.el("chinaFinalNextButton").click();
+  p.el("chinaFinalNextButton").click();
+  assert.equal(p.el("chinaFinalEngland").hidden,false);
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.england.back.001");
+});
+
+test("GAME-SP4.1G1B missing asset loader never blocks narration or route progression",()=>{
+  const p=preview();
+  p.start();p.el("skipButton").click();
+  p.el("chinaStartButton").click();
+  for(let i=0;i<5;i++)p.el("wallNextButton").click();
+  p.el("wallAcceptButton").click();
+  p.el("wallGoIncidentButton").click();
+  p.el("handoffContinueButton").click();
+  p.el("chinaFinalNextButton").click();
+  p.el("chinaFinalNextButton").click();
+  assert.equal(p.el("chinaFinalEngland").hidden,false);
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.england.back.001");
 });
 
 // GAME-SP4 — voiced Summit gate, per-speaker responses, hints, and ending.

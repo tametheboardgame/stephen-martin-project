@@ -1,5 +1,16 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G1B approved “Back in England” collage (19 October 2026)
+
+- **Owner visual review:** the actual England postcard collage and heading/subtitle layout were approved (“apart from that it was great”). The only open issue was slow first loading of the image.
+- **G1B loading refinement:** The collage is a roughly 500 KB WebP stored as the hidden `.china-final-england` CSS background, so it was not necessarily fetched until the final transition. Reused the **existing** `SMP_ASSET_LOADER.warm(url)` decode/cache helper *once* on Chapter Two's first `renderHoliday()`, keeping it off the menu/Chapter One's critical loading path. Respect `navigator.connection.saveData` and work normally when the optional loader is unavailable. The exact owner-approved WebP and visual layout are unchanged. Automated regressions cover one warm request, no opening prefetch, Save-Data and optional-loader fallback. **Owner review: passed.** The revised Cloudflare preview loaded substantially faster; owner explicitly authorised merge.
+
+
+- **G1A merged:** the owner's approved phone sequence was merged into `main` via PR #65, merge commit `b8fb6ecc1e4a53a5b0e564e61bdaadcda301178b`.
+- **G1B owner-approved art direction:** **no David/Paul portraits** and no attempt at a single geographically coherent London panorama. Instead the approved 1672×941 illustration is an obviously **spliced, torn-postcard collage**: Westminster/Big Ben, separate Tower Bridge, separate red phone box/bus, with tea, map, pinboard/postal elements. Source original `transition-back-in-england-postcard-collage-v01.png` staged in dedicated Stephen Martin Google Drive folder, file ID `1dhu_9fDVe9K_7XqMDzN2m95Oq7qp9euU`. Manifest `generated-assets/manifests/game-sp41g1b-england-postcard-collage-v01.json` materialises production `public/assets/generated/locations/transition-back-in-england-postcard-collage-v01.webp`.
+- **G1B approved branch:** `agent/game-sp41g1b-england-postcard-transition`. The approved image replaces only the blank navy `#chinaFinalEngland` background. The heading stays **live** in a compact positioned title plate; existing separated narrator subtitle and `transition.england.back.001` voice/fallback are unchanged. Responsive positioning avoids headline/topbar collision without a blanket dark wash. Build and regression checks included. **Owner approved the collage and layout and confirmed the prewarming made it load promptly; merge authorised on 19 October 2026.**
+- **Next:** G1C three-route QA, then subsequent roadmap packages.
+
 ## GAME-SP4 Summit voice integration against latest main (19 October 2026)
 
 - Integrating approved PR #45 against the much newer `main` line (281 commits advanced since the Summit audio branch). **Do not copy its older game controller wholesale.** This integration starts from the newer main source, artwork, full asset loader, transitions, contextual skips and updated office/character UI, then adds precisely the Summit audio ID and playback additions.
