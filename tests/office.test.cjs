@@ -288,7 +288,7 @@ test("Paul Confused and Pleased use approved seated sprites; Blank stays Neutral
   p.at("office.004");
   assert.equal(p.el("castPaul").dataset.expression,"pleased");
   assert.equal(p.el("castPaul").dataset.seatedSprite,"pleased");
-  assert.ok(p.el("portraitPaul").src.endsWith("paul-office-seated-pleased-v01.webp?v=1"));
+  assert.ok(p.el("portraitPaul").src.endsWith("paul-office-seated-pleased-v01.webp?v=2"));
 });
 
 test("Paul's expressions follow Confused, Blank fallback and Pleased automatically",()=>{
@@ -303,7 +303,7 @@ test("Paul's expressions follow Confused, Blank fallback and Pleased automatical
   p.el("nextButton").click();
   assert.equal(saved(p).beatId,"office.004");
   assert.equal(p.el("castPaul").dataset.seatedSprite,"pleased");
-  assert.match(p.el("portraitPaul").src,/paul-office-seated-pleased-v01\.webp\?v=1$/);
+  assert.match(p.el("portraitPaul").src,/paul-office-seated-pleased-v01\.webp\?v=2$/);
   p.el("backButton").click();
   assert.equal(p.el("castPaul").dataset.seatedSprite,"neutral");
 });
@@ -405,7 +405,10 @@ test("existing artwork remains present with original alpha and dimensions",()=>{
     assert.equal(file.toString("ascii",12,16),"VP8X");
     assert.ok((file[20]&0x10)!==0,"alpha lost "+asset);
     const w=1+file.readUIntLE(24,3),h=1+file.readUIntLE(27,3);
-    assert.equal(w,1086);assert.equal(h,1448);
+    // G0A replaced ONLY Paul's pleased cutout with a 22px transparent margin
+    // on both sides. All the other approved seated sprites retain 1086px width.
+    assert.equal(w,asset==="paul-office-seated-pleased-v01.webp"?1130:1086);
+    assert.equal(h,1448);
     assert.ok(read("scripts/build.mjs").includes(asset));
   }
   for(const asset of ["office-clean-01-v01.webp","office-foreground-01-v01.webp","office-exterior-opening-v01.webp"])
