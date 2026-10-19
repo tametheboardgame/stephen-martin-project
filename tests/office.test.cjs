@@ -4941,16 +4941,17 @@ test("GAME-SP4.1G1C England/phone layout retains distinct title, captions and re
   assert.doesNotMatch(engine,/Message interrupted — not delivered/);
 });
 
-test("GAME-SP4.1G3A Summit pair stands left of the wall at desktop, tablet and phone widths",()=>{
+test("GAME-SP4.1G3A Summit staging makes a moderate left shift on smaller screens",()=>{
   const start=css.indexOf("/* SP4.0B — Owner-approved Summit entrance cast");
   const end=css.indexOf("/* GAME-SP4.0C",start);
   assert.ok(start>=0 && end>start,"Summit style section is present");
   const summitCss=css.slice(start,end);
-  const desktop=summitCss.split("@media (max-width:800px)")[0];
+  const wide=summitCss.split("@media (max-width:1500px)")[0];
+  const laptop=summitCss.split("@media (max-width:1500px)")[1].split("@media (max-width:800px)")[0];
   const tablet=summitCss.split("@media (max-width:800px)")[1].split("@media (max-width:450px)")[0];
   const phone=summitCss.split("@media (max-width:450px)")[1];
   const rule=(part,actor)=>{
-    const marker='.summit-entrance-'+actor+' {';
+    const marker=".summit-entrance-"+actor+" {";
     const i=part.indexOf(marker);
     assert.ok(i>=0,actor+" CSS present");
     return part.slice(i+marker.length,part.indexOf("}",i));
@@ -4960,16 +4961,24 @@ test("GAME-SP4.1G3A Summit pair stands left of the wall at desktop, tablet and p
     assert.ok(match,name+" must have a percent position");
     return Number(match[1]);
   };
+  assert.equal(percent(rule(wide,"paul"),"right"),40,"Wide-screen Paul unchanged");
+  assert.equal(percent(rule(wide,"david"),"right"),22,"Wide-screen David unchanged");
   for(const [name,part,paulRight,davidRight,bottom] of [
-    ["desktop",desktop,40,22,20],["tablet",tablet,39,20,27],["phone",phone,39,8,31]
+    ["laptop",laptop,45,27,null],
+    ["tablet",tablet,42,24,27],
+    ["phone",phone,41,12,31]
   ]){
-    const paul=rule(part,"paul"),david=rule(part,"david"),keeper=rule(part,"gatekeeper");
-    assert.equal(percent(paul,"right"),paulRight,name+" Paul moves left");
-    assert.equal(percent(david,"right"),davidRight,name+" David moves left");
-    assert.equal(percent(paul,"bottom"),bottom,name+" Paul stays grounded");
-    assert.equal(percent(david,"bottom"),bottom,name+" David shares groundline");
-    assert.ok(percent(paul,"right")>percent(david,"right"),"Paul remains to David's left");
-    assert.ok(percent(keeper,"left")>=0,"Gatekeeper stays on left side");
+    const paul=rule(part,"paul"),david=rule(part,"david");
+    assert.equal(percent(paul,"right"),paulRight,name+" Paul is modestly left");
+    assert.equal(percent(david,"right"),davidRight,name+" David is modestly left");
+    assert.ok(percent(paul,"right")>percent(david,"right"),name+" keeps Paul to David's left");
+    if(bottom!==null){
+      assert.equal(percent(paul,"bottom"),bottom,name+" Paul stays grounded");
+      assert.equal(percent(david,"bottom"),bottom,name+" David shares groundline");
+      assert.ok(percent(rule(part,"gatekeeper"),"left")>=0,"Gatekeeper stays on left side");
+    }else{
+      assert.doesNotMatch(laptop,/height:|bottom:|gatekeeper/,"Laptop override changes positions only");
+    }
   }
   assert.ok(summitCss.includes("transform:scaleX(-1);"),"Approved sprite mirroring remains");
   assert.doesNotMatch(summitCss,/summit-throne/,"Do not restage throne-room actors");
