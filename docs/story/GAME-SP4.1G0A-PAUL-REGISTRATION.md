@@ -2,6 +2,20 @@
 
 **Baseline:** PR #61 merge `394aeb79c07ec4b051ea515dd5c1299a39832a21`. Active draft PR #62 on `agent/game-sp41g0a-paul-pleased-registration`.
 
+## GAME-SP4.1G0A confused portrait replacement: 19 October 2026
+
+The owner demonstrated that the **confused** portrait in `office.002` was cropped at its left outline, despite the earlier pleased sprite replacement. A new, correctly framed Paul confused illustration was created and independently checked, rather than stretching, shrinking or overlapping actors.
+
+- **New Drive source PNG:** [paul-office-seated-confused-replacement-v02.png](https://drive.google.com/file/d/1z8x-Cn24crE0hHbPwgneb2HGLyuWuhIN/view). Source SHA-256: `d5e674364e659c8c4ea700153f24e80db1241a5a8f64ef3bf44e9499e72449ec`.
+- **Production WebP:** `public/assets/generated/characters/paul-office-seated-confused-v01.webp` replaced in GitHub with the verified 1130×1448, 169,190-byte WebP. SHA-256: `3f7133bf3037a97fc7a315d4a2841d730561bc56bf8ba15290145db2e168adfd`.
+- **Drive WebP backup:** [paul-office-seated-confused-v02.webp](https://drive.google.com/file/d/1wRBgGQtYCVSFlfu53onTvQeU942Y7hWl/view).
+- Source PNG and production WebP alpha bounds are **(41, 110) to (1095, 1375)** within 1130×1448. All four outer edges have zero opacity; no illustrated outline touches the canvas boundary. This was measured on both the source PNG and the exact committed WebP.
+- Manifest updated to Google Drive source revision 2; runtime cue cache-busted to `?v=2`; packaging and SHA checks included in tests.
+- Office actor staging remains the originally approved **Paul right 3.5%, Stephen left 35% / width 30%**, with no CSS overlap tricks.
+- **Human gate still open:** inspect Paul's new confused pose for likeness, transparent outline, table perspective and the separated actors at `office.002` on the deployed game, plus neutral and pleased. **Do not merge until approved.**
+
+The older notes below document superseded failed experiments; this replacement is the current implementation.
+
 ## Diagnosis and actual replacement
 
 Owner's first preview proved that the 3.5% CSS optical inset **did not restore the missing black outline on the left of Paul's arm**. This is an issue within the tightly cropped source image, not general desk geometry. That scale-only workaround has been **removed**.

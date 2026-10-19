@@ -2,6 +2,10 @@
 
 **Updated:** 19 October 2026
 
+## CURRENT — Paul confused portrait repaired, PR #62 awaiting visual approval
+
+- **GAME-SP4.1G0A:** Replaced the actually clipped Paul **confused** production WebP with a generated 1130×1448 image with complete drawn outline and fully transparent outer edges. Exact asset 169,190 bytes, SHA-256 `3f7133bf3037a97fc7a315d4a2841d730561bc56bf8ba15290145db2e168adfd`; source PNG backed up in the project's Google Drive staging folder. Manifest rev 2, `?v=2`, width/version/integrity regression; previous Paul/Stephen overlap workaround remains reverted. Await the owner's live visual check at `office.002` and approve only if likeness and layout are right. PR #62 is draft/unmerged; G0B song panel fixes follow.
+
 ## GAME-SP4.1G0A — Paul confused/pleased crop and staging (awaiting visual acceptance)
 
 - **19 October additional owner screenshot:** the visibly clipped arm was on `office.002` (“Is China far?”) **Paul confused**, not `office.004` Paul pleased. The approved confused PNG itself touches the left canvas edge over the arm, while the portrait wrapper already permits overflow. The exposed gap between Paul and Stephen makes that edge obvious.
