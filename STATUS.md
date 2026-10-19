@@ -2,7 +2,11 @@
 
 **Updated:** 19 October 2026
 
-## GAME-SP4.1G0A — New Paul pleased image replacement (awaiting visual acceptance)
+## GAME-SP4.1G0A — Paul confused/pleased crop and staging (awaiting visual acceptance)
+
+- **19 October additional owner screenshot:** the visibly clipped arm was on `office.002` (“Is China far?”) **Paul confused**, not `office.004` Paul pleased. The approved confused PNG itself touches the left canvas edge over the arm, while the portrait wrapper already permits overflow. The exposed gap between Paul and Stephen makes that edge obvious.
+- **Current review branch correction:** register all seated Paul poses at `right:7.25%` and below Stephen's stacking layer to hide that source edge at a natural sleeve overlap. This is a staging workaround without a new confused image; check actual image rendering before merge. Earlier pleaded/pleased v2 trial asset remains and there is no temporary CSS scale rule.
+
 
 - **Planning PR #61 merged:** `394aeb79c07ec4b051ea515dd5c1299a39832a21`; G0–G4 roadmap now on main. The wider Chapter 4 Ending C review remains pending.
 - **Active feature branch:** `agent/game-sp41g0a-paul-pleased-registration`. Inspected approved original Paul pleased PNG (1086×1448); source alpha reaches both lateral edges, so this is partly **source artwork crop**, not a generic stage overflow defect.
