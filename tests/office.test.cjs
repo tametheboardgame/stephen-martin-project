@@ -208,13 +208,13 @@ test("five illustrated cutaways remain, and the song uses only its dedicated pla
     assert.ok(p.el("cutawayContent").innerHTML.includes(fragment),beat);
     assert.equal(p.el("stage").dataset.location,"interior");
   }
-  p.at("office.v07");
-  assert.equal(p.el("cutawayPanel").hidden,true,"Retired song card is not painted underneath");
-  assert.equal(p.el("cutawayContent").innerHTML,"","No obsolete song/lyrics duplicate");
-  assert.equal(p.el("stage").dataset.cutaway,"none");
-  assert.equal(p.el("stage").dataset.songActive,"true");
-  assert.equal(p.el("officeSongOverlay").hidden,false);
-  assert.equal(p.el("officeSongLyricsScroll").hidden,false);
+  const songView=preview();songView.start();songView.at("office.v07");
+  assert.equal(songView.el("cutawayPanel").hidden,true,"Retired song card is not painted underneath");
+  assert.equal(songView.el("cutawayContent").innerHTML,"","No obsolete song/lyrics duplicate");
+  assert.equal(songView.el("stage").dataset.cutaway,"none");
+  assert.equal(songView.el("stage").dataset.songActive,"true");
+  assert.equal(songView.el("officeSongOverlay").hidden,false);
+  assert.equal(songView.el("officeSongLyricsScroll").hidden,false);
   p.at("office.v12");
   assert.equal(p.el("cutawayPanel").hidden,true);
   assert.equal(p.el("stage").dataset.songActive,"false");
@@ -2388,7 +2388,7 @@ test("SP4.0D David expression scales are bottom-anchored to neutral",()=>{
   assert.ok(!chunk.includes('data-seated-sprite="neutral"'),"Neutral sprite remains the visual baseline");
 });
 
-test("SP4.0D pessimistic lyrics lead early and still reach the last line",async()=>{
+test("SP4.1G0B pessimistic lyrics hold the opening and still reach the last line",async()=>{
   const p=preview({audio:true});p.start();p.at("office.041");
   p.el("nextButton").click();
   p.el("songListenButton").click();
@@ -2397,10 +2397,10 @@ test("SP4.0D pessimistic lyrics lead early and still reach the last line",async(
   clip.duration=120;clip.currentTime=12;
   clip.ontimeupdate();
   const early=p.el("officeSongLyricsScroll").scrollTop;
-  assert.ok(early>60&&early<150,"Faster initial progression than the 60px linear baseline");
+  assert.ok(early>=0&&early<60,"Opening verse remains visible rather than jumping far ahead");
   clip.currentTime=60;
   clip.ontimeupdate();
-  assert.ok(p.el("officeSongLyricsScroll").scrollTop>300,"Still slightly ahead at half time");
+  assert.equal(p.el("officeSongLyricsScroll").scrollTop,300,"Song progresses steadily at half time");
   clip.currentTime=120;
   clip.ontimeupdate();
   assert.equal(p.el("officeSongLyricsScroll").scrollTop,600,"No skipped end section");
@@ -4198,6 +4198,8 @@ test("GAME-SP4.1G0B both songs share a responsive large lyric panel without ghos
   assert.equal(p.el("officeSongLyricsScroll").attributes["aria-label"],"Optimistic song lyrics");
   const clip=p.voices.at(-1);
   await Promise.resolve();
+  p.el("songListenButton").click();
+  assert.equal(p.voices.at(-1),clip,"Preview upgrades to full without replacing the clip");
   clip.currentTime=0;clip.duration=120;clip.ontimeupdate();
   assert.equal(p.el("officeSongLyricsScroll").scrollTop,0);
   clip.currentTime=120;clip.ontimeupdate();
