@@ -43,7 +43,7 @@ class Element {
   closest(){return "button";}
   focus(){this.focusCount=(this.focusCount||0)+1;}
 }
-function preview({audio=false}={}) {
+function preview({audio=false,assetLoader=null,saveData=false}={}) {
   const elements=new Map(),stored=new Map(),timeouts=new Map(),listeners=new Map(),voices=[];
   const el=id=>{if(!elements.has(id))elements.set(id,new Element(id));return elements.get(id);};
   const document={getElementById:el,body:new Element("body"),hidden:false,
@@ -52,6 +52,8 @@ function preview({audio=false}={}) {
     getItem:key=>stored.get(key)||null,
     setItem:(key,value)=>stored.set(key,value)
   },scrollTo() {}};
+  if(assetLoader) window.SMP_ASSET_LOADER=assetLoader;
+  if(saveData) window.navigator={connection:{saveData:true}};
   if(audio) window.Audio=class {
     constructor(){this.src="";this.preload="";this.paused=true;this.pauseCount=0;this.playCount=0;this.currentTime=0;this.duration=120;voices.push(this);}
     play(){this.paused=false;this.playCount++;return Promise.resolve();}
@@ -4474,4 +4476,54 @@ test("GAME-SP4.1G1B all three routes retain the existing England narrator and re
     p.el("chinaFinalNextButton").click();
     assert.equal(saved(p).holidayPhase,"rescue-alarm");
   }
+});
+
+
+test("GAME-SP4.1G1B prewarms the approved England postcard once as Chapter Two begins",()=>{
+  const calls=[];
+  const src="./public/assets/generated/locations/transition-back-in-england-postcard-collage-v01.webp";
+  const p=preview({assetLoader:{warm(url){calls.push(url);}}});
+  p.start();
+  assert.deepEqual(calls,[],"Do not download distant Chapter Two scenery at menu/Chapter One startup");
+  p.el("skipButton").click();
+  assert.equal(saved(p).scene,"holiday");
+  assert.equal(saved(p).holidayPhase,"transition");
+  assert.deepEqual(calls,[src],"Predecode the England illustration as Chapter Two starts");
+  p.el("chinaStartButton").click();
+  for(let i=0;i<5;i++)p.el("wallNextButton").click();
+  assert.deepEqual(calls,[src],"Do not issue duplicate downloads on successive dialogue renders");
+  assert.match(read("src/asset-loader.js"),/function warm\(url\)/);
+  assert.match(engine,/loader\.warm\(englandCollageSrc\)/);
+  assert.doesNotMatch(html,/<link rel="preload"[^>]*transition-back-in-england-postcard-collage/);
+});
+
+test("GAME-SP4.1G1B honours Save-Data and still permits a valid late England scene",()=>{
+  const calls=[];
+  const p=preview({saveData:true,assetLoader:{warm(url){calls.push(url);}}});
+  p.start();
+  p.el("skipButton").click();
+  assert.deepEqual(calls,[],"Data-saving users are not forced to prefetch distant artwork");
+  p.el("chinaStartButton").click();
+  for(let i=0;i<5;i++)p.el("wallNextButton").click();
+  p.el("wallAcceptButton").click();
+  p.el("wallGoIncidentButton").click();
+  p.el("handoffContinueButton").click();
+  p.el("chinaFinalNextButton").click();
+  p.el("chinaFinalNextButton").click();
+  assert.equal(p.el("chinaFinalEngland").hidden,false);
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.england.back.001");
+});
+
+test("GAME-SP4.1G1B missing asset loader never blocks narration or route progression",()=>{
+  const p=preview();
+  p.start();p.el("skipButton").click();
+  p.el("chinaStartButton").click();
+  for(let i=0;i<5;i++)p.el("wallNextButton").click();
+  p.el("wallAcceptButton").click();
+  p.el("wallGoIncidentButton").click();
+  p.el("handoffContinueButton").click();
+  p.el("chinaFinalNextButton").click();
+  p.el("chinaFinalNextButton").click();
+  assert.equal(p.el("chinaFinalEngland").hidden,false);
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.england.back.001");
 });
