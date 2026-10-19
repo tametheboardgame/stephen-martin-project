@@ -1,5 +1,12 @@
 # Project status
 
+## GAME-SP4 — Remaining narration merged on latest main (19 October 2026)
+
+- All 14 approved narrator MP3s were uploaded and passed 193 tests on draft PR #68. This merge integrates them with GAME-SP4.1G1B's England collage, preserving its early asset preloading, art, responsive styling, and tests.
+- Total 170 approved dialogue/narrator MP3s, plus two opening song MP3s. Endings B/C narrator closers now use the established natural-duration audio engine, while their other dialogue remains text-timed.
+- Approved by the owner; the combined code is regression-checked before final merge.
+
+
 ## CURRENT — GAME-SP4.1G1B approved “Back in England” collage (19 October 2026)
 
 - **Owner visual review:** the actual England postcard collage and heading/subtitle layout were approved (“apart from that it was great”). The only open issue was slow first loading of the image.
