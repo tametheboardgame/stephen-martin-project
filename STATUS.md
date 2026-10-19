@@ -2,6 +2,9 @@
 
 ## CURRENT — GAME-SP4.1G1A phone-battery storyboard (19 October 2026)
 
+- **G1A scene-composition refinement (owner review, 19 October):** owner liked the repaired phone art and full message but rejected the off-centre composition before shutdown. Step 0 `data-power="low"` now uses the **centred 72%-height hero handset** (top 14%, left 50%), while Step 1 `data-power="off"` shrinks to 62%, shifts left 34% and reveals the existing right-side battery-flat notice and Stephen reaction. CSS animates only left/top/height over 220ms, disabled under reduced-motion. At <=800px the two-column composition scales down; at <=580px the phone remains centred and retreats upwards when off, leaving vertically stacked notices clear of the bottom controls. No asset, route, voice or state-machine edits. Added regression coverage and checked geometry in headless Chromium at 1420×834, 1366×768, 800×740, 580×900 and 390×850. **Draft PR #65 stays unmerged pending owner's new visual approval.**
+
+
 - **G1A owner screenshot fix:** handset on first PR #65 preview fell below visible stage, obscuring message. Root cause: grid auto-track sizing with percentage-height phone and scene padding. Replaced G1A stage grid with contained block, absolutely anchored phone at top 8% / left 36%, height max 70% capped 650px and centre-translated to leave room for the lower controls; tablet stage uses 4:3 and phone portrait 3:4 framing, with dedicated mobile/small tablet centring. The asset and story/audio are unchanged. A local headless Chromium layout probe checked phone and message rectangles against action bar at 1616×932, 1366×768, 800×740, 580×900, 390×850; GitHub smoke and a new Cloudflare preview are required for owner review.
 
 - **G2A approved/merged:** PR #64, `main` commit `d99b474a688c2116d449285f9a65c1d0654693e9`. Chapter 3 desk fix accepted by owner.
