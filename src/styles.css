@@ -4361,3 +4361,229 @@ body:has(#menuScreen:not([hidden])) main {
   #officeScreen #stage .cast-actor,
   #holidayScreen [data-speaker-focus] {transition:none !important;}
 }
+
+
+/* GAME-SP4.1F — four OWNER-LOCKED illustrated transition backgrounds.
+ * Reuse F1 twice, F2A/B across two beats each, and F3 for all three routes.
+ * Original artwork stays fully bright; local caption surfaces own contrast. */
+#holidayScreen .china-intermission-art[data-destination="palace"],
+#holidayScreen .china-intermission-art[data-destination="market"] {
+  background-image:url("../public/assets/generated/locations/transition-china-passing-time-v01.webp");
+  background-position:center;
+}
+#holidayScreen .china-route-handoff-art[data-route="cult"],
+#holidayScreen .china-route-handoff-art[data-route="detention"],
+#holidayScreen .china-route-handoff-art[data-route="reassemble"] {
+  background-image:url("../public/assets/generated/locations/transition-stephen-route-handoff-v01.webp");
+  background-position:center;
+}
+#holidayScreen #rescueTravelScene[data-montage="flight-luggage"] .rescue-travel-stage {
+  background:url("../public/assets/generated/locations/transition-operation-flight-luggage-v01.webp") center/cover no-repeat;
+}
+#holidayScreen #rescueTravelScene[data-montage="map-expenses"] .rescue-travel-stage {
+  background:url("../public/assets/generated/locations/transition-operation-map-expenses-v01.webp") center/cover no-repeat;
+}
+/* These approved bright paintings do not need the old full-stage night wash. */
+#holidayScreen .china-intermission-art::before,
+#holidayScreen .china-route-handoff-art::before {
+  background:linear-gradient(90deg,rgba(3,18,33,.17),transparent 40%,rgba(3,18,33,.08));
+}
+#holidayScreen .intermission-frame,
+#holidayScreen .route-handoff-card {
+  width:min(68%,740px);
+  padding:clamp(14px,2vw,26px) clamp(16px,2.5vw,32px);
+  background:rgba(8,29,49,.86);
+}
+#holidayScreen #rescueTravelScene .rescue-travel-panel {
+  width:min(62%,760px);
+  max-height:65%;
+  padding:clamp(12px,2vw,25px);
+  gap:7px;
+  background:rgba(8,29,49,.83);
+}
+#holidayScreen #rescueTravelScene .rescue-travel-symbol {font-size:clamp(25px,4vw,45px);}
+#holidayScreen #rescueTravelScene .rescue-travel-panel h2 {font-size:clamp(19px,3vw,39px);}
+
+/* One subtitle surface, separate from the white character speech bubbles.
+ * This is only visible during actual illustrated narration beats, and stays
+ * readable if the MP3 has not yet been uploaded or Sound is turned off. */
+#holidayScreen #transitionNarration[hidden] {display:none !important;}
+#holidayScreen .transition-narration {
+  position:absolute;z-index:22;
+  bottom:clamp(70px,9%,115px);
+  left:50%;transform:translateX(-50%);
+  box-sizing:border-box;
+  width:min(76%,940px);
+  padding:8px 15px 9px;
+  border:2px solid rgba(245,210,147,.85);
+  border-radius:10px;
+  background:rgba(7,27,45,.91);
+  color:#fffbec;
+  box-shadow:0 6px 14px rgba(2,14,26,.38);
+  text-align:center;
+  pointer-events:none;
+}
+#holidayScreen .transition-narration strong {
+  display:block;
+  font:900 clamp(10px,1vw,13px) system-ui,sans-serif;
+  letter-spacing:.14em;
+  color:#ffdb95;
+}
+#holidayScreen .transition-narration p {
+  margin:4px 0 0;
+  font:650 clamp(12px,1.25vw,18px)/1.32 "Trebuchet MS",system-ui,sans-serif;
+  overflow-wrap:break-word;
+}
+@media(max-width:800px) {
+  #holidayScreen .intermission-frame,
+  #holidayScreen .route-handoff-card {
+    width:83%;padding:13px 12px;
+  }
+  #holidayScreen #rescueTravelScene .rescue-travel-panel {width:80%;padding:12px;max-height:60%;}
+  #holidayScreen .transition-narration {bottom:63px;width:91%;padding:7px 10px;}
+  #holidayScreen .transition-narration p {font-size:clamp(11px,2vw,15px);}
+}
+@media(max-width:450px) {
+  #holidayScreen .intermission-frame,
+  #holidayScreen .route-handoff-card {width:90%;padding:11px 9px;}
+  #holidayScreen #rescueTravelScene .rescue-travel-panel {width:93%;max-height:51%;gap:3px;}
+  #holidayScreen .transition-narration {bottom:56px;width:95%;padding:6px 8px;}
+  #holidayScreen .transition-narration p {font-size:11px;line-height:1.25;}
+  #holidayScreen .transition-narration strong {font-size:10px;}
+}
+
+
+/* GAME-SP4.1F.1 — compact, HEADINGS-ONLY transition title plates.
+   Narration is now exclusively in #transitionNarration, never repeated on an
+   illustrated scene card. Keep the approved images visible between panels. */
+#holidayScreen .intermission-frame,
+#holidayScreen .route-handoff-card {
+  box-sizing:border-box;
+  width:min(45%,610px);
+  padding:clamp(12px,1.55vw,22px) clamp(14px,2vw,28px);
+  display:grid;
+  justify-items:center;
+  align-content:center;
+  gap:5px;
+  border-width:2px;
+  border-radius:12px;
+  background:rgba(8,29,49,.86);
+}
+#holidayScreen .intermission-frame h2,
+#holidayScreen .route-handoff-card h2 {
+  margin:0;
+  font-size:clamp(24px,3.15vw,45px);
+  line-height:1.08;
+}
+#holidayScreen .intermission-frame h3 {
+  margin:4px 0 0;
+  font-size:clamp(16px,1.85vw,27px);
+  line-height:1.15;
+}
+#holidayScreen #rescueTravelScene .rescue-travel-panel,
+#holidayScreen #rescueHubArrival .rescue-travel-panel {
+  box-sizing:border-box;
+  width:min(44%,580px);
+  max-height:50%;
+  padding:clamp(12px,1.6vw,23px);
+  gap:5px;
+  border-width:2px;
+  border-radius:12px;
+  background:rgba(8,29,49,.86);
+}
+#holidayScreen #rescueTravelScene .rescue-travel-panel h2,
+#holidayScreen #rescueHubArrival .rescue-travel-panel h2 {
+  font-size:clamp(22px,2.65vw,37px);
+  line-height:1.08;
+}
+#holidayScreen #rescueTravelScene .rescue-travel-symbol {
+  font-size:clamp(24px,3vw,38px);
+}
+#holidayScreen #chinaFinalEngland h2 {
+  max-width:90%;
+  font-size:clamp(29px,4vw,54px);
+}
+@media (max-width:800px) {
+  #holidayScreen .intermission-frame,
+  #holidayScreen .route-handoff-card {
+    width:min(76%,480px);
+    padding:11px 13px;
+  }
+  #holidayScreen #rescueTravelScene .rescue-travel-panel,
+  #holidayScreen #rescueHubArrival .rescue-travel-panel {
+    width:min(76%,480px);
+    max-height:44%;
+    padding:11px 13px;
+  }
+  #holidayScreen .intermission-frame h2,
+  #holidayScreen .route-handoff-card h2 {
+    font-size:clamp(23px,4vw,32px);
+  }
+  #holidayScreen .intermission-frame h3 {
+    font-size:clamp(16px,3vw,23px);
+  }
+}
+@media (max-width:450px) {
+  #holidayScreen .intermission-frame,
+  #holidayScreen .route-handoff-card {
+    width:84%;
+    padding:9px 10px;
+    gap:3px;
+  }
+  #holidayScreen #rescueTravelScene .rescue-travel-panel,
+  #holidayScreen #rescueHubArrival .rescue-travel-panel {
+    width:84%;
+    max-height:35%;
+    padding:9px 10px;
+    gap:3px;
+  }
+  #holidayScreen .intermission-frame h2,
+  #holidayScreen .route-handoff-card h2 {
+    font-size:clamp(20px,5.1vw,27px);
+  }
+  #holidayScreen .intermission-frame h3 {
+    font-size:clamp(15px,3.8vw,19px);
+  }
+  #holidayScreen #rescueTravelScene .rescue-travel-panel h2,
+  #holidayScreen #rescueHubArrival .rescue-travel-panel h2 {
+    font-size:clamp(20px,5vw,26px);
+  }
+}
+
+
+/* GAME-SP4.1F.2 — Chapter Two title-art subtitle clearance.
+ * The approved Chapter Two image has its own lettering near the foot of the
+ * image. Its off-stage narrator gets a smaller LOWER-LEFT slot, leaving that
+ * lettering clear and the separate bottom-right Explore button accessible.
+ * Other transitions retain their approved narrator placement unchanged. */
+@media (min-width:801px) {
+  #holidayScreen:has(#chinaTransition:not([hidden])) #transitionNarration {
+    bottom:16px;
+    left:3%;
+    transform:none;
+    width:min(60%,790px);
+    padding:7px 12px 8px;
+  }
+}
+/* On touch/narrow layouts, do not overlay the poster at all: the subtitle
+ * follows the image/actions in natural document flow. This also avoids
+ * obscuring the original baked-in text on small portrait screens. */
+@media (max-width:800px) {
+  #holidayScreen:has(#chinaTransition:not([hidden])) #transitionNarration {
+    position:relative;
+    bottom:auto;
+    left:auto;
+    transform:none;
+    width:min(92%,720px);
+    max-width:none;
+    margin:7px auto 12px;
+    padding:7px 10px 8px;
+  }
+}
+@media (max-width:450px) {
+  #holidayScreen:has(#chinaTransition:not([hidden])) #transitionNarration {
+    width:94%;
+    margin:6px auto 10px;
+    padding:6px 8px;
+  }
+}

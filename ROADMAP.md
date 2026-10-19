@@ -733,8 +733,12 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 #### GAME-SP4.1F — Dedicated illustrated transitions
 
-**Priority:** P1; **status:** New asset approval required; **dependencies:** can be scoped/planned alongside other work, but final style follows stable D layout and asset readiness conventions from A.  
-**Owner observation:** Several scene changes feel like plain text cards rather than part of the illustrated adventure.
+**Priority:** P1; **status:** Four approved assets **installed in the game** on `agent/game-sp41f0-transition-storyboard-narration` (draft PR #59) with 12 optional narrator cues and live subtitles. Verified **168/168 tests, four images included, 112 existing voices packed**, Cloudflare preview successful (18 October 2026). The owner's existing narrator voice will be used; **12 narrator MP3 recordings remain for later upload and the script copy is editable until recorded**. Review the actual branch preview before merge; **dependencies:** D layout and asset readiness conventions from A.  
+**Owner observation:** Several scene changes feel like plain text cards rather than part of the illustrated adventure. Owner additionally requests **spoken narrator passages** paired with the new illustrated transitions, using one consistent off-screen voice.
+
+**F1 visual-refinement follow-up, 18 October 2026 (user feedback):** all old transition title plates must be **small heading-only cards**, while **all story narration is confined to the single off-stage NARRATOR subtitle box**. Scope covers two sightseeing intermissions, three destination handoffs, four travel montage beats, Back in England and the arrival at visitor information. The already approved illustrated backgrounds remain unobscured. Implemented in PR #59 with desktop, tablet and mobile layout rules; narrator MP3s remain optional and unchanged. Await owner visual review before merge.
+
+**F0 approval and implemented delivery:** `docs/story/GAME-SP4.1F0-TRANSITION-ART-NARRATION.md` covers the storyboard, **four owner-approved illustrations now in their intended scenes**, and **12 cue IDs already wired into the existing player with human-readable narrator subtitles**. The MP3s are optional until the owner records them; missing/disabled audio uses timed text. No new character voices, route decisions or gameplay steps have been introduced. Original WebPs and approved PNG provenance are recorded in `docs/story/GAME-SP4.1F-APPROVED-ASSETS.md`; Google asset automation remains tracked separately as issue #60.
 
 **Proposed bounded artwork packets, each individually approved**
 1. **F1, passage of time:** One reusable illustrated frame for time passing during Stephen’s China sightseeing, retaining editable place/time titles.
@@ -744,8 +748,15 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 **Implementation tasks:** Create concept using established approved visual bible and canonical actor references, obtain owner approval before upload, stage original PNG in Drive, manifest/convert/version WebP, combine with accessible live headings and small one-off dissolve if suitable. Do not change choices or outcome routing.
 
-**Acceptance and proof:** Major previously bare transitions now share coherent art direction, remain legible and responsive, respect mute/play/pause/skip and do not materially increase total runtime. Every image has an approved origin and real branch build preview.
-**Non-goals:** New cutscenes, travel levels, extended cinematics or baked-in interactive text.
+**Execution stages — F1, F2A/F2B, F3 and narrator mechanics implemented; actual MP3s pending:**
+- **F1 — Time-passing postcard (one asset, two uses):** Stephen sightseeing between Wall → Forbidden City and Forbidden City → Night Market; retain live daypart and location titles.
+- **F2A/F2B — Rescue travel (two assets, four uses):** David/Paul airport and baggage mishaps, followed by upside-down map and absurd expenses; reuse artwork across consecutive montage beats, no added game steps.
+- **F3 — Shared route handoff (one asset, three uses):** one route-neutral approved illustration with live Summit / banquet / spa labels, not three independent artwork bills.
+- **F-NARR — Spoken off-screen narrator (12 reserved cues):** chapter transition, both sightseeing jumps, three possible route handoffs, England return, four travel beats and hotel arrival. **Mechanics are live:** existing MP3-ID playback, speaker-independent subtitles, mute/pause/Next/Skip and missing-audio fallback. The owner will record the existing narrator voice later. Review/edit the draft cue wording before recording; no artificial placeholder recordings have been installed.
+- **F4 — Optional gap-check only:** consider an extra Back in England connector or hotel arrival picture if the four approved assets still leave obvious visual holes; separate approval before generation.
+
+**Acceptance and proof:** Major previously bare transitions now share coherent art direction and a consistent optional narrator, remain legible and responsive, respect mute/play/pause/skip and do not materially increase total runtime. Every image has an approved origin and real branch build preview. Missing narration MP3 must never stall progress; current game saves and all route checkpoints remain intact.
+**Non-goals:** New cutscenes, travel levels, extended cinematics, embedded artwork text, an additional speaking character sprite, or edits to approved dialogue.
 
 #### GAME-SP4.1G — Limited extra expressions, reactions and movement
 

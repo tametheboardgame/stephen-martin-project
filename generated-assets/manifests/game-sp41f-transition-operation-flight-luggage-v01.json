@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1KHv72tO9O-IfuBqiLwVemX7IC5AFunoI"
+  },
+  "expectedSourceName": "transition-operation-flight-luggage-v01.png",
+  "destination": "public/assets/generated/locations/transition-operation-flight-luggage-v01.webp",
+  "transform": {
+    "maxWidth": 1672,
+    "maxHeight": 941,
+    "quality": 85
+  },
+  "revision": 1
+}

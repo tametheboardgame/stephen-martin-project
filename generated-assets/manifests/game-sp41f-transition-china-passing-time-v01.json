@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "16zPAo9wnx9KHnwR2rPjNE9ZENRkN-sib"
+  },
+  "expectedSourceName": "transition-china-passing-time-v01.png",
+  "destination": "public/assets/generated/locations/transition-china-passing-time-v01.webp",
+  "transform": {
+    "maxWidth": 1672,
+    "maxHeight": 941,
+    "quality": 85
+  },
+  "revision": 1
+}
