@@ -758,9 +758,104 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 **Acceptance and proof:** Major previously bare transitions now share coherent art direction and a consistent optional narrator, remain legible and responsive, respect mute/play/pause/skip and do not materially increase total runtime. Every image has an approved origin and real branch build preview. Missing narration MP3 must never stall progress; current game saves and all route checkpoints remain intact.
 **Non-goals:** New cutscenes, travel levels, extended cinematics, embedded artwork text, an additional speaking character sprite, or edits to approved dialogue.
 
+#### GAME-SP4.1G0 — Chapter 1 opening-sequence polish (owner-scoped 19 October 2026)
+
+**Priority:** P1 before broad extra-expression work. **Status:** Planned; no new artwork, SFX recordings or game code authorised by this documentation-only work package. **Baseline:** F transition illustrations and narrator mechanics approved/merged as PR #59 (`fd1b24b`). Character and narrator recording coverage remains independent in GAME-SP4.1H.
+
+**Owner screenshots/observations:**
+1. Paul’s *happy/satisfied seated expression* clips the visible left edge of one arm.
+2. The optimistic song’s new lyric window covers an **older song display layer**; the song should use the same large, on-scene modal approach as pessimistic.
+3. The pessimistic modal can be larger; lyric scrolling still appears inaccurate/poorly framed.
+4. The **Stephen muted the group** cutaway should play a quick notification/mute *ding*, and the **bear printing** cutaway should play a printer effect.
+5. The final **David laptop / “RESCUE PLAN - FINAL - FINAL 2”** screen needs finished in-world artwork instead of a placeholder-looking file explorer.
+6. The **“Rescue Stephen Martin from China”** opening-sequence finale requires a dedicated illustrated mission/title-card image.
+
+**G0A — Paul satisfied-expression clipping (start here; small code/asset PR)**
+
+- Inspect the actual happy/satisfied source image’s alpha bounds, transparent canvas, scale, CSS overflow and desk masking against neutral and other seated Paul poses. Determine whether the left arm is cut off *in the source* or only by staging.
+- If present within the source canvas, use a small **expression-specific** registration/size/inset change with no visible scale jump. If pixels are missing from the source, request owner approval to **recanvas/regenerate this one sprite only**, matching approved face/glasses/polo and existing eyeline/groundline; keep all other Paul expressions unchanged.
+- **Acceptance:** no visible arm crop, same apparent height/placement as neighbouring expressions, no changes to Stephen/David or scene interactions. Compare before/after at desktop, tablet and phone; retain automatic scripted expression selection.
+
+**G0B — Optimistic/pessimistic song modal cleanup and lyric scrolling (next PR)**
+
+- Audit existing `#officeSongOverlay`, prior optimistic backing/card, `#officeSongLyricsScroll`, audio-time scroll logic and pessimistic offer/full-song modes. Remove/retire **only the obsolete optimistic layer** showing through; preserve song preview/full playback, approved music and lyrics.
+- Unify the two song variations under one **large modal over the illustrated office**. Use separate approved optimistic/pessimistic colour accents, but the same hierarchy, visible title, actions, accessible lyrics region and shared sizing.
+- Give the lyrics panel **most of the modal’s height** (both versions). Enlarge pessimistic too. Then calibrate auto-scroll line focus/bounds based on real `currentTime`, including initial line, long lines and last chorus; enlarging the viewport may remove most apparent scroll problems before timing changes.
+- Test 20-second preview vs full versions, Sound On/Off, pause/resume, Next/Back, Skip Intro, Stop and Continue, replay, missing audio, switching songs, focus/scroll and narrow/short screens.
+- **Acceptance:** no optimistic ghost panel, both songs use substantial but sensible screen space, legible scrolling lyrics never clip or jump erratically, no duplicate/stale audio callbacks.
+
+**G0C — Two distinct opening cutaway sound effects (bounded audio hook)**
+
+- Identify exact “Stephen muted the group” and “bear printing” beat IDs. Inspect existing `beep("printer")`/synthetic cues to **reuse or replace rather than double-play** any existing printing effect.
+- Deliver a short notification/mute **ding** and a recognisable paper-feed **printer effect**, with two optional, explicitly documented SFX hooks and file locations only if existing synthesised effects are inadequate. User-supplied/approved SFX may be integrated after hook completion; do not generate or invent recordings without approval.
+- Trigger once on the relevant beat, and stop/reset on Sound Off, Pause, Next, Back, Skip Intro, restart, menu, tab hide and Resume. Missing audio must not delay the story.
+- **Acceptance:** one correctly timed effect at each illustration, no effect on unrelated beats, no double trigger or audible leak; avoid interfering with the separate GAME-SP4.1H voice workflow.
+
+**G0D — Final risk-plan prop illustration (one new approved artwork asset)**
+
+- Design an in-world *David’s laptop / file explorer* prop to replace the “RESCUE PLAN - FINAL - FINAL 2” placeholder. Retain the over-serious faux planning folder naming, risk-matrix joke and office visual style.
+- Preserve readable/accessible essential text at real game scale, ideally as live HTML layered over a proper illustrated screen/frame rather than baking illegible fine print into the picture.
+- Obtain owner visual and likeness sign-off before staging the original PNG in the project’s Google Drive folder; use a versioned manifest and optimised WebP on a dedicated draft PR. Keep existing beat ID, script and timing.
+
+**G0E — Opening finale “Rescue Stephen Martin from China” illustrated card (one new approved artwork asset)**
+
+- Commission one deliberately heroic/ridiculous *mission launch / rescue dossier* game image as the Chapter 1 payoff. Use the existing Stephen, David and Paul canonical references and the approved graphic-novel style; this should sell the rescue premise without implying a real-world incident.
+- Keep headline clearly readable, preferably live accessible text over illustrated backing unless the owner approves baked title treatment; respect short/mid/mobile viewports and the Chapter Two handoff.
+- Preview/approve illustration separately; stage original in Drive, manifest and optimised WebP; preserve song/voice cancellation and Skip Intro logic.
+
+**G0F — Chapter 1 integration / regression**
+
+- Test the full opening from fresh save, all Paul expressions, both song preview/full cases and scrolling, chat ding, bear printer, final risk-plan prop and illustrated opening rescue card.
+- Verify top toolbar, named speech box, overlay layering, Save/Resume, Back/Next, Pause/Sound, Skip Intro, stale callbacks and reduced motion. Visual review: laptops ~1366×768 and 1440×900, tablet ~800×1280, phone ~390×844.
+- **Gate:** small draft PRs by independent packet; all newly generated images require individual owner approval, a real deployed build and tests before merge. Do not bulk-generate alternate expressions or rewrite canonical jokes.
+
+**G0 non-goals:** New music tracks, a general audio engine, a large new expression library, full office artwork redesign or runtime inflation beyond the 15–25-minute first-playthrough target.
+
+#### GAME-SP4.1G1 — Chapter 2 phone-battery clarity and Back in England image (owner-scoped 19 October 2026)
+
+**Priority:** P1 narrative clarity before broad new expressions. **Status:** Planned, not implemented. **Owner screenshot:** current dark/empty “BACK IN ENGLAND…” title with narrator panel; route-ending phone and dead-battery state is insufficiently obvious. **Dependencies:** existing three-path final-message state, speaker voice, approved F narrator subtitle and safe Skip/Resume mechanics.
+
+**G1A — Phone messages and unmistakable battery-death sequence (all three choices)**
+
+1. Audit existing `final-message` steps, route-specific canonical phone texts, `chinaFinalPhone` / `chinaBatteryLabel` / `chinaPhoneMessage` / `chinaPhoneStatus`, and the existing Stephen reaction **“Oh for fuck’s sake”**. Do not rewrite or invent chats or move a recorded line without explicit approval.
+2. Storyboard the minimum sequence on **each** route (Summit, banquet, spa): an actual phone with legible route-specific message; conspicuous red/1% battery warning; phone **powering off / disconnected** with distinct change of visual state; Stephen’s established profane reaction at the right narrative beat; then handoff to England. The player must understand that **battery failure**, not abduction, caused loss of contact.
+3. Prefer **reusable image/state layers** over three nearly identical raster phone screens: three message states can remain existing *live, accessible text* in the same illustrated phone shell, plus one shared low-battery/alert treatment and one shared dead-phone treatment. Determine exact art count **after** auditing existing UI and owner approving storyboard; this is *not* permission to generate five separate paintings automatically.
+4. Keep pacing concise and ensure phone art does not cover the real Stephen, choice/skip controls or subtitles. If an extra scripted step is essential, explicitly validate saved-game compatibility/phase migration and audio timing; never auto-answer a choice or lose correct route.
+5. **Acceptance:** all three choices clearly show correct message, visible dying battery, powered-off state and Stephen’s reaction; no wrong-route bleed; Sound Off/missing MP3, Pause/Next/Skip/Resume and narrow screens remain safe. Owner reviews sequence storyboard, assets and actual working preview separately.
+
+**G1B — Illustrated “Back in England” transition (one new approved artwork asset)**
+
+- Replace the blank navy background with a strong illustrated return to England, preferably **David and Paul in a deliberately over-serious rescue/office-panic composition**, matching approved cast likeness and current graphic-novel direction.
+- Reuse F’s **compact live heading + one separate NARRATOR subtitle box**, not duplicated prose in a huge centre panel; check no overlap with image lettering, mobile crops, top bar or the next rescue-alarm beat.
+- One owner-approved original PNG staged in Drive, versioned manifest and optimised WebP in its own preview PR. No unrelated new cutscenes or changes to existing twelve narrator audio IDs.
+- **Acceptance:** transition feels like a proper illustrated scene, heading/narrator readable and distinct, no new dark whole-stage wash or character identity drift.
+
+**G1C — Chapter 2 handoff QA**
+
+- Exercise Summit, banquet and spa phone/battery→England→David/Paul alarm sequences independently from a fresh save and resumed checkpoints. Test Next, contextual Skip to Investigation, Pause, Sound, late voice callbacks, portrait mobile and desktop/tablet overlap.
+- **Gate:** approved storyboard followed by approved art, draft PR, 3-route regression, a real Cloudflare preview and owner visual sign-off. Preserve existing outcomes, game length and narrator MP3 fallback.
+
+**G1 non-goals:** Additional playable routes, invented phone conversations, replacing the existing holiday scene art, new long cinematics, or taking ownership of the separate voice-recording strand.
+
+#### GAME-SP4.1G0/G1 — Work order before the remaining GAME-SP4.1G
+
+| Order | Scope | Gate |
+| --- | --- | --- |
+| **Start first** | **G0A** Paul satisfied arm clipping | Audit source vs CSS, smallest one-expression correction, visual comparison |
+| 2 | **G0B** both song modal layouts and lyric scrolling | One shared sizeable lyric panel; no optimistic legacy overlay |
+| 3 | **G1A** phone sequence storyboard/state design | Decide reusable phone assets/low-battery/dead-phone states before generating |
+| 4 | **G0C** two SFX hooks | Check for pre-existing printer beep; SFX source/approval can happen in parallel |
+| 5 | **Art batch:** G0D final risk-plan, G0E rescue title, G1B England card, **only approved G1A phone art** | Individual illustration likeness approval; Drive → manifest → WebP provenance |
+| 6 | **G0F + G1C** integrated QA | Chapter 1 plus all three Chapter 2 routes, responsive checks and owner sign-off |
+| After these | Existing **GAME-SP4.1G** limited expressions/reactions | Target only remaining high-value jokes; do not start large sprite production |
+| **Parallel** | **GAME-SP4.1H** user-recorded character and transition narrator audio | Separate chat/branch; do not block visual work while MP3s are absent |
+| Final | **GAME-SP4.1I** full game acceptance | Three-ending QA, pacing and release-candidate approval |
+
+**Development rules:** Small short-lived `agent/*` branches and draft PRs based on the latest `main`; preserve V3 saves and all approved dialogue, photo privacy requirements and route logic. User approval of this **plan** does not mean any ungenerated artwork or audio is approved for the game.
+
 #### GAME-SP4.1G — Limited extra expressions, reactions and movement
 
-**Priority:** P2; **status:** Deferred until B and E are stable; **dependencies:** approved expression registration and speaker focus.  
+**Priority:** P2; **status:** Deferred until newly scoped G0/G1 Chapter 1/2 polish is completed or explicitly waived; B and E are merged. **Dependencies:** approved expression registration and speaker focus.  
 **Owner idea:** Add some personality through extra reactions and motion without bloating the project.
 
 **Implementation tasks**
@@ -824,12 +919,14 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 | 4c | SP4.1D2 | D1's unified transport/speaker presentation | Contextual skip only to safe choice/game/end checkpoints, never through puzzles |
 | 5 | SP4.1E | D, stable actor scale | Correct speaker glow in every applicable scene |
 | 6 | SP4.1F | A/D presentation patterns; artwork approval | Each transition illustration packet previewed and signed off |
-| 7 | SP4.1G | B and E; new art sign-off where used | Poses never shift framing; restrained motion |
+| 7a | SP4.1G0 | Approved F and Chapter 1 owner screenshots | Paul, song modals, two SFX cues and two owner-approved prop/title illustrations |
+| 7b | SP4.1G1 | Approved F and three route handoffs | Phone battery failure clear on all routes; illustrated Back in England; state/audio intact |
+| 7c | SP4.1G | G0/G1 delivered or explicitly deferred | Limited additional expression work; no framing jumps |
 | Parallel | SP4.1H | Approved user-supplied clips | Each voice batch individually listened to and previewed |
 | Final | SP4.1I | Approved A–E and explicit F/G/H deferrals if needed | Timed full-game acceptance, release candidate ready for owner |
 | Deferred | SP4.1J | Owner reschedules | Precision board geometry, no puzzle regression |
 
-**Current implementation next (18 October 2026):** SP4.1A and SP4.1B are merged and user-approved. Start **GAME-SP4.1C (Summit entrance brightness)** from the latest `main`. Then deliver SP4.1D0 (remove Auto proof controls), D1 (consistent named speech bubbles) and D2 (contextual skip checkpoints) as separately reviewed PRs before SP4.1E speaker glow. Continue voices independently. No extra gameplay or new art is authorised by this planning update.
+**Current implementation next (19 October 2026):** SP4.1A–F including both daylight corrections, speaker glow and four illustrated transitions are owner-approved and merged. Before broad GAME-SP4.1G extra expressions, deliver the newly scoped **G0 Chapter 1** and **G1 Chapter 2** polish packets above. **Start G0A** (Paul’s satisfied sprite arm clipping), then **G0B** (song overlay and lyric scrolling); storyboard G1A battery-phone states before image generation. GAME-SP4.1H voice recording proceeds **independently in a separate strand**. This roadmap-only update does not change playable scenes or authorise unapproved artwork generation.
 
 **Historical note:** SP4.0 and SP4C entries above describe past development stages and may mention draft branches from their original dates. For current work, this SP4.1 plan and top of `STATUS.md` take precedence. No package being listed here means its artwork, code or audio is already produced.
 
