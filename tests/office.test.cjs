@@ -2719,7 +2719,7 @@ test("Back in England has ten unique whitelisted voice IDs and no spoken travel 
   assert.equal(new Set(ids).size,10);
   assert.ok(alarm.montage.every(card=>card.id.startsWith("rescue.travel.")));
   assert.ok(read("scripts/build.mjs").includes('alarmIds.forEach(id => permitted.add(id + ".mp3"))'));
-  assert.ok(read("scripts/build.mjs").includes('permitted.size !== 168'),"Original ten alarm IDs remain included in expanded voice whitelist");
+  assert.ok(read("scripts/build.mjs").includes('permitted.size !== 170'),"Original ten alarm IDs remain included in expanded voice whitelist");
   assert.ok(fs.existsSync(path.join(root,"docs/RESCUE-ALARM-VOICE-IMPORT.md")));
 });
 
@@ -2836,7 +2836,7 @@ test("Visitor Information 22 voice IDs match screenplay and automatic file white
   assert.ok(ids.every(id=>/^rescue\.hub\.[a-z0-9.]+$/.test(id)));
   assert.equal(h.correct[4].id,"rescue.hub.correct.005");
   assert.ok(read("scripts/build.mjs").includes("hubVoiceIds.forEach(id => permitted.add(id +"));
-  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 168"));
+  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 170"));
   assert.ok(fs.existsSync(path.join(root,"docs/VISITOR-INFORMATION-VOICE-IMPORT.md")));
 });
 
@@ -4565,7 +4565,7 @@ test("Summit audio has exactly 44 unique approved IDs with unchanged comic dialo
   assert.equal(summit.ending[13].speaker,"Narrator");
   assert.equal(summit.ending[13].id,"summit.ending.014");
   assert.ok(read("scripts/build.mjs").includes("summitIds.forEach(id => permitted.add"));
-  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 168"),"44 Summit voices plus 12 reserved narrator clips are whitelisted");
+  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 170"),"44 Summit voices plus 12 reserved narrator clips are whitelisted");
   assert.ok(fs.existsSync(path.join(root,"docs/SUMMIT-VOICE-IMPORT.md")));
 });
 
@@ -4675,6 +4675,89 @@ test("Missing Summit voice falls back to text-timed progression; skipped respons
   assert.equal(wrong.paused,true);
   assert.ok(p.voices.at(-1).src.endsWith("summit.check.001.charger.001.mp3"));
 });
+
+// GAME-SP4 — all remaining narration must be packaged without affecting
+// unrecorded Ending B/C character dialogue or the already-voiced Summit ending.
+test("Narration audit finds exactly 14 remaining narrator IDs with distinct approved texts",()=>{
+  const s=story();
+  const d=s.SMP_DETENTION.ending, c=s.SMP_REASSEMBLE.ending;
+  assert.equal(d.length,14);
+  assert.equal(c.length,15);
+  assert.equal(d.at(-1).id,"detention.ending.014");
+  assert.equal(c.at(-1).id,"reassemble.ending.015");
+  assert.equal(d.at(-1).speaker,"Narrator");
+  assert.equal(c.at(-1).speaker,"Narrator");
+  assert.match(d.at(-1).text,/PLEASE LEAVE certificate/);
+  assert.match(c.at(-1).text,/cardboard display/);
+  assert.equal(d.filter(line=>line.speaker==="Narrator").length,1);
+  assert.equal(c.filter(line=>line.speaker==="Narrator").length,1);
+  assert.ok(d.slice(0,-1).every(line=>!line.id));
+  assert.ok(c.slice(0,-1).every(line=>!line.id));
+  const src=read("scripts/build.mjs");
+  assert.ok(src.includes('closingNarrators.forEach(({id})=>permitted.add(id+".mp3"))'));
+  assert.ok(src.includes("permitted.size !== 170"));
+  assert.ok(src.includes('"/170 maximum (112 established voices + 44 Summit + 12 transition narrations + 2 ending narrators)."'));
+  assert.ok(fs.existsSync(path.join(root,"docs/REMAINING-NARRATION-VOICE-IMPORT.md")));
+});
+
+function toVoicedEndingNarrator(route) {
+  const p=voicedHotel(route);
+  const snapshot=saved(p), ending=route==="detention"
+    ? story().SMP_DETENTION.ending : story().SMP_REASSEMBLE.ending;
+  snapshot.hubMatched=true;
+  snapshot.holidayPhase="rescue-route-ending";
+  snapshot.rescueProgress={
+    version:1,route,introStep:7,miniGameStage:route==="detention"?3:6,
+    wrongAnswers:0,hintVisible:false,finished:true,endingStep:ending.length-1,
+    placedParts:route==="reassemble"
+      ? ["head","torso","left-arm","right-arm","left-leg","right-leg"] : []
+  };
+  if(route==="reassemble")snapshot.assemblyPowered=true;
+  p.el("homeButton").click();
+  p.stored.set("stephen-martin-game-sp1-save-v1",JSON.stringify(snapshot));
+  p.el("resumeButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+  return p;
+}
+
+test("Ending B and C narrator stingers play as MP3s and leave end cards silent",async()=>{
+  const cases=[
+    ["detention","detention.ending.014.mp3","detentionEndingLine"],
+    ["reassemble","reassemble.ending.015.mp3","assemblyEndingLine"]
+  ];
+  for(const [route,filename,lineId] of cases){
+    const p=toVoicedEndingNarrator(route);
+    const voice=p.voices.at(-1);
+    assert.ok(voice.src.endsWith(filename),route+" narrator file");
+    await Promise.resolve();
+    assert.equal(p.timeouts.size,0,"Narrator duration owns ending timing");
+    voice.finish();
+    assert.equal(p.timeouts.size,1);
+    p.tick();
+    assert.equal(p.voices.at(-1).paused,true);
+    assert.match(p.el(lineId).textContent,/ENDING [BC]/);
+    assert.equal(p.timeouts.size,1,"End-card text still advances via normal timer");
+  }
+});
+
+test("Ending B narrator falls back when unavailable; skipped Ending C clip is cancelled",async()=>{
+  const p=toVoicedEndingNarrator("detention");
+  const voice=p.voices.at(-1);
+  await Promise.resolve();
+  voice.fail();
+  assert.equal(p.timeouts.size,1);
+  assert.ok(Array.from(p.timeouts.values())[0].delay>=2600);
+  p.tick();
+  assert.match(p.el("detentionEndingLine").textContent,/ENDING B/);
+  const q=toVoicedEndingNarrator("reassemble");
+  const clip=q.voices.at(-1);
+  await Promise.resolve();
+  q.el("holidayNextButton").click();
+  assert.equal(clip.paused,true);
+  assert.equal(clip.onended,null);
+  assert.match(q.el("assemblyEndingLine").textContent,/ENDING C/);
+});
+
 
 
 
