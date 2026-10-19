@@ -4355,9 +4355,9 @@ test("GAME-SP4.1G1A phone stays independently anchored above the visible action 
   assert.match(phone,/height: min\(72%, 680px\);/);
   assert.match(phone,/transform: translateX\(-50%\);/);
   assert.doesNotMatch(phone,/position: relative|height:\s*min\(78%/);
-  const tablet=css.slice(css.indexOf("@media (max-width:800px) {",css.indexOf(".china-final-england small")),css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")));
+  const tablet=css.slice(css.indexOf("@media (max-width:800px) {",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")),css.indexOf("@media (max-width:450px) {",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")));
   assert.match(tablet,/#holidayScreen \.china-final-stage \{aspect-ratio:4\/3;\}/);
-  const mobile=css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")),css.indexOf("/* GAME-SP2.3C",css.indexOf(".china-final-england small")));
+  const mobile=css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")),css.indexOf("/* GAME-SP2.3C",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")));
   assert.match(mobile,/#holidayScreen \.china-final-stage \{aspect-ratio:3\/4;\}/);
   assert.match(mobile,/#holidayScreen \.china-final-phone \{top:5%;left:50%;height:70%;max-width:90%;transform:translateX\(-50%\);margin:0;\}/);
   assert.match(css, /@media \(min-width:451px\) and \(max-width:580px\)/);
@@ -4391,10 +4391,10 @@ test("GAME-SP4.1G1A two-step cinematography centres the delivered phone, then sl
 });
 
 test("GAME-SP4.1G1A narrow stages use centred hero and shrink upwards for stacked dead-phone notices",()=>{
-  const tablet=css.slice(css.indexOf("@media (max-width:800px) {",css.indexOf(".china-final-england small")),css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")));
+  const tablet=css.slice(css.indexOf("@media (max-width:800px) {",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")),css.indexOf("@media (max-width:450px) {",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")));
   assert.match(tablet,/china-final-phone \{height:min\(72%,520px\);max-width:65%;\}/);
   assert.match(tablet,/china-final-phone\[data-power="off"\] \{top:14%;left:30%;height:min\(60%,450px\);\}/);
-  const portrait=css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")),css.indexOf("/* GAME-SP2.3C",css.indexOf(".china-final-england small")));
+  const portrait=css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")),css.indexOf("/* GAME-SP2.3C",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")));
   assert.match(portrait,/china-final-phone \{top:5%;left:50%;height:70%;max-width:90%;transform:translateX\(-50%\);margin:0;\}/);
   assert.match(portrait,/china-final-phone\[data-power="off"\] \{top:5%;left:50%;height:46%;\}/);
   assert.match(portrait,/china-final-power-notice \{[\s\S]*?bottom:33%;/);
@@ -4413,7 +4413,7 @@ test("GAME-SP4.1G1A narrow phone layout keeps shutdown/reaction blocks above con
   // controls, and keep the flat-battery announcement higher up.
   for(const [width,offHeight,noticeBottom] of [[390,46,33],[580,44,39]]){
     const source=width<451
-      ? css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf(".china-final-england small")),css.indexOf("/* GAME-SP2.3C",css.indexOf(".china-final-england small")))
+      ? css.slice(css.indexOf("@media (max-width:450px) {",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")),css.indexOf("/* GAME-SP2.3C",css.indexOf("#holidayScreen #marketScene,#holidayScreen #chinaFinalScene")))
       : css.slice(css.indexOf("@media (min-width:451px) and (max-width:580px) {"));
     assert.match(source,new RegExp('phone\\[data-power="off"\\] \\{top:5%;left:50%;height:'+offHeight+'%;\\}'));
     assert.match(source,new RegExp('power-notice \\{[^}]*bottom:'+noticeBottom+'%;'));
