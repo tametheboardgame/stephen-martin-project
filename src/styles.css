@@ -4699,6 +4699,27 @@ body:has(#menuScreen:not([hidden])) main {
 }
 
 
+/* GAME-SP4.1H-C1 — Ending C dialogue must never inherit the full-height
+ * workshop card. The original assembly-ending-content has height:100%, and
+ * the shared named speech style deliberately removes generic max-height.
+ * Restore an auto-sized BOTTOM bubble only for this scene; keep its floating
+ * speaker tab, approved spa tableau and existing 8/13/15% bottom offsets. */
+#holidayScreen #reassembleEndingScene .assembly-ending-content.story-speech {
+  height:auto;
+  max-height:28% !important;
+  overflow:visible !important;
+}
+@media(max-width:800px) {
+  #holidayScreen #reassembleEndingScene .assembly-ending-content.story-speech {
+    max-height:32% !important;
+  }
+}
+@media(max-width:450px) {
+  #holidayScreen #reassembleEndingScene .assembly-ending-content.story-speech {
+    max-height:34% !important;
+  }
+}
+
 /* GAME-SP4.1D2: keep one contextual skip beside the existing playback
    controls. It is hidden at unanswered choices, open clues and puzzles. */
 #holidayScreen #holidaySkipButton[hidden] {display:none !important;}

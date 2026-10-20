@@ -853,7 +853,7 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 #### GAME-SP4.1G3 — Chapter 4 Ending A staging and shared post-ending hub (owner feedback, 19 October 2026)
 
-**Priority:** P1. **Status:** G3A/G3B merged as PR #71 (`b8501c0`); G3C laptop-safe image-and-label layout owner-approved, and nine individual transparent asset specification committed on `agent/game-sp41g3c-summit-admissions-illustrated-choices`; generated icons and integration pending; G3D–G still planned. **Baseline:** approved Summit exterior, admissions puzzle and four-attendant throne room; existing shared `#rescueEndingSummary` ending state. **Scope split:** G3A–E are Ending A improvements; G3F/G are **cross-ending** features. The owner is still reviewing Ending B, so future B feedback gets its own scoped backlog entries rather than being presumed resolved.
+**Priority:** P1. **Status:** G3A/G3B merged as PR #71 (`b8501c0`); G3C all nine illustrated choice assets owner-approved, materialised and integrated; merge approved on `agent/game-sp41g3c-summit-admissions-illustrated-choices`; generated icons and integration pending; G3D–G still planned. **Baseline:** approved Summit exterior, admissions puzzle and four-attendant throne room; existing shared `#rescueEndingSummary` ending state. **Scope split:** G3A–E are Ending A improvements; G3F/G are **cross-ending** features. The owner is still reviewing Ending B, so future B feedback gets its own scoped backlog entries rather than being presumed resolved.
 
 **Owner findings:**
 - Outside Summit, **move David and Paul significantly left**; David currently appears to stand on a retaining wall.

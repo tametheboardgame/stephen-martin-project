@@ -1,21 +1,37 @@
 # Project status
 
-## CURRENT — GAME-SP4.1G3C Summit illustrated admissions tiles (20 October 2026)
+## COMPLETED — GAME-SP4.1G3C Summit admissions illustrated choices (20 October 2026)
 
-- **Build packaging regression correction:** owner laptop screenshot showed correctly sized but blank A1–A3 art wells. Root cause was nine materialised WebPs in GitHub but missing from explicit `scripts/build.mjs` Cloudflare dist allow-list. Fix explicitly packages and verifies nine WebPs with alpha; tests and CI assert dist contains all nine before preview sign-off.
+- **Owner acceptance:** all nine illustrated choices and compact desktop/laptop/tablet/phone card layout approved; owner checked the corrected deployed preview and authorised PR #72 merge.
+- **Assets:** nine individually approved transparent cutouts, padded 1024×1024 PNG masters in authorised Drive staging, nine versioned manifests and alpha-preserving WebPs.
+- **Blank-image regression fixed:** published Cloudflare build now explicitly packages and checks nine WebPs; prior G3C verification passed 209/209 automated tests and owner accepted the visible result.
+- **Concurrent development preserved:** reconcile against current main without reverting latest Ending B/C spoken dialogue or game progression.
+- **Next:** GAME-SP4.1G3D throne-room attendant and actor perspective review.
 
-- **Approved baseline:** GAME-SP4.1G3A + G3B PR #71 merged at `b8501c09bfee03705d1a912fef71dbb1cf2750f7`, with final narrower-screen positioning approved by owner.
-- **G3C branch:** `agent/game-sp41g3c-summit-admissions-illustrated-choices`, draft PR pending CI and owner approval.
-- **Integration watch:** main has advanced beyond the original G3C branch due to separately merged Ending B voice work; re-check and reconcile the latest main before any final G3C merge. Documentation is on draft PR #72 only, not yet main.
-- **Nine icons owner-approved and locked (20 October):** all nine individual PNG cutouts in the specified format, and 1024×1024 padded transparent versions uploaded to the approved Drive staging folder. One manifest per icon added on G3C development branch for the authorised materialisation workflow. The single-atlas proposal remains superseded. Exact subjects, nine filenames, generation order, visual rules and owner approvals are fixed in `docs/story/GAME-SP4.1G3C-ADMISSIONS-ART-INVENTORY.md`. Existing art slots A1–C3 retain their existing answer-ID mapping.
-- **Playable first stage:** existing three answer buttons now provide an image well above the unaltered live label (horizontal icon/label on narrow screens), with numbered **ART PENDING** placeholders. No image has been generated, claimed approved, staged in Drive or added to published game assets.
-- **Owner layout accepted (20 October):** after the laptop-height heading/card compression and toolbar clearance, the owner confirmed the layout looks good. Target art sizes are ~92px full desktop, ~69px short laptop, ~64px tablet and ~55px phone. Images must not expand the cards or reintroduce scrolling.
-- **Regression coverage:** preserve original correct answer sequence, recorded lines, wrong-answer counts, Paul hints, Save/Resume, keyboard/touch buttons, and route states. Confirm desktop/tablet/phone cards without clipping or awkward nested scroll.
-- **Assets materialised (20 October):** all nine approved 1024×1024 transparent masters staged in Drive and all nine individual optimised WebPs committed back to this draft branch through the approved OIDC workflow. The source workflow failed on the long branch's GitHub subject limit; a short temporary `agent/g3c-icons` branch succeeded and was fast-forwarded into PR #72. The short branch changed the nine manifests to revision 2, without changing the staged source files.
-- **Next action:** run GitHub CI against the complete asset integration, review the deployed laptop/tablet/mobile puzzle and get owner approval. Before merging, reconcile main's concurrent Ending B/C voice work without reverting it.
-- **Next after G3C:** GAME-SP4.1G3D throne room attendants and cast perspective.
+## GAME-SP4.1H-C1 — Ending C speech-bubble height regression (20 October 2026)
 
-## COMPLETED — GAME-SP4.1G3A + G3B Summit approach staging and wording (19–20 October 2026)
+- **Owner feedback:** Ending C sound is approved; after the six-piece assembly, the first final-scene speech bubble filled nearly the entire spa tableau, obscuring Stephen, David, Paul and the cardboard model.
+- **Root cause:** shared `.story-speech` styling removed the content panel's max-height while the legacy `.assembly-ending-content` retained `height:100%`. The result was a full-height cream panel, not the intended compact bottom subtitle.
+- **Fix:** Ending C-only CSS auto-sizes the speech panel, reinstates a 28% desktop / 32% tablet / 34% phone maximum, and leaves speaker badge, bottom anchors, actors, speech recordings, pause/Next and puzzle rules unchanged. Added a targeted non-regression test.
+- **Gate:** tests and a fresh Cloudflare branch preview, then owner visual acceptance before merging PR #73.
+
+
+## GAME-SP4.1H-C — Ending C comprehensive spoken dialogue (20 October 2026)
+
+- Main baseline `8b167be`: Ending A and B fully recorded and merged; all 215 original MP3s and the two opening song tracks unchanged.
+- Prepared 39 new Ending C actor MP3s: **David 10, Paul 22, Stephen 6, Cardboard Stephen 1**. Covers seven route-intro lines; nine spoken mismatch reactions across seven special/default cases; two basic fitting/selection replies; seven context-accurate Paul hints; and fourteen closing dialogue lines. The existing narrator `reassemble.ending.015.mp3` is unchanged.
+- Added stable IDs to approved dialogue; reuses the game's duration-owned MP3 player, pause/Next/mute/failed-file fallback and text timed clues, without touching approved artwork or puzzle correctness.
+- Published `docs/ENDING-C-VOICE-IMPORT.md` for owner recording and upload to `agent/game-sp41h-ending-c-voices`. Build manifest permits 254 total MP3s (215 existing + 39 new). Draft PR/owner playback gate before merging.
+
+
+## GAME-SP4.1H-B — approved Ending B voices integrated with Summit approach (20 October 2026)
+
+- All **45** Ending B synthetic character recordings supplied and approved by the owner, plus the previously recorded Ending B narrator; 215/215 game dialogue MP3s in the combined package. Source and exact filenames: `docs/ENDING-B-VOICE-IMPORT.md`.
+- Conflict-resolved integration of PR #70 with main's approved GAME-SP4.1G3A/G3B. Keep the current Summit entrance actor offsets, compact-screen refinements, wording and regressions. Ending B preserves paper/stamp puzzle behaviour and introduces duration-timed actor responses, hints and 13-line finale.
+- Merge gate: require combined smoke tests and successful Cloudflare deployment, then merge PR #70. Ending C remains next major voice work package.
+
+
+## COMPLETED — GAME-SP4.1G3A + G3B Summit approach staging and wording (19 October 2026)
 
 - **Branch:** `agent/game-sp41g3a-g3b-summit-approach`, based on G1C-merged `main` commit `18491bc0097f43e8dddc7ddf2d380c1051afea37`. Draft PR and owner visual review required.
 - **G3A:** CSS-only Summit exterior sprite positioning: move the approved David and Paul cut-outs appreciably left onto the approach path at desktop, tablet and phone widths. Keep gatekeeper, image pixels, sprite sizes, bottom anchors, speaker focus, and all other routes/locations unchanged.
