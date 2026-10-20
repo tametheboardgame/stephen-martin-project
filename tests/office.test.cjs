@@ -2719,7 +2719,7 @@ test("Back in England has ten unique whitelisted voice IDs and no spoken travel 
   assert.equal(new Set(ids).size,10);
   assert.ok(alarm.montage.every(card=>card.id.startsWith("rescue.travel.")));
   assert.ok(read("scripts/build.mjs").includes('alarmIds.forEach(id => permitted.add(id + ".mp3"))'));
-  assert.ok(read("scripts/build.mjs").includes('permitted.size !== 215'),"Original ten alarm IDs remain included in expanded voice whitelist");
+  assert.ok(read("scripts/build.mjs").includes('permitted.size !== 254'),"Original ten alarm IDs remain included in expanded voice whitelist");
   assert.ok(fs.existsSync(path.join(root,"docs/RESCUE-ALARM-VOICE-IMPORT.md")));
 });
 
@@ -2836,7 +2836,7 @@ test("Visitor Information 22 voice IDs match screenplay and automatic file white
   assert.ok(ids.every(id=>/^rescue\.hub\.[a-z0-9.]+$/.test(id)));
   assert.equal(h.correct[4].id,"rescue.hub.correct.005");
   assert.ok(read("scripts/build.mjs").includes("hubVoiceIds.forEach(id => permitted.add(id +"));
-  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 215"));
+  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 254"));
   assert.ok(fs.existsSync(path.join(root,"docs/VISITOR-INFORMATION-VOICE-IMPORT.md")));
 });
 
@@ -4565,7 +4565,7 @@ test("Summit audio has exactly 44 unique approved IDs with unchanged comic dialo
   assert.equal(summit.ending[13].speaker,"Narrator");
   assert.equal(summit.ending[13].id,"summit.ending.014");
   assert.ok(read("scripts/build.mjs").includes("summitIds.forEach(id => permitted.add"));
-  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 215"),"44 Summit voices plus 12 reserved narrator clips are whitelisted");
+  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 254"),"44 Summit voices plus 12 reserved narrator clips are whitelisted");
   assert.ok(fs.existsSync(path.join(root,"docs/SUMMIT-VOICE-IMPORT.md")));
 });
 
@@ -4692,11 +4692,11 @@ test("Narration audit finds exactly 14 remaining narrator IDs with distinct appr
   assert.equal(d.filter(line=>line.speaker==="Narrator").length,1);
   assert.equal(c.filter(line=>line.speaker==="Narrator").length,1);
   assert.ok(d.slice(0,-1).every((line,i)=>line.id === "detention.ending."+String(i+1).padStart(3,"0")),"Ending B now has all its actor voice IDs");
-  assert.ok(c.slice(0,-1).every(line=>!line.id));
+  assert.ok(c.slice(0,-1).every((line,i)=>line.id === "reassemble.ending."+String(i+1).padStart(3,"0")));
   const src=read("scripts/build.mjs");
   assert.ok(src.includes('closingNarrators.forEach(({id})=>permitted.add(id+".mp3"))'));
-  assert.ok(src.includes("permitted.size !== 215"));
-  assert.ok(src.includes('"/215 maximum (170 existing voices + 45 Ending B recordings)."'));
+  assert.ok(src.includes("permitted.size !== 254"));
+  assert.ok(src.includes('"/254 maximum (215 established voices + 39 Ending C recordings)."'));
   assert.ok(fs.existsSync(path.join(root,"docs/REMAINING-NARRATION-VOICE-IMPORT.md")));
 });
 
@@ -4965,7 +4965,7 @@ test("Ending B 45 canonical voice IDs preserve each original form response and a
   assert.equal(data.rounds[2].approvedVoices[0].text,"APPROVED: ALL OF YOU PLEASE LEAVE.");
   assert.equal(data.rounds[2].approvedResponse,"OFFICIAL: APPROVED: ALL OF YOU PLEASE LEAVE. The printer releases a celebratory shower of unwanted paper.");
   assert.ok(read("scripts/build.mjs").includes("detentionIds.forEach(id=>permitted.add(id+"));
-  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 215"));
+  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 254"));
   assert.ok(fs.existsSync(path.join(root,"docs/ENDING-B-VOICE-IMPORT.md")));
 });
 
