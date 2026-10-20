@@ -921,7 +921,18 @@
         if (reply?.correct && reply.round === p.miniGameStage - 1)
           return {run:continueDetention,wait:VOICE_GAP_MS};
       }
-      return null; // All new answers, stamp and assembly pieces are manual.
+      if (state.route === "reassemble") {
+        const queue = state.assemblyVoiceQueue;
+        const i = state.assemblyVoiceStep;
+        if (Array.isArray(queue) && Number.isInteger(i) && i < queue.length)
+          return step(advanceAssemblyVoice,queue[i]?.text);
+        if (state.assemblyHintPending) {
+          const hint = assembly.hintVoice(state.assemblySelectedPart);
+          if (hint.id === state.assemblyHintPending)
+            return step(completeAssemblyHint,hint.text);
+        }
+      }
+      return null; // Puzzle choices and piece placements remain manual.
     }
     if (phase === "rescue-route-ending") {
       const p = rescueFramework.normalise(state.rescueProgress,state.route);
@@ -970,6 +981,10 @@
     delete state.detentionStampSelected;
     delete state.assemblySelectedPart;
     delete state.assemblyFeedback;
+    delete state.assemblyVoiceQueue;
+    delete state.assemblyVoiceStep;
+    delete state.assemblyHintPending;
+    delete state.assemblyHintsHeard;
     delete state.assemblyPowered;
     state.holidayPhase = "rescue-hotel";
   }
@@ -1516,6 +1531,10 @@
     delete state.detentionStampSelected;
     delete state.assemblySelectedPart;
     delete state.assemblyFeedback;
+    delete state.assemblyVoiceQueue;
+    delete state.assemblyVoiceStep;
+    delete state.assemblyHintPending;
+    delete state.assemblyHintsHeard;
     delete state.assemblyPowered;
   }
   // Keep each existing reply and choice ID. Promote the first spoken
