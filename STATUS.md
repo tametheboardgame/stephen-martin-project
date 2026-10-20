@@ -2,6 +2,8 @@
 
 ## CURRENT — GAME-SP4.1G3C Summit illustrated admissions tiles (20 October 2026)
 
+- **Build packaging regression correction:** owner laptop screenshot showed correctly sized but blank A1–A3 art wells. Root cause was nine materialised WebPs in GitHub but missing from explicit `scripts/build.mjs` Cloudflare dist allow-list. Fix explicitly packages and verifies nine WebPs with alpha; tests and CI assert dist contains all nine before preview sign-off.
+
 - **Approved baseline:** GAME-SP4.1G3A + G3B PR #71 merged at `b8501c09bfee03705d1a912fef71dbb1cf2750f7`, with final narrower-screen positioning approved by owner.
 - **G3C branch:** `agent/game-sp41g3c-summit-admissions-illustrated-choices`, draft PR pending CI and owner approval.
 - **Integration watch:** main has advanced beyond the original G3C branch due to separately merged Ending B voice work; re-check and reconcile the latest main before any final G3C merge. Documentation is on draft PR #72 only, not yet main.
