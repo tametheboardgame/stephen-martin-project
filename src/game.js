@@ -2786,6 +2786,7 @@
       return;
     }
     const accepted = selected === slot;
+    queueAssemblyVoices(accepted ? assembly.fitVoices : assembly.reactionVoice(selected,slot));
     state.rescueProgress = rescueFramework.placePart(progress,"reassemble",selected,slot);
     state.assemblyFeedback = accepted
       ? "✓ "+assembly.parts.find(part=>part.id===selected).label
