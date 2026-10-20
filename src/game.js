@@ -2803,6 +2803,10 @@
        state.assemblyPowered === true) return;
     const progress = rescueFramework.normalise(state.rescueProgress,"reassemble");
     if(!progress.finished || progress.placedParts.length !== rescueFramework.slots.length) return;
+    stopHolidayVoice();
+    delete state.assemblyVoiceQueue;
+    delete state.assemblyVoiceStep;
+    delete state.assemblyHintPending;
     state.assemblyPowered = true;
     state.rescueProgress = progress;
     state.rescueProgress.endingStep = 0;
