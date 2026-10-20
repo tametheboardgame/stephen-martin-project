@@ -1,36 +1,104 @@
-# GAME-SP4.1G3C: The Summit illustrated answer tiles
+# GAME-SP4.1G3C: The Summit illustrated answer assets
 
-**Status:** Phase 1 implementation on draft PR; art concept inventory for owner approval. **Baseline:** `main` merge `b8501c09bfee03705d1a912fef71dbb1cf2750f7` (G3A/G3B approved). No newly generated illustration is approved or materialised by this document.
+**Status (20 October 2026):** The three-choice layout, including the laptop-height compact adjustment, is visually approved by the owner. This revised generation specification replaces the earlier 3×3 runtime atlas proposal. Nine independent transparent image assets are approved as the *production approach*; **individual rendered artwork still requires owner's visual approval before materialisation or merge**.
 
-## Canonical puzzle inventory and proposed art
+**Development:** `agent/game-sp41g3c-summit-admissions-illustrated-choices`, draft PR #72. Baseline for G3C was G3A/G3B merge `b8501c0`. Meanwhile `main` has received separate Ending B voice work; reconcile both branches before the eventual G3C merge.
 
-The existing three rounds, nine labels, option IDs, correct choices, wrong-answer jokes, speaker recordings and hints **must not change**. A consistent **3 × 3 icon atlas** is proposed. Each square contains one illustrated object, without words, characters, UI, hints or success colouring; place equal-weight artwork inside equal-size neutral frames. Icons are not answers in their own right: the full original label remains visible as live button text.
+## Decision: nine individual transparent cutouts, not a nine-cell runtime atlas
 
-| Atlas cell | ID (round/option) | Existing label | Proposed illustration |
-| --- | --- | --- | --- |
-| A1 | `vase` (1/1) | Golden ceremonial vase | Ornate golden two-handled ceremonial urn |
-| A2 | `ticket` (1/2) | Airline ticket | Airline boarding pass with small plane pictogram |
-| A3 | `charger` (1/3) | Phone charger | Recognisable USB plug, cable loop and charger block |
-| B1 | `spreadsheet` (2/1) | Your spreadsheet is compliant | Spreadsheet grid on clipped paperwork, small check mark |
-| B2 | `legs` (2/2) | Great legs, your magnificence | Two proud trousered legs and smart shoes in comic pose |
-| B3 | `ticket` (2/3) | I'm here to raise a ticket | IT support ticket slip with numbered queue/stamp, **not** a plane ticket |
-| C1 | `rescue` (3/1) | I am here to rescue Stephen | Rescue rope and life ring, no actual Stephen depiction |
-| C2 | `join` (3/2) | I wish to join the club | Gold-crested fictional membership card |
-| C3 | `flight` (3/3) | I bring news of the return flight | Departures/return flight notice with tiny aeroplane and clock, **not** the A2 boarding pass |
+The approved shallow card layout needs immediately legible, independent images with minimal detail. Create **nine separate transparent PNG masters**, materialised into **nine separate alpha-preserving WebP game assets**. One optional contact sheet may be assembled **for review only**, not used by the runtime. Do not attempt to crop individual images from a combined atlas in the game.
 
-### Image proposal and provenance gate
+Each icon occupies the existing `summitChoiceArt0/1/2` illustration well, with the original live answer label beside/below it:
+- Original desktop art well: approximately **92px high**.
+- Shorter laptop art well: approximately **69px high** (approved no-unnecessary-scroll layout).
+- Tablet art well: approximately **64px high**.
+- Phone art well: approximately **55px high**.
 
-- Proposed single source: `summit-admissions-icons-atlas-v01.png`, 960 × 960 or 1200 × 1200, nine equally sized square cells in row-major order A1→C3. No printed words, UI labels, arrows, highlighting, border numbers, names, or faces painted into artwork.
-- Graphic-novel / comic-game style from `docs/ART-DIRECTION.md`: warm gold/navy contours, clean outlines, restrained halftone, consistent size and contrast. Backgrounds neutral and consistent so the correct answer is **not** visually telegraphed.
-- **Await owner sign-off of inventory and art direction before generating or staging the source.** When approved, place original in the dedicated Stephen Martin Drive staging folder; add one versioned provenance manifest and materialise optimised WebP through the existing GitHub Actions OIDC pipeline, on this branch only.
-- Do not introduce new images into Git as stand-ins. The first working preview uses clearly labelled neutral placeholder wells so button layout can be assessed before the art is commissioned.
+The rendered object must remain clear at **55px**; avoid concepts that depend on details visible only in the original master.
 
-## UI, state and behaviour contract
+## Global production rules
 
-- Each answer remains the original `summitChoice0/1/2` button, with its stable index/listener, focusability, tap region, screen-reader text and canonical full label.
-- Add an `aria-hidden` illustration well and a separate live label in the button. Update icon slot ID and label together on render and on Save/Resume. Same option ordering and IDs for all rounds. No coloured hints, correct markings or answer leaks.
-- Desktop/laptop: three consistent tiles with the pictogram above the label. Tablets/phones: three stacked horizontal tiles with icon left and label right, avoiding tall cards and nested scrolling.
-- Keep existing dialogue, recorded voice, wrong answer/hint system, puzzle save key, navigation and transitions untouched. Maintain mouse, keyboard, touch and Sound Off modes.
-- Test all three rounds, repeated wrong choices, saved resumes, correct acknowledgement, small-screen layout and audio cancellation. Owner acceptance of actual artwork and working preview required before merge.
+- **Source canvas:** square 1024×1024 transparent-background PNG per icon; keep a consistent drawing scale. Target approximately **70–80% of the safe canvas** for the primary silhouette. For naturally wide objects, favour a visually chunky near-square composition over a long, thin, unreadable horizontal strip.
+- **Runtime:** small WebP with verified alpha, cropped only to a consistent transparent canvas without slicing shadows or contours. Use `object-fit: contain`; centre each illustration and prevent it from enlarging the card or forcing scrollbars.
+- **Style:** bold comic-poster / graphic-novel pictogram compatible with `docs/ART-DIRECTION.md`. Thick clean contours, simple warm gold and deep navy palette with restrained complementary accents, limited halftone shading, high contrast, strong shape recognition, similar weight across all nine icons.
+- **One dominant object or compact symbolic grouping per icon**, no mini-scenes or human character portraits. Small supporting details only where essential to tell two concepts apart.
+- **No baked-in text**, labels, stamps, letters, numbers, watermarks, canvas backdrops, inset panel borders, thumbnail/card frames, correctness badges or green/red success coding. The *game* supplies the parchment/gold frame and the accessible live wording.
+- Keep each option equally polished and visually prominent. Do **not** cue the correct option through colour, framing, scale, lighting or composition.
+- Maintain consistent orientation, margin, outline strength and export size, even if generated individually.
 
-**Non-goals:** redrawn Summit scene, new mini-game, speech changes, extra clues, animations, nine independent original assets, or an unapproved font/icon/CDN dependency.
+## Nine-asset generation list and unambiguous mappings
+
+All nine canon choices and recorded voice/dialogue remain unchanged. `artSlot` values already exist in `src/summit-data.js` and should map to these exact destinations once the icons are approved.
+
+### Round 1: Offer a sacred object
+
+1. **A1 · `vase` · Golden ceremonial vase**
+   - Visual: large ornate golden two-handled ritual urn, simple strong silhouette, no writing.
+   - Source: `summit-choice-vase-cutout-v01.png`
+   - Runtime: `public/assets/generated/game/summit-choice-vase-cutout-v01.webp`
+2. **A2 · `ticket` · Airline ticket**
+   - Visual: obvious angled airline boarding pass with a large plane pictogram and perforation, no real text or airline branding.
+   - Source: `summit-choice-airline-ticket-cutout-v01.png`
+   - Runtime: `public/assets/generated/game/summit-choice-airline-ticket-cutout-v01.webp`
+3. **A3 · `charger` · Phone charger**
+   - Visual: chunky phone-charger block with an unmistakable cable loop and USB/phone connector. Prefer strong plug/cable silhouette, not a whole phone.
+   - Source: `summit-choice-phone-charger-cutout-v01.png`
+   - Runtime: `public/assets/generated/game/summit-choice-phone-charger-cutout-v01.webp`
+
+### Round 2: Recite the highest compliment
+
+4. **B1 · `spreadsheet` · Your spreadsheet is compliant**
+   - Visual: bold clipped spreadsheet grid with oversized tick/checkmark; no readable cells or tiny lettering.
+   - Source: `summit-choice-spreadsheet-cutout-v01.png`
+   - Runtime: `public/assets/generated/game/summit-choice-spreadsheet-cutout-v01.webp`
+5. **B2 · `legs` · Great legs, your magnificence**
+   - Visual: exaggerated, proud pair of sharply trousered legs in stylish smart shoes; no torso or recognisable person.
+   - Source: `summit-choice-legs-cutout-v01.png`
+   - Runtime: `public/assets/generated/game/summit-choice-legs-cutout-v01.webp`
+6. **B3 · `ticket` · I'm here to raise a ticket**
+   - Visual: upright IT service/helpdesk request slip with oversized headset or spanner symbol, clearly *not* the A2 boarding pass.
+   - Source: `summit-choice-it-ticket-cutout-v01.png`
+   - Runtime: `public/assets/generated/game/summit-choice-it-ticket-cutout-v01.webp`
+
+### Round 3: Declare your intention
+
+7. **C1 · `rescue` · I am here to rescue Stephen**
+   - Visual: chunky rescue lifebuoy and coiled rope, rescue symbolism only, **no Stephen portrait**.
+   - Source: `summit-choice-rescue-kit-cutout-v01.png`
+   - Runtime: `public/assets/generated/game/summit-choice-rescue-kit-cutout-v01.webp`
+8. **C2 · `join` · I wish to join the club**
+   - Visual: simple official-looking fictional gold-crested membership card or emblem pass, with no invented small-print text.
+   - Source: `summit-choice-membership-card-cutout-v01.png`
+   - Runtime: `public/assets/generated/game/summit-choice-membership-card-cutout-v01.webp`
+9. **C3 · `flight` · I bring news of the return flight**
+   - Visual: a compact departures/return-flight notice board paired with a large clock and curved returning plane symbol; clearly different from the A2 boarding pass, no lettering.
+   - Source: `summit-choice-return-flight-cutout-v01.png`
+   - Runtime: `public/assets/generated/game/summit-choice-return-flight-cutout-v01.webp`
+
+**Critical disambiguation:** airline *boarding pass* (A2) vs upright *IT service ticket* (B3) vs *return-flight information and clock* (C3). Do not reuse or recolour the same ticket silhouette. C1 is rescue gear rather than a person.
+
+## Generation order and review gates
+
+1. Phone charger (A3).
+2. Airline ticket (A2).
+3. IT support ticket (B3).
+4. Return flight notice (C3).
+5. Golden ceremonial vase (A1).
+6. Compliant spreadsheet (B1).
+7. Magnificent legs (B2).
+8. Membership card (C2).
+9. Rescue kit (C1).
+
+Approve/revise each image against this brief before staging it. The optional review-only contact sheet can be built from the nine **approved** icons, and is not required as a game asset.
+
+## Source staging, integration and QA
+
+- Upload each **approved transparent PNG master** to the established Stephen Martin Google Drive staging folder, rather than committing original generated images to Git.
+- Create one versioned `generated-assets/manifests/` record per approved image, mapping the exact Drive filename and file ID to its corresponding `public/assets/generated/game/` WebP. Use the existing OIDC materialisation workflow described in `docs/GENERATED-ASSET-PIPELINE.md`; no long-lived keys.
+- Confirm each WebP retains transparent alpha, is readable at 55px and does not overflow or distort its slot. Do not materialise preview mock-ups or unapproved originals.
+- Replace each provisional `ART PENDING` slot with the corresponding separate WebP image; keep artwork decorative (`aria-hidden` and empty image alt text), with **the existing full live answer label** as the accessible button name.
+- Keep unchanged all three rounds, all nine canonical labels and IDs, correct-answer ordering, feedback, Paul hints, recorded voices, Save/Resume, game state and touch/keyboard operation.
+- Verify three original card columns on desktop, compact no-unnecessary-scroll layout on laptop (including ~1366×768), and stacked horizontal cards on tablet and phone. Check text and art remain readable without clipping, overlap or accidental extra scrolling.
+- Check current `main` and recent Ending B changes before merging the draft PR. Run full appropriate tests and confirm a deployed Cloudflare preview from the exact final head, followed by owner visual sign-off.
+
+**Non-goals:** a new mini-game, a new clue mechanic, new dialogue, unrelated background artwork, runtime sprite-sheet slicing, additional dependencies, or publication of unapproved assets.
