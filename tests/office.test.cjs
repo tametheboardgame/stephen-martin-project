@@ -5245,3 +5245,25 @@ test("Spa reactions split David and Paul, cancel stale audio and keep puzzle man
   assert.ok(p.voices.at(-1).src.endsWith("reassemble.reaction.toaster.001.mp3"));
   assert.equal(saved(p).rescueProgress.miniGameStage,0);
 });
+
+
+test("GAME-SP4.1H-C1 spa final dialogue stays a short bottom bubble, not a full-height workshop card",()=>{
+  const styles=read("src/styles.css");
+  const scene=html.slice(html.indexOf('id="reassembleEndingScene"'),
+    html.indexOf('id="rescueEndingSummary"'));
+  assert.match(scene,/class="assembly-ending-content story-speech"/);
+  assert.match(scene,/id="assemblyEndingSpeaker"/);
+  assert.match(scene,/id="assemblyEndingLine"/);
+  assert.match(scene,/id="assemblyEndingProgress"/);
+  const shared=styles.indexOf("/* GAME-SP4.1D1: one opening-office-style named speech tab");
+  const fix=styles.indexOf("/* GAME-SP4.1H-C1 — Ending C dialogue must never inherit");
+  assert.ok(shared>=0 && fix>shared,"Compact Ending C override must come after shared speech styles");
+  const css=styles.slice(fix,styles.indexOf("/* GAME-SP4.1D2:",fix));
+  assert.match(css,/#holidayScreen #reassembleEndingScene \.assembly-ending-content\.story-speech \{\s*height:auto;\s*max-height:28% !important;\s*overflow:visible !important;/);
+  assert.match(css,/@media\(max-width:800px\) \{[\s\S]*?max-height:32% !important;/);
+  assert.match(css,/@media\(max-width:450px\) \{[\s\S]*?max-height:34% !important;/);
+  assert.doesNotMatch(css,/\.spa-ending-(david|stephen|paul|cardboard-stephen)|#summitEndingScene|#detentionEndingScene/,
+    "Keep approved cast and the other endings unchanged");
+  assert.match(styles,/#holidayScreen #reassembleEndingScene \.assembly-ending-content \{\s*position:absolute;z-index:5;left:3%;right:3%;bottom:8%/,
+    "The dialogue stays above the bottom status bar");
+});
