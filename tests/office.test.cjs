@@ -1289,10 +1289,10 @@ test("GAME-SP4.1G3C artwork well IDs follow the unchanged nine Summit answer cho
     assert.match(html,new RegExp('id="summitChoice'+i+'"[\\s\\S]*?id="summitChoiceArt'+i+'"[^>]*aria-hidden="true"[\\s\\S]*?id="summitChoiceLabel'+i+'"'));
   }
   assert.match(html,/Illustrated choices in preparation/,"Preview must not misrepresent the art as approved");
-  assert.match(css,/\\.summit-card-art \\{[\\s\\S]*?height:92px/);
-  assert.match(css,/@media \\(max-width:800px\\) \\{[\\s\\S]*?\\.summit-card \\{[\\s\\S]*?grid-template-columns:84px/);
-  assert.match(css,/@media \\(max-width:450px\\) \\{[\\s\\S]*?\\.summit-card \\{[\\s\\S]*?grid-template-columns:60px/);
-  assert.doesNotMatch(css,/summit-admissions-icons-atlas-v01\\.webp/,"Unapproved atlas must not ship");
+  assert.ok(css.includes("height:92px;width:100%"),"Desktop art well has real height");
+  assert.ok(css.includes("grid-template-columns:84px minmax(0,1fr)"),"Tablet cards use compact side-by-side art");
+  assert.ok(css.includes("grid-template-columns:60px minmax(0,1fr)"),"Phone cards use smaller art wells");
+  assert.ok(!css.includes("summit-admissions-icons-atlas-v01.webp"),"Unapproved atlas must not ship");
 });
 
 test("GAME-SP4.1G3C all three rounds refresh pictured slots and accessible labels without changing answers",()=>{
