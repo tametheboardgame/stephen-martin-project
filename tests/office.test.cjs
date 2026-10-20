@@ -1325,6 +1325,8 @@ test("GAME-SP4.1G3C all nine staged approved WebP choices are built and packaged
       "Cloudflare build must copy all nine approved icons");
     assert.ok(builder.includes('copyFile(path.join(root, relative), path.join(output, relative))'),
       "Build includes each generated WebP in published dist");
+    assert.ok(css.includes("../public/assets/generated/game/summit-choice-"+slug+"-cutout-v01.webp"),
+      "CSS image URL resolves to the same path copied into dist");
 
   }
 });
