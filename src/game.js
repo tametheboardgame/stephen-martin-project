@@ -2748,6 +2748,16 @@
     renderHoliday();
   }
 
+  function completeAssemblyHint() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+        state.route !== "reassemble" || !state.assemblyHintPending) return;
+    const hint = assembly.hintVoice(state.assemblySelectedPart);
+    if (hint.id !== state.assemblyHintPending) return;
+    state.assemblyHintsHeard = {...state.assemblyHintsHeard,[hint.id]:true};
+    delete state.assemblyHintPending;
+    renderHoliday();
+  }
+
   function selectAssemblyPiece(id) {
     if(screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
        state.route !== "reassemble" || state.hubMatched !== true) return;
