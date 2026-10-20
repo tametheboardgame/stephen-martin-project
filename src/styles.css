@@ -2780,6 +2780,72 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen .summit-artwork-review-note {font-size:10px;}
 }
 
+/* GAME-SP4.1G3C laptop-height polish (owner visual review).
+ * The top toolbar sits at the upper right of the stage; reserve clear space
+ * above the puzzle header, then reclaim space from oversized heading margins
+ * and provisional art wells. Let the panel scroll only when feedback/hints
+ * genuinely exceed the available height, not on the default answer view. */
+@media (min-width:801px) and (max-height:900px) {
+  #holidayScreen #rescueMiniGameScene:has(#summitAdmissions:not([hidden])) .rescue-route-intro-stage {
+    padding:94px 3% 68px;
+  }
+  #holidayScreen #summitAdmissions {
+    width:min(96%,1000px);
+    padding:12px 16px;
+  }
+  #holidayScreen #summitAdmissions .summit-eyebrow {
+    font-size:10px;
+    letter-spacing:.065em;
+  }
+  #holidayScreen #summitAdmissions h2 {
+    font-size:clamp(21px,2.1vw,29px);
+    line-height:1.12;
+    margin:3px 0 1px;
+  }
+  #holidayScreen #summitAdmissions .summit-progress {
+    font-size:12px;
+    margin:2px 0;
+  }
+  #holidayScreen #summitAdmissions .summit-prompt {
+    font-size:clamp(15px,1.4vw,19px);
+    line-height:1.25;
+    margin:7px 0 4px;
+  }
+  #holidayScreen #summitAdmissions .summit-clue {
+    font-size:clamp(12px,1.08vw,15px);
+    line-height:1.25;
+    margin:4px 0 9px;
+  }
+  #holidayScreen #summitAdmissions .summit-cards {
+    gap:10px;
+    margin-bottom:4px;
+  }
+  #holidayScreen #summitAdmissions .summit-card {
+    min-height:133px;
+    gap:6px;
+    padding:7px;
+  }
+  #holidayScreen #summitAdmissions .summit-card-art {
+    height:69px;
+    font-size:22px;
+  }
+  #holidayScreen #summitAdmissions .summit-card-label {
+    min-height:30px;
+  }
+  #holidayScreen #summitAdmissions .summit-artwork-review-note {
+    margin:0 0 3px;
+  }
+}
+@media (min-width:801px) and (max-height:680px) {
+  #holidayScreen #rescueMiniGameScene:has(#summitAdmissions:not([hidden])) .rescue-route-intro-stage {
+    padding-top:82px;
+    padding-bottom:64px;
+  }
+  #holidayScreen #summitAdmissions h2 {font-size:22px;}
+  #holidayScreen #summitAdmissions .summit-card {min-height:112px;}
+  #holidayScreen #summitAdmissions .summit-card-art {height:56px;}
+}
+
 /* GAME-SP3.2 provisional fictional paperwork setting, no final illustration. */
 #holidayScreen #detentionPaperwork[hidden],
 #holidayScreen #detentionChoiceCards[hidden],
