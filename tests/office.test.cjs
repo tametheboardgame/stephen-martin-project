@@ -1266,9 +1266,118 @@ test("SP3.1 approved Summit script, correct cards, preview assets and responsive
   assert.ok(html.indexOf('src="./src/summit-data.js"')<html.indexOf('src="./src/game.js"'));
   assert.ok(read("scripts/build.mjs").includes('"src/summit-data.js"'));
   assert.match(css,/\.summit-cards \{display:grid;grid-template-columns:repeat\(3/);
-  assert.match(css,/\.summit-card \{[\s\S]*?min-height:80px/);
+  assert.match(css,/\.summit-card \{[\s\S]*?min-height:166px/);
   assert.match(css,/@media \(max-width:800px\) \{[\s\S]*?\.summit-cards \{grid-template-columns:1fr/);
 });
+test("GAME-SP4.1G3C artwork well IDs follow the unchanged nine Summit answer choices",()=>{
+  const data=story().SMP_SUMMIT;
+  const expected=[
+    ["a1","a2","a3"],["b1","b2","b3"],["c1","c2","c3"]
+  ];
+  const ids=new Set();
+  for(let round=0;round<3;round++){
+    const options=data.rounds[round].options;
+    assert.equal(options.length,3);
+    for(let choice=0;choice<3;choice++){
+      assert.equal(options[choice].artSlot,expected[round][choice]);
+      ids.add(options[choice].artSlot);
+      assert.ok(options[choice].label.length>4);
+    }
+  }
+  assert.equal(ids.size,9,"Every image well is uniquely addressed even for two ticket IDs");
+  for(let i=0;i<3;i++){
+    assert.match(html,new RegExp('id="summitChoice'+i+'"[\\s\\S]*?id="summitChoiceArt'+i+'"[^>]*aria-hidden="true"[\\s\\S]*?id="summitChoiceLabel'+i+'"'));
+  }
+  assert.doesNotMatch(html,/Illustrated choices in preparation/,"Final icon build has no draft notice");
+  assert.doesNotMatch(css,/ART PENDING/,"Final icon art wells have no draft markers");
+  const slots={
+    a1:"vase",a2:"airline-ticket",a3:"phone-charger",
+    b1:"spreadsheet",b2:"legs",b3:"it-ticket",
+    c1:"rescue-kit",c2:"membership-card",c3:"return-flight"
+  };
+  for(const [slot,slug] of Object.entries(slots)){
+    assert.ok(css.includes('.summit-card-art[data-slot="'+slot+'"]'),"CSS slot "+slot+" exists");
+    assert.ok(css.includes('summit-choice-'+slug+'-cutout-v01.webp'),"Approved WebP "+slug+" is referenced");
+  }
+  assert.ok(css.includes("height:92px;width:100%"),"Desktop art well has real height");
+  assert.ok(css.includes("grid-template-columns:84px minmax(0,1fr)"),"Tablet cards use compact side-by-side art");
+  assert.ok(css.includes("grid-template-columns:60px minmax(0,1fr)"),"Phone cards use smaller art wells");
+  assert.ok(!css.includes("summit-admissions-icons-atlas-v01.webp"),"Unapproved atlas must not ship");
+});
+
+test("GAME-SP4.1G3C all nine staged approved WebP choices are built and packaged",()=>{
+  const names=[
+    "vase","airline-ticket","phone-charger",
+    "spreadsheet","legs","it-ticket",
+    "rescue-kit","membership-card","return-flight"
+  ];
+  for(const slug of names){
+    const asset="public/assets/generated/game/summit-choice-"+slug+"-cutout-v01.webp";
+    assert.ok(fs.existsSync(path.join(root,asset)),asset+" has been materialised");
+    const raw=fs.readFileSync(path.join(root,asset));
+    assert.equal(raw.subarray(0,4).toString("ascii"),"RIFF");
+    assert.equal(raw.subarray(8,12).toString("ascii"),"WEBP");
+    assert.ok(raw.length>2500 && raw.length<2*1024*1024,asset+" size is plausible");
+    assert.equal(raw.subarray(12,16).toString("ascii"),"VP8X",asset+" has extended alpha header");
+    assert.ok((raw[20] & 0x10)!==0,asset+" preserves transparency");
+    const builder=read("scripts/build.mjs");
+    assert.ok(builder.includes('"public/assets/generated/game/summit-choice-" + slug + "-cutout-v01.webp"'),
+      "Cloudflare build must copy all nine approved icons");
+    assert.ok(builder.includes('copyFile(path.join(root, relative), path.join(output, relative))'),
+      "Build includes each generated WebP in published dist");
+    assert.ok(css.includes("../public/assets/generated/game/summit-choice-"+slug+"-cutout-v01.webp"),
+      "CSS image URL resolves to the same path copied into dist");
+
+  }
+});
+
+test("GAME-SP4.1G3C short laptop screens keep puzzle heading below toolbar without default-scroll bloat",()=>{
+  const start=css.indexOf("/* GAME-SP4.1G3C laptop-height polish");
+  const end=css.indexOf("/* GAME-SP3.2 provisional fictional paperwork",start);
+  assert.ok(start>=0 && end>start,"Laptop-height responsive rule is present");
+  const rules=css.slice(start,end);
+  assert.ok(rules.includes("@media (min-width:801px) and (max-height:900px)"),
+    "Only short laptop/desktop screens get the compact card layout");
+  assert.ok(rules.includes(".rescue-route-intro-stage {\n    padding:94px 3% 68px;"),
+    "Leave clear space below the global top navigation");
+  assert.ok(rules.includes("#summitAdmissions h2 {\n    font-size:clamp(21px,2.1vw,29px)"),
+    "Shrink the question heading on smaller-height laptops");
+  assert.ok(rules.includes(".summit-card {\n    min-height:133px;"),
+    "Reclaim vertical room from provisional answer card images");
+  assert.ok(rules.includes(".summit-card-art {\n    height:69px;"),
+    "Match the compact art well to the card height");
+  assert.ok(rules.includes("@media (min-width:801px) and (max-height:680px)"),
+    "Extra-short landscape screens keep a second compact breakpoint");
+  assert.match(css,/#holidayScreen \.summit-admissions \{[\s\S]*?overflow-y:auto/,
+    "Long accessibility feedback and hints can still scroll when genuinely necessary");
+  assert.ok(css.includes("@media (max-width:800px) {\n  #holidayScreen .summit-cards"),
+    "Portrait tablet and phone continue to use the existing horizontal illustrated choices");
+});
+
+test("GAME-SP4.1G3C all three rounds refresh pictured slots and accessible labels without changing answers",()=>{
+  const p=toSummitAdmissions();
+  const rounds=story().SMP_SUMMIT.rounds;
+  for(let round=0;round<3;round++){
+    for(let i=0;i<3;i++){
+      const option=rounds[round].options[i];
+      assert.equal(p.el("summitChoiceLabel"+i).textContent,option.label);
+      assert.equal(p.el("summitChoiceArt"+i).dataset.slot,option.artSlot);
+      assert.equal(p.el("summitChoiceArt"+i).textContent,"","Art is decorative, not duplicated as button text");
+      assert.equal(p.el("summitChoice"+i).dataset.correct,"false");
+    }
+    if(round===0){
+      p.el("homeButton").click();p.el("resumeButton").click();
+      assert.equal(p.el("summitChoiceLabel0").textContent,rounds[0].options[0].label,
+        "Save/Resume still redraws live labels");
+    }
+    const correct=rounds[round].options.findIndex(o=>o.correct);
+    p.el("summitChoice"+correct).click();
+    assert.equal(p.el("summitChoiceCards").hidden,true);
+    p.el("summitNextButton").click();
+  }
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+});
+
 test("SP3.1 wrong answers persist, Paul hints after 2, correct answers require acknowledgement",()=>{
   const p=toSummitAdmissions();
   p.el("summitChoice0").click();

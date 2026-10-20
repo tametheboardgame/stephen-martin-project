@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "19ngNUMcGnvaRq2R9pNCBrCbPNNm_mR5C"
+  },
+  "expectedSourceName": "summit-choice-legs-cutout-v01.png",
+  "destination": "public/assets/generated/game/summit-choice-legs-cutout-v01.webp",
+  "transform": {
+    "maxWidth": 1024,
+    "maxHeight": 1024,
+    "quality": 85
+  },
+  "revision": 2
+}

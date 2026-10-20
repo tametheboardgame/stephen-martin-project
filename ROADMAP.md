@@ -853,7 +853,7 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 #### GAME-SP4.1G3 — Chapter 4 Ending A staging and shared post-ending hub (owner feedback, 19 October 2026)
 
-**Priority:** P1. **Status:** G3A/G3B active in `agent/game-sp41g3a-g3b-summit-approach`, awaiting regression and owner visual approval; G3C–G still planned. **Baseline:** approved Summit exterior, admissions puzzle and four-attendant throne room; existing shared `#rescueEndingSummary` ending state. **Scope split:** G3A–E are Ending A improvements; G3F/G are **cross-ending** features. The owner is still reviewing Ending B, so future B feedback gets its own scoped backlog entries rather than being presumed resolved.
+**Priority:** P1. **Status:** G3A/G3B merged as PR #71 (`b8501c0`); G3C all nine illustrated choice assets owner-approved, materialised and integrated; merge approved on `agent/game-sp41g3c-summit-admissions-illustrated-choices`; generated icons and integration pending; G3D–G still planned. **Baseline:** approved Summit exterior, admissions puzzle and four-attendant throne room; existing shared `#rescueEndingSummary` ending state. **Scope split:** G3A–E are Ending A improvements; G3F/G are **cross-ending** features. The owner is still reviewing Ending B, so future B feedback gets its own scoped backlog entries rather than being presumed resolved.
 
 **Owner findings:**
 - Outside Summit, **move David and Paul significantly left**; David currently appears to stand on a retaining wall.
@@ -875,10 +875,12 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 **G3C — Pictographic Summit admissions choices**
 
-- Inventory all three existing questions, choices and their correct/incorrect responses, including the first check's vase, airline ticket and charger. Produce a compact **prop/icon inventory** before generating anything.
-- Present answer choices as consistent **image + readable text** tiles with comparable size and prominence. Reuse appropriate existing icons where possible; create only the **minimum** approved matching illustrations, staged as Drive source → versioned manifest → optimised WebP.
-- Retain choice IDs and scoring, feedback, keyboard/touch/screen-reader equivalents, hints and current progression. Avoid accidental answer clues via differing art emphasis or converting it into a new mini-game.
-- Acceptance: three visually playful accessible checks, correct answer mechanics, no option clipping or unintended extra time.
+- **Layout approved 20 October 2026:** three image-and-live-label tiles and compact laptop-height heading/cards, with tablet and phone horizontal card variants. Preserve the no-unnecessary-scroll design and title clearance beneath the top controls.
+- **Asset specification locked for generation:** [G3C nine-cutout brief](docs/story/GAME-SP4.1G3C-ADMISSIONS-ART-INVENTORY.md). The early single 3×3 **runtime atlas is superseded**. Generate **nine separate transparent-background icons**, one per canonical choice, with an optional contact sheet for review **only**. Each original is a 1024×1024 transparent PNG, exported individually as alpha-preserving WebP after approval.
+- **Production style:** bold comic-poster silhouettes, centred within a consistent 70–80% safe canvas, limited detail and no baked-in words/backgrounds/frames. All nine should look equally important and remain legible inside the approved ~69px laptop / 64px tablet / 55px phone wells (92px full desktop). Do not cue correct answers through art treatment.
+- **Exact generation order:** (1) Phone charger A3; (2) Airline boarding pass A2; (3) IT support ticket B3; (4) Return-flight notice C3; (5) Golden ceremonial vase A1; (6) Compliance spreadsheet B1; (7) Magnificent trousered legs B2; (8) Membership pass C2; (9) Rescue gear C1. Three travel/ticket items must have visibly distinct shapes. Refer to the specification for exact source/runtime filenames and prompts.
+- **Approval and integration:** review each illustrated cutout before staging; originals only in the existing dedicated Drive folder, followed by nine versioned manifests and individual optimised WebPs on G3C's draft branch. Replace ART PENDING wells with images, retaining the live labels, all existing option IDs, scoring, hints, voice, keyboard/touch, accessibility, Save/Resume and game length.
+- **Acceptance:** visually approve all nine, test 3×3 choices on desktop/laptop/tablet/phone, no clipping, scrollbars or extra puzzle difficulty, green CI and deployed Cloudflare exact-head preview. Only then merge PR #72, reconciling separately merged Ending B voice work first.
 
 **G3D — Throne room attendant/actor scale and position**
 

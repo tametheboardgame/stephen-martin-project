@@ -54,6 +54,15 @@ jobs:
           test -f dist/public/assets/generated/characters/china-night-market-spa-representative-v01.webp
           test -f dist/public/assets/generated/characters/stephen-night-market-skewer-v01.webp
           test -f dist/src/styles.css
+          test -s dist/public/assets/generated/game/summit-choice-vase-cutout-v01.webp
+          test -s dist/public/assets/generated/game/summit-choice-airline-ticket-cutout-v01.webp
+          test -s dist/public/assets/generated/game/summit-choice-phone-charger-cutout-v01.webp
+          test -s dist/public/assets/generated/game/summit-choice-spreadsheet-cutout-v01.webp
+          test -s dist/public/assets/generated/game/summit-choice-legs-cutout-v01.webp
+          test -s dist/public/assets/generated/game/summit-choice-it-ticket-cutout-v01.webp
+          test -s dist/public/assets/generated/game/summit-choice-rescue-kit-cutout-v01.webp
+          test -s dist/public/assets/generated/game/summit-choice-membership-card-cutout-v01.webp
+          test -s dist/public/assets/generated/game/summit-choice-return-flight-cutout-v01.webp
           test -f dist/public/assets/generated/locations/office-clean-01-v01.webp
           test -f dist/public/assets/generated/locations/office-foreground-01-v01.webp
           test -f dist/public/assets/generated/locations/office-exterior-opening-v01.webp

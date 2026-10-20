@@ -1,5 +1,13 @@
 # Project status
 
+## COMPLETED — GAME-SP4.1G3C Summit admissions illustrated choices (20 October 2026)
+
+- **Owner acceptance:** all nine illustrated choices and compact desktop/laptop/tablet/phone card layout approved; owner checked the corrected deployed preview and authorised PR #72 merge.
+- **Assets:** nine individually approved transparent cutouts, padded 1024×1024 PNG masters in authorised Drive staging, nine versioned manifests and alpha-preserving WebPs.
+- **Blank-image regression fixed:** published Cloudflare build now explicitly packages and checks nine WebPs; prior G3C verification passed 209/209 automated tests and owner accepted the visible result.
+- **Concurrent development preserved:** reconcile against current main without reverting latest Ending B/C spoken dialogue or game progression.
+- **Next:** GAME-SP4.1G3D throne-room attendant and actor perspective review.
+
 ## GAME-SP4.1H-C1 — Ending C speech-bubble height regression (20 October 2026)
 
 - **Owner feedback:** Ending C sound is approved; after the six-piece assembly, the first final-scene speech bubble filled nearly the entire spa tableau, obscuring Stephen, David, Paul and the cardboard model.
@@ -23,7 +31,7 @@
 - Merge gate: require combined smoke tests and successful Cloudflare deployment, then merge PR #70. Ending C remains next major voice work package.
 
 
-## CURRENT — GAME-SP4.1G3A + G3B Summit approach staging and wording (19 October 2026)
+## COMPLETED — GAME-SP4.1G3A + G3B Summit approach staging and wording (19 October 2026)
 
 - **Branch:** `agent/game-sp41g3a-g3b-summit-approach`, based on G1C-merged `main` commit `18491bc0097f43e8dddc7ddf2d380c1051afea37`. Draft PR and owner visual review required.
 - **G3A:** CSS-only Summit exterior sprite positioning: move the approved David and Paul cut-outs appreciably left onto the approach path at desktop, tablet and phone widths. Keep gatekeeper, image pixels, sprite sizes, bottom anchors, speaker focus, and all other routes/locations unchanged.

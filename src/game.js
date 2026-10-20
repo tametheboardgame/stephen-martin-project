@@ -2033,7 +2033,13 @@
           $("summitChoiceCards").hidden = acknowledging;
           for (let i = 0; i < round.options.length; i++) {
             const button = $("summitChoice" + i);
-            button.textContent = round.options[i].label;
+            const option = round.options[i];
+            // Keep canonical text as live button content and hide only the
+            // optional pictogram from assistive technology. No answer hints.
+            $("summitChoiceLabel" + i).textContent = option.label;
+            const artwork = $("summitChoiceArt" + i);
+            artwork.dataset.slot = option.artSlot;
+            artwork.textContent = ""; // Final cutout is selected via the artSlot CSS rule.
             button.dataset.correct = "false";
           }
           renderNamedResponse("summitResponseCard", "summitResponseSpeaker", "summitFeedback",
