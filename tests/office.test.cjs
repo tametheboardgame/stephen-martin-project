@@ -1810,7 +1810,9 @@ test("SP3.4 all three fully-earned finales autoplay their lines but stop at summ
         p.el("assemblyPiece"+i).click();
         p.el("assemblySlot"+i).click();
       }
-      assert.equal(p.timeouts.size,0,"POWER ON must never trigger automatically");
+      assert.equal(saved(p).assemblyPowered,undefined,"POWER ON must remain a manual choice");
+      if(p.timeouts.size) p.tick(); // Complete Paul\'s harmless spoken fit acknowledgement.
+      assert.equal(saved(p).assemblyPowered,undefined,"Voice completion cannot turn on cardboard Stephen");
       p.el("assemblyPowerButton").click();
       return p;
     },lines:story().SMP_REASSEMBLE.ending.length}
@@ -5183,7 +5185,7 @@ test("Spa approach speaks seven actors in order before entering unattempted puzz
   assert.ok(p.voices.at(-1).src.endsWith("reassemble.intro.001.mp3"));
   p.el("routeIntroNextButton").click();
   assert.ok(p.voices.at(-1).src.endsWith("reassemble.intro.002.mp3"));
-  for(let i=1;i<7;i++)p.el("routeIntroNextButton").click();
+  for(let i=1;i<=7;i++)p.el("routeIntroNextButton").click();
   assert.equal(saved(p).holidayPhase,"rescue-minigame");
   assert.equal(saved(p).rescueProgress.miniGameStage,0);
 });
