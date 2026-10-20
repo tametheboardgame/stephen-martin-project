@@ -46,13 +46,13 @@
       kind: "assembly",
       stages: 6,
       intro: Object.freeze([
-        { speaker:"David", text:"It's worse than I feared." },
-        { speaker:"Paul", text:"It's a spa." },
-        { speaker:"David", text:"Look at the catalogue. 'Stephen Martin: replacement parts available'." },
-        { speaker:"Paul", text:"How do they know his name?" },
-        { speaker:"David", text:"Obviously an international operation." },
-        { speaker:"Paul", text:"Or they made a name badge." },
-        { speaker:"David", text:"Paul, we're beyond that." }
+        { id:"reassemble.intro.001", speaker:"David", text:"It's worse than I feared." },
+        { id:"reassemble.intro.002", speaker:"Paul", text:"It's a spa." },
+        { id:"reassemble.intro.003", speaker:"David", text:"Look at the catalogue. 'Stephen Martin: replacement parts available'." },
+        { id:"reassemble.intro.004", speaker:"Paul", text:"How do they know his name?" },
+        { id:"reassemble.intro.005", speaker:"David", text:"Obviously an international operation." },
+        { id:"reassemble.intro.006", speaker:"Paul", text:"Or they made a name badge." },
+        { id:"reassemble.intro.007", speaker:"David", text:"Paul, we're beyond that." }
       ])
     })
   });
