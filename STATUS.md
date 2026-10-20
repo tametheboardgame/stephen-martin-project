@@ -1,5 +1,12 @@
 # Project status
 
+## GAME-SP4.1H-B — approved Ending B voices integrated with Summit approach (20 October 2026)
+
+- All **45** Ending B synthetic character recordings supplied and approved by the owner, plus the previously recorded Ending B narrator; 215/215 game dialogue MP3s in the combined package. Source and exact filenames: `docs/ENDING-B-VOICE-IMPORT.md`.
+- Conflict-resolved integration of PR #70 with main's approved GAME-SP4.1G3A/G3B. Keep the current Summit entrance actor offsets, compact-screen refinements, wording and regressions. Ending B preserves paper/stamp puzzle behaviour and introduces duration-timed actor responses, hints and 13-line finale.
+- Merge gate: require combined smoke tests and successful Cloudflare deployment, then merge PR #70. Ending C remains next major voice work package.
+
+
 ## CURRENT — GAME-SP4.1G3A + G3B Summit approach staging and wording (19 October 2026)
 
 - **Branch:** `agent/game-sp41g3a-g3b-summit-approach`, based on G1C-merged `main` commit `18491bc0097f43e8dddc7ddf2d380c1051afea37`. Draft PR and owner visual review required.
