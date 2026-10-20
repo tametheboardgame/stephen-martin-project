@@ -1,5 +1,13 @@
 # Project status
 
+## GAME-SP4.1H-C1 — Ending C speech-bubble height regression (20 October 2026)
+
+- **Owner feedback:** Ending C sound is approved; after the six-piece assembly, the first final-scene speech bubble filled nearly the entire spa tableau, obscuring Stephen, David, Paul and the cardboard model.
+- **Root cause:** shared `.story-speech` styling removed the content panel's max-height while the legacy `.assembly-ending-content` retained `height:100%`. The result was a full-height cream panel, not the intended compact bottom subtitle.
+- **Fix:** Ending C-only CSS auto-sizes the speech panel, reinstates a 28% desktop / 32% tablet / 34% phone maximum, and leaves speaker badge, bottom anchors, actors, speech recordings, pause/Next and puzzle rules unchanged. Added a targeted non-regression test.
+- **Gate:** tests and a fresh Cloudflare branch preview, then owner visual acceptance before merging PR #73.
+
+
 ## GAME-SP4.1H-C — Ending C comprehensive spoken dialogue (20 October 2026)
 
 - Main baseline `8b167be`: Ending A and B fully recorded and merged; all 215 original MP3s and the two opening song tracks unchanged.
