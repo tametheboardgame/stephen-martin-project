@@ -160,6 +160,38 @@ if (mutedBytes.length < 50000 || mutedBytes.length > 2 * 1024 * 1024 ||
 await mkdir(path.dirname(path.join(output, approvedMutedChatCutaway)), { recursive: true });
 await copyFile(mutedSource, path.join(output, approvedMutedChatCutaway));
 
+// GAME-SP4.1G3C: the nine owner-approved admissions cutouts are materialised
+// from Drive and must be present in the published Cloudflare output. Tests
+// against repository sources alone do not catch a missing dist copy.
+const summitChoiceSlugs = [
+  "vase",
+  "airline-ticket",
+  "phone-charger",
+  "spreadsheet",
+  "legs",
+  "it-ticket",
+  "rescue-kit",
+  "membership-card",
+  "return-flight"
+];
+if (summitChoiceSlugs.length !== 9 || new Set(summitChoiceSlugs).size !== 9) {
+  throw new Error("Expected exactly nine unique approved Summit choice icons.");
+}
+for (const slug of summitChoiceSlugs) {
+  const relative = "public/assets/generated/game/summit-choice-" + slug + "-cutout-v01.webp";
+  const bytes = await readFile(path.join(root, relative));
+  if (bytes.length < 2500 || bytes.length > 2 * 1024 * 1024 ||
+      bytes.toString("ascii", 0, 4) !== "RIFF" ||
+      bytes.toString("ascii", 8, 12) !== "WEBP" ||
+      bytes.toString("ascii", 12, 16) !== "VP8X" ||
+      (bytes[20] & 0x10) === 0) {
+    throw new Error("G3C choice icon missing, invalid or not transparent: " + relative);
+  }
+  await mkdir(path.dirname(path.join(output, relative)), { recursive: true });
+  await copyFile(path.join(root, relative), path.join(output, relative));
+}
+console.log("Approved G3C choice cutouts packaged: " + summitChoiceSlugs.length + "/9.");
+
 // GAME-SP4B: include exactly the locked Ending B images and the release
 // permit assembled from Stephen's original approved office sprite pixels.
 const endingBImages = [
