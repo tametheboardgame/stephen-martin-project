@@ -1971,7 +1971,7 @@
             $("summitChoiceLabel" + i).textContent = option.label;
             const artwork = $("summitChoiceArt" + i);
             artwork.dataset.slot = option.artSlot;
-            artwork.textContent = option.artSlot.toUpperCase(); // Draft art wells.
+            artwork.textContent = ""; // Final cutout is selected via the artSlot CSS rule.
             button.dataset.correct = "false";
           }
           renderNamedResponse("summitResponseCard", "summitResponseSpeaker", "summitFeedback",

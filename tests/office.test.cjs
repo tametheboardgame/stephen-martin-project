@@ -1288,7 +1288,17 @@ test("GAME-SP4.1G3C artwork well IDs follow the unchanged nine Summit answer cho
   for(let i=0;i<3;i++){
     assert.match(html,new RegExp('id="summitChoice'+i+'"[\\s\\S]*?id="summitChoiceArt'+i+'"[^>]*aria-hidden="true"[\\s\\S]*?id="summitChoiceLabel'+i+'"'));
   }
-  assert.match(html,/Illustrated choices in preparation/,"Preview must not misrepresent the art as approved");
+  assert.doesNotMatch(html,/Illustrated choices in preparation/,"Final icon build has no draft notice");
+  assert.doesNotMatch(css,/ART PENDING/,"Final icon art wells have no draft markers");
+  const slots={
+    a1:"vase",a2:"airline-ticket",a3:"phone-charger",
+    b1:"spreadsheet",b2:"legs",b3:"it-ticket",
+    c1:"rescue-kit",c2:"membership-card",c3:"return-flight"
+  };
+  for(const [slot,slug] of Object.entries(slots)){
+    assert.ok(css.includes('.summit-card-art[data-slot="'+slot+'"]'),"CSS slot "+slot+" exists");
+    assert.ok(css.includes('summit-choice-'+slug+'-cutout-v01.webp'),"Approved WebP "+slug+" is referenced");
+  }
   assert.ok(css.includes("height:92px;width:100%"),"Desktop art well has real height");
   assert.ok(css.includes("grid-template-columns:84px minmax(0,1fr)"),"Tablet cards use compact side-by-side art");
   assert.ok(css.includes("grid-template-columns:60px minmax(0,1fr)"),"Phone cards use smaller art wells");
@@ -1326,7 +1336,7 @@ test("GAME-SP4.1G3C all three rounds refresh pictured slots and accessible label
       const option=rounds[round].options[i];
       assert.equal(p.el("summitChoiceLabel"+i).textContent,option.label);
       assert.equal(p.el("summitChoiceArt"+i).dataset.slot,option.artSlot);
-      assert.equal(p.el("summitChoiceArt"+i).textContent,option.artSlot.toUpperCase());
+      assert.equal(p.el("summitChoiceArt"+i).textContent,"","Art is decorative, not duplicated as button text");
       assert.equal(p.el("summitChoice"+i).dataset.correct,"false");
     }
     if(round===0){
