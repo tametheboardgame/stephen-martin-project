@@ -629,7 +629,7 @@
             text:rescueHub.hint[state.route].replace(/^Paul:\s*/, "")};
       }
     }
-    if (["cult","detention"].includes(state.route) &&
+    if (["cult","detention","reassemble"].includes(state.route) &&
         state.holidayPhase === "rescue-route-intro") {
       const line = rescueFramework.routes[state.route].intro[state.rescueProgress?.introStep];
       return line || null;
@@ -673,12 +673,23 @@
       }
       return {id:round.promptId,text:round.prompt.replace(/^OFFICIAL:\s*/, "")};
     }
+    if (state.route === "reassemble" && state.holidayPhase === "rescue-minigame") {
+      const queue = state.assemblyVoiceQueue;
+      const i = state.assemblyVoiceStep;
+      if (Array.isArray(queue) && Number.isInteger(i) && i < queue.length)
+        return queue[i];
+      if (state.assemblyHintPending) {
+        const hint = assembly.hintVoice(state.assemblySelectedPart);
+        if (hint.id === state.assemblyHintPending) return hint;
+      }
+      return null;
+    }
     if (state.route === "cult" && state.holidayPhase === "rescue-route-ending") {
       const p = rescueFramework.normalise(state.rescueProgress,"cult");
       return summit.ending[p.endingStep] || null; // End card remains silent.
     }
     // Ending B now has 13 actor MP3s and the existing narrator stinger;
-    // Ending C still has only its own final narrator line.
+    // Ending C now has character voices and its existing narrator.
     if (state.holidayPhase === "rescue-route-ending" &&
         (state.route === "detention" || state.route === "reassemble")) {
       const p = rescueFramework.normalise(state.rescueProgress,state.route);
