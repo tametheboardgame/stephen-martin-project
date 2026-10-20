@@ -5132,3 +5132,58 @@ test("GAME-SP4.1G3B Summit status reflects a rescue attempt, leaving B/C copy un
     assert.match(q.el("routeIntroStatus").textContent,/^Rescue briefing · 1 of /);
   }
 });
+
+
+// GAME-SP4.1H-C: exact owner-approved spa line count and strict case mapping.
+test("Ending C has 39 independent actor clips with unchanged puzzle reaction text",()=>{
+  const route=story().SMP_RESCUE_FRAMEWORK.routes.reassemble;
+  const spa=story().SMP_REASSEMBLE;
+  const ids=[...Array.from(route.intro,line=>line.id),
+    ...Array.from(spa.ending.slice(0,-1),line=>line.id),
+    ...Object.values(spa.reactionVoices).flatMap(lines=>Array.from(lines,line=>line.id)),
+    ...Array.from(spa.fitVoices,line=>line.id),
+    ...Array.from(spa.noSelectionVoices,line=>line.id),
+    ...Object.values(spa.hintVoices).map(line=>line.id)];
+  assert.equal(route.intro.length,7);
+  assert.equal(spa.ending.length,15);
+  assert.equal(spa.ending.at(-1).id,"reassemble.ending.015");
+  assert.equal(ids.length,39);
+  assert.equal(new Set(ids).size,39);
+  assert.ok(ids.every(id=>/^reassemble\.[a-z0-9.-]+$/.test(id)));
+  for(const [part,slot] of [["wifi-heart","head"],["toaster","head"],["banana","torso"],
+    ["kidney-1","head"],["spleen","head"],["head","left-arm"],["right-arm","head"]]){
+    assert.equal(spa.reaction(part,slot),
+      Array.from(spa.reactionVoice(part,slot),line=>line.speaker+": "+line.text).join(" "));
+  }
+  assert.equal(spa.hintVoice("head").text,
+    "Match the Head shape to the standee. He faces us, so his left is on your right.");
+  assert.equal(spa.hintVoice("kidney-1").text,
+    "Try the six normal cardboard bits. Spare kidneys, Wi-Fi hearts and toasters are extras.");
+  assert.ok(read("scripts/build.mjs").includes("assemblyIds.forEach(id=>permitted.add(id+"));
+  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 254"));
+  assert.ok(fs.existsSync(path.join(root,"docs/ENDING-C-VOICE-IMPORT.md")));
+});
+
+function voicedSpaIntro() {
+  const p=voicedHotel("reassemble");
+  for(let i=0;i<8;i++)p.el("hotelNextButton").click();
+  p.el("hotelReassembleButton").click();
+  for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+  return p;
+}
+function voicedSpaPuzzle() {
+  const p=voicedSpaIntro();
+  for(let i=0;i<8;i++)p.el("routeIntroNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  return p;
+}
+test("Spa approach speaks seven actors in order before entering unattempted puzzle",()=>{
+  const p=voicedSpaIntro();
+  assert.ok(p.voices.at(-1).src.endsWith("reassemble.intro.001.mp3"));
+  p.el("routeIntroNextButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("reassemble.intro.002.mp3"));
+  for(let i=1;i<7;i++)p.el("routeIntroNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  assert.equal(saved(p).rescueProgress.miniGameStage,0);
+});
