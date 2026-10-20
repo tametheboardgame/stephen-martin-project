@@ -1305,6 +1305,22 @@ test("GAME-SP4.1G3C artwork well IDs follow the unchanged nine Summit answer cho
   assert.ok(!css.includes("summit-admissions-icons-atlas-v01.webp"),"Unapproved atlas must not ship");
 });
 
+test("GAME-SP4.1G3C all nine staged approved WebP choices are built and packaged",()=>{
+  const names=[
+    "vase","airline-ticket","phone-charger",
+    "spreadsheet","legs","it-ticket",
+    "rescue-kit","membership-card","return-flight"
+  ];
+  for(const slug of names){
+    const asset="public/assets/generated/game/summit-choice-"+slug+"-cutout-v01.webp";
+    assert.ok(fs.existsSync(path.join(root,asset)),asset+" has been materialised");
+    const raw=fs.readFileSync(path.join(root,asset));
+    assert.equal(raw.subarray(0,4).toString("ascii"),"RIFF");
+    assert.equal(raw.subarray(8,12).toString("ascii"),"WEBP");
+    assert.ok(raw.length>2500 && raw.length<2*1024*1024,asset+" size is plausible");
+  }
+});
+
 test("GAME-SP4.1G3C short laptop screens keep puzzle heading below toolbar without default-scroll bloat",()=>{
   const start=css.indexOf("/* GAME-SP4.1G3C laptop-height polish");
   const end=css.indexOf("/* GAME-SP3.2 provisional fictional paperwork",start);
