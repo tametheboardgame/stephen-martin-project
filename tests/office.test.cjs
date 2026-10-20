@@ -2719,7 +2719,7 @@ test("Back in England has ten unique whitelisted voice IDs and no spoken travel 
   assert.equal(new Set(ids).size,10);
   assert.ok(alarm.montage.every(card=>card.id.startsWith("rescue.travel.")));
   assert.ok(read("scripts/build.mjs").includes('alarmIds.forEach(id => permitted.add(id + ".mp3"))'));
-  assert.ok(read("scripts/build.mjs").includes('permitted.size !== 170'),"Original ten alarm IDs remain included in expanded voice whitelist");
+  assert.ok(read("scripts/build.mjs").includes('permitted.size !== 215'),"Original ten alarm IDs remain included in expanded voice whitelist");
   assert.ok(fs.existsSync(path.join(root,"docs/RESCUE-ALARM-VOICE-IMPORT.md")));
 });
 
@@ -2836,7 +2836,7 @@ test("Visitor Information 22 voice IDs match screenplay and automatic file white
   assert.ok(ids.every(id=>/^rescue\.hub\.[a-z0-9.]+$/.test(id)));
   assert.equal(h.correct[4].id,"rescue.hub.correct.005");
   assert.ok(read("scripts/build.mjs").includes("hubVoiceIds.forEach(id => permitted.add(id +"));
-  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 170"));
+  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 215"));
   assert.ok(fs.existsSync(path.join(root,"docs/VISITOR-INFORMATION-VOICE-IMPORT.md")));
 });
 
@@ -4565,7 +4565,7 @@ test("Summit audio has exactly 44 unique approved IDs with unchanged comic dialo
   assert.equal(summit.ending[13].speaker,"Narrator");
   assert.equal(summit.ending[13].id,"summit.ending.014");
   assert.ok(read("scripts/build.mjs").includes("summitIds.forEach(id => permitted.add"));
-  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 170"),"44 Summit voices plus 12 reserved narrator clips are whitelisted");
+  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 215"),"44 Summit voices plus 12 reserved narrator clips are whitelisted");
   assert.ok(fs.existsSync(path.join(root,"docs/SUMMIT-VOICE-IMPORT.md")));
 });
 
@@ -4691,12 +4691,12 @@ test("Narration audit finds exactly 14 remaining narrator IDs with distinct appr
   assert.match(c.at(-1).text,/cardboard display/);
   assert.equal(d.filter(line=>line.speaker==="Narrator").length,1);
   assert.equal(c.filter(line=>line.speaker==="Narrator").length,1);
-  assert.ok(d.slice(0,-1).every(line=>!line.id));
+  assert.ok(d.slice(0,-1).every((line,i)=>line.id === "detention.ending."+String(i+1).padStart(3,"0")),"Ending B now has all its actor voice IDs");
   assert.ok(c.slice(0,-1).every(line=>!line.id));
   const src=read("scripts/build.mjs");
   assert.ok(src.includes('closingNarrators.forEach(({id})=>permitted.add(id+".mp3"))'));
-  assert.ok(src.includes("permitted.size !== 170"));
-  assert.ok(src.includes('"/170 maximum (112 established voices + 44 Summit + 12 transition narrations + 2 ending narrators)."'));
+  assert.ok(src.includes("permitted.size !== 215"));
+  assert.ok(src.includes('"/215 maximum (170 existing voices + 45 Ending B recordings)."'));
   assert.ok(fs.existsSync(path.join(root,"docs/REMAINING-NARRATION-VOICE-IMPORT.md")));
 });
 
@@ -4939,6 +4939,132 @@ test("GAME-SP4.1G1C England/phone layout retains distinct title, captions and re
   assert.match(css,/@media \(max-width:450px\) \{[\s\S]*?china-final-england h2/);
   assert.match(css,/@media \(prefers-reduced-motion:reduce\) \{[\s\S]*?china-final-phone-screen \{transition:none !important;\}/);
   assert.doesNotMatch(engine,/Message interrupted — not delivered/);
+});
+
+
+// GAME-SP4.1H-B: all 45 character clips and existing Ending B narrator.
+test("Ending B 45 canonical voice IDs preserve each original form response and approved dialogue",()=>{
+  const route=story().SMP_RESCUE_FRAMEWORK.routes.detention;
+  const data=story().SMP_DETENTION;
+  const ids=[...Array.from(route.intro,b=>b.id)];
+  for(let i=0;i<3;i++){
+    const round=data.rounds[i];
+    ids.push(round.promptId,round.hintId);
+    for(const option of round.options){
+      ids.push(...Array.from(option.voices,b=>b.id));
+      assert.equal(option.response,option.voices.map(b=>b.speaker+": "+b.text).join(" "));
+    }
+    if(round.approvedVoices)ids.push(...Array.from(round.approvedVoices,b=>b.id));
+  }
+  ids.push(...Array.from(data.stampSelectedVoices,b=>b.id));
+  ids.push(...Array.from(data.ending.slice(0,-1),b=>b.id));
+  assert.equal(ids.length,45);
+  assert.equal(new Set(ids).size,45);
+  assert.ok(ids.every(id=>/^detention\.[a-z0-9.-]+$/.test(id)));
+  assert.equal(data.ending.at(-1).id,"detention.ending.014");
+  assert.equal(data.rounds[2].approvedVoices[0].text,"APPROVED: ALL OF YOU PLEASE LEAVE.");
+  assert.equal(data.rounds[2].approvedResponse,"OFFICIAL: APPROVED: ALL OF YOU PLEASE LEAVE. The printer releases a celebratory shower of unwanted paper.");
+  assert.ok(read("scripts/build.mjs").includes("detentionIds.forEach(id=>permitted.add(id+"));
+  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 215"));
+  assert.ok(fs.existsSync(path.join(root,"docs/ENDING-B-VOICE-IMPORT.md")));
+});
+
+function voicedDetention() {
+  const p=voicedHotel("detention");
+  for(let i=0;i<8;i++)p.el("hotelNextButton").click();
+  p.el("hotelDetentionButton").click();
+  for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+  return p;
+}
+function voicedDetentionPuzzle() {
+  const p=voicedDetention();
+  for(let i=0;i<=6;i++)p.el("routeIntroNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  return p;
+}
+
+test("Ending B official route intro plays six existing lines then first spoken form prompt",async()=>{
+  const p=voicedDetention();
+  const first=p.voices.at(-1);
+  assert.ok(first.src.endsWith("detention.intro.001.mp3"));
+  await Promise.resolve();
+  assert.equal(p.timeouts.size,0);
+  first.finish();
+  assert.equal(Array.from(p.timeouts.values())[0].delay,260);
+  p.tick();
+  assert.ok(p.voices.at(-1).src.endsWith("detention.intro.002.mp3"));
+  for(let i=1;i<=6;i++)p.el("routeIntroNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  assert.ok(p.voices.at(-1).src.endsWith("detention.form.001.prompt.mp3"));
+  assert.equal(p.el("holidayNextButton").hidden,true,"Form choices remain manual");
+});
+
+test("Ending B wrong-answer character voices sequence then Paul hint plays once",()=>{
+  const p=voicedDetentionPuzzle();
+  p.el("detentionChoice0").click();
+  assert.ok(p.voices.at(-1).src.endsWith("detention.form.001.operation.001.mp3"));
+  p.el("holidayNextButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("detention.form.001.operation.002.mp3"));
+  p.el("holidayNextButton").click();
+  assert.equal(p.el("holidayNextButton").hidden,true);
+  p.el("detentionChoice2").click();
+  assert.ok(p.voices.at(-1).src.endsWith("detention.form.001.meal.001.mp3"));
+  p.el("holidayNextButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("detention.form.001.meal.002.mp3"));
+  p.el("holidayNextButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("detention.form.001.hint.mp3"));
+  p.el("holidayNextButton").click();
+  assert.equal(saved(p).detentionHintHeard,true);
+  p.el("detentionChoice0").click();
+  p.el("holidayNextButton").click();
+  p.el("holidayNextButton").click();
+  assert.equal(p.el("holidayNextButton").hidden,true);
+  assert.equal(saved(p).rescueProgress.miniGameStage,0);
+});
+
+test("Ending B correct response finishes both speakers before changing forms",async()=>{
+  const p=voicedDetentionPuzzle();
+  p.el("detentionChoice1").click();
+  const voice=p.voices.at(-1);
+  assert.ok(voice.src.endsWith("detention.form.001.retrieve.001.mp3"));
+  assert.equal(saved(p).rescueProgress.miniGameStage,1);
+  await Promise.resolve();
+  voice.finish();p.tick();
+  assert.ok(p.voices.at(-1).src.endsWith("detention.form.001.retrieve.002.mp3"));
+  assert.equal(saved(p).detentionResponse.correct,true);
+  const second=p.voices.at(-1);
+  second.finish();p.tick();
+  assert.equal(saved(p).detentionVoiceStep,null);
+  p.tick();
+  assert.equal(saved(p).detentionResponse,undefined);
+  assert.equal(saved(p).rescueProgress.miniGameStage,1);
+  assert.ok(p.voices.at(-1).src.endsWith("detention.form.002.prompt.mp3"));
+});
+
+test("Ending B stamp selection and Official approval are voice-only, narration stays recorded",()=>{
+  const p=voicedDetentionPuzzle();
+  for(const correct of [1,2]){
+    p.el("detentionChoice"+correct).click();
+    p.el("detentionNextButton").click();
+  }
+  assert.equal(saved(p).rescueProgress.miniGameStage,2);
+  p.el("detentionChoice2").click();
+  assert.ok(p.voices.at(-1).src.endsWith("detention.form.003.drink.001.mp3"));
+  p.el("detentionStampButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("detention.stamp.selected.001.mp3"));
+  p.el("holidayNextButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("detention.stamp.selected.002.mp3"));
+  p.el("detentionPermitButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("detention.stamp.approved.001.mp3"));
+  assert.equal(saved(p).rescueProgress.finished,true);
+  p.el("detentionNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+  for(let i=1;i<=14;i++){
+    assert.ok(p.voices.at(-1).src.endsWith("detention.ending."+String(i).padStart(3,"0")+".mp3"));
+    p.el("detentionEndingNextButton").click();
+  }
+  assert.match(p.el("detentionEndingLine").textContent,/ENDING B/);
 });
 
 test("GAME-SP4.1G3A Summit staging makes a moderate left shift on smaller screens",()=>{

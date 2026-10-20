@@ -4,7 +4,7 @@ This folder is the exact upload destination for the project's ElevenLabs MP3
 voice clips. The static build automatically packages files whose names match
 the canonical dialogue script IDs.
 
-## Supported recordings — 170 audio clips (156 established + 14 narrator clips)
+## Supported recordings — 215 approved dialogue/narration MP3s (including 45 Ending B actor recordings)
 
 - Original office: `intro.exterior.mp3`, `office.001.mp3` to `office.054.mp3` (55).
 - Stephen's Great Wall, Forbidden City, Night Market and final phone line:
@@ -44,12 +44,13 @@ the canonical dialogue script IDs.
 - **Authoritative 14-file ElevenLabs checklist:**
   [Remaining narration recording guide](../../../../docs/REMAINING-NARRATION-VOICE-IMPORT.md).
 
+- **Ending B official rescue:** 45 actor recordings for its six-line intro, three paperwork prompts, nine split response options, three hints, stamp selection/approval and 13 ending lines. See [grouped ElevenLabs script](../../../../docs/ENDING-B-VOICE-IMPORT.md). The separately recorded narrator closing line `detention.ending.014.mp3` is already present and must not be re-uploaded.
+
 ## Upload
 
-For the fourteen remaining narrator MP3s, upload to branch
-`agent/game-sp4-remaining-narration` at `public/assets/audio/dialogue/`.
-Do not upload these files directly to `main` before the owner listens to
-and approves the Cloudflare draft build.
+All 45 Ending B actor recordings have been uploaded and approved. They are now part of the
+215-file game audio set alongside the existing Ending B narrator. When preparing
+new voice batches, use a separate development branch and obtain owner approval before merging.
 
 1. Select the branch in GitHub; open `public/assets/audio/dialogue/`.
 2. Click **Add file → Upload files** and commit the exact MP3 filenames.

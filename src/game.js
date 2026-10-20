@@ -629,8 +629,9 @@
             text:rescueHub.hint[state.route].replace(/^Paul:\s*/, "")};
       }
     }
-    if (state.route === "cult" && state.holidayPhase === "rescue-route-intro") {
-      const line = rescueFramework.routes.cult.intro[state.rescueProgress?.introStep];
+    if (["cult","detention"].includes(state.route) &&
+        state.holidayPhase === "rescue-route-intro") {
+      const line = rescueFramework.routes[state.route].intro[state.rescueProgress?.introStep];
       return line || null;
     }
     if (state.route === "cult" && state.holidayPhase === "rescue-minigame") {
@@ -653,18 +654,37 @@
       }
       return {id:round.promptId, text:round.prompt.replace(/^GATEKEEPER:\s*/, "")};
     }
+    if (state.route === "detention" && state.holidayPhase === "rescue-minigame") {
+      const p = rescueFramework.normalise(state.rescueProgress,"detention");
+      const reply = state.detentionResponse;
+      const roundIndex = reply?.correct && reply.round === p.miniGameStage - 1
+        ? reply.round : p.miniGameStage;
+      const round = detention.rounds[roundIndex];
+      if (!round) return null;
+      if (reply && reply.round === roundIndex) {
+        const lines = detentionResponseVoices(reply);
+        const index = state.detentionVoiceStep;
+        if (lines && Number.isInteger(index) && index >= 0 && index < lines.length)
+          return lines[index];
+        if (lines && !reply.correct && reply.choice !== "stamp-selected" &&
+            index === lines.length && p.hintVisible && !state.detentionHintHeard)
+          return {id:round.hintId,text:round.hint.replace(/^Paul:\s*/, "")};
+        return null;
+      }
+      return {id:round.promptId,text:round.prompt.replace(/^OFFICIAL:\s*/, "")};
+    }
     if (state.route === "cult" && state.holidayPhase === "rescue-route-ending") {
       const p = rescueFramework.normalise(state.rescueProgress,"cult");
       return summit.ending[p.endingStep] || null; // End card remains silent.
     }
-    // Endings B/C are not yet fully voiced, but their two existing narrator
-    // stingers may play now; other unrecorded character lines remain text-timed.
+    // Ending B now has 13 actor MP3s and the existing narrator stinger;
+    // Ending C still has only its own final narrator line.
     if (state.holidayPhase === "rescue-route-ending" &&
         (state.route === "detention" || state.route === "reassemble")) {
       const p = rescueFramework.normalise(state.rescueProgress,state.route);
       const lines = state.route === "detention" ? detention.ending : assembly.ending;
       const beat = lines[p.endingStep];
-      return beat?.speaker === "Narrator" ? beat : null;
+      return beat?.id ? beat : null;
     }
     return null;
   }
@@ -873,9 +893,23 @@
         if (reply?.correct && reply.round === p.miniGameStage - 1)
           return {run:continueSummit,wait:VOICE_GAP_MS};
       }
-      if (state.route === "detention" && state.detentionResponse?.correct === true &&
-          state.detentionResponse.round === p.miniGameStage - 1)
-        return step(continueDetention, detention.rounds[state.detentionResponse.round]?.approvedResponse || "Form accepted.");
+      if (state.route === "detention") {
+        const reply = state.detentionResponse;
+        const roundIndex = reply?.correct && reply.round === p.miniGameStage - 1
+          ? reply.round : p.miniGameStage;
+        const round = detention.rounds[roundIndex];
+        const lines = reply && detentionResponseVoices(reply);
+        if (reply && lines && Number.isInteger(state.detentionVoiceStep)) {
+          const index = state.detentionVoiceStep;
+          if (index < lines.length)
+            return step(advanceDetentionVoice,lines[index]?.text);
+          if (!reply.correct && reply.choice !== "stamp-selected" &&
+              index === lines.length && p.hintVisible && !state.detentionHintHeard)
+            return step(advanceDetentionVoice,round.hint);
+        }
+        if (reply?.correct && reply.round === p.miniGameStage - 1)
+          return {run:continueDetention,wait:VOICE_GAP_MS};
+      }
       return null; // All new answers, stamp and assembly pieces are manual.
     }
     if (phase === "rescue-route-ending") {
@@ -919,6 +953,8 @@
     delete state.summitVoiceStep;
     delete state.summitHintHeard;
     delete state.detentionResponse;
+    delete state.detentionVoiceStep;
+    delete state.detentionHintHeard;
     delete state.detentionStampFound;
     delete state.detentionStampSelected;
     delete state.assemblySelectedPart;
@@ -1463,6 +1499,8 @@
     delete state.summitVoiceStep;
     delete state.summitHintHeard;
     delete state.detentionResponse;
+    delete state.detentionVoiceStep;
+    delete state.detentionHintHeard;
     delete state.detentionStampFound;
     delete state.detentionStampSelected;
     delete state.assemblySelectedPart;
@@ -2544,6 +2582,33 @@
     renderHoliday();
   }
 
+  function detentionResponseVoices(reply) {
+    if (!reply) return null;
+    if (reply.choice === "stamp-selected") return detention.stampSelectedVoices;
+    if (reply.choice === "approved") return detention.rounds[2].approvedVoices;
+    return detention.rounds[reply.round]?.options.find(o=>o.id===reply.choice)?.voices || null;
+  }
+
+  function advanceDetentionVoice() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+        state.route !== "detention" || !Number.isInteger(state.detentionVoiceStep)) return;
+    const reply = state.detentionResponse;
+    const lines = detentionResponseVoices(reply);
+    if (!lines) return;
+    const end = lines.length;
+    const stage = rescueFramework.normalise(state.rescueProgress,"detention");
+    if (state.detentionVoiceStep < end-1) state.detentionVoiceStep++;
+    else if (state.detentionVoiceStep === end-1) {
+      state.detentionVoiceStep = !reply.correct &&
+        reply.choice !== "stamp-selected" && stage.hintVisible &&
+        !state.detentionHintHeard ? end : null;
+    } else if (state.detentionVoiceStep === end) {
+      state.detentionHintHeard = true;
+      state.detentionVoiceStep = null;
+    }
+    renderHoliday();
+  }
+
   function chooseDetention(which) {
     if (screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
         state.route !== "detention" || state.hubMatched !== true) return;
@@ -2556,6 +2621,8 @@
     if (!round || !Number.isInteger(which) || which < 0 || which >= round.options.length ||
         (roundIndex === 2 && state.detentionStampFound === true)) return;
     const choice = round.options[which];
+    stopHolidayVoice();
+    state.detentionVoiceStep = 0;
     if (roundIndex === 2 && choice.correct) {
       state.detentionStampFound = true;
       state.detentionStampSelected = false;
@@ -2575,7 +2642,10 @@
         state.detentionStampFound !== true) return;
     const progress = rescueFramework.normalise(state.rescueProgress, "detention");
     if (progress.miniGameStage !== 2 || progress.finished) return;
+    stopHolidayVoice();
     state.detentionStampSelected = true;
+    state.detentionResponse = {round:2,choice:"stamp-selected",correct:false};
+    state.detentionVoiceStep = 0;
     renderHoliday();
   }
 
@@ -2585,8 +2655,10 @@
         state.detentionStampFound !== true || state.detentionStampSelected !== true) return;
     const progress = rescueFramework.normalise(state.rescueProgress, "detention");
     if (progress.miniGameStage !== 2 || progress.finished) return;
+    stopHolidayVoice();
     state.rescueProgress = rescueFramework.completeStep(progress,"detention",2);
     state.detentionResponse = {round:2,choice:"approved",correct:true};
+    state.detentionVoiceStep = 0;
     renderHoliday();
   }
 
@@ -2598,6 +2670,8 @@
     if (!response || response.correct !== true ||
         response.round !== progress.miniGameStage - 1) return;
     delete state.detentionResponse;
+    delete state.detentionVoiceStep;
+    delete state.detentionHintHeard;
     delete state.detentionStampFound;
     delete state.detentionStampSelected;
     if (progress.finished) {
