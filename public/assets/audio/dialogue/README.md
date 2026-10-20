@@ -4,7 +4,7 @@ This folder is the exact upload destination for the project's ElevenLabs MP3
 voice clips. The static build automatically packages files whose names match
 the canonical dialogue script IDs.
 
-## Supported recordings — 215 approved dialogue/narration MP3s (including 45 Ending B actor recordings)
+## Supported recordings — 215 existing MP3s; 39 Ending C voice cues awaiting recording
 
 - Original office: `intro.exterior.mp3`, `office.001.mp3` to `office.054.mp3` (55).
 - Stephen's Great Wall, Forbidden City, Night Market and final phone line:
@@ -46,11 +46,14 @@ the canonical dialogue script IDs.
 
 - **Ending B official rescue:** 45 actor recordings for its six-line intro, three paperwork prompts, nine split response options, three hints, stamp selection/approval and 13 ending lines. See [grouped ElevenLabs script](../../../../docs/ENDING-B-VOICE-IMPORT.md). The separately recorded narrator closing line `detention.ending.014.mp3` is already present and must not be re-uploaded.
 
+- **Ending C spa and cardboard Stephen:** 39 new actor cues: seven arrival lines, fourteen closing character lines, nine wrong-piece responses, one correct-fit reaction, one no-selection instruction, and seven contextual hints. Existing narrator `reassemble.ending.015.mp3` is already present. The complete grouped script is [Ending C's ElevenLabs import guide](../../../../docs/ENDING-C-VOICE-IMPORT.md).
+
 ## Upload
 
-All 45 Ending B actor recordings have been uploaded and approved. They are now part of the
-215-file game audio set alongside the existing Ending B narrator. When preparing
-new voice batches, use a separate development branch and obtain owner approval before merging.
+All 45 Ending B recordings have been approved and merged. For Ending C,
+upload 39 new recordings to `agent/game-sp41h-ending-c-voices` at
+`public/assets/audio/dialogue/`; keep the branch in draft until the owner
+listens to its Cloudflare preview and approves the merge.
 
 1. Select the branch in GitHub; open `public/assets/audio/dialogue/`.
 2. Click **Add file → Upload files** and commit the exact MP3 filenames.

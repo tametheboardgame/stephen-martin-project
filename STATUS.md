@@ -1,5 +1,21 @@
 # Project status
 
+## GAME-SP4.1H-C1 — Ending C speech-bubble height regression (20 October 2026)
+
+- **Owner feedback:** Ending C sound is approved; after the six-piece assembly, the first final-scene speech bubble filled nearly the entire spa tableau, obscuring Stephen, David, Paul and the cardboard model.
+- **Root cause:** shared `.story-speech` styling removed the content panel's max-height while the legacy `.assembly-ending-content` retained `height:100%`. The result was a full-height cream panel, not the intended compact bottom subtitle.
+- **Fix:** Ending C-only CSS auto-sizes the speech panel, reinstates a 28% desktop / 32% tablet / 34% phone maximum, and leaves speaker badge, bottom anchors, actors, speech recordings, pause/Next and puzzle rules unchanged. Added a targeted non-regression test.
+- **Gate:** tests and a fresh Cloudflare branch preview, then owner visual acceptance before merging PR #73.
+
+
+## GAME-SP4.1H-C — Ending C comprehensive spoken dialogue (20 October 2026)
+
+- Main baseline `8b167be`: Ending A and B fully recorded and merged; all 215 original MP3s and the two opening song tracks unchanged.
+- Prepared 39 new Ending C actor MP3s: **David 10, Paul 22, Stephen 6, Cardboard Stephen 1**. Covers seven route-intro lines; nine spoken mismatch reactions across seven special/default cases; two basic fitting/selection replies; seven context-accurate Paul hints; and fourteen closing dialogue lines. The existing narrator `reassemble.ending.015.mp3` is unchanged.
+- Added stable IDs to approved dialogue; reuses the game's duration-owned MP3 player, pause/Next/mute/failed-file fallback and text timed clues, without touching approved artwork or puzzle correctness.
+- Published `docs/ENDING-C-VOICE-IMPORT.md` for owner recording and upload to `agent/game-sp41h-ending-c-voices`. Build manifest permits 254 total MP3s (215 existing + 39 new). Draft PR/owner playback gate before merging.
+
+
 ## GAME-SP4.1H-B — approved Ending B voices integrated with Summit approach (20 October 2026)
 
 - All **45** Ending B synthetic character recordings supplied and approved by the owner, plus the previously recorded Ending B narrator; 215/215 game dialogue MP3s in the combined package. Source and exact filenames: `docs/ENDING-B-VOICE-IMPORT.md`.

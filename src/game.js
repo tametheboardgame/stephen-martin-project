@@ -629,7 +629,7 @@
             text:rescueHub.hint[state.route].replace(/^Paul:\s*/, "")};
       }
     }
-    if (["cult","detention"].includes(state.route) &&
+    if (["cult","detention","reassemble"].includes(state.route) &&
         state.holidayPhase === "rescue-route-intro") {
       const line = rescueFramework.routes[state.route].intro[state.rescueProgress?.introStep];
       return line || null;
@@ -673,12 +673,23 @@
       }
       return {id:round.promptId,text:round.prompt.replace(/^OFFICIAL:\s*/, "")};
     }
+    if (state.route === "reassemble" && state.holidayPhase === "rescue-minigame") {
+      const queue = state.assemblyVoiceQueue;
+      const i = state.assemblyVoiceStep;
+      if (Array.isArray(queue) && Number.isInteger(i) && i < queue.length)
+        return queue[i];
+      if (state.assemblyHintPending) {
+        const hint = assembly.hintVoice(state.assemblySelectedPart);
+        if (hint.id === state.assemblyHintPending) return hint;
+      }
+      return null;
+    }
     if (state.route === "cult" && state.holidayPhase === "rescue-route-ending") {
       const p = rescueFramework.normalise(state.rescueProgress,"cult");
       return summit.ending[p.endingStep] || null; // End card remains silent.
     }
     // Ending B now has 13 actor MP3s and the existing narrator stinger;
-    // Ending C still has only its own final narrator line.
+    // Ending C now has character voices and its existing narrator.
     if (state.holidayPhase === "rescue-route-ending" &&
         (state.route === "detention" || state.route === "reassemble")) {
       const p = rescueFramework.normalise(state.rescueProgress,state.route);
@@ -910,7 +921,18 @@
         if (reply?.correct && reply.round === p.miniGameStage - 1)
           return {run:continueDetention,wait:VOICE_GAP_MS};
       }
-      return null; // All new answers, stamp and assembly pieces are manual.
+      if (state.route === "reassemble") {
+        const queue = state.assemblyVoiceQueue;
+        const i = state.assemblyVoiceStep;
+        if (Array.isArray(queue) && Number.isInteger(i) && i < queue.length)
+          return step(advanceAssemblyVoice,queue[i]?.text);
+        if (state.assemblyHintPending) {
+          const hint = assembly.hintVoice(state.assemblySelectedPart);
+          if (hint.id === state.assemblyHintPending)
+            return step(completeAssemblyHint,hint.text);
+        }
+      }
+      return null; // Puzzle choices and piece placements remain manual.
     }
     if (phase === "rescue-route-ending") {
       const p = rescueFramework.normalise(state.rescueProgress,state.route);
@@ -959,6 +981,10 @@
     delete state.detentionStampSelected;
     delete state.assemblySelectedPart;
     delete state.assemblyFeedback;
+    delete state.assemblyVoiceQueue;
+    delete state.assemblyVoiceStep;
+    delete state.assemblyHintPending;
+    delete state.assemblyHintsHeard;
     delete state.assemblyPowered;
     state.holidayPhase = "rescue-hotel";
   }
@@ -1505,6 +1531,10 @@
     delete state.detentionStampSelected;
     delete state.assemblySelectedPart;
     delete state.assemblyFeedback;
+    delete state.assemblyVoiceQueue;
+    delete state.assemblyVoiceStep;
+    delete state.assemblyHintPending;
+    delete state.assemblyHintsHeard;
     delete state.assemblyPowered;
   }
   // Keep each existing reply and choice ID. Promote the first spoken
@@ -2693,14 +2723,51 @@
     renderHoliday();
   }
 
+  function queueAssemblyVoices(lines) {
+    stopHolidayVoice();
+    state.assemblyVoiceQueue = Array.isArray(lines) ? lines : [];
+    state.assemblyVoiceStep = state.assemblyVoiceQueue.length ? 0 : null;
+    delete state.assemblyHintPending;
+  }
+  function armAssemblyHint(progress) {
+    if (!progress?.hintVisible) return;
+    const hint = assembly.hintVoice(state.assemblySelectedPart);
+    if (hint && !state.assemblyHintsHeard?.[hint.id])
+      state.assemblyHintPending = hint.id;
+  }
+
+  function advanceAssemblyVoice() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+        state.route !== "reassemble" || !Number.isInteger(state.assemblyVoiceStep)) return;
+    const lines = state.assemblyVoiceQueue || [];
+    if (state.assemblyVoiceStep < lines.length - 1) state.assemblyVoiceStep++;
+    else {
+      state.assemblyVoiceStep = null;
+      delete state.assemblyVoiceQueue;
+    }
+    renderHoliday();
+  }
+
+  function completeAssemblyHint() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+        state.route !== "reassemble" || !state.assemblyHintPending) return;
+    const hint = assembly.hintVoice(state.assemblySelectedPart);
+    if (hint.id !== state.assemblyHintPending) return;
+    state.assemblyHintsHeard = {...state.assemblyHintsHeard,[hint.id]:true};
+    delete state.assemblyHintPending;
+    renderHoliday();
+  }
+
   function selectAssemblyPiece(id) {
     if(screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
        state.route !== "reassemble" || state.hubMatched !== true) return;
     const progress = rescueFramework.normalise(state.rescueProgress,"reassemble");
     const item = [...assembly.parts,...assembly.decoys].find(part => part.id === id);
     if (!item || progress.finished || progress.placedParts.includes(id)) return;
+    queueAssemblyVoices([]);
     state.assemblySelectedPart = id;
     state.assemblyFeedback = item.label+" selected. Tap its matching silhouette slot.";
+    armAssemblyHint(progress);
     renderHoliday();
   }
 
@@ -2712,17 +2779,21 @@
     if(progress.finished || !assembly.parts.some(part=>part.id===slot) ||
        progress.placedParts.includes(slot)) return;
     if(!selected || ![...assembly.parts,...assembly.decoys].some(part=>part.id===selected)){
+      queueAssemblyVoices(assembly.noSelectionVoices);
       state.assemblyFeedback = "Paul: Select a cardboard piece from the tray first.";
+      armAssemblyHint(progress);
       renderHoliday();
       return;
     }
     const accepted = selected === slot;
+    queueAssemblyVoices(accepted ? assembly.fitVoices : assembly.reactionVoice(selected,slot));
     state.rescueProgress = rescueFramework.placePart(progress,"reassemble",selected,slot);
     state.assemblyFeedback = accepted
       ? "✓ "+assembly.parts.find(part=>part.id===selected).label
         +" snapped into the foam display. Paul: That actually fits."
       : assembly.reaction(selected,slot);
     if(accepted) delete state.assemblySelectedPart;
+    else armAssemblyHint(state.rescueProgress);
     renderHoliday();
   }
 
@@ -2732,6 +2803,10 @@
        state.assemblyPowered === true) return;
     const progress = rescueFramework.normalise(state.rescueProgress,"reassemble");
     if(!progress.finished || progress.placedParts.length !== rescueFramework.slots.length) return;
+    stopHolidayVoice();
+    delete state.assemblyVoiceQueue;
+    delete state.assemblyVoiceStep;
+    delete state.assemblyHintPending;
     state.assemblyPowered = true;
     state.rescueProgress = progress;
     state.rescueProgress.endingStep = 0;

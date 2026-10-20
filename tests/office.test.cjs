@@ -1810,7 +1810,9 @@ test("SP3.4 all three fully-earned finales autoplay their lines but stop at summ
         p.el("assemblyPiece"+i).click();
         p.el("assemblySlot"+i).click();
       }
-      assert.equal(p.timeouts.size,0,"POWER ON must never trigger automatically");
+      assert.equal(saved(p).assemblyPowered,undefined,"POWER ON must remain a manual choice");
+      if(p.timeouts.size) p.tick(); // Complete Paul\'s harmless spoken fit acknowledgement.
+      assert.equal(saved(p).assemblyPowered,undefined,"Voice completion cannot turn on cardboard Stephen");
       p.el("assemblyPowerButton").click();
       return p;
     },lines:story().SMP_REASSEMBLE.ending.length}
@@ -2719,7 +2721,7 @@ test("Back in England has ten unique whitelisted voice IDs and no spoken travel 
   assert.equal(new Set(ids).size,10);
   assert.ok(alarm.montage.every(card=>card.id.startsWith("rescue.travel.")));
   assert.ok(read("scripts/build.mjs").includes('alarmIds.forEach(id => permitted.add(id + ".mp3"))'));
-  assert.ok(read("scripts/build.mjs").includes('permitted.size !== 215'),"Original ten alarm IDs remain included in expanded voice whitelist");
+  assert.ok(read("scripts/build.mjs").includes('permitted.size !== 254'),"Original ten alarm IDs remain included in expanded voice whitelist");
   assert.ok(fs.existsSync(path.join(root,"docs/RESCUE-ALARM-VOICE-IMPORT.md")));
 });
 
@@ -2836,7 +2838,7 @@ test("Visitor Information 22 voice IDs match screenplay and automatic file white
   assert.ok(ids.every(id=>/^rescue\.hub\.[a-z0-9.]+$/.test(id)));
   assert.equal(h.correct[4].id,"rescue.hub.correct.005");
   assert.ok(read("scripts/build.mjs").includes("hubVoiceIds.forEach(id => permitted.add(id +"));
-  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 215"));
+  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 254"));
   assert.ok(fs.existsSync(path.join(root,"docs/VISITOR-INFORMATION-VOICE-IMPORT.md")));
 });
 
@@ -4565,7 +4567,7 @@ test("Summit audio has exactly 44 unique approved IDs with unchanged comic dialo
   assert.equal(summit.ending[13].speaker,"Narrator");
   assert.equal(summit.ending[13].id,"summit.ending.014");
   assert.ok(read("scripts/build.mjs").includes("summitIds.forEach(id => permitted.add"));
-  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 215"),"44 Summit voices plus 12 reserved narrator clips are whitelisted");
+  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 254"),"44 Summit voices plus 12 reserved narrator clips are whitelisted");
   assert.ok(fs.existsSync(path.join(root,"docs/SUMMIT-VOICE-IMPORT.md")));
 });
 
@@ -4692,11 +4694,11 @@ test("Narration audit finds exactly 14 remaining narrator IDs with distinct appr
   assert.equal(d.filter(line=>line.speaker==="Narrator").length,1);
   assert.equal(c.filter(line=>line.speaker==="Narrator").length,1);
   assert.ok(d.slice(0,-1).every((line,i)=>line.id === "detention.ending."+String(i+1).padStart(3,"0")),"Ending B now has all its actor voice IDs");
-  assert.ok(c.slice(0,-1).every(line=>!line.id));
+  assert.ok(c.slice(0,-1).every((line,i)=>line.id === "reassemble.ending."+String(i+1).padStart(3,"0")));
   const src=read("scripts/build.mjs");
   assert.ok(src.includes('closingNarrators.forEach(({id})=>permitted.add(id+".mp3"))'));
-  assert.ok(src.includes("permitted.size !== 215"));
-  assert.ok(src.includes('"/215 maximum (170 existing voices + 45 Ending B recordings)."'));
+  assert.ok(src.includes("permitted.size !== 254"));
+  assert.ok(src.includes('"/254 maximum (215 established voices + 39 Ending C recordings)."'));
   assert.ok(fs.existsSync(path.join(root,"docs/REMAINING-NARRATION-VOICE-IMPORT.md")));
 });
 
@@ -4965,7 +4967,7 @@ test("Ending B 45 canonical voice IDs preserve each original form response and a
   assert.equal(data.rounds[2].approvedVoices[0].text,"APPROVED: ALL OF YOU PLEASE LEAVE.");
   assert.equal(data.rounds[2].approvedResponse,"OFFICIAL: APPROVED: ALL OF YOU PLEASE LEAVE. The printer releases a celebratory shower of unwanted paper.");
   assert.ok(read("scripts/build.mjs").includes("detentionIds.forEach(id=>permitted.add(id+"));
-  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 215"));
+  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 254"));
   assert.ok(fs.existsSync(path.join(root,"docs/ENDING-B-VOICE-IMPORT.md")));
 });
 
@@ -5131,4 +5133,137 @@ test("GAME-SP4.1G3B Summit status reflects a rescue attempt, leaving B/C copy un
     assert.equal(q.el("routeIntroPhaseLabel").textContent,"Investigation complete · Rescue briefing");
     assert.match(q.el("routeIntroStatus").textContent,/^Rescue briefing · 1 of /);
   }
+});
+
+
+// GAME-SP4.1H-C: exact owner-approved spa line count and strict case mapping.
+test("Ending C has 39 independent actor clips with unchanged puzzle reaction text",()=>{
+  const route=story().SMP_RESCUE_FRAMEWORK.routes.reassemble;
+  const spa=story().SMP_REASSEMBLE;
+  const ids=[...Array.from(route.intro,line=>line.id),
+    ...Array.from(spa.ending.slice(0,-1),line=>line.id),
+    ...Object.values(spa.reactionVoices).flatMap(lines=>Array.from(lines,line=>line.id)),
+    ...Array.from(spa.fitVoices,line=>line.id),
+    ...Array.from(spa.noSelectionVoices,line=>line.id),
+    ...Object.values(spa.hintVoices).map(line=>line.id)];
+  assert.equal(route.intro.length,7);
+  assert.equal(spa.ending.length,15);
+  assert.equal(spa.ending.at(-1).id,"reassemble.ending.015");
+  assert.equal(ids.length,39);
+  assert.equal(new Set(ids).size,39);
+  assert.ok(ids.every(id=>/^reassemble\.[a-z0-9.-]+$/.test(id)));
+  for(const [part,slot] of [["wifi-heart","head"],["toaster","head"],["banana","torso"],
+    ["kidney-1","head"],["spleen","head"],["head","left-arm"],["right-arm","head"]]){
+    assert.equal(spa.reaction(part,slot),
+      Array.from(spa.reactionVoice(part,slot),line=>line.speaker+": "+line.text).join(" "));
+  }
+  assert.equal(spa.hintVoice("head").text,
+    "Match the Head shape to the standee. He faces us, so his left is on your right.");
+  assert.equal(spa.hintVoice("kidney-1").text,
+    "Try the six normal cardboard bits. Spare kidneys, Wi-Fi hearts and toasters are extras.");
+  assert.ok(read("scripts/build.mjs").includes("assemblyIds.forEach(id=>permitted.add(id+"));
+  assert.ok(read("scripts/build.mjs").includes("permitted.size !== 254"));
+  assert.ok(fs.existsSync(path.join(root,"docs/ENDING-C-VOICE-IMPORT.md")));
+});
+
+function voicedSpaIntro() {
+  const p=voicedHotel("reassemble");
+  for(let i=0;i<8;i++)p.el("hotelNextButton").click();
+  p.el("hotelReassembleButton").click();
+  for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+  return p;
+}
+function voicedSpaPuzzle() {
+  const p=voicedSpaIntro();
+  for(let i=0;i<8;i++)p.el("routeIntroNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  return p;
+}
+test("Spa approach speaks seven actors in order before entering unattempted puzzle",()=>{
+  const p=voicedSpaIntro();
+  assert.ok(p.voices.at(-1).src.endsWith("reassemble.intro.001.mp3"));
+  p.el("routeIntroNextButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("reassemble.intro.002.mp3"));
+  for(let i=1;i<=7;i++)p.el("routeIntroNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  assert.equal(saved(p).rescueProgress.miniGameStage,0);
+});
+
+
+test("Spa piece selection, wrong-piece reactions and hints use individual clip timings",async()=>{
+  const p=voicedSpaPuzzle();
+  p.el("assemblyPiece6").click(); // First kidney is a decoy.
+  p.el("assemblySlot0").click();
+  assert.ok(p.voices.at(-1).src.endsWith("reassemble.reaction.kidney.001.mp3"));
+  assert.equal(saved(p).rescueProgress.miniGameStage,0);
+  p.el("holidayNextButton").click();
+  p.el("assemblyPiece7").click(); // Second mistake unlocks Paul.
+  p.el("assemblySlot0").click();
+  assert.ok(p.voices.at(-1).src.endsWith("reassemble.reaction.kidney.001.mp3"));
+  p.el("holidayNextButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("reassemble.hint.general.001.mp3"));
+  p.el("holidayNextButton").click();
+  assert.equal(saved(p).assemblyHintsHeard["reassemble.hint.general.001"],true);
+  p.el("assemblyPiece0").click();
+  assert.ok(p.voices.at(-1).src.endsWith("reassemble.hint.head.001.mp3"));
+  p.el("holidayNextButton").click();
+  assert.equal(saved(p).assemblyHintsHeard["reassemble.hint.head.001"],true);
+  assert.equal(saved(p).rescueProgress.miniGameStage,0);
+});
+
+test("Spa voice follows the six manually fitted pieces and all fifteen ending lines",async()=>{
+  const p=voicedSpaPuzzle();
+  for(let i=0;i<6;i++){
+    p.el("assemblyPiece"+i).click();
+    p.el("assemblySlot"+i).click();
+    assert.ok(p.voices.at(-1).src.endsWith("reassemble.reaction.fit.001.mp3"));
+    assert.equal(saved(p).rescueProgress.miniGameStage,i+1);
+  }
+  assert.equal(saved(p).rescueProgress.finished,true);
+  p.el("assemblyPowerButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+  for(let i=1;i<=15;i++){
+    const filename="reassemble.ending."+String(i).padStart(3,"0")+".mp3";
+    assert.ok(p.voices.at(-1).src.endsWith(filename),filename);
+    p.el("assemblyEndingNextButton").click();
+  }
+  assert.match(p.el("assemblyEndingLine").textContent,/ENDING C/);
+});
+
+test("Spa reactions split David and Paul, cancel stale audio and keep puzzle manual",()=>{
+  const p=voicedSpaPuzzle();
+  p.el("assemblyPiece9").click(); // Wi-Fi heart decoy
+  p.el("assemblySlot0").click();
+  assert.ok(p.voices.at(-1).src.endsWith("reassemble.reaction.wifi-heart.001.mp3"));
+  p.el("holidayNextButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("reassemble.reaction.wifi-heart.002.mp3"));
+  const old=p.voices.at(-1);
+  p.el("assemblyPiece10").click(); // Toaster decoy cancels old clip
+  assert.equal(old.paused,true);
+  p.el("assemblySlot0").click();
+  assert.ok(p.voices.at(-1).src.endsWith("reassemble.reaction.toaster.001.mp3"));
+  assert.equal(saved(p).rescueProgress.miniGameStage,0);
+});
+
+
+test("GAME-SP4.1H-C1 spa final dialogue stays a short bottom bubble, not a full-height workshop card",()=>{
+  const styles=read("src/styles.css");
+  const scene=html.slice(html.indexOf('id="reassembleEndingScene"'),
+    html.indexOf('id="rescueEndingSummary"'));
+  assert.match(scene,/class="assembly-ending-content story-speech"/);
+  assert.match(scene,/id="assemblyEndingSpeaker"/);
+  assert.match(scene,/id="assemblyEndingLine"/);
+  assert.match(scene,/id="assemblyEndingProgress"/);
+  const shared=styles.indexOf("/* GAME-SP4.1D1: one opening-office-style named speech tab");
+  const fix=styles.indexOf("/* GAME-SP4.1H-C1 — Ending C dialogue must never inherit");
+  assert.ok(shared>=0 && fix>shared,"Compact Ending C override must come after shared speech styles");
+  const css=styles.slice(fix,styles.indexOf("/* GAME-SP4.1D2:",fix));
+  assert.match(css,/#holidayScreen #reassembleEndingScene \.assembly-ending-content\.story-speech \{\s*height:auto;\s*max-height:28% !important;\s*overflow:visible !important;/);
+  assert.match(css,/@media\(max-width:800px\) \{[\s\S]*?max-height:32% !important;/);
+  assert.match(css,/@media\(max-width:450px\) \{[\s\S]*?max-height:34% !important;/);
+  assert.doesNotMatch(css,/\.spa-ending-(david|stephen|paul|cardboard-stephen)|#summitEndingScene|#detentionEndingScene/,
+    "Keep approved cast and the other endings unchanged");
+  assert.match(styles,/#holidayScreen #reassembleEndingScene \.assembly-ending-content \{\s*position:absolute;z-index:5;left:3%;right:3%;bottom:8%/,
+    "The dialogue stays above the bottom status bar");
 });
