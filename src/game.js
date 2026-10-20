@@ -2793,6 +2793,7 @@
         +" snapped into the foam display. Paul: That actually fits."
       : assembly.reaction(selected,slot);
     if(accepted) delete state.assemblySelectedPart;
+    else armAssemblyHint(state.rescueProgress);
     renderHoliday();
   }
 
