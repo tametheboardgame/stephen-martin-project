@@ -1266,9 +1266,59 @@ test("SP3.1 approved Summit script, correct cards, preview assets and responsive
   assert.ok(html.indexOf('src="./src/summit-data.js"')<html.indexOf('src="./src/game.js"'));
   assert.ok(read("scripts/build.mjs").includes('"src/summit-data.js"'));
   assert.match(css,/\.summit-cards \{display:grid;grid-template-columns:repeat\(3/);
-  assert.match(css,/\.summit-card \{[\s\S]*?min-height:80px/);
+  assert.match(css,/\.summit-card \{[\s\S]*?min-height:166px/);
   assert.match(css,/@media \(max-width:800px\) \{[\s\S]*?\.summit-cards \{grid-template-columns:1fr/);
 });
+test("GAME-SP4.1G3C artwork well IDs follow the unchanged nine Summit answer choices",()=>{
+  const data=story().SMP_SUMMIT;
+  const expected=[
+    ["a1","a2","a3"],["b1","b2","b3"],["c1","c2","c3"]
+  ];
+  const ids=new Set();
+  for(let round=0;round<3;round++){
+    const options=data.rounds[round].options;
+    assert.equal(options.length,3);
+    for(let choice=0;choice<3;choice++){
+      assert.equal(options[choice].artSlot,expected[round][choice]);
+      ids.add(options[choice].artSlot);
+      assert.ok(options[choice].label.length>4);
+    }
+  }
+  assert.equal(ids.size,9,"Every image well is uniquely addressed even for two ticket IDs");
+  for(let i=0;i<3;i++){
+    assert.match(html,new RegExp('id="summitChoice'+i+'"[\\s\\S]*?id="summitChoiceArt'+i+'"[^>]*aria-hidden="true"[\\s\\S]*?id="summitChoiceLabel'+i+'"'));
+  }
+  assert.match(html,/Illustrated choices in preparation/,"Preview must not misrepresent the art as approved");
+  assert.match(css,/\\.summit-card-art \\{[\\s\\S]*?height:92px/);
+  assert.match(css,/@media \\(max-width:800px\\) \\{[\\s\\S]*?\\.summit-card \\{[\\s\\S]*?grid-template-columns:84px/);
+  assert.match(css,/@media \\(max-width:450px\\) \\{[\\s\\S]*?\\.summit-card \\{[\\s\\S]*?grid-template-columns:60px/);
+  assert.doesNotMatch(css,/summit-admissions-icons-atlas-v01\\.webp/,"Unapproved atlas must not ship");
+});
+
+test("GAME-SP4.1G3C all three rounds refresh pictured slots and accessible labels without changing answers",()=>{
+  const p=toSummitAdmissions();
+  const rounds=story().SMP_SUMMIT.rounds;
+  for(let round=0;round<3;round++){
+    for(let i=0;i<3;i++){
+      const option=rounds[round].options[i];
+      assert.equal(p.el("summitChoiceLabel"+i).textContent,option.label);
+      assert.equal(p.el("summitChoiceArt"+i).dataset.slot,option.artSlot);
+      assert.equal(p.el("summitChoiceArt"+i).textContent,option.artSlot.toUpperCase());
+      assert.equal(p.el("summitChoice"+i).dataset.correct,"false");
+    }
+    if(round===0){
+      p.el("homeButton").click();p.el("resumeButton").click();
+      assert.equal(p.el("summitChoiceLabel0").textContent,rounds[0].options[0].label,
+        "Save/Resume still redraws live labels");
+    }
+    const correct=rounds[round].options.findIndex(o=>o.correct);
+    p.el("summitChoice"+correct).click();
+    assert.equal(p.el("summitChoiceCards").hidden,true);
+    p.el("summitNextButton").click();
+  }
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+});
+
 test("SP3.1 wrong answers persist, Paul hints after 2, correct answers require acknowledgement",()=>{
   const p=toSummitAdmissions();
   p.el("summitChoice0").click();
