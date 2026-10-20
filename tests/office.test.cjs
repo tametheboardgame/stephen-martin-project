@@ -1295,6 +1295,29 @@ test("GAME-SP4.1G3C artwork well IDs follow the unchanged nine Summit answer cho
   assert.ok(!css.includes("summit-admissions-icons-atlas-v01.webp"),"Unapproved atlas must not ship");
 });
 
+test("GAME-SP4.1G3C short laptop screens keep puzzle heading below toolbar without default-scroll bloat",()=>{
+  const start=css.indexOf("/* GAME-SP4.1G3C laptop-height polish");
+  const end=css.indexOf("/* GAME-SP3.2 provisional fictional paperwork",start);
+  assert.ok(start>=0 && end>start,"Laptop-height responsive rule is present");
+  const rules=css.slice(start,end);
+  assert.ok(rules.includes("@media (min-width:801px) and (max-height:900px)"),
+    "Only short laptop/desktop screens get the compact card layout");
+  assert.ok(rules.includes(".rescue-route-intro-stage {\n    padding:94px 3% 68px;"),
+    "Leave clear space below the global top navigation");
+  assert.ok(rules.includes("#summitAdmissions h2 {\n    font-size:clamp(21px,2.1vw,29px)"),
+    "Shrink the question heading on smaller-height laptops");
+  assert.ok(rules.includes(".summit-card {\n    min-height:133px;"),
+    "Reclaim vertical room from provisional answer card images");
+  assert.ok(rules.includes(".summit-card-art {\n    height:69px;"),
+    "Match the compact art well to the card height");
+  assert.ok(rules.includes("@media (min-width:801px) and (max-height:680px)"),
+    "Extra-short landscape screens keep a second compact breakpoint");
+  assert.match(css,/#holidayScreen \.summit-admissions \{[\s\S]*?overflow-y:auto/,
+    "Long accessibility feedback and hints can still scroll when genuinely necessary");
+  assert.ok(css.includes("@media (max-width:800px) {\n  #holidayScreen .summit-cards"),
+    "Portrait tablet and phone continue to use the existing horizontal illustrated choices");
+});
+
 test("GAME-SP4.1G3C all three rounds refresh pictured slots and accessible labels without changing answers",()=>{
   const p=toSummitAdmissions();
   const rounds=story().SMP_SUMMIT.rounds;
