@@ -1,5 +1,15 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G3C Summit illustrated admissions tiles (20 October 2026)
+
+- **Approved baseline:** GAME-SP4.1G3A + G3B PR #71 merged at `b8501c09bfee03705d1a912fef71dbb1cf2750f7`, with final narrower-screen positioning approved by owner.
+- **G3C branch:** `agent/game-sp41g3c-summit-admissions-illustrated-choices`, draft PR pending CI and owner approval.
+- **Art inventory:** documented all nine canonical answer labels and IDs, three rounds, and proposed a **single 3×3 illustrated pictogram atlas** (`docs/story/GAME-SP4.1G3C-ADMISSIONS-ART-INVENTORY.md`). Each cell has a unique stable slot; two different “ticket” choices intentionally have distinct art.
+- **Playable first stage:** existing three answer buttons now provide an image well above the unaltered live label (horizontal icon/label on narrow screens), with numbered **ART PENDING** placeholders. No image has been generated, claimed approved, staged in Drive or added to published game assets.
+- **Regression coverage:** preserve original correct answer sequence, recorded lines, wrong-answer counts, Paul hints, Save/Resume, keyboard/touch buttons, and route states. Confirm desktop/tablet/phone cards without clipping or awkward nested scroll.
+- **Owner gate:** inspect layout preview and approve/revise the proposed nine-icon art inventory *before generating the actual illustration*. Then stage original via dedicated Drive folder, versioned provenance manifest and optimised WebP on the same draft branch; replace placeholder wells, test and re-preview before any merge.
+- **Next after G3C:** GAME-SP4.1G3D throne room attendants and cast perspective.
+
 ## CURRENT — GAME-SP4.1G3A + G3B Summit approach staging and wording (19 October 2026)
 
 - **Branch:** `agent/game-sp41g3a-g3b-summit-approach`, based on G1C-merged `main` commit `18491bc0097f43e8dddc7ddf2d380c1051afea37`. Draft PR and owner visual review required.
