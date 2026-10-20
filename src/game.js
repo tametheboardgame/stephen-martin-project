@@ -2736,6 +2736,18 @@
       state.assemblyHintPending = hint.id;
   }
 
+  function advanceAssemblyVoice() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
+        state.route !== "reassemble" || !Number.isInteger(state.assemblyVoiceStep)) return;
+    const lines = state.assemblyVoiceQueue || [];
+    if (state.assemblyVoiceStep < lines.length - 1) state.assemblyVoiceStep++;
+    else {
+      state.assemblyVoiceStep = null;
+      delete state.assemblyVoiceQueue;
+    }
+    renderHoliday();
+  }
+
   function selectAssemblyPiece(id) {
     if(screens.holiday.hidden || state.holidayPhase !== "rescue-minigame" ||
        state.route !== "reassemble" || state.hubMatched !== true) return;
