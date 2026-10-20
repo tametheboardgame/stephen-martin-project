@@ -2706,12 +2706,36 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen .summit-progress {font-size:14px;color:#bce9ff;font-weight:750;margin:6px 0;}
 #holidayScreen .summit-prompt {font-size:clamp(15px,1.5vw,20px);font-weight:850;margin:11px 0;color:#fff;}
 #holidayScreen .summit-clue {font-size:clamp(13px,1.2vw,16px);color:#fff2c2;margin:10px 0 15px;}
-#holidayScreen .summit-cards {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:12px;}
+/* GAME-SP4.1G3C: three equal illustration wells plus the original live labels.
+   Temporary A1–C3 placeholders are deliberate: artwork is owner-gated. */
+#holidayScreen .summit-cards {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:5px;}
 #holidayScreen .summit-card {
-  display:block;min-height:80px;width:100%;padding:14px 10px;
+  box-sizing:border-box;display:flex;flex-direction:column;align-items:stretch;
+  justify-content:center;gap:9px;min-height:166px;width:100%;padding:10px;
   background:#eaf4ff;color:#163a56;border:3px solid #91c4df;border-radius:11px;
   box-shadow:0 5px 0 rgba(0,0,0,.37);cursor:pointer;
   font-size:clamp(14px,1.3vw,18px);line-height:1.3;font-weight:850;
+}
+#holidayScreen .summit-card-art {
+  position:relative;box-sizing:border-box;display:grid;place-items:center;
+  height:92px;width:100%;overflow:hidden;border-radius:9px;
+  border:2px solid #c49a5b;
+  background:radial-gradient(circle at 50% 40%,#f3e6c3,#ddc79d 85%);
+  color:#6f5b3a;font-size:27px;letter-spacing:.13em;font-weight:900;
+}
+#holidayScreen .summit-card-art::before {
+  content:"";position:absolute;inset:6px;border:1px dashed rgba(93,75,46,.4);
+  border-radius:6px;pointer-events:none;
+}
+#holidayScreen .summit-card-art::after {
+  content:"ART PENDING";position:absolute;bottom:7px;left:0;right:0;
+  font-size:9px;letter-spacing:.08em;color:#725f43;pointer-events:none;
+}
+#holidayScreen .summit-card-label {
+  flex:1;display:grid;place-items:center;min-height:34px;text-wrap:balance;
+}
+#holidayScreen .summit-artwork-review-note {
+  margin:0 0 9px;font-size:11px;color:#e9d9b0;line-height:1.25;
 }
 #holidayScreen .summit-card:hover,#holidayScreen .summit-card:focus-visible {
   background:#fff1bf;border-color:#ffdb87;outline:3px solid #ffdb87;outline-offset:2px;
@@ -2734,11 +2758,26 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen .summit-ending-line {font-size:clamp(17px,2vw,26px);font-weight:800;line-height:1.4;color:#fff9e9;margin:13px 0 20px;}
 @media (max-width:800px) {
   #holidayScreen .summit-cards {grid-template-columns:1fr;gap:8px;}
-  #holidayScreen .summit-card {min-height:50px;padding:10px;}
+  #holidayScreen .summit-card {
+    display:grid;grid-template-columns:84px minmax(0,1fr);align-items:center;
+    gap:12px;min-height:82px;padding:7px 12px;text-align:left;
+  }
+  #holidayScreen .summit-card-art {height:64px;font-size:20px;}
+  #holidayScreen .summit-card-art::after {font-size:8px;bottom:4px;}
+  #holidayScreen .summit-card-label {display:block;min-height:0;text-wrap:wrap;}
   #holidayScreen .summit-admissions {padding:14px;}
   #holidayScreen #rescueMiniGameScene:has(#summitAdmissions:not([hidden])) .rescue-route-intro-stage,
   #holidayScreen .summit-ending-stage {padding:16px 3%;}
   #holidayScreen .summit-ending-content {padding:16px;}
+}
+@media (max-width:450px) {
+  #holidayScreen .summit-card {
+    grid-template-columns:60px minmax(0,1fr);
+    gap:9px;min-height:70px;padding:6px 9px;font-size:14px;
+  }
+  #holidayScreen .summit-card-art {height:55px;font-size:17px;}
+  #holidayScreen .summit-card-art::after {font-size:7px;}
+  #holidayScreen .summit-artwork-review-note {font-size:10px;}
 }
 
 /* GAME-SP3.2 provisional fictional paperwork setting, no final illustration. */
