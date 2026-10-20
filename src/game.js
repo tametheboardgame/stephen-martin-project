@@ -1913,9 +1913,18 @@
         // exterior stage; highlight whoever owns the current spoken line.
         $("rescueRouteIntro").dataset.speaker = duringDialogue && (route === "cult" || route === "detention" || route === "reassemble")
           ? line.speaker.toLowerCase() : "";
-        $("routeIntroStatus").textContent = duringDialogue
-          ? "Rescue briefing · " + (progress.introStep + 1) + " of " + config.intro.length
-          : "Briefing complete. " + config.gameTitle + " is the next stage.";
+        // Summit is an active rescue attempt, not a pre-mission briefing.
+        // Other routes retain their labels until their separately scoped reviews.
+        $("routeIntroPhaseLabel").textContent = route === "cult"
+          ? "Investigation complete · Summit approach"
+          : "Investigation complete · Rescue briefing";
+        $("routeIntroStatus").textContent = route === "cult"
+          ? (duringDialogue
+            ? "Rescue attempt · Summit entrance · " + (progress.introStep + 1) + " of " + config.intro.length
+            : "Approach complete · " + config.gameTitle + " next.")
+          : (duringDialogue
+            ? "Rescue briefing · " + (progress.introStep + 1) + " of " + config.intro.length
+            : "Briefing complete. " + config.gameTitle + " is the next stage.");
         $("routeIntroNextButton").textContent = duringDialogue
           ? "Next line →" : "Continue to " + config.gameTitle + " →";
       }
