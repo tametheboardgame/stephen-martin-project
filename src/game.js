@@ -2764,8 +2764,10 @@
     const progress = rescueFramework.normalise(state.rescueProgress,"reassemble");
     const item = [...assembly.parts,...assembly.decoys].find(part => part.id === id);
     if (!item || progress.finished || progress.placedParts.includes(id)) return;
+    queueAssemblyVoices([]);
     state.assemblySelectedPart = id;
     state.assemblyFeedback = item.label+" selected. Tap its matching silhouette slot.";
+    armAssemblyHint(progress);
     renderHoliday();
   }
 
@@ -2777,7 +2779,9 @@
     if(progress.finished || !assembly.parts.some(part=>part.id===slot) ||
        progress.placedParts.includes(slot)) return;
     if(!selected || ![...assembly.parts,...assembly.decoys].some(part=>part.id===selected)){
+      queueAssemblyVoices(assembly.noSelectionVoices);
       state.assemblyFeedback = "Paul: Select a cardboard piece from the tray first.";
+      armAssemblyHint(progress);
       renderHoliday();
       return;
     }
