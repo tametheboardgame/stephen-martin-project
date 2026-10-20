@@ -5105,3 +5105,4 @@ test("GAME-SP4.1G3B Summit status reflects a rescue attempt, leaving B/C copy un
     assert.match(q.el("routeIntroStatus").textContent,/^Rescue briefing · 1 of /);
   }
 });
+// GAME-SP4.1G3C final nine-image materialisation smoke proof.
