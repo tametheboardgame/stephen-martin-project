@@ -1321,7 +1321,7 @@ test("GAME-SP4.1G3C all nine staged approved WebP choices are built and packaged
     assert.equal(raw.subarray(12,16).toString("ascii"),"VP8X",asset+" has extended alpha header");
     assert.ok((raw[20] & 0x10)!==0,asset+" preserves transparency");
     const builder=read("scripts/build.mjs");
-    assert.ok(builder.includes('"summit-choice-" + slug + "-cutout-v01.webp"'),
+    assert.ok(builder.includes('"public/assets/generated/game/summit-choice-" + slug + "-cutout-v01.webp"'),
       "Cloudflare build must copy all nine approved icons");
     assert.ok(builder.includes('copyFile(path.join(root, relative), path.join(output, relative))'),
       "Build includes each generated WebP in published dist");
