@@ -5187,3 +5187,59 @@ test("Spa approach speaks seven actors in order before entering unattempted puzz
   assert.equal(saved(p).holidayPhase,"rescue-minigame");
   assert.equal(saved(p).rescueProgress.miniGameStage,0);
 });
+
+
+test("Spa piece selection, wrong-piece reactions and hints use individual clip timings",async()=>{
+  const p=voicedSpaPuzzle();
+  p.el("assemblyPiece6").click(); // First kidney is a decoy.
+  p.el("assemblySlot0").click();
+  assert.ok(p.voices.at(-1).src.endsWith("reassemble.reaction.kidney.001.mp3"));
+  assert.equal(saved(p).rescueProgress.miniGameStage,0);
+  p.el("holidayNextButton").click();
+  p.el("assemblyPiece7").click(); // Second mistake unlocks Paul.
+  p.el("assemblySlot0").click();
+  assert.ok(p.voices.at(-1).src.endsWith("reassemble.reaction.kidney.001.mp3"));
+  p.el("holidayNextButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("reassemble.hint.general.001.mp3"));
+  p.el("holidayNextButton").click();
+  assert.equal(saved(p).assemblyHintsHeard["reassemble.hint.general.001"],true);
+  p.el("assemblyPiece0").click();
+  assert.ok(p.voices.at(-1).src.endsWith("reassemble.hint.head.001.mp3"));
+  p.el("holidayNextButton").click();
+  assert.equal(saved(p).assemblyHintsHeard["reassemble.hint.head.001"],true);
+  assert.equal(saved(p).rescueProgress.miniGameStage,0);
+});
+
+test("Spa voice follows the six manually fitted pieces and all fifteen ending lines",async()=>{
+  const p=voicedSpaPuzzle();
+  for(let i=0;i<6;i++){
+    p.el("assemblyPiece"+i).click();
+    p.el("assemblySlot"+i).click();
+    assert.ok(p.voices.at(-1).src.endsWith("reassemble.reaction.fit.001.mp3"));
+    assert.equal(saved(p).rescueProgress.miniGameStage,i+1);
+  }
+  assert.equal(saved(p).rescueProgress.finished,true);
+  p.el("assemblyPowerButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+  for(let i=1;i<=15;i++){
+    const filename="reassemble.ending."+String(i).padStart(3,"0")+".mp3";
+    assert.ok(p.voices.at(-1).src.endsWith(filename),filename);
+    p.el("assemblyEndingNextButton").click();
+  }
+  assert.match(p.el("assemblyEndingLine").textContent,/ENDING C/);
+});
+
+test("Spa reactions split David and Paul, cancel stale audio and keep puzzle manual",()=>{
+  const p=voicedSpaPuzzle();
+  p.el("assemblyPiece9").click(); // Wi-Fi heart decoy
+  p.el("assemblySlot0").click();
+  assert.ok(p.voices.at(-1).src.endsWith("reassemble.reaction.wifi-heart.001.mp3"));
+  p.el("holidayNextButton").click();
+  assert.ok(p.voices.at(-1).src.endsWith("reassemble.reaction.wifi-heart.002.mp3"));
+  const old=p.voices.at(-1);
+  p.el("assemblyPiece10").click(); // Toaster decoy cancels old clip
+  assert.equal(old.paused,true);
+  p.el("assemblySlot0").click();
+  assert.ok(p.voices.at(-1).src.endsWith("reassemble.reaction.toaster.001.mp3"));
+  assert.equal(saved(p).rescueProgress.miniGameStage,0);
+});
