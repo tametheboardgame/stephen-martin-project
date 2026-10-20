@@ -501,7 +501,40 @@ if (detentionIntro.length !== 6 || detentionData.rounds.length !== 3 ||
   throw new Error("Ending B voice contract changed: expected 45 canonical actor beats.");
 }
 detentionIds.forEach(id=>permitted.add(id+".mp3"));
-if (permitted.size !== 215) throw new Error("Duplicate Ending B voice ID.");
+// Ending C: seven spa arrivals, fourteen actors in the ending, nine
+// conditional mismatch replies, one successful-fit reaction, one empty-tray
+// correction, and seven part-specific/general hints: 39 new recordings.
+const assemblyIntro = frameworkSandbox.window.SMP_RESCUE_FRAMEWORK.routes.reassemble.intro;
+const assemblyData = frameworkSandbox.window.SMP_REASSEMBLE;
+const assemblyIds = [
+  ...assemblyIntro.map(beat=>beat.id),
+  ...assemblyData.ending.slice(0,-1).map(beat=>beat.id),
+  ...Object.values(assemblyData.reactionVoices).flatMap(voices=>voices.map(beat=>beat.id)),
+  ...assemblyData.fitVoices.map(beat=>beat.id),
+  ...assemblyData.noSelectionVoices.map(beat=>beat.id),
+  ...Object.values(assemblyData.hintVoices).map(beat=>beat.id)
+];
+const reactionCases = [
+  ["wifi-heart","head"],["toaster","torso"],["banana","torso"],
+  ["kidney-1","torso"],["spleen","torso"],["head","left-arm"],
+  ["left-leg","torso"]
+];
+if (assemblyIntro.length !== 7 || assemblyData.ending.length !== 15 ||
+    assemblyData.ending.at(-1)?.id !== "reassemble.ending.015" ||
+    assemblyIntro.some((beat,i)=>beat.id !== "reassemble.intro."+String(i+1).padStart(3,"0")) ||
+    assemblyData.ending.slice(0,-1).some((beat,i)=>beat.id !== "reassemble.ending."+String(i+1).padStart(3,"0")) ||
+    Object.values(assemblyData.reactionVoices).reduce((n,lines)=>n+lines.length,0) !== 9 ||
+    reactionCases.some(([part,slot])=>
+      assemblyData.reaction(part,slot) !== assemblyData.reactionVoice(part,slot)
+        .map(beat=>beat.speaker+": "+beat.text).join(" ")) ||
+    Object.values(assemblyData.hintVoices).length !== 7 ||
+    assemblyData.fitVoices.length !== 1 ||
+    assemblyData.noSelectionVoices.length !== 1 ||
+    assemblyIds.length !== 39 || new Set(assemblyIds).size !== 39) {
+  throw new Error("Ending C recording script mismatch: expected 39 approved actor lines.");
+}
+assemblyIds.forEach(id=>permitted.add(id+".mp3"));
+if (permitted.size !== 254) throw new Error("Duplicate Ending C audio ID.");
 
 await mkdir(path.join(output, audioSource), { recursive: true });
 let voiceCount = 0;
@@ -519,7 +552,7 @@ for (const filename of await readdir(audioFolder)) {
   voiceCount++;
 }
 console.log("Approved dialogue MP3s packaged: " + voiceCount +
-  "/215 maximum (170 existing voices + 45 Ending B recordings).");
+  "/254 maximum (215 established voices + 39 Ending C recordings).");
 
 // Optional owner-supplied songs are uploaded directly to this exact folder
 // on the song PR branch. Builds work before upload; once present, the MP3s
