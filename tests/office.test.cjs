@@ -5404,8 +5404,11 @@ test("GAME-SP4.1G3B Summit status reflects a rescue attempt, leaving B/C copy un
     completeHotelIntro(q);
     q.el("hotel"+route[0].toUpperCase()+route.slice(1)+"Button").click();
     for(let i=0;i<6;i++)q.el("hotelFinishButton").click();
-    assert.equal(q.el("routeIntroPhaseLabel").textContent,"Investigation complete · Rescue briefing");
-    assert.match(q.el("routeIntroStatus").textContent,/^Rescue briefing · 1 of /);
+    assert.equal(q.el("routeIntroPhaseLabel").textContent,route==="detention"
+      ? "Investigation complete · Release office"
+      : "Investigation complete · Rescue briefing");
+    assert.match(q.el("routeIntroStatus").textContent,route==="detention"
+      ? /^Ceremonial release process · 1 of / : /^Rescue briefing · 1 of /);
   }
 });
 
@@ -5856,4 +5859,131 @@ test("GAME-SP4.1G4B production handoff reuses exactly the approved G1A and G1B a
   assert.equal((phone.match(new RegExp(shell.replace(/\./g,"\\."),"g"))||[]).length,1);
   assert.match(engine,/case "final-message":[\s\S]*?state\.finalStep === 2 \? transitionNarration\.backEngland/);
   assert.match(engine,/id:"transition\.england\.back\.001"/);
+});
+
+
+// GAME-SP4.1G4D–G4F: player-visible B corrections without touching the actors' voice IDs.
+test("G4D Ending B says release office and administrative approach, not rescue briefing",()=>{
+  const p=toHotelInvestigation("detention");
+  completeHotelIntro(p);
+  p.el("hotelDetentionButton").click();
+  for(let i=0;i<6;i++)p.el("hotelFinishButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+  const lines=story().SMP_RESCUE_FRAMEWORK.routes.detention.intro;
+  assert.equal(p.el("routeIntroPhaseLabel").textContent,"Investigation complete · Release office");
+  assert.equal(p.el("routeIntroStatus").textContent,
+    "Ceremonial release process · 1 of "+lines.length);
+  for(let i=0;i<lines.length;i++){
+    assert.equal(p.el("routeIntroLine").textContent,lines[i].text);
+    p.el("routeIntroNextButton").click();
+  }
+  assert.equal(p.el("routeIntroStatus").textContent,
+    "Administrative approach complete. "+story().SMP_RESCUE_FRAMEWORK.routes.detention.gameTitle+" is next.");
+  assert.doesNotMatch(p.el("routeIntroStatus").textContent,/briefing/i);
+  p.el("routeIntroNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  assert.equal(p.el("detentionPaperwork").dataset.permitApproved,"false");
+});
+
+test("G4E permit expands only after real approved stamp, survives resume and clears before Ending B",()=>{
+  const p=toDetentionPaperwork();
+  finishDetentionForms(p);
+  assert.equal(saved(p).rescueProgress.miniGameStage,2);
+  assert.equal(p.el("detentionApprovedPreview").hidden,true);
+  assert.equal(p.el("detentionPaperwork").dataset.permitApproved,"false");
+  p.el("detentionPermitButton").click();
+  assert.equal(p.el("detentionApprovedPreview").hidden,true,"Cannot fake approval");
+  p.el("detentionChoice2").click();
+  p.el("detentionStampButton").click();
+  p.el("detentionPermitButton").click();
+  assert.equal(saved(p).rescueProgress.finished,true);
+  assert.equal(p.el("detentionPaperwork").dataset.permitApproved,"true");
+  assert.equal(p.el("detentionApprovedPreview").hidden,false);
+  assert.equal(p.el("detentionApprovedPreview").focusCount,1,
+    "Keyboard focus moves to the approved permit proof");
+  assert.equal(p.el("detentionRoundTitle").textContent,"Ceremonial release approved");
+  assert.equal(p.el("detentionRoundProgress").textContent,"APPROVED · Review the full-size permit");
+  assert.equal(p.el("detentionNextButton").hidden,false);
+  assert.equal(p.el("detentionNextButton").textContent,"Continue to Stephen →");
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(p.el("detentionApprovedPreview").hidden,false);
+  assert.equal(p.el("detentionPaperwork").dataset.permitApproved,"true");
+  p.el("detentionNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+  assert.equal(p.el("detentionEndingScene").hidden,false);
+  assert.equal(p.el("rescueMiniGameScene").hidden,true,
+    "The entire paperwork stage is hidden once Ending B dialogue begins");
+  const ending=html.slice(html.indexOf('id="detentionEndingScene"'),html.indexOf('id="reassembleEndingScene"'));
+  assert.doesNotMatch(ending,/detention-ending-permit|ending-b-release-permit-canonical-portrait-proof-v01\.webp/,
+    "No redundant floating permit during the four-character dialogue");
+});
+
+test("G4E approved original permit is the readable proof without new/repainted art",()=>{
+  const htmlProof=html.slice(html.indexOf('id="detentionApprovedPreview"'),html.indexOf('id="detentionResponseCard"'));
+  assert.match(htmlProof,/role="region" aria-labelledby="detentionPermitProofTitle" tabindex="-1"/);
+  assert.match(htmlProof,/ending-b-release-permit-canonical-portrait-proof-v01\.webp/);
+  assert.match(htmlProof,/ending-b-approved-ink-impression-v01\.webp/);
+  assert.match(htmlProof,/detention-proof-caption/);
+  const rules=css.slice(css.lastIndexOf("/* GAME-SP4.1G4D–G4F:"));
+  assert.match(rules,/data-permit-approved="true"/);
+  assert.match(rules,/width:min\(100%,32vh,310px\);height:auto;aspect-ratio:2\/3/,
+    "Approved permit uses its actual 2:3 coordinate frame, without wide gutters");
+  assert.match(rules,/@media \(max-width:800px\)/);
+  assert.match(rules,/@media \(max-width:450px\)/);
+});
+
+test("G4F Ending B actors share one foot anchor and four columns on three screen sizes",()=>{
+  const ending=html.slice(html.indexOf('id="detentionEndingScene"'),html.indexOf('id="reassembleEndingScene"'));
+  for(const id of ["detentionEndingStephenActor","detentionEndingDavidActor",
+    "detentionEndingOfficialActor","detentionEndingPaulActor"]){
+    assert.ok(ending.includes('id="'+id+'"'),"Approved actor remains: "+id);
+  }
+  const rules=css.slice(css.lastIndexOf("/* GAME-SP4.1G4D–G4F:"));
+  assert.match(rules,/\.detention-ending-actor,[\s\S]*?\.detention-ending-official \{\s*position:absolute;bottom:25%;/);
+  assert.match(rules,/object-position:center bottom/);
+  assert.match(rules,/transform:translateX\(-50%\)/);
+  assert.match(rules,/@media \(max-width:800px\)[\s\S]*?bottom:33%;max-width:24%/);
+  assert.match(rules,/@media \(max-width:450px\)[\s\S]*?bottom:37%;max-width:25%/);
+  assert.ok(css.includes('data-speaker-focus][data-speaking="true"]'),
+    "Existing speaker glow remains intact");
+});
+
+
+test("G4E screenshot: red ink stays in the actual 2:3 permit approval box",()=>{
+ const s=css.slice(css.lastIndexOf("/* GAME-SP4.1G4D–G4F:"));
+ assert.match(s,/width:min\(100%,32vh,310px\);height:auto;aspect-ratio:2\/3/);
+ assert.doesNotMatch(s,/width:min\(100%,690px\)/);
+ assert.match(s,/\.detention-approved-preview-frame \.detention-ink-overlay \{\s*left:55%;top:64%;width:39%;height:21%/);
+ assert.match(s,/width:min\(100%,28vh,267px\);height:auto/);
+ assert.match(s,/width:min\(100%,26vh,215px\);height:auto/);
+ const htmlProof=html.slice(html.indexOf('id="detentionApprovedPreview"'),html.indexOf('id="detentionResponseCard"'));
+ assert.match(htmlProof,/ending-b-release-permit-canonical-portrait-proof-v01\.webp/);
+ assert.match(htmlProof,/ending-b-approved-ink-impression-v01\.webp/);
+});
+test("G4F screenshot: Stephen is lowered at all sizes without disturbing Dave Paul Official",()=>{
+ const s=css.slice(css.lastIndexOf("/* GAME-SP4.1G4D–G4F:"));
+ assert.match(s,/\.detention-ending-stephen \{\s*left:16%;height:52%;bottom:22%;z-index:2;/);
+ assert.match(s,/\.detention-ending-stephen \{left:15%;height:43%;bottom:30%;\}/);
+ assert.match(s,/\.detention-ending-stephen \{left:15%;height:33%;bottom:34%;\}/);
+ for(const a of ["left:35%;height:50%;z-index:2;","left:58%;height:54%;z-index:2;","left:77%;height:48%;z-index:2;"])
+  assert.ok(s.includes(a));
+ assert.match(s,/\.detention-ending-content\.story-speech \{\s*z-index:5/);
+});
+
+
+test("G4F owner spacing revision: Stephen and Paul move inward without shifting David or Official",()=>{
+  const rules=css.slice(css.lastIndexOf("/* GAME-SP4.1G4D–G4F:"));
+  const checks=[
+    ["desktop Stephen",/\.detention-ending-stephen \{\s*left:16%;height:52%;bottom:22%;z-index:2;/],
+    ["desktop Paul",/\.detention-ending-paul \{\s*left:77%;height:48%;z-index:2;/],
+    ["tablet Stephen",/\.detention-ending-stephen \{left:15%;height:43%;bottom:30%;\}/],
+    ["tablet Paul",/\.detention-ending-paul \{left:79%;height:39%;\}/],
+    ["mobile Stephen",/\.detention-ending-stephen \{left:15%;height:33%;bottom:34%;\}/],
+    ["mobile Paul",/\.detention-ending-paul \{left:80%;height:30%;\}/],
+    ["David unchanged",/\.detention-ending-david \{\s*left:35%;height:50%;z-index:2;/],
+    ["Official unchanged",/\.detention-ending-official \{\s*left:58%;height:54%;z-index:2;/]
+  ];
+  for (const [description,pattern] of checks) assert.match(rules,pattern,description);
+  assert.match(rules,/\.detention-ending-actor,[\s\S]*?object-position:center bottom/);
+  assert.match(rules,/\.detention-ending-content\.story-speech \{\s*z-index:5/);
 });

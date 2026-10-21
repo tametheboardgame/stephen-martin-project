@@ -3610,14 +3610,6 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen .detention-ending-stephen {left:9%;height:58%;}
 #holidayScreen .detention-ending-david {left:38%;height:58%;}
 #holidayScreen .detention-ending-paul {right:9%;height:55%;}
-#holidayScreen .detention-ending-permit {
-  position:absolute;z-index:2;top:2%;right:2%;height:36%;width:max-content;
-  max-width:23%;transform:rotate(5deg);filter:drop-shadow(2px 4px 3px #102030bb);
-}
-#holidayScreen .detention-ending-permit > img:first-child {height:100%;max-width:100%;object-fit:contain;}
-#holidayScreen .detention-ending-permit .detention-ending-ink {
-  position:absolute;left:56%;top:66%;width:42%;height:22%;object-fit:contain;transform:rotate(-4deg);
-}
 #holidayScreen .detention-ending-content {
   position:relative;z-index:4;align-self:end;margin:0 auto 3%;
   width:min(93%,1000px);height:auto;max-height:43%;
@@ -3641,7 +3633,6 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen .detention-ending-stephen {height:49%;left:3%;}
   #holidayScreen .detention-ending-david {height:47%;left:30%;}
   #holidayScreen .detention-ending-paul {height:43%;right:2%;}
-  #holidayScreen .detention-ending-permit {height:28%;top:2%;right:2%;}
   #holidayScreen .detention-ending-content {max-height:48%;width:99%;margin-bottom:2%;padding:8px;}
 }
 
@@ -5207,4 +5198,127 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen #rescueEndingSummary .wall-action-strip {gap:4px;}
   #holidayScreen #rescueEndingSummary .rescue-jump-label {font-size:10px;}
   #holidayScreen #rescueEndingSummary .rescue-jump-label select {max-width:145px;font-size:10px;}
+}
+
+
+/* GAME-SP4.1G4D–G4F: Ending B scene polish.
+ * After the legitimate final stamp, use the approved portrait permit and
+ * approved red impression in a legible, full-width proof stage. Never re-open
+ * the stamp puzzle or show a permit over the spoken arrival scene. */
+#holidayScreen #rescueMiniGameScene[data-route="detention"]
+  .detention-paperwork[data-permit-approved="true"] {
+  width:min(96%,920px);
+  padding:clamp(8px,1.6vh,15px) clamp(10px,1.6vw,18px);
+  gap:clamp(5px,.8vh,9px);
+}
+#holidayScreen .detention-paperwork[data-permit-approved="true"] .detention-form-columns {
+  display:block;
+}
+#holidayScreen .detention-paperwork[data-permit-approved="true"] .detention-reading-column {
+  display:none;
+}
+#holidayScreen .detention-paperwork[data-permit-approved="true"] .detention-answer-column {
+  align-items:center;
+  gap:clamp(5px,1vh,11px);
+}
+#holidayScreen .detention-paperwork[data-permit-approved="true"] .detention-approved-preview {
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:clamp(4px,.75vh,9px);width:100%;box-sizing:border-box;
+  padding:clamp(7px,1.2vh,12px);margin:0;
+  border:2px solid #b88b49;background:#f8eed5;
+}
+#holidayScreen .detention-paperwork[data-permit-approved="true"] .detention-approved-preview-frame {
+  display:block;position:relative;
+  /* Source permit: 1024x1536 (2:3). Position ink relative to the paper,
+     not the old 690px box containing wide transparent gutters. */
+  width:min(100%,32vh,310px);height:auto;aspect-ratio:2/3;
+  max-width:100%;margin:0 auto;
+}
+#holidayScreen .detention-paperwork[data-permit-approved="true"] .detention-approved-preview-frame > img:first-child {
+  display:block;width:100%;height:100%;object-fit:contain;
+}
+/* Owner review G4E: stamp printed in the portrait's approval rectangle. */
+#holidayScreen .detention-paperwork[data-permit-approved="true"]
+  .detention-approved-preview-frame .detention-ink-overlay {
+  left:55%;top:64%;width:39%;height:21%;
+  object-fit:contain;transform:rotate(-4deg);
+}
+#holidayScreen .detention-paperwork[data-permit-approved="true"] #detentionPermitProofTitle {
+  font-size:clamp(13px,1.55vw,20px);letter-spacing:.08em;color:#204b42;
+}
+#holidayScreen .detention-paperwork[data-permit-approved="true"] .detention-proof-caption {
+  color:#204b42;font-size:clamp(12px,1.13vw,15px);
+  line-height:1.25;text-align:center;font-weight:750;
+}
+#holidayScreen .detention-paperwork[data-permit-approved="true"] .detention-response-card {
+  width:100%;
+}
+#holidayScreen .detention-paperwork[data-permit-approved="true"] .story-puzzle-response {
+  width:100%;box-sizing:border-box;
+}
+#holidayScreen .detention-paperwork[data-permit-approved="true"] #detentionNextButton {
+  flex:0 0 auto;width:min(100%,360px);min-height:46px;
+}
+/* G4F: one common floor line and true four-column positioning for Ending B.
+ * Keep the previously approved alpha cutouts, independent speaker glow and
+ * live bottom dialogue. The earlier single-actor offsets are superseded. */
+#holidayScreen #detentionEndingScene .detention-ending-stage {
+  isolation:isolate;overflow:hidden;
+}
+#holidayScreen #detentionEndingScene .detention-ending-actor,
+#holidayScreen #detentionEndingScene .detention-ending-official {
+  position:absolute;bottom:25%;top:auto;right:auto;
+  width:auto;max-width:23%;object-fit:contain;object-position:center bottom;
+  transform:translateX(-50%);transform-origin:center bottom;
+  pointer-events:none;clip-path:none;
+}
+#holidayScreen #detentionEndingScene .detention-ending-stephen {
+  left:16%;height:52%;bottom:22%;z-index:2;
+}
+#holidayScreen #detentionEndingScene .detention-ending-david {
+  left:35%;height:50%;z-index:2;
+}
+#holidayScreen #detentionEndingScene .detention-ending-official {
+  left:58%;height:54%;z-index:2;
+}
+#holidayScreen #detentionEndingScene .detention-ending-paul {
+  left:77%;height:48%;z-index:2;
+}
+#holidayScreen #detentionEndingScene .detention-ending-content.story-speech {
+  z-index:5;left:3%;right:3%;width:94%;
+}
+/* The proof occupies its own stage, and speech can no longer be squeezed by
+ * a redundant high-right permit. On narrow viewports crop only blank space. */
+@media (max-width:800px) {
+  #holidayScreen .detention-paperwork[data-permit-approved="true"] .detention-approved-preview-frame {
+    width:min(100%,28vh,267px);height:auto;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-actor,
+  #holidayScreen #detentionEndingScene .detention-ending-official {
+    bottom:33%;max-width:24%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-stephen {left:15%;height:43%;bottom:30%;}
+  #holidayScreen #detentionEndingScene .detention-ending-david {left:35%;height:41%;}
+  #holidayScreen #detentionEndingScene .detention-ending-official {left:59%;height:44%;}
+  #holidayScreen #detentionEndingScene .detention-ending-paul {left:79%;height:39%;}
+}
+@media (max-width:450px) {
+  #holidayScreen #rescueMiniGameScene[data-route="detention"]
+    .detention-paperwork[data-permit-approved="true"] {
+    padding:8px;max-height:100%;
+  }
+  #holidayScreen .detention-paperwork[data-permit-approved="true"] .detention-approved-preview-frame {
+    width:min(100%,26vh,215px);height:auto;
+  }
+  #holidayScreen .detention-paperwork[data-permit-approved="true"] .detention-proof-caption {
+    font-size:12px;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-actor,
+  #holidayScreen #detentionEndingScene .detention-ending-official {
+    bottom:37%;max-width:25%;
+  }
+  #holidayScreen #detentionEndingScene .detention-ending-stephen {left:15%;height:33%;bottom:34%;}
+  #holidayScreen #detentionEndingScene .detention-ending-david {left:35%;height:31%;}
+  #holidayScreen #detentionEndingScene .detention-ending-official {left:59%;height:35%;}
+  #holidayScreen #detentionEndingScene .detention-ending-paul {left:80%;height:30%;}
 }
