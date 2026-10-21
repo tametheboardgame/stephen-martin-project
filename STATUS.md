@@ -1,5 +1,11 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G3G Full Ending Regression (21 October 2026)
+
+- Branch: `agent/game-sp41g3g-regression`; pending GitHub CI, Cloudflare preview and owner acceptance.
+- State regression covers completed Ending A/B/C, the five checkpoint jumps, save/resume, replay, album links and responsive CSS. Route/Hotel jumps now clear stale assembly power, permit/stamp and voice-response flags.
+- Browser layouts, audio listening, reduced-motion presentation and 15–25 minute pacing still require real manual playthrough; automated state checks are not visual/audio confirmation.
+
 ## CURRENT — GAME-SP4.1G3F universal ending menu and album covers (21 October 2026)
 
 - **Apple Music branding refinement:** replaced both generic note glyphs with Apple's approved coloured Apple Music icon from its published identity guidelines. Streaming destinations and the approved ending layout unchanged; awaiting owner review.
