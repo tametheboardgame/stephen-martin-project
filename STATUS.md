@@ -1,5 +1,14 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G3D Summit throne perspective refinement (21 October 2026)
+
+- **Baseline:** PR #72 G3C illustrated admissions merged as `1177b6f`, preserving Ending B/C voice work.
+- **Branch:** `agent/game-sp41g3d-throne-room-perspective`, draft PR and owner screenshot approval still required.
+- **Geometry audit:** four existing approved silent attendant sprites already correctly alternate standing/kneeling on left and right, mirroring only the right pair. Prior kneeling figures were less than half as high as the standing figures on narrower layouts, giving a miniature effect.
+- **Draft CSS adjustment:** enlarge and move the mirrored kneeling ewer/towel pair modestly forwards at desktop/tablet/phone sizes; keep them behind standing figures and protagonists using lower layer depth. Preserve Stephen, David, Paul, two standing attendants, original approved sprites and background, all 14 Ending A lines, speaker glow and game logic.
+- **Review gate:** compare throne scene on laptop, tablet and mobile, including the speaking bubbles and Skip to End. Full scope and position matrix: `docs/story/GAME-SP4.1G3D-THRONE-PERSPECTIVE-QA.md`. Do not merge until visual approval and CI.
+- **Next:** G3E bespoke illustrated Ending A conclusion.
+
 ## COMPLETED — GAME-SP4.1G3C Summit admissions illustrated choices (20 October 2026)
 
 - **Owner acceptance:** all nine illustrated choices and compact desktop/laptop/tablet/phone card layout approved; owner checked the corrected deployed preview and authorised PR #72 merge.
