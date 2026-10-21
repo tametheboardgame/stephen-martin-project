@@ -1,5 +1,13 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G4 revised priorities (owner decision, 21 October 2026)
+
+- **G4C deferred, optional and LAST**, with no new transition illustration generation or narrated scripts approved. Earlier G4C concept proposals are not locked or in progress.
+- **Next:** inspect and repair existing Ending B scene defects under G4D/G4E/G4F, then produce and approve its bespoke final image under G4G. Run focused B regression G4H.
+- **After B:** perform complete Ending C defect review and fix all material scene, dialogue, puzzle, audio and responsive issues (G5) before any optional transition work.
+- **Decision gate:** once B and C are polished, reassess whether three extra transition cards actually improve pace. Cancel G4C if unnecessary. No gameplay or asset changes in this planning update.
+- **Git:** G4B was merged as PR #80, merge commit `a462303cbb77593c057426de745ef14e44517f79`. This reorder is documentation-only on a separate planning PR, not yet merged.
+
 ## CURRENT — GAME-SP4.1G4B Dying Phone and England Handoff (21 October 2026)
 
 - Based on `main` after G4A merge `d945217`; branch `agent/game-sp41g4b-banquet-england-handoff` planned as a draft QA PR.
