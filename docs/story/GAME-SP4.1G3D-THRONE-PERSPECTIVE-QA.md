@@ -12,10 +12,10 @@ The **geometry issue** is that the kneeling left/right pair is far smaller than 
 
 | Layer | Desktop | Tablet ≤800px | Phone ≤450px |
 |---|---|---|---|
-| Left standing fan | left 9%, bottom 29%, height 27% | left 7%, bottom 31%, height 25% | left -1%, bottom 33%, height 20% |
-| Right standing tray | right 9%, bottom 29%, height 27% | right 7%, bottom 31%, height 25% | right -1%, bottom 33%, height 20% |
-| Left kneeling ewer, **new** | left 17%, bottom 31%, height 19% | left 15%, bottom 33%, height 17% | left 8%, bottom 35%, height 14% |
-| Right kneeling towel, **new** | right 17%, bottom 31%, height 19% | right 15%, bottom 33%, height 17% | right 8%, bottom 35%, height 14% |
+| Left standing fan | left 9%, bottom 29%, height 31% | left 7%, bottom 31%, height 29% | left -1%, bottom 33%, height 24% |
+| Right standing tray | right 9%, bottom 29%, height 31% | right 7%, bottom 31%, height 29% | right -1%, bottom 33%, height 24% |
+| Left kneeling ewer, **new** | left 17%, bottom 31%, height 22% | left 15%, bottom 33%, height 20% | left 8%, bottom 35%, height 17% |
+| Right kneeling towel, **new** | right 17%, bottom 31%, height 22% | right 15%, bottom 33%, height 20% | right 8%, bottom 35%, height 17% |
 | Stephen (unchanged) | centred, bottom 46%, height 17% | bottom 46%, height 16% | bottom 43%, height 14% |
 | David (unchanged) | left 30%, bottom 33%, height 28% | left 24%, bottom 33%, height 26% | left 12%, bottom 33%, height 22% |
 | Paul (unchanged) | right 29%, bottom 33%, height 27% | right 23%, bottom 33%, height 25% | right 12%, bottom 33%, height 22% |
@@ -25,6 +25,14 @@ The **geometry issue** is that the kneeling left/right pair is far smaller than 
 The kneeling pair remains at `z-index:1`, behind standing attendants (`z-index:2`) and David/Paul (`z-index:3`); the live dialogue (`z-index:5`) stays at the front. Right-hand attendants retain existing sprite-only mirroring. Original Stephen/David/Paul, standing pair and image artwork remain untouched.
 
 **Separate issue visible in the same screenshot:** The Ending A speech panel/progress was partially hidden by the footer on a short laptop display. A Summit-only CSS rule now lifts the panel slightly (13% desktop / 15% tablet / 18% phone) and caps its height, retaining scroll for long text. Ending B/C share no selectors with that local fix.
+
+## Third-pass proportional adjustment (21 October 2026)
+
+The owner approved the **floor grouping and placement** in the second G3D screenshot but found all four attendants slightly too small relative to David and Paul, even though the attendants stand or kneel closer to camera. The third CSS-only candidate scales the standing pair from 27→31% desktop, 25→29% tablet, 20→24% phone, and kneeling pair from 19→22%, 17→20%, 14→17%, respectively.
+
+**Exactly unchanged:** all standing/kneeling `left`, `right`, `bottom` positions, right-side sprite mirroring, rear z-index, approved character art and the game's live dialogue. Each actor's `max-width` allowance grows proportionately to avoid unintentionally capping the added height. David, Paul and Stephen keep their prior placements. The standing actors' desktop figure heights (31%) now exceed David (28%) and Paul (27%) as expected for their nearer depth plane.
+
+This is a preview for owner acceptance, not a final assertion of visual correctness.
 
 ## Visual review and acceptance
 
