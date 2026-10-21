@@ -1693,6 +1693,7 @@
     $("detentionEndingScene").hidden = !inDetentionEnding;
     $("reassembleEndingScene").hidden = !inAssemblyEnding;
     $("rescueEndingSummary").hidden = !inSummary;
+    $("rescueEndingSummary").dataset.route = inSummary && state.route === "cult" ? "cult" : "other";
     if (inWall) {
       const position = Number.isInteger(state.wallStep)
         ? Math.max(0, Math.min(state.wallStep, greatWall.lines.length)) : 0;
@@ -2143,6 +2144,9 @@
         const step = Math.min(progress.endingStep, summit.ending.length);
         state.rescueProgress.endingStep = step;
         const card = step === summit.ending.length;
+        // The approved G3E portrait appears only for the end card. Every
+        // earlier line retains the G3D throne room and speaking highlights.
+        $("summitEndingScene").dataset.finale = card ? "true" : "false";
         const line = summit.ending[Math.min(step, summit.ending.length - 1)];
         $("summitEndingSpeaker").textContent = card ? "ENDING A" : line.speaker.toUpperCase();
         // All three approved throne-room sprites stay in place; speaker focus
@@ -2210,8 +2214,10 @@
           : route === "detention"
             ? "A bear meme caused an administrative queue, not a kidnapping. The fictitious office has approved everybody's departure."
             : "Stephen was enjoying a massage. The lads bought a cardboard cut-out and spare parts, then congratulated themselves.";
-        $("rescueSummaryDisclaimer").textContent = "Ending "+(route === "cult" ? "A" : route === "detention" ? "B" : "C")
-          + " complete. New illustrations are deferred until the full functional game is approved.";
+        $("rescueSummaryDisclaimer").textContent = route === "cult"
+          ? "Ending A complete. Stephen is exactly where he wants to be."
+          : "Ending "+(route === "detention" ? "B" : "C")
+            + " complete. New illustrations are deferred until the full functional game is approved.";
       }
     }
     renderTransitionNarration();

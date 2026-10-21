@@ -3340,6 +3340,65 @@ body:has(#menuScreen:not([hidden])) main {
 }
 
 
+/* GAME-SP4.1G3E — owner-approved crowned/winking Stephen close-up.
+ * A final reveal ONLY after all 14 spoken Ending A lines. The G3D throne
+ * background and independently staged cast stay unchanged during dialogue.
+ * One approved opaque background, no baked-in lettering or route logic. */
+#holidayScreen #summitEndingScene[data-finale="true"] .summit-ending-stage {
+  background:linear-gradient(to top,rgba(4,17,35,.34),transparent 44%),
+    url("../public/assets/generated/locations/ending-a-finale-stephen-crowned-wink-v01.webp") 45% center/cover no-repeat;
+}
+#holidayScreen #summitEndingScene[data-finale="true"] .summit-throne-label,
+#holidayScreen #summitEndingScene[data-finale="true"] .summit-throne-attendant,
+#holidayScreen #summitEndingScene[data-finale="true"] .summit-throne-stephen,
+#holidayScreen #summitEndingScene[data-finale="true"] .summit-throne-actor {
+  display:none !important;
+}
+#holidayScreen #summitEndingScene[data-finale="true"] .summit-ending-content.story-speech {
+  bottom:13%;left:4%;right:4%;width:92%;max-height:25% !important;
+  background:rgba(255,249,236,.94) !important;
+}
+#holidayScreen #summitEndingScene[data-finale="true"] .summit-ending-line {
+  font-size:clamp(18px,2.25vw,30px);line-height:1.2;
+}
+#holidayScreen #rescueEndingSummary[data-route="cult"] .rescue-route-intro-stage {
+  display:block;padding:0;
+  background:linear-gradient(to top,rgba(4,17,35,.38),transparent 52%),
+    url("../public/assets/generated/locations/ending-a-finale-stephen-crowned-wink-v01.webp") 45% center/cover no-repeat;
+}
+#holidayScreen #rescueEndingSummary[data-route="cult"] .rescue-travel-panel {
+  position:absolute;z-index:3;left:5%;right:5%;bottom:15%;
+  width:90%;max-height:32%;box-sizing:border-box;overflow-y:auto;
+  padding:clamp(10px,1.4vw,19px);gap:5px;
+  background:rgba(5,24,45,.88);
+}
+#holidayScreen #rescueEndingSummary[data-route="cult"] .rescue-travel-panel h2 {
+  font-size:clamp(20px,2.6vw,34px);
+}
+#holidayScreen #rescueEndingSummary[data-route="cult"] .rescue-travel-panel p {
+  font-size:clamp(13px,1.25vw,18px);
+}
+@media(max-width:800px){
+  #holidayScreen #summitEndingScene[data-finale="true"] .summit-ending-content.story-speech {
+    bottom:15%;max-height:28% !important;
+  }
+  #holidayScreen #rescueEndingSummary[data-route="cult"] .rescue-travel-panel {
+    left:3%;right:3%;width:94%;bottom:18%;max-height:42%;
+    padding:10px 12px;
+  }
+}
+@media(max-width:450px){
+  #holidayScreen #summitEndingScene[data-finale="true"] .summit-ending-content.story-speech {
+    bottom:18%;max-height:32% !important;
+  }
+  #holidayScreen #rescueEndingSummary[data-route="cult"] .rescue-travel-panel {
+    bottom:20%;max-height:43%;gap:3px;padding:8px 10px;
+  }
+  #holidayScreen #rescueEndingSummary[data-route="cult"] .rescue-travel-panel h2 {
+    font-size:clamp(18px,5.5vw,26px);
+  }
+}
+
 /* GAME-SP4.0E — approved David risk-assessment cutaway at office.v02.
  * The art is the exact 1672 × 941 office stage ratio. Scope this override to
  * risk only so the printer, group chat and music retain their original layout. */

@@ -57,7 +57,8 @@ const officeImages = [
   "public/assets/generated/locations/china-night-market-background-v01.webp",
   "public/assets/generated/locations/china-visitor-information-lobby-background-v01.webp",
   "public/assets/generated/locations/summit-entrance-v01.webp",
-  "public/assets/generated/locations/summit-throne-room-v01.webp"
+  "public/assets/generated/locations/summit-throne-room-v01.webp",
+  "public/assets/generated/locations/ending-a-finale-stephen-crowned-wink-v01.webp"
 ];
 // GAME-SP4.1F: these four exact owner-approved, versioned backgrounds are
 // required in every playable build. Do not package the raw Drive PNGs.

@@ -893,8 +893,8 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 **G3E — “Heaven Was a Place on Earth” dedicated Ending A art**
 
-- Generate **one bespoke owner-approved ending illustration** showing Stephen happy at the Summit and David/Paul's entirely unnecessary intervention as the comic payoff. Use canonical cast likenesses and approved graphics style; avoid merely reusing the existing visitor-information background.
-- Show heading and summary as **live accessible text** on a restrained contrast panel wherever possible. Remove **“new illustrations deferred”** placeholder wording only when the final image actually ships.
+- **Approved final composition (21 October 2026):** a close-up of crowned Stephen winking and raising a golden goblet, with his canonical sandy hair, eyebrows and stubble, seated in the blue-and-gold Alpine throne. This intentionally replaces the earlier wide David/Paul ensemble concept; their failed rescue remains clear from the preceding 14 lines and the live summary. Approved 1672×941 PNG staged via Drive, single WebP and versioned manifest.
+- Use the close-up **only for the final Ending A title reveal** (after line 14) and the ensuing Ending A summary, leaving all earlier G3D throne dialogue/positions untouched. Heading, summary and replay choices stay live/accessibly labelled; remove “illustrations deferred” wording for Ending A only, retain B/C placeholders.
 - Stage source in Google Drive, versioned manifest, optimised WebP, responsive preview. Acceptance: deliberate Ending A final payoff, heading remains readable, no unnecessary full-frame darkness, ending mechanics unchanged.
 
 **G3F — Universal end menu, safe jumps and album covers (all endings)**
