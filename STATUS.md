@@ -5,7 +5,7 @@
 - **Baseline:** PR #72 G3C illustrated admissions merged as `1177b6f`, preserving Ending B/C voice work.
 - **Branch:** `agent/game-sp41g3d-throne-room-perspective`, draft PR and owner screenshot approval still required.
 - **Geometry audit:** four existing approved silent attendant sprites already correctly alternate standing/kneeling on left and right, mirroring only the right pair. Prior kneeling figures were less than half as high as the standing figures on narrower layouts, giving a miniature effect.
-- **Draft CSS adjustment:** enlarge and move the mirrored kneeling ewer/towel pair modestly forwards at desktop/tablet/phone sizes; keep them behind standing figures and protagonists using lower layer depth. Preserve Stephen, David, Paul, two standing attendants, original approved sprites and background, all 14 Ending A lines, speaker glow and game logic.
+- **Second visual correction (21 October):** owner screenshot showed the kneeling attendants' heads higher than standing heads, with feet 70–80px up-stage, despite the first enlargement. Adjust both kneelers **down** to within 1–2% of the standing figures' floor contact at each breakpoint, and move them a little outwards to form coherent side groups. Preserve the earlier appropriate sizes and rear stacking; no actor art replaced. Also lift/cap Ending A's caption (desktop/tablet/phone) so progress is not hidden behind the footer. See the updated G3D QA matrix.
 - **Review gate:** compare throne scene on laptop, tablet and mobile, including the speaking bubbles and Skip to End. Full scope and position matrix: `docs/story/GAME-SP4.1G3D-THRONE-PERSPECTIVE-QA.md`. Do not merge until visual approval and CI.
 - **Next:** G3E bespoke illustrated Ending A conclusion.
 
