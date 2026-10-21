@@ -3207,31 +3207,29 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen #summitEndingScene .summit-throne-label strong {
   font-size:clamp(15px,1.8vw,25px);letter-spacing:.05em;
 }
-/* GAME-SP4.1G3D perspective / contact-plane correction:
- * two matched pairs of attendants face Stephen, one standing + one kneeling
- * on each side. The prior kneeling heads were HIGHER than the standing heads
- * because they sat 9-11% of the stage higher despite being visibly smaller.
- * Keep their approved larger size, align their knee/foot contact with the
- * same foreground marble plane (bottom 1-2% above the standing figures),
- * and group them slightly outwards from David/Paul. Preserve rear z-index,
- * mirrored right-hand sprites, all character pixels and the centre throne. */
+/* GAME-SP4.1G3D: owner-approved side grouping and floor contact, 3rd-pass
+ * scale correction. All four attendants stand/kneel on the established marble
+ * plane 4% ahead of David/Paul. Their prior figures looked slightly too small
+ * for that depth: increase standing actors to 31/29/24% and kneeling to
+ * 22/20/17% at desktop/tablet/phone. DO NOT alter left/right/bottom anchors,
+ * sprite mirroring, depth, throne or dialogue/speaker layers. */
 #holidayScreen #summitEndingScene .summit-throne-attendant {
   display:block;position:absolute;z-index:2;pointer-events:none;
   width:auto;object-fit:contain;object-position:center bottom;
   filter:drop-shadow(2px 4px 3px rgba(3,20,35,.42));
 }
 #holidayScreen #summitEndingScene .summit-throne-attendant-fan {
-  left:9%;bottom:29%;height:27%;max-width:21%;
+  left:9%;bottom:29%;height:31%;max-width:24%;
 }
 #holidayScreen #summitEndingScene .summit-throne-attendant-tray {
-  left:auto;right:9%;bottom:29%;height:27%;max-width:21%;
+  left:auto;right:9%;bottom:29%;height:31%;max-width:24%;
   transform:scaleX(-1);transform-origin:center bottom;
 }
 #holidayScreen #summitEndingScene .summit-throne-attendant-ewer {
-  left:17%;right:auto;bottom:31%;height:19%;max-width:17%;z-index:1;
+  left:17%;right:auto;bottom:31%;height:22%;max-width:19%;z-index:1;
 }
 #holidayScreen #summitEndingScene .summit-throne-attendant-towel {
-  right:17%;bottom:31%;height:19%;max-width:17%;z-index:1;
+  right:17%;bottom:31%;height:22%;max-width:19%;z-index:1;
   transform:scaleX(-1);transform-origin:center bottom;
 }
 #holidayScreen #summitEndingScene .summit-throne-stephen {
@@ -3292,16 +3290,16 @@ body:has(#menuScreen:not([hidden])) main {
     height:16%;bottom:46%;max-width:20%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-fan {
-    left:7%;bottom:31%;height:25%;max-width:26%;
+    left:7%;bottom:31%;height:29%;max-width:28%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-tray {
-    right:7%;bottom:31%;height:25%;max-width:26%;
+    right:7%;bottom:31%;height:29%;max-width:28%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-ewer {
-    left:15%;bottom:33%;height:17%;max-width:20%;
+    left:15%;bottom:33%;height:20%;max-width:23%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-towel {
-    right:15%;bottom:33%;height:17%;max-width:20%;
+    right:15%;bottom:33%;height:20%;max-width:23%;
   }
   #holidayScreen #summitEndingScene .summit-throne-david {
     left:24%;bottom:33%;height:26%;max-width:29%;
@@ -3318,16 +3316,16 @@ body:has(#menuScreen:not([hidden])) main {
     height:14%;bottom:43%;max-width:28%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-fan {
-    left:-1%;bottom:33%;height:20%;max-width:33%;
+    left:-1%;bottom:33%;height:24%;max-width:37%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-tray {
-    right:-1%;bottom:33%;height:20%;max-width:33%;
+    right:-1%;bottom:33%;height:24%;max-width:37%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-ewer {
-    left:8%;bottom:35%;height:14%;max-width:24%;
+    left:8%;bottom:35%;height:17%;max-width:27%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-towel {
-    right:8%;bottom:35%;height:14%;max-width:24%;
+    right:8%;bottom:35%;height:17%;max-width:27%;
   }
   #holidayScreen #summitEndingScene .summit-throne-david {
     left:12%;bottom:33%;height:22%;max-width:35%;
