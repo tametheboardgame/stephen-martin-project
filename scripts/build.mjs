@@ -161,6 +161,21 @@ if (mutedBytes.length < 50000 || mutedBytes.length > 2 * 1024 * 1024 ||
 await mkdir(path.dirname(path.join(output, approvedMutedChatCutaway)), { recursive: true });
 await copyFile(mutedSource, path.join(output, approvedMutedChatCutaway));
 
+// GAME-SP4.1G3F: approved Berserk Llama Syndrome artwork is packaged from
+// Drive-generated WebPs. Buttons display images, never invented music URLs.
+for (const filename of ["bls-stephen-martin-songs-madness-cover-v01.webp","bls-stephen-martin-tracklist-art-v01.webp"]) {
+  const relative = "public/assets/generated/music/" + filename;
+  const bytes = await readFile(path.join(root,relative));
+  if (bytes.length < 25000 || bytes.length > 3 * 1024 * 1024 ||
+      bytes.toString("ascii",0,4) !== "RIFF" ||
+      bytes.toString("ascii",8,12) !== "WEBP") {
+    throw new Error("Missing/invalid approved Berserk Llama Syndrome artwork: " + filename);
+  }
+  await mkdir(path.dirname(path.join(output,relative)),{recursive:true});
+  await copyFile(path.join(root,relative),path.join(output,relative));
+}
+console.log("G3F album cover artwork packaged: 2/2.");
+
 // GAME-SP4.1G3C: the nine owner-approved admissions cutouts are materialised
 // from Drive and must be present in the published Cloudflare output. Tests
 // against repository sources alone do not catch a missing dist copy.

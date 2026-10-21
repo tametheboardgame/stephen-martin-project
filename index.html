@@ -643,15 +643,56 @@
         </div>
         <div id="rescueEndingSummary" class="rescue-route-intro" hidden>
           <div class="rescue-route-intro-stage">
-            <div class="rescue-travel-panel">
-              <span>THE WORLD'S WORST RESCUE · ENDING</span>
-              <h2 id="rescueSummaryHeading">ENDING</h2>
-              <p id="rescueSummaryMessage"></p>
-              <small id="rescueSummaryDisclaimer">Finale cutscenes are delivered with the matching route mini-game, not this framework.</small>
+            <div class="rescue-end-hub">
+              <div class="rescue-travel-panel rescue-end-summary">
+                <span>THE WORLD'S WORST RESCUE · ENDING</span>
+                <h2 id="rescueSummaryHeading">ENDING</h2>
+                <p id="rescueSummaryMessage"></p>
+                <small id="rescueSummaryDisclaimer"></small>
+              </div>
+              <section class="rescue-album-promo" aria-label="Berserk Llama Syndrome album artwork">
+                <h3>If you liked this, you might also enjoy Steve, Paul and Dave's albums</h3>
+                <div class="rescue-album-buttons">
+                  <button id="rescueAlbumFrontButton" class="rescue-album-button" type="button" aria-haspopup="dialog" aria-label="View Berserk Llama Syndrome Stephen Martin album cover">
+                    <img src="./public/assets/generated/music/bls-stephen-martin-songs-madness-cover-v01.webp" width="1024" height="1024" alt="Berserk Llama Syndrome, Stephen Martin: Songs of Madness and Obsession album cover" loading="lazy">
+                    <span>Album cover · Enlarge</span>
+                  </button>
+                  <button id="rescueAlbumTracklistButton" class="rescue-album-button" type="button" aria-haspopup="dialog" aria-label="View Berserk Llama Syndrome Stephen Martin tracklist artwork">
+                    <img src="./public/assets/generated/music/bls-stephen-martin-tracklist-art-v01.webp" width="1024" height="1024" alt="Berserk Llama Syndrome Stephen Martin album artwork showing the song list" loading="lazy">
+                    <span>Tracklist art · Enlarge</span>
+                  </button>
+                </div>
+                <p class="rescue-album-caption">Select a cover to see the artwork. Listening links can be added separately.</p>
+              </section>
+            </div>
+            <div id="rescueAlbumViewer" class="rescue-album-viewer" role="dialog" aria-modal="true" aria-labelledby="rescueAlbumViewerTitle" hidden>
+              <div class="rescue-album-viewer-card">
+                <div class="rescue-album-viewer-header">
+                  <h3 id="rescueAlbumViewerTitle">Album artwork</h3>
+                  <button id="rescueAlbumCloseButton" class="btn btn-secondary" type="button">Close ×</button>
+                </div>
+                <img id="rescueAlbumViewerImage" alt="" src="./public/assets/generated/music/bls-stephen-martin-songs-madness-cover-v01.webp">
+              </div>
             </div>
           </div>
           <div class="wall-action-strip">
             <div class="wall-story-progress">Rescue complete</div>
+            <div class="rescue-ending-jumps" role="group" aria-label="Jump to a safe story checkpoint">
+              <label for="rescueSummaryJumpSelect">Jump to scene</label>
+              <select id="rescueSummaryJumpSelect" aria-label="Choose a safe scene">
+                <option value="office" id="rescueJumpOffice">Chapter 1 · Office opening</option>
+                <option value="wall" id="rescueJumpWall" selected>Chapter 2 · Great Wall choice</option>
+                <option value="palace" id="rescueJumpPalace">Chapter 2 · Forbidden City</option>
+                <option value="market" id="rescueJumpMarket">Chapter 2 · Night Market</option>
+                <option value="england" id="rescueJumpEngland">Chapter 2 · Back in England</option>
+                <option value="alarm" id="rescueJumpAlarm">Chapter 3 · Rescue alarm</option>
+                <option value="hotel" id="rescueJumpHotel">Chapter 3 · Hotel investigation</option>
+                <option value="briefing" id="rescueJumpBriefing">Chapter 4 · Route briefing</option>
+                <option value="game" id="rescueJumpGame">Chapter 4 · Replay mini-game</option>
+                <option value="ending" id="rescueJumpEnding">Chapter 4 · Replay ending</option>
+              </select>
+              <button id="rescueSummaryJumpButton" class="btn btn-secondary" type="button">Jump ↗</button>
+            </div>
             <button id="rescueSummaryReplayButton" class="btn btn-primary" type="button">Play another ending ↺</button>
             <button id="rescueSummaryRestartButton" class="btn btn-secondary" type="button">Play from the start</button>
             <button id="rescueSummaryMenuButton" class="btn btn-secondary" type="button">Main menu</button>

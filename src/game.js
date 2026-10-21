@@ -1694,6 +1694,7 @@
     $("reassembleEndingScene").hidden = !inAssemblyEnding;
     $("rescueEndingSummary").hidden = !inSummary;
     $("rescueEndingSummary").dataset.route = inSummary && state.route === "cult" ? "cult" : "other";
+    if (!inSummary) $("rescueAlbumViewer").hidden = true;
     if (inWall) {
       const position = Number.isInteger(state.wallStep)
         ? Math.max(0, Math.min(state.wallStep, greatWall.lines.length)) : 0;
@@ -2208,6 +2209,7 @@
           state.holidayPhase = "rescue-minigame";
           return renderHoliday();
         }
+        updateEndHubJumps();
         $("rescueSummaryHeading").textContent = config.endingTitle;
         $("rescueSummaryMessage").textContent = route === "cult"
           ? "Stephen is perfectly happy at The Summit. David's operation has rescued absolutely nobody."
@@ -2838,6 +2840,128 @@
     renderHoliday();
   }
 
+  // G3F: end-menu jumps are only available after a genuinely completed
+  // ending. Never fabricate a puzzle result, choice or hotel deduction.
+  const endHubJumps = Object.freeze({
+    office:"rescueJumpOffice",wall:"rescueJumpWall",
+    palace:"rescueJumpPalace",market:"rescueJumpMarket",
+    england:"rescueJumpEngland",alarm:"rescueJumpAlarm",
+    hotel:"rescueJumpHotel",briefing:"rescueJumpBriefing",
+    game:"rescueJumpGame",ending:"rescueJumpEnding"
+  });
+  const albumArtwork = Object.freeze({
+    front:Object.freeze({name:"Stephen Martin: Songs of Madness & Obsession",file:"bls-stephen-martin-songs-madness-cover-v01.webp",alt:"Berserk Llama Syndrome Stephen Martin album cover, Songs of Madness and Obsession"}),
+    tracklist:Object.freeze({name:"Stephen Martin: tracklist artwork",file:"bls-stephen-martin-tracklist-art-v01.webp",alt:"Berserk Llama Syndrome Stephen Martin album tracklist illustration"})
+  });
+  let lastAlbumButton = null;
+
+  function closeAlbumArtwork() {
+    const viewer = $("rescueAlbumViewer");
+    const wasOpen = !viewer.hidden;
+    viewer.hidden = true;
+    if (wasOpen && lastAlbumButton && typeof lastAlbumButton.focus === "function")
+      lastAlbumButton.focus({preventScroll:true});
+    lastAlbumButton = null;
+  }
+
+  function openAlbumArtwork(key) {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-ending-summary" ||
+        !albumArtwork[key]) return;
+    const artwork = albumArtwork[key];
+    lastAlbumButton = $(key === "front" ? "rescueAlbumFrontButton" : "rescueAlbumTracklistButton");
+    $("rescueAlbumViewerTitle").textContent = artwork.name;
+    $("rescueAlbumViewerImage").src = "./public/assets/generated/music/" + artwork.file;
+    $("rescueAlbumViewerImage").alt = artwork.alt;
+    $("rescueAlbumViewer").hidden = false;
+    $("rescueAlbumCloseButton").focus?.({preventScroll:true});
+  }
+
+  function completedEndingInHub() {
+    if (screens.holiday.hidden || state.holidayPhase !== "rescue-ending-summary" ||
+        !rescueFramework.validRoute(state.route) || state.hubMatched !== true) return false;
+    const route = state.route;
+    const progress = rescueFramework.normalise(state.rescueProgress,route);
+    return progress.finished && progress.endingStep >=
+      (route === "cult" ? summit : route === "detention" ? detention : assembly).ending.length &&
+      (route !== "reassemble" || state.assemblyPowered === true);
+  }
+
+  function allowedEndHubJumps() {
+    const valid = completedEndingInHub();
+    const palace = valid && state.wallDecision === "decline";
+    const market = palace && state.palaceDecision === "decline";
+    const routeLocked = valid && (
+      state.route === "cult" && state.wallDecision === "accept" ||
+      state.route === "detention" && palace && state.palaceDecision === "accept" ||
+      state.route === "reassemble" && market && state.marketDecision === "accept");
+    return {
+      office:valid,wall:valid,palace,market,
+      england:routeLocked,alarm:routeLocked,hotel:routeLocked,
+      briefing:routeLocked && state.hubMatched === true,
+      game:routeLocked && state.hubMatched === true,
+      ending:routeLocked && state.hubMatched === true
+    };
+  }
+
+  function updateEndHubJumps() {
+    const allowed = allowedEndHubJumps();
+    for (const [key,id] of Object.entries(endHubJumps)) $(id).disabled = !allowed[key];
+    const selected = $("rescueSummaryJumpSelect");
+    if (!allowed[selected.value]) selected.value = "wall";
+    $("rescueSummaryJumpButton").disabled = !allowed[selected.value];
+  }
+
+  function jumpFromEndingHub() {
+    if (!completedEndingInHub()) return;
+    const key = $("rescueSummaryJumpSelect").value;
+    if (!allowedEndHubJumps()[key]) return;
+    const route = state.route;
+    clearHolidayAdvanceTimer();
+    stopHolidayVoice();
+    closeAlbumArtwork();
+    if (key === "office") { startOffice(); return; }
+    if (key === "wall") { chooseAnotherEnding(); return; }
+    if (key === "palace" || key === "market") {
+      // Both declined decisions were actually made in this completed run.
+      // Clear everything later before revisiting the selected branch.
+      clearDownstream();
+      state.wallDecision = "decline";
+      if (key === "market") {
+        state.palaceDecision = "decline";
+        state.palaceStep = palace.lines.length;
+      }
+      state.holidayPhase = key;
+    } else if (["england","alarm","hotel"].includes(key)) {
+      // A locked, previously chosen route is retained, but investigations
+      // and mini-games are reset to unresolved and unanswered.
+      skipToInvestigation(route);
+      if (key === "england") {
+        state.holidayPhase = "final-message";
+        state.finalStep = 0;
+      } else if (key === "alarm") {
+        state.holidayPhase = "rescue-alarm";
+        state.rescueAlarmStep = 0;
+      }
+    } else if (["briefing","game"].includes(key)) {
+      // A previously earned hubMatch allows returning to the already visited
+      // route, but its puzzle is fresh and MUST be solved again.
+      state.rescueProgress = rescueFramework.fresh(route);
+      for (const name of ["summitResponse","summitVoiceStep","summitHintHeard",
+        "detentionResponse","detentionVoiceStep","detentionHintHeard",
+        "detentionStampFound","detentionStampSelected","assemblySelectedPart",
+        "assemblyFeedback","assemblyVoiceQueue","assemblyVoiceStep",
+        "assemblyHintPending","assemblyHintsHeard","assemblyPowered"])
+        delete state[name];
+      state.holidayPhase = key === "briefing" ? "rescue-route-intro" : "rescue-minigame";
+    } else if (key === "ending") {
+      // The same ending was completed legitimately, so replay its real lines.
+      state.rescueProgress = rescueFramework.normalise(state.rescueProgress,route);
+      state.rescueProgress.endingStep = 0;
+      state.holidayPhase = "rescue-route-ending";
+    }
+    renderHoliday();
+  }
+
   function chooseAnotherEnding() {
     if (screens.holiday.hidden ||
         !(state.wallDecision === "accept" || state.wallDecision === "decline")) return;
@@ -2970,6 +3094,17 @@
   $("assemblyEndingNextButton").addEventListener("click",advanceAssemblyEnding);
   $("rescueMiniGameReplayButton").addEventListener("click", chooseAnotherEnding);
   $("rescueSummaryReplayButton").addEventListener("click", chooseAnotherEnding);
+  $("rescueSummaryJumpButton").addEventListener("click", jumpFromEndingHub);
+  $("rescueSummaryJumpSelect").addEventListener("change", updateEndHubJumps);
+  $("rescueAlbumFrontButton").addEventListener("click",()=>openAlbumArtwork("front"));
+  $("rescueAlbumTracklistButton").addEventListener("click",()=>openAlbumArtwork("tracklist"));
+  $("rescueAlbumCloseButton").addEventListener("click",closeAlbumArtwork);
+  document.addEventListener("keydown",event=>{
+    if (event.key === "Escape" && !$("rescueAlbumViewer").hidden) {
+      event.preventDefault();
+      closeAlbumArtwork();
+    }
+  });
   $("rescueSummaryRestartButton").addEventListener("click", startOffice);
   $("rescueSummaryMenuButton").addEventListener("click", showMenu);
   $("holidayPauseButton").addEventListener("click",()=>setHolidayAutoplay(!holidayAutoPlaying));
