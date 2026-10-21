@@ -5665,3 +5665,47 @@ test("G3G ending menu preserves six listening links, responsive layout and focus
   assert.match(layout,/@media\(max-width:450px\)/);
   assert.match(layout,/:focus-visible/);
 });
+
+
+test("GAME-SP4.1G4A Forbidden City uses the precise approved Chapter 1 bear print, never an emoji",()=>{
+  const canonical="./public/assets/generated/game/office-printer-bear-cutaway-v01.webp";
+  assert.ok(engine.includes('printer: \'<img class="cutaway-approved-art cutaway-approved-printer" src="'+canonical+'"'),
+    "Chapter 1 source is the original approved printer cutaway");
+  const scene=html.slice(html.indexOf('id="palacePhotoGag"'),html.indexOf('id="palaceGoMarketButton"'));
+  assert.ok(scene.includes('src="'+canonical+'"'),"Banquet reuses the very same WebP URL");
+  assert.ok(scene.includes('alt="The same printed photograph'));
+  assert.ok(scene.includes("FIRST PHOTO: UPLOADED"));
+  assert.doesNotMatch(scene,/🐻|data:image|bear-classification-v01|new-generated-bear/i);
+  const manifest=JSON.parse(read("generated-assets/manifests/game-sp40f-office-printer-bear-v01.json"));
+  assert.equal(manifest.destination,canonical.slice(2));
+  assert.equal(manifest.expectedSourceName,"office-printer-bear-cutaway-v01.png");
+  const built=read("scripts/build.mjs");
+  assert.ok(built.includes('const approvedPrinterCutaway = "'+canonical.slice(2)+'"'));
+  const style=css.slice(css.indexOf("/* G4A: crop the actual approved office printer cutaway"),
+    css.indexOf("#holidayScreen .palace-scene .wall-choices p"));
+  assert.match(style,/\.palace-photo-crop/);
+  assert.match(style,/overflow:hidden/);
+  assert.match(style,/img \{[\s\S]*?width:214%/);
+  assert.match(style,/left:-56%;top:-68%/);
+  assert.doesNotMatch(style,/#detentionEndingScene|#summitEndingScene|#reassembleEndingScene/);
+});
+
+test("GAME-SP4.1G4A identical printed photo is shown only after the full accepted banquet reply",()=>{
+  const p=toPalaceChoice();
+  assert.equal(p.el("palacePhotoGag").hidden,true);
+  p.el("palaceAcceptButton").click();
+  assert.equal(p.el("palacePhotoGag").hidden,true,"Five canonical replies must not be skipped");
+  for(let i=0;i<4;i++) {
+    p.el("palaceNextButton").click();
+    assert.equal(p.el("palacePhotoGag").hidden,true,"Photo is only revealed after complete reply");
+  }
+  p.el("palaceNextButton").click();
+  assert.equal(p.el("palacePhotoGag").hidden,false);
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(p.el("palacePhotoGag").hidden,false,"Accepted photo reveal survives saved-game resume");
+  p.el("palaceReplayButton").click();
+  assert.equal(p.el("palacePhotoGag").hidden,true,"Replay clears the previous accepted reveal");
+  const declined=toPalaceChoice();
+  declined.el("palaceDeclineButton").click();
+  assert.equal(declined.el("palacePhotoGag").hidden,true,"Declining the banquet never uploads the photo");
+});
