@@ -1,5 +1,13 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G4D–G4F Ending B polish, draft (21 October 2026)
+
+- Draft branch `agent/game-sp41g4d-f-ending-b-polish`, based on main `a118c20`. No generated art or voice replacement.
+- G4D: only Ending B labels changed to release office and ceremonial administrative process; recorded dialogue preserved.
+- G4E: after authentic stamp completion a larger approved permit proof is shown with explicit next action, persistent after Save/Resume; redundant floating top-right permit removed from dialogue scene.
+- G4F: initial four-sprite scale/foot-plane/layout adjustments at laptop, tablet and mobile; these remain a visual candidate pending owner feedback.
+- Next gate: GitHub smoke/Cloudflare preview and owner actual-layout test, especially Ending B arrivals. Do not merge until approval. G4G bespoke Ending B final image follows.
+
 ## CURRENT — GAME-SP4.1G4 revised priorities (owner decision, 21 October 2026)
 
 - **G4C deferred, optional and LAST**, with no new transition illustration generation or narrated scripts approved. Earlier G4C concept proposals are not locked or in progress.

@@ -1987,18 +1987,24 @@
         // exterior stage; highlight whoever owns the current spoken line.
         $("rescueRouteIntro").dataset.speaker = duringDialogue && (route === "cult" || route === "detention" || route === "reassemble")
           ? line.speaker.toLowerCase() : "";
-        // Summit is an active rescue attempt, not a pre-mission briefing.
-        // Other routes retain their labels until their separately scoped reviews.
+        // G4D: B is an administrative release process, not a rescue briefing.
+        // Keep existing Summit and spa status copy and all recorded dialogue.
         $("routeIntroPhaseLabel").textContent = route === "cult"
           ? "Investigation complete · Summit approach"
-          : "Investigation complete · Rescue briefing";
+          : route === "detention"
+            ? "Investigation complete · Release office"
+            : "Investigation complete · Rescue briefing";
         $("routeIntroStatus").textContent = route === "cult"
           ? (duringDialogue
             ? "Rescue attempt · Summit entrance · " + (progress.introStep + 1) + " of " + config.intro.length
             : "Approach complete · " + config.gameTitle + " next.")
-          : (duringDialogue
-            ? "Rescue briefing · " + (progress.introStep + 1) + " of " + config.intro.length
-            : "Briefing complete. " + config.gameTitle + " is the next stage.");
+          : route === "detention"
+            ? (duringDialogue
+              ? "Ceremonial release process · " + (progress.introStep + 1) + " of " + config.intro.length
+              : "Administrative approach complete. " + config.gameTitle + " is next.")
+            : (duringDialogue
+              ? "Rescue briefing · " + (progress.introStep + 1) + " of " + config.intro.length
+              : "Briefing complete. " + config.gameTitle + " is the next stage.");
         $("routeIntroNextButton").textContent = duringDialogue
           ? "Next line →" : "Continue to " + config.gameTitle + " →";
       }
@@ -2065,9 +2071,12 @@
           const round = detention.rounds[roundIndex];
           const option = reply && reply.round === roundIndex
             ? round.options.find(value => value.id === reply.choice) : null;
-          $("detentionRoundTitle").textContent = round.title;
-          $("detentionRoundProgress").textContent = "Form stage " + (roundIndex + 1)
-            + " of " + detention.rounds.length;
+          $("detentionRoundTitle").textContent =
+            acknowledging && roundIndex === 2 && progress.finished ? "Ceremonial release approved" : round.title;
+          $("detentionRoundProgress").textContent =
+            acknowledging && roundIndex === 2 && progress.finished
+              ? "APPROVED · Review the full-size permit"
+              : "Form stage " + (roundIndex + 1) + " of " + detention.rounds.length;
           $("detentionRoundPrompt").textContent = round.prompt;
           $("detentionRoundClue").textContent = round.clue;
           // Art direction only: the three approved source compositions do not
@@ -2075,8 +2084,10 @@
           $("detentionBearArtLink").hidden = roundIndex !== 1;
           $("detentionCupPreview").hidden = roundIndex !== 2 ||
             state.detentionStampFound === true || Boolean(acknowledging);
-          $("detentionApprovedPreview").hidden = !(acknowledging && roundIndex === 2);
-          $("detentionInkOnPermit").hidden = !(acknowledging && roundIndex === 2);
+          const permitApproved = Boolean(acknowledging && roundIndex === 2 && progress.finished);
+          $("detentionPaperwork").dataset.permitApproved = permitApproved ? "true" : "false";
+          $("detentionApprovedPreview").hidden = !permitApproved;
+          $("detentionInkOnPermit").hidden = !permitApproved;
           $("detentionChoiceCards").hidden = acknowledging ||
             (roundIndex === 2 && state.detentionStampFound === true);
           for (let i = 0; i < round.options.length; i++) {
@@ -2104,7 +2115,7 @@
           $("detentionHint").textContent = progress.hintVisible ? round.hint : "";
           $("detentionNextButton").hidden = !acknowledging;
           $("detentionNextButton").textContent = progress.finished
-            ? "Collect Stephen →" : "Continue to form stage " + (roundIndex + 2) + " →";
+            ? "Continue to Stephen →" : "Continue to form stage " + (roundIndex + 2) + " →";
         }
         if (playableAssembly) {
           const placed = progress.placedParts;
