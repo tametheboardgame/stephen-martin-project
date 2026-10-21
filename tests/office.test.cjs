@@ -5541,3 +5541,127 @@ test("GAME-SP4.1H-C1 spa final dialogue stays a short bottom bubble, not a full-
   assert.match(styles,/#holidayScreen #reassembleEndingScene \.assembly-ending-content \{\s*position:absolute;z-index:5;left:3%;right:3%;bottom:8%/,
     "The dialogue stays above the bottom status bar");
 });
+
+
+/* G3G regression: reach endings by completing their real puzzles, then test all hub jumps. */
+function g3gComplete(route){
+  const p=route==="cult"?toSummitAdmissions():route==="detention"?toDetentionPaperwork():toAssemblyWorkshop();
+  if(route==="cult"){
+    p.el("summitChoice0").click(); // wrong answer cannot progress
+    assert.equal(saved(p).rescueProgress.miniGameStage,0);
+    for(const correct of [2,1,2]){p.el("summitChoice"+correct).click();p.el("summitNextButton").click();}
+  }else if(route==="detention"){
+    finishDetentionForms(p);
+    p.el("detentionChoice2").click();p.el("detentionStampButton").click();
+    p.el("detentionPermitButton").click();p.el("detentionNextButton").click();
+  }else{
+    p.el("assemblyPiece6").click();p.el("assemblySlot0").click();
+    assert.equal(saved(p).rescueProgress.miniGameStage,0);
+    for(let i=0;i<6;i++){p.el("assemblyPiece"+i).click();p.el("assemblySlot"+i).click();}
+    p.el("assemblyPowerButton").click();
+  }
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+  const data=route==="cult"?story().SMP_SUMMIT:route==="detention"?story().SMP_DETENTION:story().SMP_REASSEMBLE;
+  const next=route==="cult"?"summitEndingNextButton":route==="detention"?"detentionEndingNextButton":"assemblyEndingNextButton";
+  for(let i=0;i<=data.ending.length;i++)p.el(next).click();
+  assert.equal(saved(p).holidayPhase,"rescue-ending-summary");
+  assert.equal(p.el("rescueEndingSummary").hidden,false);
+  assert.equal(p.el("rescueSummaryJumpButton").disabled,true);
+  assert.equal(saved(p).rescueProgress.finished,true);
+  return p;
+}
+function g3gSelect(p,value){
+  p.el("rescueSummaryJumpSelect").value=value;
+  p.el("rescueSummaryJumpSelect").events.change();
+  assert.equal(p.el("rescueSummaryJumpButton").disabled,false);
+  p.el("rescueSummaryJumpButton").click();
+}
+for(const route of ["cult","detention","reassemble"]){
+  test("G3G "+route+" ending hub survives save/resume and replay",()=>{
+    const p=g3gComplete(route),title=p.el("rescueSummaryHeading").textContent;
+    assert.ok(title.length>10);
+    p.el("homeButton").click();p.el("resumeButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-ending-summary");
+    assert.equal(p.el("rescueSummaryHeading").textContent,title);
+    assert.equal(p.el("rescueSummaryJumpButton").disabled,true);
+    p.el("rescueSummaryReplayButton").click();
+    assert.equal(saved(p).holidayPhase,"wall");
+    assert.equal(saved(p).wallDecision,null);
+    assert.equal(saved(p).wallStep,story().SMP_CHINA_WALL.lines.length);
+    assert.equal(Object.hasOwn(saved(p),"route"),false);
+    assert.equal(Object.hasOwn(saved(p),"rescueProgress"),false);
+  });
+  for(const dest of ["office","china","wall","hotel","route"]){
+    test("G3G "+route+" completed ending jumps safely to "+dest,()=>{
+      const p=g3gComplete(route);
+      g3gSelect(p,dest);
+      const s=saved(p);
+      assert.equal(s.version,3);
+      if(dest==="office"){
+        assert.equal(s.scene,"office");assert.equal(s.beatId,"intro.exterior");
+        assert.equal(Object.hasOwn(s,"rescueProgress"),false);
+      }else if(dest==="china"){
+        assert.equal(s.holidayPhase,"transition");assert.equal(s.wallStep,0);
+        assert.equal(s.wallDecision,null);assert.equal(Object.hasOwn(s,"route"),false);
+      }else if(dest==="wall"){
+        assert.equal(s.holidayPhase,"wall");assert.equal(s.wallDecision,null);
+        assert.equal(Object.hasOwn(s,"route"),false);
+        assert.equal(Object.hasOwn(s,"rescueProgress"),false);
+      }else if(dest==="hotel"){
+        assert.equal(s.holidayPhase,"rescue-hub-arrival");
+        assert.equal(s.route,route);assert.equal(s.hubIntroStep,0);
+        assert.equal(s.hubMatched,false);assert.equal(s.hubViewed.length,0);
+        assert.equal(Object.hasOwn(s,"rescueProgress"),false);
+      }else{
+        assert.equal(s.holidayPhase,"rescue-route-intro");
+        assert.equal(s.route,route);assert.equal(s.hubMatched,true);
+        assert.equal(s.rescueProgress.miniGameStage,0);
+        assert.equal(s.rescueProgress.finished,false);
+        assert.equal(s.rescueProgress.endingStep,0);
+        for(const name of ["summitResponse","detentionResponse","detentionStampFound",
+          "detentionStampSelected","assemblyPowered","assemblySelectedPart","assemblyHintsHeard"])
+          assert.equal(Object.hasOwn(s,name),false,"stale replay state "+name);
+        const intro=story().SMP_RESCUE_FRAMEWORK.routes[route].intro;
+        for(let i=0;i<=intro.length;i++)p.el("routeIntroNextButton").click();
+        assert.equal(saved(p).holidayPhase,"rescue-minigame");
+        assert.equal(saved(p).rescueProgress.finished,false);
+        assert.equal(saved(p).rescueProgress.miniGameStage,0);
+        assert.equal(p.el("holidaySkipButton").hidden,true);
+        if(route==="reassemble"){
+          for(let i=0;i<6;i++){p.el("assemblyPiece"+i).click();p.el("assemblySlot"+i).click();}
+          assert.equal(saved(p).rescueProgress.finished,true);
+          p.el("assemblyPowerButton").click();
+          assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+        }else if(route==="detention"){
+          finishDetentionForms(p);
+          p.el("detentionChoice2").click();p.el("detentionStampButton").click();
+          p.el("detentionPermitButton").click();
+          assert.equal(saved(p).rescueProgress.finished,true);
+        }else{
+          p.el("summitChoice2").click();
+          assert.equal(saved(p).rescueProgress.miniGameStage,1);
+        }
+      }
+      p.el("homeButton").click();p.el("resumeButton").click();
+      assert.notEqual(saved(p).holidayPhase,"rescue-ending-summary");
+    });
+  }
+}
+test("G3G ending menu preserves six listening links, responsive layout and focus",()=>{
+  const fragment=html.slice(html.indexOf('id="rescueEndingSummary"'),
+    html.indexOf("<!-- Off-stage transition narration:"));
+  assert.ok(fragment.indexOf('data-album="martiin"')<fragment.indexOf('data-album="martin"'));
+  assert.equal((fragment.match(/class="bls-platform-link /g)||[]).length,6);
+  assert.equal((fragment.match(/target="_blank" rel="noopener noreferrer"/g)||[]).length,8);
+  for(const platform of ["spotify","apple","youtube"])
+    assert.equal((fragment.match(new RegExp("bls-platform-"+platform,"g"))||[]).length,2);
+  for(const id of ["rescueSummaryJumpSelect","rescueSummaryJumpButton",
+    "rescueSummaryReplayButton","rescueSummaryRestartButton","rescueSummaryMenuButton"])
+    assert.ok(fragment.includes('id="'+id+'"'));
+  const layout=css.slice(css.indexOf("/* GAME-SP4.1G3F: restored wide lower caption"));
+  assert.match(layout,/top:auto;left:5%;right:5%;bottom:15%/);
+  assert.match(layout,/top:12%;right:3%;bottom:auto/);
+  assert.match(layout,/@media\(max-width:800px\)/);
+  assert.match(layout,/@media\(max-width:450px\)/);
+  assert.match(layout,/:focus-visible/);
+});

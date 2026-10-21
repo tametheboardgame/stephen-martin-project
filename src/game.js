@@ -1499,6 +1499,24 @@
       description: "Stephen has found a ninety-per-cent discount on a complete body-renewal package. An excellent bargain, apparently."
     }
   };
+  // G3G: previous completed puzzles must not contaminate a chapter replay.
+  function clearRouteTransientState() {
+    delete state.summitResponse;
+    delete state.summitVoiceStep;
+    delete state.summitHintHeard;
+    delete state.detentionResponse;
+    delete state.detentionVoiceStep;
+    delete state.detentionHintHeard;
+    delete state.detentionStampFound;
+    delete state.detentionStampSelected;
+    delete state.assemblySelectedPart;
+    delete state.assemblyFeedback;
+    delete state.assemblyVoiceQueue;
+    delete state.assemblyVoiceStep;
+    delete state.assemblyHintPending;
+    delete state.assemblyHintsHeard;
+    delete state.assemblyPowered;
+  }
   function clearDownstream() {
     state.palaceStep = 0;
     state.palaceReplyStep = 0;
@@ -1521,21 +1539,7 @@
     state.hubVoiceFeedbackStep = null;
     state.hubVoiceHintHeard = false;
     delete state.rescueProgress;
-    delete state.summitResponse;
-    delete state.summitVoiceStep;
-    delete state.summitHintHeard;
-    delete state.detentionResponse;
-    delete state.detentionVoiceStep;
-    delete state.detentionHintHeard;
-    delete state.detentionStampFound;
-    delete state.detentionStampSelected;
-    delete state.assemblySelectedPart;
-    delete state.assemblyFeedback;
-    delete state.assemblyVoiceQueue;
-    delete state.assemblyVoiceStep;
-    delete state.assemblyHintPending;
-    delete state.assemblyHintsHeard;
-    delete state.assemblyPowered;
+    clearRouteTransientState();
   }
   // Keep each existing reply and choice ID. Promote the first spoken
   // character prefix into the named card; later character cues stay inline.
@@ -2861,12 +2865,15 @@
     if (choice === "china") { showHoliday(); return; }
     if (choice === "wall") { chooseAnotherEnding(); return; }
     if (!rescueFramework.validRoute(state.route) || state.hubMatched !== true) return;
+    clearRouteTransientState();
     if (choice === "hotel") {
       state.hubIntroStep = 0;
       state.hubMatched = false;
       state.hubActiveClue = null;
       state.hubViewed = [];
       state.hubWrongGuesses = 0;
+      state.hubLastWrongRoute = null;
+      state.hubVoiceHintHeard = false;
       state.hubCorrectStep = 0;
       state.hubVoiceFeedbackStep = null;
       delete state.rescueProgress;

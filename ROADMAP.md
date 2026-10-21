@@ -910,6 +910,9 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 **G3G — Ending A and all-ending hub regression**
 
+- **In progress (21 October 2026):** automate three completed endings × five checkpoint jumps, saves and replay, preserve six album links and responsive rules. Clear transient puzzle state on route/hotel replay. Require green CI, Cloudflare preview and owner visual/audio approval before merge.
+
+
 - Full Ending A from Summit exterior → admissions (all right/wrong answers) → throne → Ending A art → hub; separately confirm **Ending B and C** also reach and use the shared hub without skipped challenges.
 - Test change route, fresh and resumed saves, Next/Play/Pause/Sound, Skip to Game/End, return to opening, chapter jumps, album covers with/without URLs, mobile, tablet, laptop, reduced motion and accessibility. Verify no loss of voice or artwork state and 15–25-minute first-playthrough pacing.
 - Owner reviews separate staging, labels, pictographic art, throne staging, end illustration and end-hub PRs; each requires green CI and real Cloudflare preview before merge.
