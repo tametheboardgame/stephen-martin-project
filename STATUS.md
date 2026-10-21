@@ -1,5 +1,13 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G3F Universal ending hub and album art (21 October 2026)
+
+- **Baseline:** G3E crowned Steve Ending A finale merged as `61e425f`; preserving all 254 dialogue recordings and existing A/B/C routes.
+- **Approved image sources:** attached Berserk Llama Syndrome Stephen Martin artwork, front album cover and tracklist illustration, staged separately in Drive and materialised by the existing OIDC pipeline to two optimised WebPs in `public/assets/generated/music/`.
+- **UI:** post-ending shared card with live route-specific summary, both album artwork buttons, accessible enlargements with close controls and three existing restart/replay/menu actions.
+- **Safe jumps:** available after a legitimately completed ending; chapter 1 opening resets progress, Great Wall opens unanswered choice, Palace/Market require historical declines, England/alarm/hotel start with real route but reset deduction and game, route briefing/mini-game start with a fresh unsolved puzzle only on previously earned hotel match, replay ending only when genuinely completed.
+- **No fabricated audio/purchase links**, no simulated game success, and no overwritten choice history. Full smoke, production packaging check, Cloudflare exact-head preview and user approval required before merging.
+
 ## CURRENT — GAME-SP4.1G3E Ending A close-up finale integration (21 October 2026)
 
 - **Approved artwork:** final crowned-and-winking Stephen close-up, canonical likeness based on owner's office reference. Master PNG `ending-a-finale-stephen-crowned-wink-v01.png` stored in dedicated Drive staging; optimised WebP and manifest are on `agent/g3e-finale`.

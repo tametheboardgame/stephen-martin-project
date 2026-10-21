@@ -5093,3 +5093,126 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen .china-final-phone,
   #holidayScreen .china-final-phone-screen {transition:none !important;}
 }
+
+
+/* GAME-SP4.1G3F: universal post-ending hub. Endings A/B/C preserve their
+ * own background and summary; cover buttons are previews, not invented links. */
+#holidayScreen #rescueEndingSummary .rescue-end-hub {
+  position:absolute;z-index:4;left:3%;right:3%;bottom:15%;
+  max-height:43%;display:grid;
+  grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);
+  gap:12px;align-items:stretch;box-sizing:border-box;
+}
+#holidayScreen #rescueEndingSummary .rescue-end-hub .rescue-travel-panel,
+#holidayScreen #rescueEndingSummary[data-route="cult"] .rescue-end-hub .rescue-travel-panel {
+  position:relative;left:auto;right:auto;bottom:auto;
+  width:100%;height:auto;max-height:none;margin:0;box-sizing:border-box;
+  align-content:center;gap:6px;overflow:visible;
+  padding:clamp(10px,1.5vw,20px);
+  background:rgba(5,25,46,.90);
+}
+#holidayScreen #rescueEndingSummary .rescue-end-hub .rescue-travel-panel h2 {
+  font-size:clamp(20px,2.35vw,32px);line-height:1.1;
+}
+#holidayScreen #rescueEndingSummary .rescue-end-hub .rescue-travel-panel p {
+  font-size:clamp(12px,1.25vw,18px);line-height:1.3;
+}
+#holidayScreen #rescueEndingSummary .rescue-end-hub .rescue-travel-panel small {
+  font-size:clamp(10px,1vw,13px);line-height:1.3;
+}
+#holidayScreen #rescueEndingSummary .rescue-album-promo {
+  min-width:0;min-height:0;display:grid;align-content:center;gap:7px;
+  padding:10px 12px;border:2px solid #e4b56f;border-radius:13px;
+  background:rgba(6,29,48,.94);color:#fff3d5;text-align:center;
+  box-sizing:border-box;
+}
+#holidayScreen #rescueEndingSummary .rescue-album-promo h3 {
+  color:#ffdd8d;font-size:clamp(13px,1.2vw,17px);line-height:1.2;margin:0;
+}
+#holidayScreen #rescueEndingSummary .rescue-album-buttons {
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;
+  justify-items:stretch;align-items:start;
+}
+#holidayScreen #rescueEndingSummary .rescue-album-button {
+  background:#f1e9d8;color:#092842;border:2px solid #e3b46b;border-radius:8px;
+  cursor:pointer;padding:5px;display:grid;justify-items:center;gap:5px;
+  min-width:0;font-weight:850;font-size:clamp(10px,.96vw,13px);line-height:1.2;
+}
+#holidayScreen #rescueEndingSummary .rescue-album-button img {
+  display:block;aspect-ratio:1;width:min(100%,145px);height:auto;
+  object-fit:contain;border-radius:4px;
+}
+#holidayScreen #rescueEndingSummary .rescue-album-button:hover,
+#holidayScreen #rescueEndingSummary .rescue-album-button:focus-visible {
+  outline:3px solid #fff4a2;outline-offset:1px;transform:translateY(-1px);
+}
+#holidayScreen #rescueEndingSummary .rescue-album-caption {
+  margin:0;color:#bfdae2;font-size:11px;line-height:1.2;
+}
+#holidayScreen #rescueEndingSummary .rescue-ending-jumps {
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+}
+#holidayScreen #rescueEndingSummary .rescue-ending-jumps label {
+  color:#ffe0a0;font-size:12px;font-weight:850;
+}
+#holidayScreen #rescueEndingSummary .rescue-ending-jumps select {
+  min-height:43px;max-width:min(33vw,300px);border:2px solid #84c0dc;
+  border-radius:7px;padding:7px 9px;color:#092945;background:#fff5df;
+  font:800 13px/1.2 inherit;
+}
+#holidayScreen #rescueEndingSummary .rescue-ending-jumps select:focus-visible {
+  outline:3px solid #ffdb8d;outline-offset:2px;
+}
+#holidayScreen #rescueEndingSummary .rescue-album-viewer[hidden] {display:none!important;}
+#holidayScreen #rescueEndingSummary .rescue-album-viewer {
+  position:absolute;inset:0;z-index:30;display:grid;place-items:center;
+  background:rgba(2,11,22,.88);padding:clamp(12px,2vw,26px);
+  box-sizing:border-box;
+}
+#holidayScreen #rescueEndingSummary .rescue-album-viewer-card {
+  background:#0b2941;color:#ffedbf;border:2px solid #eec782;
+  border-radius:12px;padding:12px;max-width:100%;max-height:100%;
+  display:grid;gap:8px;justify-items:center;box-sizing:border-box;
+}
+#holidayScreen #rescueEndingSummary .rescue-album-viewer-header {
+  display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;
+}
+#holidayScreen #rescueEndingSummary .rescue-album-viewer-header h3 {
+  margin:0;font-size:clamp(14px,1.4vw,19px);line-height:1.15;
+}
+#holidayScreen #rescueEndingSummary .rescue-album-viewer-card img {
+  display:block;max-height:min(66vh,560px);max-width:min(82vw,560px);
+  width:auto;height:auto;object-fit:contain;
+}
+@media(max-width:800px){
+  #holidayScreen #rescueEndingSummary .rescue-end-hub {
+    left:2%;right:2%;bottom:17%;max-height:48%;gap:8px;
+  }
+  #holidayScreen #rescueEndingSummary .rescue-album-promo {padding:8px;gap:5px;}
+  #holidayScreen #rescueEndingSummary .rescue-album-button img {width:min(100%,115px);}
+  #holidayScreen #rescueEndingSummary .rescue-ending-jumps select {max-width:235px;}
+}
+@media(max-width:450px){
+  #holidayScreen #rescueEndingSummary .rescue-end-hub {
+    left:2%;right:2%;bottom:8%;top:23%;max-height:none;
+    display:flex;flex-direction:column;gap:6px;
+  }
+  #holidayScreen #rescueEndingSummary .rescue-end-hub .rescue-travel-panel,
+  #holidayScreen #rescueEndingSummary[data-route="cult"] .rescue-end-hub .rescue-travel-panel {
+    flex:0 0 auto;padding:7px 9px;gap:3px;max-height:43%;
+    overflow:visible;
+  }
+  #holidayScreen #rescueEndingSummary .rescue-end-hub .rescue-travel-panel > span {font-size:10px;}
+  #holidayScreen #rescueEndingSummary .rescue-end-hub .rescue-travel-panel h2 {font-size:clamp(17px,5vw,22px);}
+  #holidayScreen #rescueEndingSummary .rescue-end-hub .rescue-travel-panel p {font-size:12px;}
+  #holidayScreen #rescueEndingSummary .rescue-end-hub .rescue-travel-panel small {font-size:10px;}
+  #holidayScreen #rescueEndingSummary .rescue-album-promo {flex:1 1 auto;padding:6px;gap:4px;}
+  #holidayScreen #rescueEndingSummary .rescue-album-promo h3 {font-size:12px;}
+  #holidayScreen #rescueEndingSummary .rescue-album-buttons {gap:9px;}
+  #holidayScreen #rescueEndingSummary .rescue-album-button {padding:3px;font-size:10px;}
+  #holidayScreen #rescueEndingSummary .rescue-album-button img {width:min(100%,104px);}
+  #holidayScreen #rescueEndingSummary .rescue-album-caption {font-size:10px;}
+  #holidayScreen #rescueEndingSummary .rescue-ending-jumps {width:100%;}
+  #holidayScreen #rescueEndingSummary .rescue-ending-jumps select {flex:1;max-width:100%;min-width:125px;}
+  #holidayScreen #rescueEndingSummary .rescue-album-viewer-card img {max-width:76vw;max-height:50vh;}
+}

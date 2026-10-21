@@ -5491,3 +5491,93 @@ test("GAME-SP4.1H-C1 spa final dialogue stays a short bottom bubble, not a full-
   assert.match(styles,/#holidayScreen #reassembleEndingScene \.assembly-ending-content \{\s*position:absolute;z-index:5;left:3%;right:3%;bottom:8%/,
     "The dialogue stays above the bottom status bar");
 });
+
+test("GAME-SP4.1G3F approved BLS album covers and shared end hub package and preview",()=>{
+  const names=["bls-stephen-martin-songs-madness-cover-v01","bls-stephen-martin-tracklist-art-v01"];
+  const build=read("scripts/build.mjs");
+  for(const stem of names){
+    const asset="public/assets/generated/music/"+stem+".webp";
+    const manifest=JSON.parse(read("generated-assets/manifests/game-sp41g3f-"+stem+".json"));
+    const data=fs.readFileSync(path.join(root,asset));
+    assert.equal(manifest.source.provider,"google-drive");
+    assert.equal(manifest.expectedSourceName,stem+".png");
+    assert.equal(manifest.destination,asset);
+    assert.ok(data.length>25000);
+    assert.equal(data.toString("ascii",0,4),"RIFF");
+    assert.equal(data.toString("ascii",8,12),"WEBP");
+    assert.ok(build.includes('"'+stem+'.webp"'),"Both images copied into dist");
+    assert.ok(html.includes("./"+asset));
+  }
+  for(const id of ["rescueAlbumFrontButton","rescueAlbumTracklistButton",
+    "rescueAlbumViewer","rescueAlbumViewerImage","rescueAlbumCloseButton",
+    "rescueSummaryJumpSelect","rescueSummaryJumpButton"])
+    assert.ok(html.includes('id="'+id+'"'),id+" exists");
+  assert.ok(html.includes('aria-haspopup="dialog"')&&html.includes('aria-modal="true"'));
+  assert.ok(css.includes(".rescue-end-hub"));
+  assert.ok(css.includes(".rescue-album-button:focus-visible"));
+  assert.ok(css.includes("@media(max-width:450px)"));
+  assert.doesNotMatch(html,/https?:\/\/(?:spotify|apple\.com\/music|amazon\.com)/i,
+    "No invented album purchase or listening link");
+});
+
+test("GAME-SP4.1G3F safe end hub jumps preserve earned clues and never simulate puzzle wins",()=>{
+  const completeSummit=()=>{
+    const p=toSummitAdmissions();
+    for(const answer of [2,1,2]){
+      p.el("summitChoice"+answer).click();
+      p.el("summitNextButton").click();
+    }
+    for(let i=0;i<=story().SMP_SUMMIT.ending.length;i++)p.el("summitEndingNextButton").click();
+    assert.equal(saved(p).holidayPhase,"rescue-ending-summary");
+    return p;
+  };
+  const p=completeSummit();
+  assert.equal(p.el("rescueJumpWall").disabled,false);
+  assert.equal(p.el("rescueJumpPalace").disabled,true,"Cannot invent a decline after accepting Summit");
+  assert.equal(p.el("rescueJumpMarket").disabled,true);
+  assert.equal(p.el("rescueJumpGame").disabled,false,"Completed route was legitimately unlocked");
+  p.el("rescueAlbumFrontButton").click();
+  assert.equal(p.el("rescueAlbumViewer").hidden,false);
+  assert.match(p.el("rescueAlbumViewerImage").src,/songs-madness/);
+  p.el("rescueAlbumCloseButton").click();
+  assert.equal(p.el("rescueAlbumViewer").hidden,true);
+  p.el("rescueAlbumTracklistButton").click();
+  assert.match(p.el("rescueAlbumViewerImage").src,/tracklist-art/);
+  p.el("rescueAlbumCloseButton").click();
+
+  p.el("rescueSummaryJumpSelect").value="palace";
+  p.el("rescueSummaryJumpButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-ending-summary","Disabled route may not be used even by direct event");
+  p.el("rescueSummaryJumpSelect").value="game";
+  p.el("rescueSummaryJumpButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  assert.equal(saved(p).rescueProgress.finished,false,"Replay is an unsolved game");
+  assert.equal(saved(p).rescueProgress.miniGameStage,0);
+  assert.equal(saved(p).hubMatched,true,"Previously earned deduction retained");
+  assert.equal(p.el("summitAdmissions").hidden,false);
+  const p2=completeSummit();
+  p2.el("rescueSummaryJumpSelect").value="alarm";
+  p2.el("rescueSummaryJumpButton").click();
+  assert.equal(saved(p2).holidayPhase,"rescue-alarm");
+  assert.equal(saved(p2).rescueAlarmStep,0);
+  assert.equal(saved(p2).hubMatched,false,"Hotel evidence must be redone");
+  assert.equal(Object.hasOwn(saved(p2),"rescueProgress"),false);
+
+  const p3=completeSummit();
+  p3.el("rescueSummaryJumpSelect").value="ending";
+  p3.el("rescueSummaryJumpButton").click();
+  assert.equal(saved(p3).holidayPhase,"rescue-route-ending");
+  assert.equal(saved(p3).rescueProgress.finished,true,"Earlier legitimately solved game was kept");
+  assert.equal(saved(p3).rescueProgress.endingStep,0);
+  const p4=completeSummit();
+  p4.el("rescueSummaryJumpSelect").value="wall";
+  p4.el("rescueSummaryJumpButton").click();
+  assert.equal(saved(p4).holidayPhase,"wall");
+  assert.equal(saved(p4).wallDecision,null);
+  assert.equal(Object.hasOwn(saved(p4),"route"),false);
+  const p5=completeSummit();
+  p5.el("rescueSummaryJumpSelect").value="office";
+  p5.el("rescueSummaryJumpButton").click();
+  assert.equal(saved(p5).scene,"office");
+  assert.equal(saved(p5).beatId,"intro.exterior");
+});
