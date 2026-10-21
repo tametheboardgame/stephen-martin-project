@@ -2354,8 +2354,8 @@ test("GAME-SP4.1G3D symmetric kneeling performers read at believable scale and r
     if(i===0){
       assert.ok(ewer.includes("z-index:1;")&&towel.includes("z-index:1;"),
         "Rear kneeling pair is painted beneath standing attendants");
-      assert.match(tray,/transform:scaleX\\(-1\\)/,"Right standing attendant faces Stephen");
-      assert.match(towel,/transform:scaleX\\(-1\\)/,"Right kneeling attendant faces Stephen");
+      assert.ok(tray.includes("transform:scaleX(-1);"),"Right standing attendant faces Stephen");
+      assert.ok(towel.includes("transform:scaleX(-1);"),"Right kneeling attendant faces Stephen");
     }
   }
   const scene=html.split('id="summitEndingScene"')[1].split('id="detentionEndingScene"')[0];
@@ -2363,8 +2363,8 @@ test("GAME-SP4.1G3D symmetric kneeling performers read at believable scale and r
     "summitThroneAttendantFan","summitThroneAttendantTray","summitThroneAttendantEwer","summitThroneAttendantTowel"]){
     assert.ok(scene.includes('id="'+id+'"'),id+" remains independent and visible");
   }
-  assert.match(section,/\.summit-throne-actor \{[\\s\\S]*?z-index:3/,"Protagonists remain in front");
-  assert.match(section,/\.summit-ending-content \{[\\s\\S]*?z-index:5/,"Live subtitles stay above the cast");
+  assert.ok(section.includes(".summit-throne-actor {")&&section.includes("z-index:3;pointer-events:none;"),"Protagonists remain in front");
+  assert.ok(section.includes(".summit-ending-content {")&&section.includes("z-index:5;"),"Live subtitles stay above the cast");
   assert.ok(section.includes('data-speaker="stephen"'));
   assert.ok(section.includes('data-speaker="david"'));
   assert.ok(section.includes('data-speaker="paul"'));
