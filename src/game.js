@@ -1693,7 +1693,6 @@
     $("detentionEndingScene").hidden = !inDetentionEnding;
     $("reassembleEndingScene").hidden = !inAssemblyEnding;
     $("rescueEndingSummary").hidden = !inSummary;
-    if (!inSummary) $("blsAlbumLightbox").hidden = true;
     if (inSummary) { $("rescueSummaryJumpSelect").value = ""; $("rescueSummaryJumpButton").disabled = true; }
     $("rescueEndingSummary").dataset.route = inSummary && state.route === "cult" ? "cult" : "other";
     if (inWall) {
@@ -2880,25 +2879,6 @@
       renderHoliday();
     }
   }
-  let albumReturnFocus = null;
-  function openAlbumPreview(name) {
-    const names = {
-      madness:["bls-stephen-martin-madness-cover-v01.webp","Songs of Madness and Obsession album cover"],
-      tracklist:["bls-stephen-martin-tracklist-cover-v01.webp","Stephen Martin album artwork and track listing"]
-    };
-    const item = names[name];
-    if (!item || $("rescueEndingSummary").hidden) return;
-    albumReturnFocus = name === "madness" ? $("blsAlbumMadness") : $("blsAlbumTracklist");
-    $("blsAlbumLarge").src = "./public/assets/generated/game/" + item[0];
-    $("blsAlbumLarge").alt = item[1];
-    $("blsAlbumLightbox").hidden = false;
-    $("blsAlbumClose").focus?.();
-  }
-  function closeAlbumPreview() {
-    $("blsAlbumLightbox").hidden = true;
-    albumReturnFocus?.focus?.();
-  }
-
   function showMenu() {
     reveal("menu");
     $("resumeButton").hidden = !readSave();
@@ -3021,15 +3001,6 @@
     $("rescueSummaryJumpButton").disabled = !$("rescueSummaryJumpSelect").value;
   });
   $("rescueSummaryJumpButton").addEventListener("click", jumpFromEnding);
-  $("blsAlbumMadness").addEventListener("click", () => openAlbumPreview("madness"));
-  $("blsAlbumTracklist").addEventListener("click", () => openAlbumPreview("tracklist"));
-  $("blsAlbumClose").addEventListener("click", closeAlbumPreview);
-  $("blsAlbumLightbox").addEventListener("click", event => {
-    if (event.target === $("blsAlbumLightbox")) closeAlbumPreview();
-  });
-  document.addEventListener?.("keydown", event => {
-    if (event.key === "Escape" && !$("blsAlbumLightbox").hidden) closeAlbumPreview();
-  });
   $("rescueSummaryReplayButton").addEventListener("click", chooseAnotherEnding);
   $("rescueSummaryRestartButton").addEventListener("click", startOffice);
   $("rescueSummaryMenuButton").addEventListener("click", showMenu);

@@ -2159,7 +2159,7 @@ test("SP4.0C Stephen is sized for the background's raised throne at desktop/tabl
 });
 
 
-test("GAME-SP4.1G3F album buttons and safe checkpoint menu are packaged and accessible",()=>{
+test("GAME-SP4.1G3F album cards, linked platforms and safe checkpoints are packaged",()=>{
   const build=read("scripts/build.mjs");
   for(const name of ["madness","tracklist"]){
     const filename="bls-stephen-martin-"+name+"-cover-v01.webp";
@@ -2174,15 +2174,33 @@ test("GAME-SP4.1G3F album buttons and safe checkpoint menu are packaged and acce
     assert.equal(manifest.destination,relative);
     assert.equal(manifest.source.provider,"google-drive");
   }
-  assert.match(html,/id="blsAlbumMadness"/);
-  assert.match(html,/id="blsAlbumTracklist"/);
-  assert.match(html,/id="blsAlbumLightbox"/);
+  const albums=[
+    ["martiin","Stephen Martiin","madness","3pplNTs1JPhcowaDVFu1kX","1892550046","OLAK5uy_lfcCREgMXnjHssdMy-I1xFi34VfEi4hvE"],
+    ["martin","Stephen Martin","tracklist","1OGTtKaWAP3qNpqIiigcyQ","1860668056","OLAK5uy_lcQUOTNEoQdXQ6-n6XAk5j5OU8Rc3_Awk"]
+  ];
+  for(const [key,title,asset,spotify,apple,youtube] of albums){
+    const start=html.indexOf('data-album="'+key+'"');
+    assert.ok(start>0,"Missing "+title+" card");
+    const card=html.slice(start,html.indexOf("</article>",start));
+    assert.ok(card.includes("bls-stephen-martin-"+asset+"-cover-v01.webp"));
+    assert.ok(card.includes('alt="'+title+' album cover"'));
+    assert.ok(card.includes('>'+title+'</strong>'));
+    assert.ok(card.includes(spotify)&&card.includes(apple)&&card.includes(youtube));
+    assert.equal((card.match(/class="bls-platform-link /g)||[]).length,3);
+    assert.equal((card.match(/target="_blank" rel="noopener noreferrer"/g)||[]).length,4);
+    for(const site of ["Spotify","Apple Music","YouTube"]){
+      assert.ok(card.includes("Listen to "+title+" on "+site));
+    }
+  }
+  assert.doesNotMatch(html,/id="blsAlbumLightbox"/);
+  assert.doesNotMatch(engine,/blsAlbumLightbox|openAlbumPreview/);
+  assert.match(css,/top:12%;right:3%;bottom:auto/);
+  assert.match(css,/top:auto;left:5%;right:5%;bottom:15%/);
   assert.match(html,/id="rescueSummaryJumpSelect"/);
   assert.match(html,/value="hotel"/);
   assert.match(engine,/function jumpFromEnding/);
   assert.match(engine,/state\.hubMatched = false/);
   assert.match(engine,/rescueFramework\.fresh\(state\.route\)/);
-  assert.doesNotMatch(html,/https?:\/\/.*(spotify|amazon|bandcamp)/i);
 });
 test("GAME-SP4.1G3E approved crowned Steve finale appears only after fourteen Ending A lines",()=>{
   const filename="ending-a-finale-stephen-crowned-wink-v01.webp";
