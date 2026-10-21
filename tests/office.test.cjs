@@ -5899,6 +5899,8 @@ test("G4E permit expands only after real approved stamp, survives resume and cle
   assert.equal(saved(p).rescueProgress.finished,true);
   assert.equal(p.el("detentionPaperwork").dataset.permitApproved,"true");
   assert.equal(p.el("detentionApprovedPreview").hidden,false);
+  assert.equal(p.el("detentionApprovedPreview").focusCount,1,
+    "Keyboard focus moves to the approved permit proof");
   assert.equal(p.el("detentionRoundTitle").textContent,"Ceremonial release approved");
   assert.equal(p.el("detentionRoundProgress").textContent,"APPROVED · Review the full-size permit");
   assert.equal(p.el("detentionNextButton").hidden,false);
@@ -5909,7 +5911,8 @@ test("G4E permit expands only after real approved stamp, survives resume and cle
   p.el("detentionNextButton").click();
   assert.equal(saved(p).holidayPhase,"rescue-route-ending");
   assert.equal(p.el("detentionEndingScene").hidden,false);
-  assert.equal(p.el("detentionPaperwork").hidden,true);
+  assert.equal(p.el("rescueMiniGameScene").hidden,true,
+    "The entire paperwork stage is hidden once Ending B dialogue begins");
   const ending=html.slice(html.indexOf('id="detentionEndingScene"'),html.indexOf('id="reassembleEndingScene"'));
   assert.doesNotMatch(ending,/detention-ending-permit|ending-b-release-permit-canonical-portrait-proof-v01\.webp/,
     "No redundant floating permit during the four-character dialogue");

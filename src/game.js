@@ -2718,6 +2718,9 @@
     state.detentionResponse = {round:2,choice:"approved",correct:true};
     state.detentionVoiceStep = 0;
     renderHoliday();
+    // G4E: stamping removes the previously focused button. Move keyboard
+    // and assistive-technology focus into the approved full-size proof.
+    $("detentionApprovedPreview").focus({preventScroll:true});
   }
 
   function continueDetention() {
