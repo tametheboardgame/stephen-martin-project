@@ -5926,8 +5926,8 @@ test("G4E approved original permit is the readable proof without new/repainted a
   assert.match(htmlProof,/detention-proof-caption/);
   const rules=css.slice(css.lastIndexOf("/* GAME-SP4.1G4D–G4F:"));
   assert.match(rules,/data-permit-approved="true"/);
-  assert.match(rules,/height:clamp\(235px,48vh,465px\)/,
-    "Approved proof is substantially larger than the old 185px preview");
+  assert.match(rules,/width:min\(100%,32vh,310px\);height:auto;aspect-ratio:2\/3/,
+    "Approved permit uses its actual 2:3 coordinate frame, without wide gutters");
   assert.match(rules,/@media \(max-width:800px\)/);
   assert.match(rules,/@media \(max-width:450px\)/);
 });
@@ -5946,4 +5946,26 @@ test("G4F Ending B actors share one foot anchor and four columns on three screen
   assert.match(rules,/@media \(max-width:450px\)[\s\S]*?bottom:37%;max-width:25%/);
   assert.ok(css.includes('data-speaker-focus][data-speaking="true"]'),
     "Existing speaker glow remains intact");
+});
+
+
+test("G4E screenshot: red ink stays in the actual 2:3 permit approval box",()=>{
+ const s=css.slice(css.lastIndexOf("/* GAME-SP4.1G4D–G4F:"));
+ assert.match(s,/width:min\(100%,32vh,310px\);height:auto;aspect-ratio:2\/3/);
+ assert.doesNotMatch(s,/width:min\(100%,690px\)/);
+ assert.match(s,/\.detention-approved-preview-frame \.detention-ink-overlay \{\s*left:55%;top:64%;width:39%;height:21%/);
+ assert.match(s,/width:min\(100%,28vh,267px\);height:auto/);
+ assert.match(s,/width:min\(100%,26vh,215px\);height:auto/);
+ const htmlProof=html.slice(html.indexOf('id="detentionApprovedPreview"'),html.indexOf('id="detentionResponseCard"'));
+ assert.match(htmlProof,/ending-b-release-permit-canonical-portrait-proof-v01\.webp/);
+ assert.match(htmlProof,/ending-b-approved-ink-impression-v01\.webp/);
+});
+test("G4F screenshot: Stephen is lowered at all sizes without disturbing Dave Paul Official",()=>{
+ const s=css.slice(css.lastIndexOf("/* GAME-SP4.1G4D–G4F:"));
+ assert.match(s,/\.detention-ending-stephen \{\s*left:13%;height:52%;bottom:22%;z-index:2;/);
+ assert.match(s,/\.detention-ending-stephen \{left:12%;height:43%;bottom:30%;\}/);
+ assert.match(s,/\.detention-ending-stephen \{left:12%;height:33%;bottom:34%;\}/);
+ for(const a of ["left:35%;height:50%;z-index:2;","left:58%;height:54%;z-index:2;","left:81%;height:48%;z-index:2;"])
+  assert.ok(s.includes(a));
+ assert.match(s,/\.detention-ending-content\.story-speech \{\s*z-index:5/);
 });

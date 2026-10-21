@@ -2,6 +2,11 @@
 
 ## CURRENT — GAME-SP4.1G4D–G4F Ending B polish, draft (21 October 2026)
 
+- Owner screenshots: red stamp fell outside the full portrait because its overlay was anchored to a 690px-wide frame. Updated to real approved 1024x1536 image's 2:3 aspect ratio and repositioned the original stamp inside its approval box.
+- Stephen's white shoes visibly floated above the other cast on arrival. Lowered only Stephen's scene-specific position at desktop/tablet/mobile, leaving David, Paul and Official untouched.
+- PR #82 remains draft for updated tests, Cloudflare preview and owner visual feedback.
+
+
 - Draft branch `agent/game-sp41g4d-f-ending-b-polish`, based on main `a118c20`. No generated art or voice replacement.
 - G4D: only Ending B labels changed to release office and ceremonial administrative process; recorded dialogue preserved.
 - G4E: after authentic stamp completion a larger approved permit proof is shown with explicit next action, persistent after Save/Resume; redundant floating top-right permit removed from dialogue scene.
