@@ -2,6 +2,8 @@
 
 ## CURRENT — GAME-SP4.1G3F universal ending menu and album covers (21 October 2026)
 
+- **Apple Music branding refinement:** replaced both generic note glyphs with Apple's approved coloured Apple Music icon from its published identity guidelines. Streaming destinations and the approved ending layout unchanged; awaiting owner review.
+
 - **Owner revision:** upper-right promo cards link to all three platforms for **Stephen Martiin** (second album, left) and **Stephen Martin** (first album, right), with correct title/cover mapping. G3E bottom-wide summary restored. Lightbox removed; PR #77 remains draft for owner visual approval.
 
 - Two supplied Berserk Llama Syndrome covers are staged in Drive and independently materialised as optimised WebPs. Owner-supplied Spotify, Apple Music and YouTube URLs now power real external links.

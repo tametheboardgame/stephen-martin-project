@@ -2192,7 +2192,12 @@ test("GAME-SP4.1G3F album cards, linked platforms and safe checkpoints are packa
       assert.ok(card.includes("Listen to "+title+" on "+site));
     }
   }
-  assert.doesNotMatch(html,/id="blsAlbumLightbox"/);
+  // Both Apple Music tiles must use the approved coloured icon, not the generic note SVG.
+  assert.equal((html.match(/class="bls-apple-music-logo"/g)||[]).length,2);
+  assert.equal((html.match(/https://marketing\\.services\\.apple/mdsa/assets/storage/blobs/images/640a25ea26ab1a0007c2b3fd/en-us-large%401x\\.png/g)||[]).length,2);
+  assert.doesNotMatch(html,/<a class="bls-platform-link bls-platform-apple"[^>]*><svg/);
+  assert.match(css,/\.bls-platform-apple \.bls-apple-music-logo/);
+    assert.doesNotMatch(html,/id="blsAlbumLightbox"/);
   assert.doesNotMatch(engine,/blsAlbumLightbox|openAlbumPreview/);
   assert.match(css,/top:12%;right:3%;bottom:auto/);
   assert.match(css,/top:auto;left:5%;right:5%;bottom:15%/);
