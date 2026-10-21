@@ -3207,12 +3207,14 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen #summitEndingScene .summit-throne-label strong {
   font-size:clamp(15px,1.8vw,25px);letter-spacing:.05em;
 }
-/* GAME-SP4.1G3D perspective refinement (draft for owner review):
- * one standing and one kneeling attendant per side, both facing Stephen.
- * Kneeling pair now reads as kneeling people, not miniature figures: bring
- * them slightly towards the standing pair and increase their visible height.
- * They remain BEHIND the nearer standing pair and David/Paul. Preserve
- * original transparent sprite pixels, background, throne and dialogue. */
+/* GAME-SP4.1G3D perspective / contact-plane correction:
+ * two matched pairs of attendants face Stephen, one standing + one kneeling
+ * on each side. The prior kneeling heads were HIGHER than the standing heads
+ * because they sat 9-11% of the stage higher despite being visibly smaller.
+ * Keep their approved larger size, align their knee/foot contact with the
+ * same foreground marble plane (bottom 1-2% above the standing figures),
+ * and group them slightly outwards from David/Paul. Preserve rear z-index,
+ * mirrored right-hand sprites, all character pixels and the centre throne. */
 #holidayScreen #summitEndingScene .summit-throne-attendant {
   display:block;position:absolute;z-index:2;pointer-events:none;
   width:auto;object-fit:contain;object-position:center bottom;
@@ -3226,10 +3228,10 @@ body:has(#menuScreen:not([hidden])) main {
   transform:scaleX(-1);transform-origin:center bottom;
 }
 #holidayScreen #summitEndingScene .summit-throne-attendant-ewer {
-  left:20%;right:auto;bottom:40%;height:19%;max-width:17%;z-index:1;
+  left:17%;right:auto;bottom:31%;height:19%;max-width:17%;z-index:1;
 }
 #holidayScreen #summitEndingScene .summit-throne-attendant-towel {
-  right:20%;bottom:40%;height:19%;max-width:17%;z-index:1;
+  right:17%;bottom:31%;height:19%;max-width:17%;z-index:1;
   transform:scaleX(-1);transform-origin:center bottom;
 }
 #holidayScreen #summitEndingScene .summit-throne-stephen {
@@ -3296,10 +3298,10 @@ body:has(#menuScreen:not([hidden])) main {
     right:7%;bottom:31%;height:25%;max-width:26%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-ewer {
-    left:18%;bottom:41%;height:17%;max-width:20%;
+    left:15%;bottom:33%;height:17%;max-width:20%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-towel {
-    right:18%;bottom:41%;height:17%;max-width:20%;
+    right:15%;bottom:33%;height:17%;max-width:20%;
   }
   #holidayScreen #summitEndingScene .summit-throne-david {
     left:24%;bottom:33%;height:26%;max-width:29%;
@@ -3322,10 +3324,10 @@ body:has(#menuScreen:not([hidden])) main {
     right:-1%;bottom:33%;height:20%;max-width:33%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-ewer {
-    left:10%;bottom:42%;height:14%;max-width:24%;
+    left:8%;bottom:35%;height:14%;max-width:24%;
   }
   #holidayScreen #summitEndingScene .summit-throne-attendant-towel {
-    right:10%;bottom:42%;height:14%;max-width:24%;
+    right:8%;bottom:35%;height:14%;max-width:24%;
   }
   #holidayScreen #summitEndingScene .summit-throne-david {
     left:12%;bottom:33%;height:22%;max-width:35%;
@@ -4546,6 +4548,24 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen .assembly-ending-content.story-speech {
   overflow:visible !important;
   max-height:none !important;
+}
+/* G3D: On shorter laptops, the aspect-ratio throne stage extends under
+ * its bottom action strip. Lift ONLY Ending A's paper subtitle so both the
+ * line and progress remain above that footer; cap its height independently
+ * of the shared story-speech overflow override. Other endings unaffected. */
+#holidayScreen #summitEndingScene .summit-ending-content.story-speech {
+  bottom:13%;height:auto;min-height:0;max-height:26% !important;
+  overflow-y:auto !important;overflow-x:hidden !important;
+}
+@media (max-width:800px) {
+  #holidayScreen #summitEndingScene .summit-ending-content.story-speech {
+    bottom:15%;max-height:30% !important;
+  }
+}
+@media (max-width:450px) {
+  #holidayScreen #summitEndingScene .summit-ending-content.story-speech {
+    bottom:18%;max-height:33% !important;
+  }
 }
 #holidayScreen .story-speech:is(.summit-ending-content,.detention-ending-content,.assembly-ending-content) > p:last-child {
   color:#556878 !important;
