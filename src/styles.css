@@ -5158,14 +5158,14 @@ body:has(#menuScreen:not([hidden])) main {
 #holidayScreen #rescueEndingSummary .rescue-ending-jumps select {
   min-height:43px;max-width:min(33vw,300px);border:2px solid #84c0dc;
   border-radius:7px;padding:7px 9px;color:#092945;background:#fff5df;
-  font:800 13px/1.2 inherit;
+  font-weight:800;font-size:13px;line-height:1.2;font-family:inherit;
 }
 #holidayScreen #rescueEndingSummary .rescue-ending-jumps select:focus-visible {
   outline:3px solid #ffdb8d;outline-offset:2px;
 }
 #holidayScreen #rescueEndingSummary .rescue-album-viewer[hidden] {display:none!important;}
 #holidayScreen #rescueEndingSummary .rescue-album-viewer {
-  position:absolute;inset:0;z-index:30;display:grid;place-items:center;
+  position:fixed;inset:0;z-index:100;display:grid;place-items:center;
   background:rgba(2,11,22,.88);padding:clamp(12px,2vw,26px);
   box-sizing:border-box;
 }
