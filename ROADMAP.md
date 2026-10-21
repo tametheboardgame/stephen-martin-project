@@ -899,6 +899,8 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 **G3F — Universal end menu, safe jumps and album covers (all endings)**
 
+- **Implementation started 21 October 2026:** both user-supplied square album covers staged through Drive manifests; cover buttons open an accessible larger view rather than unapproved external commerce links. Safe checkpoint jump menu uses existing playable states without pretending that a puzzle was completed. Review via draft PR before merging.
+
 - Extend the current `#rescueEndingSummary` to a shared post-Ending **menu** after **A, B and C**. Keep route-specific ending identity and summary visible, plus **Play from start**, **Play another ending** and a usable **Jump to chapter/scene** selector.
 - Explicit checkpoint contract: jumps to opening/China/office alarm/hotel/route intro/game/ending must be **safe and state-aware**. Direct jumps must initialise valid prerequisite route choices, fresh unanswered decisions and unsolved puzzles; no simulated puzzle success, invented earlier story decisions, corrupt V3 saves or jumps into inaccessible scenes. Hide/disable destinations requiring unresolved prerequisites or restart from a safe real checkpoint. Preserve D2 contextual Skip behaviour.
 - Separate promotional region: **“If you liked this, you might also enjoy Steve, Paul and Dave’s albums”**; reserve **two portrait cover slots** for the owner's existing **Berserk Llama Syndrome** album covers with correct aspect ratio, captions and alt text. Reuse approved project covers only after checking source/usage; owner supplies/approves any listening/purchase URLs. **Do not invent commerce links**, make ads interrupt gameplay or require album interaction to replay.

@@ -1,5 +1,12 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G3F universal ending menu and album covers (21 October 2026)
+
+- Two supplied Berserk Llama Syndrome covers are staged in Drive and independently materialised as optimised WebPs. They are interactive artwork-preview buttons; no listening/purchase URLs are invented.
+- Shared Ending A/B/C summary now includes the two album buttons and safe checkpoint selector. The Office and China jumps reset from actual opening checkpoints; Great Wall returns to the unanswered route choice; Hotel reopens real investigation, and Route briefing resets its mini-game instead of falsifying puzzle completion.
+- Same live route-specific ending title and summary retained. Existing replay, restart and menu controls unchanged.
+- Draft branch `agent/g3f-endmenu`; visual and smoke-test approval required before merge.
+
 ## CURRENT — GAME-SP4.1G3E Ending A close-up finale integration (21 October 2026)
 
 - **Approved artwork:** final crowned-and-winking Stephen close-up, canonical likeness based on owner's office reference. Master PNG `ending-a-finale-stephen-crowned-wink-v01.png` stored in dedicated Drive staging; optimised WebP and manifest are on `agent/g3e-finale`.

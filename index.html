@@ -649,12 +649,42 @@
               <p id="rescueSummaryMessage"></p>
               <small id="rescueSummaryDisclaimer">Finale cutscenes are delivered with the matching route mini-game, not this framework.</small>
             </div>
+            <section class="bls-albums" aria-label="Berserk Llama Syndrome albums">
+              <p>If you liked this, you might also enjoy Steve, Paul and Dave's albums</p>
+              <div class="bls-album-buttons">
+                <button id="blsAlbumMadness" class="bls-album-button" type="button" aria-label="View Songs of Madness and Obsession album cover">
+                  <img src="./public/assets/generated/game/bls-stephen-martin-madness-cover-v01.webp" alt="" loading="lazy">
+                  <span>Songs of Madness and Obsession</span>
+                </button>
+                <button id="blsAlbumTracklist" class="bls-album-button" type="button" aria-label="View Stephen Martin album cover and track listing">
+                  <img src="./public/assets/generated/game/bls-stephen-martin-tracklist-cover-v01.webp" alt="" loading="lazy">
+                  <span>Stephen Martin, track listing</span>
+                </button>
+              </div>
+            </section>
           </div>
           <div class="wall-action-strip">
             <div class="wall-story-progress">Rescue complete</div>
+            <label class="rescue-jump-label" for="rescueSummaryJumpSelect">Jump to chapter
+              <select id="rescueSummaryJumpSelect">
+                <option value="">Choose a safe checkpoint…</option>
+                <option value="office">Chapter 1, the office</option>
+                <option value="china">Chapter 2, China arrival</option>
+                <option value="wall">Chapter 2, Great Wall choice</option>
+                <option value="hotel">Chapter 3, hotel investigation</option>
+                <option value="route">Chapter 4, current route briefing</option>
+              </select>
+            </label>
+            <button id="rescueSummaryJumpButton" class="btn btn-secondary" type="button" disabled>Go to checkpoint →</button>
             <button id="rescueSummaryReplayButton" class="btn btn-primary" type="button">Play another ending ↺</button>
             <button id="rescueSummaryRestartButton" class="btn btn-secondary" type="button">Play from the start</button>
             <button id="rescueSummaryMenuButton" class="btn btn-secondary" type="button">Main menu</button>
+          </div>
+        </div>
+        <div id="blsAlbumLightbox" class="bls-album-lightbox" role="dialog" aria-modal="true" aria-label="Album artwork" hidden>
+          <div class="bls-album-lightbox-panel">
+            <button id="blsAlbumClose" class="btn btn-secondary" type="button">Close album preview ×</button>
+            <img id="blsAlbumLarge" src="./public/assets/generated/game/bls-stephen-martin-madness-cover-v01.webp" alt="Berserk Llama Syndrome album cover">
           </div>
         </div>
         <!-- Off-stage transition narration: live subtitles remain available with no MP3. -->

@@ -2159,6 +2159,29 @@ test("SP4.0C Stephen is sized for the background's raised throne at desktop/tabl
 });
 
 
+test("GAME-SP4.1G3F album buttons and safe checkpoint menu are packaged and accessible",()=>{
+  const build=read("scripts/build.mjs");
+  for(const name of ["madness","tracklist"]){
+    const filename="bls-stephen-martin-"+name+"-cover-v01.webp";
+    const relative="public/assets/generated/game/"+filename;
+    const b=fs.readFileSync(path.join(root,relative));
+    assert.equal(b.toString("ascii",0,4),"RIFF");
+    assert.equal(b.toString("ascii",8,12),"WEBP");
+    assert.ok(build.includes('bls-stephen-martin-"+name+"-cover-v01.webp'.replace('"+name+"',name)) || build.includes('"bls-stephen-martin-"+name+"-cover-v01.webp"'));
+    const manifest=JSON.parse(read("generated-assets/manifests/game-sp41g3f-bls-"+name+"-cover-v01.json"));
+    assert.equal(manifest.destination,relative);
+    assert.equal(manifest.source.provider,"google-drive");
+  }
+  assert.match(html,/id="blsAlbumMadness"/);
+  assert.match(html,/id="blsAlbumTracklist"/);
+  assert.match(html,/id="blsAlbumLightbox"/);
+  assert.match(html,/id="rescueSummaryJumpSelect"/);
+  assert.match(html,/value="hotel"/);
+  assert.match(engine,/function jumpFromEnding/);
+  assert.match(engine,/state\.hubMatched = false/);
+  assert.match(engine,/rescueFramework\.fresh\(state\.route\)/);
+  assert.doesNotMatch(html,/https?:\/\/.*(spotify|amazon|bandcamp)/i);
+});
 test("GAME-SP4.1G3E approved crowned Steve finale appears only after fourteen Ending A lines",()=>{
   const filename="ending-a-finale-stephen-crowned-wink-v01.webp";
   const asset="public/assets/generated/locations/"+filename;
