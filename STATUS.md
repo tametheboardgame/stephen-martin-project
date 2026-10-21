@@ -1,5 +1,15 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G3D Summit throne perspective refinement (21 October 2026)
+
+- **Baseline:** PR #72 G3C illustrated admissions merged as `1177b6f`, preserving Ending B/C voice work.
+- **Branch:** `agent/game-sp41g3d-throne-room-perspective`, draft PR and owner screenshot approval still required.
+- **Geometry audit:** four existing approved silent attendant sprites already correctly alternate standing/kneeling on left and right, mirroring only the right pair. Prior kneeling figures were less than half as high as the standing figures on narrower layouts, giving a miniature effect.
+- **Second visual correction (21 October):** owner screenshot showed the kneeling attendants' heads higher than standing heads, with feet 70–80px up-stage, despite the first enlargement. Adjust both kneelers **down** to within 1–2% of the standing figures' floor contact at each breakpoint, and move them a little outwards to form coherent side groups. Preserve the earlier appropriate sizes and rear stacking; no actor art replaced. Also lift/cap Ending A's caption (desktop/tablet/phone) so progress is not hidden behind the footer. See the updated G3D QA matrix.
+- **Owner second review (21 October):** floor grouping and dialogue improvement accepted, but **all four attendants still appear too small relative to the slightly more distant David and Paul**. Third candidate scales standing 27→31% desktop (25→29 tablet; 20→24 phone), kneeling 19→22% (17→20 tablet; 14→17 phone), and permits matching maximum widths. Foot anchors, all x placements, right-hand flips, rear depth, all approved images and character dialogue unchanged.
+- **Review gate:** check larger attendants on laptop, tablet and mobile, including feet, speech overlays and Skip to End. Full scope/matrix: `docs/story/GAME-SP4.1G3D-THRONE-PERSPECTIVE-QA.md`. Do not merge until final visual approval and CI.
+- **Next:** G3E bespoke illustrated Ending A conclusion.
+
 ## COMPLETED — GAME-SP4.1G3C Summit admissions illustrated choices (20 October 2026)
 
 - **Owner acceptance:** all nine illustrated choices and compact desktop/laptop/tablet/phone card layout approved; owner checked the corrected deployed preview and authorised PR #72 merge.

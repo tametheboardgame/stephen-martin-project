@@ -2269,9 +2269,9 @@ test("SP4.0C places larger standing pair forward and smaller kneeling pair at re
   const tablet=stageCss.split("@media (max-width:800px)")[1].split("@media (max-width:450px)")[0];
   const mobile=stageCss.split("@media (max-width:450px)")[1];
   const expectations=[
-    {source:desktop,fan:"left:9%;bottom:29%;height:27%",tray:"left:auto;right:9%;bottom:29%;height:27%",ewer:"left:23%;right:auto;bottom:42%;height:14%",towel:"right:23%;bottom:42%;height:14%"},
-    {source:tablet,fan:"left:7%;bottom:31%;height:25%",tray:"right:7%;bottom:31%;height:25%",ewer:"left:20%;bottom:43%;height:12%",towel:"right:20%;bottom:43%;height:12%"},
-    {source:mobile,fan:"left:-1%;bottom:33%;height:20%",tray:"right:-1%;bottom:33%;height:20%",ewer:"left:13%;bottom:45%;height:9%",towel:"right:13%;bottom:45%;height:9%"}
+    {source:desktop,fan:"left:9%;bottom:29%;height:31%",tray:"left:auto;right:9%;bottom:29%;height:31%",ewer:"left:17%;right:auto;bottom:31%;height:22%",towel:"right:17%;bottom:31%;height:22%"},
+    {source:tablet,fan:"left:7%;bottom:31%;height:29%",tray:"right:7%;bottom:31%;height:29%",ewer:"left:15%;bottom:33%;height:20%",towel:"right:15%;bottom:33%;height:20%"},
+    {source:mobile,fan:"left:-1%;bottom:33%;height:24%",tray:"right:-1%;bottom:33%;height:24%",ewer:"left:8%;bottom:35%;height:17%",towel:"right:8%;bottom:35%;height:17%"}
   ];
   const rule=(text,name)=>{
     const key="#holidayScreen #summitEndingScene .summit-throne-attendant-"+name+" {";
@@ -2289,7 +2289,8 @@ test("SP4.0C places larger standing pair forward and smaller kneeling pair at re
     const numeric=(name,prop)=>Number(pos[name].match(new RegExp(prop+":(-?\\d+)%"))[1]);
     assert.ok(numeric("fan","height")>numeric("ewer","height"),"Standing left sprite is larger");
     assert.ok(numeric("tray","height")>numeric("towel","height"),"Standing right sprite is larger");
-    assert.ok(numeric("fan","height")>=numeric("ewer","height")*1.8,"Near/far depth needs a clear standing-to-kneeling size ratio");
+    assert.ok(numeric("fan","height")>=numeric("ewer","height")*1.35,"Kneeling actor must not look like a miniature");
+    assert.ok(numeric("fan","height")<=numeric("ewer","height")*1.6,"G3D reduces excessive standing/kneeling scale difference");
     assert.ok(numeric("fan","bottom")<numeric("ewer","bottom"),"Standing left sprite is farther forward");
     assert.ok(numeric("tray","bottom")<numeric("towel","bottom"),"Standing right sprite is farther forward");
   }
@@ -2308,10 +2309,10 @@ test("SP4.0C right standing and kneeling attendants face inward via sprite-only 
     return desktop.slice(start,desktop.indexOf("}",start));
   };
   const fan=block("fan"),tray=block("tray"),ewer=block("ewer"),towel=block("towel");
-  assert.match(fan,/left:9%;bottom:29%;height:27%/,"Fan stands forward left");
-  assert.match(tray,/right:9%;bottom:29%;height:27%/,"Tray stands forward right");
-  assert.match(ewer,/left:23%;right:auto;bottom:42%;height:14%/,"Ewer kneels rear left");
-  assert.match(towel,/right:23%;bottom:42%;height:14%/,"Towel kneels rear right");
+  assert.match(fan,/left:9%;bottom:29%;height:31%/,"Fan stands forward left");
+  assert.match(tray,/right:9%;bottom:29%;height:31%/,"Tray stands forward right");
+  assert.match(ewer,/left:17%;right:auto;bottom:31%;height:22%/,"Ewer kneels beside left standing attendant on marble");
+  assert.match(towel,/right:17%;bottom:31%;height:22%/,"Towel kneels beside right standing attendant on marble");
   assert.doesNotMatch(fan,/scaleX\(-1\)/,"Left-standing fan faces centre without a flip");
   assert.doesNotMatch(ewer,/scaleX\(-1\)/,"Left-kneeling ewer faces centre without a flip");
   assert.match(tray,/transform:scaleX\(-1\);transform-origin:center bottom/,"Right-standing tray faces centre");
@@ -2322,6 +2323,77 @@ test("SP4.0C right standing and kneeling attendants face inward via sprite-only 
   assert.ok(desktop.includes('right:29%;bottom:33%;height:27%;max-width:23%;'),"Paul unchanged");
 });
 
+
+test("GAME-SP4.1G3D symmetric kneeling performers read at believable scale and remain behind standing cast",()=>{
+  const section=css.slice(css.indexOf("/* GAME-SP4.0C — Owner-approved Summit throne"));
+  const all=[
+    section.split("@media (max-width:800px)")[0],
+    section.split("@media (max-width:800px)")[1].split("@media (max-width:450px)")[0],
+    section.split("@media (max-width:450px)")[1]
+  ];
+  const getRule=(fragment,name)=>{
+    const key="#holidayScreen #summitEndingScene .summit-throne-attendant-"+name+" {";
+    const i=fragment.indexOf(key);
+    assert.ok(i>=0,name+" must have a scoped placement");
+    return fragment.slice(i,fragment.indexOf("}",i));
+  };
+  const coord=(style,key)=>{
+    const m=style.match(new RegExp(key+":(-?\\d+)%"));
+    assert.ok(m,key+" must be explicitly set");
+    return Number(m[1]);
+  };
+  for(const [i,sectionPart] of all.entries()){
+    const fan=getRule(sectionPart,"fan"),tray=getRule(sectionPart,"tray");
+    const ewer=getRule(sectionPart,"ewer"),towel=getRule(sectionPart,"towel");
+    assert.equal(coord(fan,"left"),coord(tray,"right"),"Standing pair balanced at breakpoint "+i);
+    assert.equal(coord(ewer,"left"),coord(towel,"right"),"Kneeling pair balanced at breakpoint "+i);
+    assert.equal(coord(ewer,"height"),coord(towel,"height"),"Kneeling pair match height at breakpoint "+i);
+    assert.equal(coord(fan,"height"),coord(tray,"height"),"Standing pair match height at breakpoint "+i);
+    const protagonists=[{david:28,paul:27},{david:26,paul:25},{david:22,paul:22}][i];
+    assert.ok(coord(fan,"height")>protagonists.david && coord(tray,"height")>protagonists.paul,
+      "Foreground standing attendants must read slightly larger than David and Paul");
+    const expectedSizes=[{standing:31,kneeling:22},{standing:29,kneeling:20},{standing:24,kneeling:17}][i];
+    assert.equal(coord(fan,"height"),expectedSizes.standing,"Attendant increase is controlled at breakpoint "+i);
+    assert.equal(coord(ewer,"height"),expectedSizes.kneeling,"Kneeling increase is controlled at breakpoint "+i);
+    assert.ok(coord(ewer,"height")>=Math.round(coord(fan,"height")*0.65),
+      "Kneeling actors remain legible without miniature scaling at breakpoint "+i);
+    assert.ok(coord(ewer,"bottom")>coord(fan,"bottom"),"Kneeling actors remain slightly behind in depth");
+    assert.ok(coord(ewer,"bottom")-coord(fan,"bottom")<=2,
+      "Kneeling figures' contact points must share the foreground floor plane");
+    assert.ok(coord(ewer,"left")-coord(fan,"left")<=10,
+      "Left pair must read as a group rather than scattered across the room");
+    assert.ok(coord(towel,"right")-coord(tray,"right")<=10,
+      "Right pair must read as a group rather than scattered across the room");
+    if(i===0){
+      assert.ok(ewer.includes("z-index:1;")&&towel.includes("z-index:1;"),
+        "Rear kneeling pair is painted beneath standing attendants");
+      assert.ok(tray.includes("transform:scaleX(-1);"),"Right standing attendant faces Stephen");
+      assert.ok(towel.includes("transform:scaleX(-1);"),"Right kneeling attendant faces Stephen");
+    }
+  }
+  const scene=html.split('id="summitEndingScene"')[1].split('id="detentionEndingScene"')[0];
+  for(const id of ["summitThroneStephen","summitThroneDavid","summitThronePaul",
+    "summitThroneAttendantFan","summitThroneAttendantTray","summitThroneAttendantEwer","summitThroneAttendantTowel"]){
+    assert.ok(scene.includes('id="'+id+'"'),id+" remains independent and visible");
+  }
+  assert.ok(section.includes(".summit-throne-actor {")&&section.includes("z-index:3;pointer-events:none;"),"Protagonists remain in front");
+  assert.ok(section.includes(".summit-ending-content {")&&section.includes("z-index:5;"),"Live subtitles stay above the cast");
+  assert.ok(section.includes('data-speaker="stephen"'));
+  assert.ok(section.includes('data-speaker="david"'));
+  assert.ok(section.includes('data-speaker="paul"'));
+  const subtitleFix=css.slice(css.indexOf("/* G3D: On shorter laptops"));
+  assert.ok(subtitleFix.includes('#summitEndingScene .summit-ending-content.story-speech {'),
+    "Speech correction stays scoped to the Summit ending");
+  assert.ok(subtitleFix.includes("bottom:13%;height:auto;min-height:0;max-height:26% !important"),
+    "Laptop caption and progress are lifted above overlapping action strip");
+  assert.ok(subtitleFix.includes("bottom:15%;max-height:30% !important"),
+    "Tablet dialogue keeps progress clear of the footer");
+  assert.ok(subtitleFix.includes("bottom:18%;max-height:33% !important"),
+    "Phone dialogue keeps progress clear of the footer");
+  assert.ok(subtitleFix.includes("overflow-y:auto !important;overflow-x:hidden !important"),
+    "Longer subtitles scroll internally instead of clipping behind footer");
+  assert.equal(story().SMP_SUMMIT.ending.length,14,"All fourteen Ending A lines remain unchanged");
+});
 
 test("SP4.0D optimistic music cutaway plays up to 20 seconds and preserves full-track option",async()=>{
   const p=preview({audio:true});p.start();p.at("office.v07");

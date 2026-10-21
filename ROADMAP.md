@@ -853,7 +853,7 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 #### GAME-SP4.1G3 — Chapter 4 Ending A staging and shared post-ending hub (owner feedback, 19 October 2026)
 
-**Priority:** P1. **Status:** G3A/G3B merged as PR #71 (`b8501c0`); G3C all nine illustrated choice assets owner-approved, materialised and integrated; merge approved on `agent/game-sp41g3c-summit-admissions-illustrated-choices`; generated icons and integration pending; G3D–G still planned. **Baseline:** approved Summit exterior, admissions puzzle and four-attendant throne room; existing shared `#rescueEndingSummary` ending state. **Scope split:** G3A–E are Ending A improvements; G3F/G are **cross-ending** features. The owner is still reviewing Ending B, so future B feedback gets its own scoped backlog entries rather than being presumed resolved.
+**Priority:** P1. **Status:** G3A/G3B merged in PR #71; G3C nine illustrated choice assets merged in PR #72 (`1177b6f`); **G3D in draft development**, CSS-only attendant-depth and scale candidate awaiting visual review. G3E–G planned. **Baseline:** approved Summit exterior, admissions puzzle and four-attendant throne room; existing shared `#rescueEndingSummary` ending state. **Scope split:** G3A–E are Ending A improvements; G3F/G are **cross-ending** features. The owner is still reviewing Ending B, so future B feedback gets its own scoped backlog entries rather than being presumed resolved.
 
 **Owner findings:**
 - Outside Summit, **move David and Paul significantly left**; David currently appears to stand on a retaining wall.
@@ -883,6 +883,8 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 - **Acceptance:** visually approve all nine, test 3×3 choices on desktop/laptop/tablet/phone, no clipping, scrollbars or extra puzzle difficulty, green CI and deployed Cloudflare exact-head preview. Only then merge PR #72, reconciling separately merged Ending B voice work first.
 
 **G3D — Throne room attendant/actor scale and position**
+
+- **21 October progress:** First screenshot revealed kneelers floated high above the standing pair; second CSS preview corrected marble-ground contact, grouping and clipped Ending A caption. **Owner approved that geometry but requested all four attendants slightly larger because they are closer to the viewer than David/Paul**. Third draft now increases standing and kneeling heights at desktop/tablet/phone breakpoints, preserving all horizontal and foot anchors, images, speakers and voice. Final visual acceptance pending. See [G3D placement audit and QA](docs/story/GAME-SP4.1G3D-THRONE-PERSPECTIVE-QA.md). Owner to review the actual preview before merge.
 
 - Audit the locked room art, throne Stephen, David, Paul and **four existing attendants** (`summitThroneAttendantFan`, `Tray`, `Ewer`, `Towel`). Use perspective markers and staging overlays before moving anything.
 - **Increase attendants to believable scale** and place them intentionally: **one standing and one kneeling on each side**, facing inward to Stephen. Kneeling figures should not seem miniature or too far in the foreground. Preserve the intended separate fan/tray/ewer/towel roles and layering.
