@@ -5138,9 +5138,8 @@ body:has(#menuScreen:not([hidden])) main {
 }
 #holidayScreen #rescueEndingSummary .bls-platform-link svg {display:block;width:20px;height:20px;}
 #holidayScreen #rescueEndingSummary .bls-platform-spotify {color:#1ed760;}
-/* Apple Music's official colour icon, not an unbranded note glyph. */
-#holidayScreen #rescueEndingSummary .bls-platform-apple {background:transparent;border-color:transparent;}
-#holidayScreen #rescueEndingSummary .bls-platform-apple .bls-apple-music-logo {display:block;width:24px;height:24px;object-fit:contain;}
+/* Apple Music uses the same outlined button as Spotify and YouTube. */
+#holidayScreen #rescueEndingSummary .bls-platform-apple .bls-apple-music-logo {display:block;width:20px;height:20px;object-fit:contain;}
 #holidayScreen #rescueEndingSummary .bls-platform-youtube {color:#ff3838;}
 #holidayScreen #rescueEndingSummary .bls-album-cover:hover,
 #holidayScreen #rescueEndingSummary .bls-platform-link:hover {filter:brightness(1.12);transform:translateY(-1px);}
@@ -5190,7 +5189,7 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen #rescueEndingSummary .bls-albums > p {font-size:9px;margin-bottom:4px;}
   #holidayScreen #rescueEndingSummary .bls-platform-link {width:24px;height:24px;min-width:24px;}
   #holidayScreen #rescueEndingSummary .bls-platform-link svg {width:18px;height:18px;}
-  #holidayScreen #rescueEndingSummary .bls-platform-apple .bls-apple-music-logo {width:22px;height:22px;}
+  #holidayScreen #rescueEndingSummary .bls-platform-apple .bls-apple-music-logo {width:18px;height:18px;}
   #holidayScreen #rescueEndingSummary .wall-action-strip {gap:4px;}
   #holidayScreen #rescueEndingSummary .rescue-jump-label {font-size:10px;}
   #holidayScreen #rescueEndingSummary .rescue-jump-label select {max-width:145px;font-size:10px;}
