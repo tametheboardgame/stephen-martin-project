@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1K-oO9FDAOP7V12o4HAJTfcn9aLceKjPS"
+  },
+  "expectedSourceName": "ending-a-finale-stephen-crowned-wink-v01.png",
+  "destination": "public/assets/generated/locations/ending-a-finale-stephen-crowned-wink-v01.webp",
+  "transform": {
+    "maxWidth": 1672,
+    "maxHeight": 941,
+    "quality": 88
+  },
+  "revision": 1
+}

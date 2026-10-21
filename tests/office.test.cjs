@@ -2159,6 +2159,49 @@ test("SP4.0C Stephen is sized for the background's raised throne at desktop/tabl
 });
 
 
+test("GAME-SP4.1G3E approved crowned Steve finale appears only after fourteen Ending A lines",()=>{
+  const filename="ending-a-finale-stephen-crowned-wink-v01.webp";
+  const asset="public/assets/generated/locations/"+filename;
+  const bytes=fs.readFileSync(path.join(root,asset));
+  assert.ok(bytes.length>25000,"Owner-approved image must be materialised");
+  assert.equal(bytes.toString("ascii",0,4),"RIFF");
+  assert.equal(bytes.toString("ascii",8,12),"WEBP");
+  const manifest=JSON.parse(read("generated-assets/manifests/game-sp41g3e-ending-a-finale-stephen-crowned-wink-v01.json"));
+  assert.equal(manifest.source.provider,"google-drive");
+  assert.equal(manifest.expectedSourceName,"ending-a-finale-stephen-crowned-wink-v01.png");
+  assert.equal(manifest.destination,asset);
+  assert.ok(manifest.source.fileId,"Original image is tracked to approved Drive staging");
+  assert.ok(read("scripts/build.mjs").includes('"'+asset+'"'),"Cloudflare packages the approved finale WebP");
+  assert.ok(css.includes('#summitEndingScene[data-finale="true"] .summit-ending-stage'));
+  assert.ok(css.includes('#rescueEndingSummary[data-route="cult"] .rescue-route-intro-stage'));
+  assert.ok(css.includes('url("../'+asset+'")'),"Both end card and summary use the approved image");
+  assert.ok(css.includes('#summitEndingScene[data-finale="true"] .summit-throne-actor'));
+  assert.ok(css.includes('#rescueEndingSummary[data-route="cult"] .rescue-travel-panel'));
+  assert.ok(css.includes('max-height:43%'),"Mobile summary text can fit without masking Steve's face");
+  const p=toSummitAdmissions();
+  for(const correct of [2,1,2]){
+    p.el("summitChoice"+correct).click();
+    p.el("summitNextButton").click();
+  }
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+  assert.equal(p.el("summitEndingScene").dataset.finale,"false","Dialogue scene remains the approved throne");
+  for(let i=0;i<story().SMP_SUMMIT.ending.length;i++){
+    assert.equal(p.el("summitEndingScene").dataset.finale,"false","No portrait before finishing spoken line "+(i+1));
+    p.el("summitEndingNextButton").click();
+  }
+  assert.equal(p.el("summitEndingScene").dataset.finale,"true","Final card reveals crowned Steve");
+  assert.equal(p.el("summitEndingSpeaker").textContent,"ENDING A");
+  assert.equal(p.el("summitEndingLine").textContent,story().SMP_SUMMIT.endCard);
+  p.el("summitEndingNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-ending-summary");
+  assert.equal(p.el("rescueEndingSummary").dataset.route,"cult");
+  assert.equal(p.el("rescueSummaryHeading").textContent,"HEAVEN WAS A PLACE ON EARTH");
+  assert.doesNotMatch(p.el("rescueSummaryDisclaimer").textContent,/deferred/i);
+  p.el("rescueSummaryReplayButton").click();
+  assert.equal(saved(p).holidayPhase,"wall","Existing replay still resets the route");
+  assert.equal(p.el("rescueEndingSummary").hidden,true);
+});
+
 test("SP4.0C approved David-left and Paul-right actors are independently packaged and focused",()=>{
   const scenes=[
     {name:"david",asset:"summit-throne-david-confrontational-v01.webp",manifest:"game-sp40c-throne-david-v01.json",id:"summitThroneDavid"},

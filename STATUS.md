@@ -1,5 +1,17 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G3E Ending A close-up finale integration (21 October 2026)
+
+- **Approved artwork:** final crowned-and-winking Stephen close-up, canonical likeness based on owner's office reference. Master PNG `ending-a-finale-stephen-crowned-wink-v01.png` stored in dedicated Drive staging; optimised WebP and manifest are on `agent/g3e-finale`.
+- **Scope:** switch to the new portrait only after all 14 Summit ending lines, and retain the same portrait for Ending A's final summary; preserve the approved G3D throne cast, recorded speech and all gameplay. Keep ending text and controls live, not embedded in the art.
+- **Packaging:** add the materialised file to the explicit Cloudflare build allow-list, with tests checking manifest/provenance, reveal order, summary and replay. The prior G3C missing-`dist` failure must not recur.
+- **Status:** draft/unmerged; require green CI, Cloudflare exact-commit preview and owner's in-game visual acceptance before merging.
+- **Next:** G3F shared post-ending menu across A/B/C.
+
+## COMPLETED — GAME-SP4.1G3D Summit throne refinement (21 October 2026)
+
+- PR #74 merged into main as `5cecaf3` after owner approved corrected attendant scale, floor positioning and subtitles.
+
 ## CURRENT — GAME-SP4.1G3D Summit throne perspective refinement (21 October 2026)
 
 - **Baseline:** PR #72 G3C illustrated admissions merged as `1177b6f`, preserving Ending B/C voice work.
