@@ -2269,9 +2269,9 @@ test("SP4.0C places larger standing pair forward and smaller kneeling pair at re
   const tablet=stageCss.split("@media (max-width:800px)")[1].split("@media (max-width:450px)")[0];
   const mobile=stageCss.split("@media (max-width:450px)")[1];
   const expectations=[
-    {source:desktop,fan:"left:9%;bottom:29%;height:27%",tray:"left:auto;right:9%;bottom:29%;height:27%",ewer:"left:17%;right:auto;bottom:31%;height:19%",towel:"right:17%;bottom:31%;height:19%"},
-    {source:tablet,fan:"left:7%;bottom:31%;height:25%",tray:"right:7%;bottom:31%;height:25%",ewer:"left:15%;bottom:33%;height:17%",towel:"right:15%;bottom:33%;height:17%"},
-    {source:mobile,fan:"left:-1%;bottom:33%;height:20%",tray:"right:-1%;bottom:33%;height:20%",ewer:"left:8%;bottom:35%;height:14%",towel:"right:8%;bottom:35%;height:14%"}
+    {source:desktop,fan:"left:9%;bottom:29%;height:31%",tray:"left:auto;right:9%;bottom:29%;height:31%",ewer:"left:17%;right:auto;bottom:31%;height:22%",towel:"right:17%;bottom:31%;height:22%"},
+    {source:tablet,fan:"left:7%;bottom:31%;height:29%",tray:"right:7%;bottom:31%;height:29%",ewer:"left:15%;bottom:33%;height:20%",towel:"right:15%;bottom:33%;height:20%"},
+    {source:mobile,fan:"left:-1%;bottom:33%;height:24%",tray:"right:-1%;bottom:33%;height:24%",ewer:"left:8%;bottom:35%;height:17%",towel:"right:8%;bottom:35%;height:17%"}
   ];
   const rule=(text,name)=>{
     const key="#holidayScreen #summitEndingScene .summit-throne-attendant-"+name+" {";
@@ -2309,10 +2309,10 @@ test("SP4.0C right standing and kneeling attendants face inward via sprite-only 
     return desktop.slice(start,desktop.indexOf("}",start));
   };
   const fan=block("fan"),tray=block("tray"),ewer=block("ewer"),towel=block("towel");
-  assert.match(fan,/left:9%;bottom:29%;height:27%/,"Fan stands forward left");
-  assert.match(tray,/right:9%;bottom:29%;height:27%/,"Tray stands forward right");
-  assert.match(ewer,/left:17%;right:auto;bottom:31%;height:19%/,"Ewer kneels beside left standing attendant on marble");
-  assert.match(towel,/right:17%;bottom:31%;height:19%/,"Towel kneels beside right standing attendant on marble");
+  assert.match(fan,/left:9%;bottom:29%;height:31%/,"Fan stands forward left");
+  assert.match(tray,/right:9%;bottom:29%;height:31%/,"Tray stands forward right");
+  assert.match(ewer,/left:17%;right:auto;bottom:31%;height:22%/,"Ewer kneels beside left standing attendant on marble");
+  assert.match(towel,/right:17%;bottom:31%;height:22%/,"Towel kneels beside right standing attendant on marble");
   assert.doesNotMatch(fan,/scaleX\(-1\)/,"Left-standing fan faces centre without a flip");
   assert.doesNotMatch(ewer,/scaleX\(-1\)/,"Left-kneeling ewer faces centre without a flip");
   assert.match(tray,/transform:scaleX\(-1\);transform-origin:center bottom/,"Right-standing tray faces centre");
@@ -2348,6 +2348,13 @@ test("GAME-SP4.1G3D symmetric kneeling performers read at believable scale and r
     assert.equal(coord(fan,"left"),coord(tray,"right"),"Standing pair balanced at breakpoint "+i);
     assert.equal(coord(ewer,"left"),coord(towel,"right"),"Kneeling pair balanced at breakpoint "+i);
     assert.equal(coord(ewer,"height"),coord(towel,"height"),"Kneeling pair match height at breakpoint "+i);
+    assert.equal(coord(fan,"height"),coord(tray,"height"),"Standing pair match height at breakpoint "+i);
+    const protagonists=[{david:28,paul:27},{david:26,paul:25},{david:22,paul:22}][i];
+    assert.ok(coord(fan,"height")>protagonists.david && coord(tray,"height")>protagonists.paul,
+      "Foreground standing attendants must read slightly larger than David and Paul");
+    const expectedSizes=[{standing:31,kneeling:22},{standing:29,kneeling:20},{standing:24,kneeling:17}][i];
+    assert.equal(coord(fan,"height"),expectedSizes.standing,"Attendant increase is controlled at breakpoint "+i);
+    assert.equal(coord(ewer,"height"),expectedSizes.kneeling,"Kneeling increase is controlled at breakpoint "+i);
     assert.ok(coord(ewer,"height")>=Math.round(coord(fan,"height")*0.65),
       "Kneeling actors remain legible without miniature scaling at breakpoint "+i);
     assert.ok(coord(ewer,"bottom")>coord(fan,"bottom"),"Kneeling actors remain slightly behind in depth");
