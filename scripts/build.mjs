@@ -161,6 +161,15 @@ if (mutedBytes.length < 50000 || mutedBytes.length > 2 * 1024 * 1024 ||
 await mkdir(path.dirname(path.join(output, approvedMutedChatCutaway)), { recursive: true });
 await copyFile(mutedSource, path.join(output, approvedMutedChatCutaway));
 
+// GAME-SP4.1G3F: two owner-supplied Berserk Llama Syndrome album covers.
+for(const name of ["madness","tracklist"]){
+  const relative = "public/assets/generated/game/bls-stephen-martin-"+name+"-cover-v01.webp";
+  const bytes=await readFile(path.join(root,relative));
+  if(bytes.length<10000 || bytes.toString("ascii",0,4)!=="RIFF" ||
+     bytes.toString("ascii",8,12)!=="WEBP") throw new Error("G3F album cover missing/invalid: "+relative);
+  await mkdir(path.dirname(path.join(output,relative)),{recursive:true});
+  await copyFile(path.join(root,relative),path.join(output,relative));
+}
 // GAME-SP4.1G3C: the nine owner-approved admissions cutouts are materialised
 // from Drive and must be present in the published Cloudflare output. Tests
 // against repository sources alone do not catch a missing dist copy.

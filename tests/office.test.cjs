@@ -2159,6 +2159,56 @@ test("SP4.0C Stephen is sized for the background's raised throne at desktop/tabl
 });
 
 
+test("GAME-SP4.1G3F album cards, linked platforms and safe checkpoints are packaged",()=>{
+  const build=read("scripts/build.mjs");
+  for(const name of ["madness","tracklist"]){
+    const filename="bls-stephen-martin-"+name+"-cover-v01.webp";
+    const relative="public/assets/generated/game/"+filename;
+    const b=fs.readFileSync(path.join(root,relative));
+    assert.equal(b.toString("ascii",0,4),"RIFF");
+    assert.equal(b.toString("ascii",8,12),"WEBP");
+    assert.ok(build.includes('for(const name of ["madness","tracklist"])') &&
+      build.includes('"public/assets/generated/game/bls-stephen-martin-"+name+"-cover-v01.webp"'),
+      "Cloudflare must package both approved covers");
+    const manifest=JSON.parse(read("generated-assets/manifests/game-sp41g3f-bls-"+name+"-cover-v01.json"));
+    assert.equal(manifest.destination,relative);
+    assert.equal(manifest.source.provider,"google-drive");
+  }
+  const albums=[
+    ["martiin","Stephen Martiin","madness","3pplNTs1JPhcowaDVFu1kX","1892550046","OLAK5uy_lfcCREgMXnjHssdMy-I1xFi34VfEi4hvE"],
+    ["martin","Stephen Martin","tracklist","1OGTtKaWAP3qNpqIiigcyQ","1860668056","OLAK5uy_lcQUOTNEoQdXQ6-n6XAk5j5OU8Rc3_Awk"]
+  ];
+  for(const [key,title,asset,spotify,apple,youtube] of albums){
+    const start=html.indexOf('data-album="'+key+'"');
+    assert.ok(start>0,"Missing "+title+" card");
+    const card=html.slice(start,html.indexOf("</article>",start));
+    assert.ok(card.includes("bls-stephen-martin-"+asset+"-cover-v01.webp"));
+    assert.ok(card.includes('alt="'+title+' album cover"'));
+    assert.ok(card.includes('>'+title+'</strong>'));
+    assert.ok(card.includes(spotify)&&card.includes(apple)&&card.includes(youtube));
+    assert.equal((card.match(/class="bls-platform-link /g)||[]).length,3);
+    assert.equal((card.match(/target="_blank" rel="noopener noreferrer"/g)||[]).length,4);
+    for(const site of ["Spotify","Apple Music","YouTube"]){
+      assert.ok(card.includes("Listen to "+title+" on "+site));
+    }
+  }
+  // Both Apple Music tiles must use the approved coloured icon, not the generic note SVG.
+  assert.equal((html.match(/class="bls-apple-music-logo"/g)||[]).length,2);
+  assert.equal(html.split("https://marketing.services.apple/mdsa/assets/storage/blobs/images/640a25ea26ab1a0007c2b3fd/en-us-large%401x.png").length-1,2);
+  assert.doesNotMatch(html,/<a class="bls-platform-link bls-platform-apple"[^>]*><svg/);
+  assert.match(css,/\.bls-platform-apple \.bls-apple-music-logo/);
+  assert.doesNotMatch(css,/\.bls-platform-apple\s*\{[^}]*background:transparent/);
+  assert.match(css,/\.bls-platform-link\s*\{[^}]*background:rgba\(255,255,255,\.13\);[^}]*border:1px solid/);
+  assert.doesNotMatch(html,/id="blsAlbumLightbox"/);
+  assert.doesNotMatch(engine,/blsAlbumLightbox|openAlbumPreview/);
+  assert.match(css,/top:12%;right:3%;bottom:auto/);
+  assert.match(css,/top:auto;left:5%;right:5%;bottom:15%/);
+  assert.match(html,/id="rescueSummaryJumpSelect"/);
+  assert.match(html,/value="hotel"/);
+  assert.match(engine,/function jumpFromEnding/);
+  assert.match(engine,/state\.hubMatched = false/);
+  assert.match(engine,/rescueFramework\.fresh\(state\.route\)/);
+});
 test("GAME-SP4.1G3E approved crowned Steve finale appears only after fourteen Ending A lines",()=>{
   const filename="ending-a-finale-stephen-crowned-wink-v01.webp";
   const asset="public/assets/generated/locations/"+filename;

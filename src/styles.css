@@ -5093,3 +5093,104 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen .china-final-phone,
   #holidayScreen .china-final-phone-screen {transition:none !important;}
 }
+
+/* GAME-SP4.1G3F: restored wide lower caption and two linked albums at upper-right. */
+#holidayScreen #rescueEndingSummary .rescue-route-intro-stage {position:relative;isolation:isolate;}
+#holidayScreen #rescueEndingSummary .rescue-travel-panel,
+#holidayScreen #rescueEndingSummary[data-route="cult"] .rescue-travel-panel {
+  position:absolute;z-index:3;top:auto;left:5%;right:5%;bottom:15%;
+  width:90%;max-width:none;max-height:32%;margin:0;box-sizing:border-box;
+  overflow-y:auto;padding:clamp(10px,1.4vw,19px);gap:5px;background:rgba(5,24,45,.88);
+}
+#holidayScreen #rescueEndingSummary .bls-albums {
+  position:absolute;z-index:4;top:12%;right:3%;bottom:auto;
+  width:min(31%,370px);max-width:calc(100% - 20px);
+  padding:9px 11px;box-sizing:border-box;color:#fff4db;
+  background:rgba(5,24,45,.9);border:2px solid #ebcb87;border-radius:13px;
+}
+#holidayScreen #rescueEndingSummary .bls-albums > p {
+  text-align:center;font-size:clamp(11px,1vw,14px);font-weight:800;
+  line-height:1.2;margin:0 0 8px;
+}
+#holidayScreen #rescueEndingSummary .bls-album-grid {
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;
+}
+#holidayScreen #rescueEndingSummary .bls-album-card {
+  min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px;
+}
+#holidayScreen #rescueEndingSummary .bls-album-cover {
+  display:block;width:100%;padding:3px;box-sizing:border-box;
+  background:#fff5df;border:2px solid #d6af62;border-radius:8px;
+}
+#holidayScreen #rescueEndingSummary .bls-album-cover img {
+  display:block;width:100%;aspect-ratio:1;object-fit:contain;border-radius:3px;
+}
+#holidayScreen #rescueEndingSummary .bls-album-card strong {
+  font-size:clamp(11px,.94vw,14px);line-height:1.15;text-align:center;color:#fff4db;
+}
+#holidayScreen #rescueEndingSummary .bls-platform-links {
+  display:flex;align-items:center;justify-content:center;gap:7px;
+}
+#holidayScreen #rescueEndingSummary .bls-platform-link {
+  display:grid;place-items:center;width:29px;height:29px;min-width:29px;
+  border-radius:6px;background:rgba(255,255,255,.13);
+  border:1px solid rgba(255,255,255,.3);
+}
+#holidayScreen #rescueEndingSummary .bls-platform-link svg {display:block;width:20px;height:20px;}
+#holidayScreen #rescueEndingSummary .bls-platform-spotify {color:#1ed760;}
+/* Apple Music uses the same outlined button as Spotify and YouTube. */
+#holidayScreen #rescueEndingSummary .bls-platform-apple .bls-apple-music-logo {display:block;width:20px;height:20px;object-fit:contain;}
+#holidayScreen #rescueEndingSummary .bls-platform-youtube {color:#ff3838;}
+#holidayScreen #rescueEndingSummary .bls-album-cover:hover,
+#holidayScreen #rescueEndingSummary .bls-platform-link:hover {filter:brightness(1.12);transform:translateY(-1px);}
+#holidayScreen #rescueEndingSummary .bls-album-cover:focus-visible,
+#holidayScreen #rescueEndingSummary .bls-platform-link:focus-visible {outline:3px solid #89ddff;outline-offset:2px;}
+#holidayScreen #rescueEndingSummary .wall-action-strip {display:flex;align-items:center;gap:8px;flex-wrap:wrap;z-index:7;}
+#holidayScreen #rescueEndingSummary .rescue-jump-label {
+  display:flex;align-items:center;gap:6px;font-size:12px;color:#fff1cd;font-weight:800;
+}
+#holidayScreen #rescueEndingSummary .rescue-jump-label select {
+  min-width:0;max-width:220px;font-size:12px;padding:7px;border-radius:6px;
+  color:#102a44;background:#fff7e7;border:1px solid #e3bf78;
+}
+@media(max-height:650px) and (min-width:801px) {
+  #holidayScreen #rescueEndingSummary .bls-albums {top:13%;width:min(28%,315px);padding:6px;}
+  #holidayScreen #rescueEndingSummary .bls-albums > p {font-size:11px;margin-bottom:4px;}
+  #holidayScreen #rescueEndingSummary .bls-album-card {gap:3px;}
+  #holidayScreen #rescueEndingSummary .bls-platform-link {width:25px;height:25px;min-width:25px;}
+}
+@media(max-width:800px) {
+  #holidayScreen #rescueEndingSummary .rescue-travel-panel,
+  #holidayScreen #rescueEndingSummary[data-route="cult"] .rescue-travel-panel {
+    top:auto;left:3%;right:3%;bottom:18%;width:94%;max-height:42%;padding:10px 12px;
+  }
+  #holidayScreen #rescueEndingSummary .bls-albums {
+    top:14%;right:3%;bottom:auto;width:min(52%,320px);padding:6px;
+  }
+  #holidayScreen #rescueEndingSummary .bls-albums > p {font-size:10px;margin-bottom:5px;}
+  #holidayScreen #rescueEndingSummary .bls-album-grid {gap:5px;}
+  #holidayScreen #rescueEndingSummary .bls-album-card strong {font-size:10px;}
+  #holidayScreen #rescueEndingSummary .bls-platform-links {gap:3px;}
+  #holidayScreen #rescueEndingSummary .bls-platform-link {width:25px;height:25px;min-width:25px;}
+}
+@media(max-width:450px) {
+  #holidayScreen #rescueEndingSummary .rescue-travel-panel,
+  #holidayScreen #rescueEndingSummary[data-route="cult"] .rescue-travel-panel {
+    top:auto;bottom:20%;max-height:43%;gap:3px;padding:8px 10px;
+  }
+  #holidayScreen #rescueEndingSummary .bls-albums {
+    top:13%;right:3%;bottom:auto;width:82%;padding:5px;
+  }
+  #holidayScreen #rescueEndingSummary .bls-album-cover img {
+    height:clamp(60px,19vw,88px);object-fit:contain;
+  }
+  #holidayScreen #rescueEndingSummary .bls-album-grid {gap:4px;}
+  #holidayScreen #rescueEndingSummary .bls-album-card strong {font-size:10px;}
+  #holidayScreen #rescueEndingSummary .bls-albums > p {font-size:9px;margin-bottom:4px;}
+  #holidayScreen #rescueEndingSummary .bls-platform-link {width:24px;height:24px;min-width:24px;}
+  #holidayScreen #rescueEndingSummary .bls-platform-link svg {width:18px;height:18px;}
+  #holidayScreen #rescueEndingSummary .bls-platform-apple .bls-apple-music-logo {width:18px;height:18px;}
+  #holidayScreen #rescueEndingSummary .wall-action-strip {gap:4px;}
+  #holidayScreen #rescueEndingSummary .rescue-jump-label {font-size:10px;}
+  #holidayScreen #rescueEndingSummary .rescue-jump-label select {max-width:145px;font-size:10px;}
+}
