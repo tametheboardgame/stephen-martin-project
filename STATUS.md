@@ -1,5 +1,12 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G4G Ending B finale artwork (21 October 2026)
+
+- G4D–G4F PR #82 approved, merged and verified on main as `7cdf0af19acae182d38f97e89bff8fdaa6e1973a`, 254/254 checks passed before merge.
+- G4G new independent draft branch `agent/game-sp41g4g-ending-b-finale-art`; first concept art brief for “Detained by the Administration” committed. The canonical last narrator joke is David proudly framing his government-issued PLEASE LEAVE certificate.
+- Art concept pending owner **visual approval**; no new PNG, WebP, Drive manifest or game integration yet. Preserve approved actor likenesses and keep top-right album area and bottom live heading/summary clear.
+- Next after art approval: stage original in Drive, manifest and WebP materialise, Ending-B-only shared hub background integration, regression and owner sign-off. Optional G4C transitions remain deferred until after Ending C fixes.
+
 ## CURRENT — GAME-SP4.1G4D–G4F Ending B polish, draft (21 October 2026)
 
 - **Owner feedback (cast spacing):** stamp now approved. Stephen and Paul are too close to the left/right edges respectively despite satisfactory height/foot contact. Moved Stephen right and Paul left at desktop, tablet and mobile breakpoints; David, Official, heights and bottom offsets unchanged. Await fresh CI/deployment and screenshot confirmation.
