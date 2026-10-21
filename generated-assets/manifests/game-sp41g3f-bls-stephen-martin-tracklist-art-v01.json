@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "19WU0ollJTXbjRkZ6Uk7n4KlsWZ2dEEYS"
+  },
+  "expectedSourceName": "bls-stephen-martin-tracklist-art-v01.png",
+  "destination": "public/assets/generated/music/bls-stephen-martin-tracklist-art-v01.webp",
+  "transform": {
+    "maxWidth": 1024,
+    "maxHeight": 1024,
+    "quality": 87
+  },
+  "revision": 1
+}
