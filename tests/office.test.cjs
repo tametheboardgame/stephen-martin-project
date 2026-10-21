@@ -2167,7 +2167,9 @@ test("GAME-SP4.1G3F album buttons and safe checkpoint menu are packaged and acce
     const b=fs.readFileSync(path.join(root,relative));
     assert.equal(b.toString("ascii",0,4),"RIFF");
     assert.equal(b.toString("ascii",8,12),"WEBP");
-    assert.ok(build.includes('bls-stephen-martin-"+name+"-cover-v01.webp'.replace('"+name+"',name)) || build.includes('"bls-stephen-martin-"+name+"-cover-v01.webp"'));
+    assert.ok(build.includes('for(const name of ["madness","tracklist"])') &&
+      build.includes('"public/assets/generated/game/bls-stephen-martin-"+name+"-cover-v01.webp"'),
+      "Cloudflare must package both approved covers");
     const manifest=JSON.parse(read("generated-assets/manifests/game-sp41g3f-bls-"+name+"-cover-v01.json"));
     assert.equal(manifest.destination,relative);
     assert.equal(manifest.source.provider,"google-drive");
