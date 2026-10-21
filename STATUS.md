@@ -1,5 +1,12 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G4A Bear Photograph Continuity (21 October 2026)
+
+- Found banquet acceptance used a 🐻 emoji, while the approved Chapter 1 printer still already contains Paul's actual official-and-bear photograph.
+- Draft fix reuses the exact approved source file `office-printer-bear-cutaway-v01.webp` in a CSS crop within the banquet acceptance panel. No new generated artwork or changed voice/audio/story state.
+- New automated regression checks validate that the same WebP appears in both chapters, only after all five accepted reply lines, remains visible after resume and is absent on decline/replay.
+- Needs GitHub tests, Cloudflare deployment and owner visual review before merge; proceed to G4B afterwards.
+
 ## CURRENT — GAME-SP4.1G3G Full Ending Regression (21 October 2026)
 
 - Branch: `agent/game-sp41g3g-regression`; pending GitHub CI, Cloudflare preview and owner acceptance.

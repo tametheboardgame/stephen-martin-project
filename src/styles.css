@@ -1722,12 +1722,22 @@ body:has(#menuScreen:not([hidden])) main {
   border: 2px solid #c29d5d;
   background: #fff3d5; color: #233346;
 }
-#holidayScreen .palace-photo-gag > span {
-  font-size: 39px; line-height: 1;
+/* G4A: crop the actual approved office printer cutaway in place.
+   The source is the original unchanged WebP, not an emoji or a second bear asset.
+   1672×941 source: the central print occupies approximately x=440–1260,
+   y=360–895, so this overflow-hidden frame reveals that exact picture. */
+#holidayScreen .palace-photo-gag .palace-photo-crop {
+  position:relative;overflow:hidden;flex:0 0 clamp(96px,9vw,132px);
+  width:clamp(96px,9vw,132px);aspect-ratio:3/2;
+  background:#d6ebed;border:2px solid #c29d5d;border-radius:4px;
 }
-#holidayScreen .palace-photo-gag div { display: grid; gap: 3px; }
-#holidayScreen .palace-photo-gag strong { color: #1f4565; font-size: 12px; }
-#holidayScreen .palace-photo-gag small { color: #323c45; font-size: 12px; }
+#holidayScreen .palace-photo-gag .palace-photo-crop img {
+  position:absolute;display:block;width:214%;max-width:none;height:auto;
+  left:-56%;top:-68%;pointer-events:none;user-select:none;
+}
+#holidayScreen .palace-photo-gag .palace-photo-copy { display:grid;gap:3px;min-width:0; }
+#holidayScreen .palace-photo-gag strong { color:#1f4565;font-size:12px; }
+#holidayScreen .palace-photo-gag small { color:#323c45;font-size:12px;line-height:1.25; }
 #holidayScreen .palace-scene .wall-choices p {
   max-width: 750px;
 }
@@ -1754,7 +1764,11 @@ body:has(#menuScreen:not([hidden])) main {
 @media (max-width: 450px) {
   #holidayScreen .palace-scene .wall-stage { aspect-ratio: 3 / 4; }
   #holidayScreen .palace-honour-badge { font-size: 10px; max-width: 50%; top: 16%; }
-  #holidayScreen .palace-photo-gag > span { font-size: 30px; }
+  #holidayScreen .palace-photo-gag {gap:8px;padding:5px 7px;}
+  #holidayScreen .palace-photo-gag .palace-photo-crop {
+    flex-basis:86px;width:86px;
+  }
+  #holidayScreen .palace-photo-gag small {font-size:11px;}
 }
 
 

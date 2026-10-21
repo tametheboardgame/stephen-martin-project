@@ -223,8 +223,15 @@
             <div id="palaceResult" class="wall-result" hidden>
               <strong id="palaceResultTitle">Banquet booked</strong>
               <p id="palaceResultText" aria-live="polite"></p>
-              <div id="palacePhotoGag" class="palace-photo-gag" hidden role="img" aria-label="Stephen's first phone photograph is Paul's ridiculous cartoon bear image">
-                <span aria-hidden="true">🐻</span><div><strong>FIRST PHOTO: UPLOADED</strong><small>Paul's rather unfortunate bear picture. Stephen hasn't noticed.</small></div>
+              <div id="palacePhotoGag" class="palace-photo-gag" hidden>
+                <!-- G4A: reuse the exact approved Chapter 1 printer still. A CSS viewport
+                     isolates its printed photograph, with no altered or invented bear art. -->
+                <div class="palace-photo-crop">
+                  <img src="./public/assets/generated/game/office-printer-bear-cutaway-v01.webp"
+                    alt="The same printed photograph seen in Paul's office printer: a smiling official beside a honey-loving cartoon bear."
+                    width="1672" height="941" loading="lazy">
+                </div>
+                <div class="palace-photo-copy"><strong>FIRST PHOTO: UPLOADED</strong><small>It's the exact picture Paul printed at the office. Stephen hasn't noticed.</small></div>
               </div>
               <button id="palaceGoMarketButton" type="button" class="btn btn-primary">The next evening… →</button>
               <button id="palaceGoIncidentButton" type="button" class="btn btn-primary" hidden>Attend the banquet →</button>
