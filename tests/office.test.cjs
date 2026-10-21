@@ -5709,3 +5709,151 @@ test("GAME-SP4.1G4A identical printed photo is shown only after the full accepte
   declined.el("palaceDeclineButton").click();
   assert.equal(declined.el("palacePhotoGag").hidden,true,"Declining the banquet never uploads the photo");
 });
+
+
+/*
+ * GAME-SP4.1G4B: Ending B's genuinely selected banquet must reuse the
+ * approved G1A phone and G1B England card exactly once, including after G4A.
+ * These are state/audio integration tests, not screenshot or listening claims.
+ */
+test("GAME-SP4.1G4B actual banquet photo flows into the existing phone, England and complete rescue alarm",()=>{
+  const p=toPalaceChoice();
+  p.el("palaceAcceptButton").click();
+  assert.equal(saved(p).pendingPlan,"detention");
+  assert.equal(p.el("palacePhotoGag").hidden,true,"Canonical G4A photo cannot precede dialogue");
+  for(let i=0;i<5;i++)p.el("palaceNextButton").click();
+  assert.equal(p.el("palacePhotoGag").hidden,false);
+  p.el("palaceGoIncidentButton").click();
+  assert.equal(saved(p).holidayPhase,"route-handoff");
+  assert.equal(saved(p).route,"detention");
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.route.banquet.001");
+  p.el("handoffContinueButton").click();
+  const message=story().SMP_CHINA_FINAL.messageByRoute.detention;
+  assert.equal(saved(p).holidayPhase,"final-message");
+  assert.equal(saved(p).finalStep,0);
+  assert.equal(p.el("chinaPhoneMessage").textContent,message);
+  assert.equal(p.el("chinaPhoneStatus").textContent,"Partial message delivered");
+  assert.equal(p.el("chinaBatteryLabel").textContent,"1% · LOW BATTERY");
+  assert.equal(p.el("chinaFinalPhone").dataset.power,"low");
+  assert.equal(p.el("chinaPhonePowerNotice").hidden,true);
+  assert.equal(p.el("chinaFinalReaction").hidden,true);
+  assert.equal(p.el("chinaFinalEngland").hidden,true);
+  assert.equal(p.el("transitionNarration").hidden,true,"Do not narrate England over Stephen's phone");
+
+  p.el("chinaFinalNextButton").click();
+  assert.equal(saved(p).finalStep,1);
+  assert.equal(p.el("chinaPhoneMessage").textContent,message);
+  assert.equal(p.el("chinaFinalPhone").dataset.power,"off");
+  assert.equal(p.el("chinaBatteryLabel").textContent,"0% · Battery flat");
+  assert.equal(p.el("chinaPhonePowerNotice").hidden,false);
+  assert.equal(p.el("chinaFinalReaction").hidden,false);
+  assert.match(html,/id="chinaFinalReaction"[^>]*><strong>STEPHEN<\/strong><p>Oh, for fuck's sake\.<\/p>/);
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(saved(p).finalStep,1);
+  assert.equal(p.el("chinaFinalPhone").dataset.power,"off");
+
+  p.el("chinaFinalNextButton").click();
+  assert.equal(saved(p).finalStep,2);
+  assert.equal(p.el("chinaFinalPhone").hidden,true);
+  assert.equal(p.el("chinaPhonePowerNotice").hidden,true);
+  assert.equal(p.el("chinaFinalEngland").hidden,false);
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.england.back.001");
+  assert.equal(p.el("transitionNarration").hidden,false);
+  p.el("homeButton").click();p.el("resumeButton").click();
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.england.back.001");
+  p.el("chinaFinalNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-alarm");
+  assert.equal(saved(p).route,"detention");
+  assert.equal(saved(p).rescueAlarmStep,0);
+  assert.equal(p.el("transitionNarration").hidden,true,"No second England card");
+  assert.equal(p.el("rescueAlarmPhoneText").textContent,message);
+
+  const alarm=story().SMP_RESCUE_ALARM;
+  assert.equal(alarm.lines.length,10);
+  for(let i=0;i<alarm.lines.length;i++){
+    assert.equal(p.el("rescueAlarmLine").textContent,alarm.lines[i].text,
+      "Keep the canonical David/Paul dialogue and order at line "+(i+1));
+    assert.equal(p.el("rescueAlarmPhoneText").textContent,message);
+    p.el("rescueAlarmNextButton").click();
+  }
+  assert.equal(saved(p).rescueAlarmStep,10);
+  assert.equal(p.el("rescueAlarmTravelButton").hidden,false);
+  p.el("rescueAlarmTravelButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-travel");
+  for(let i=0;i<4;i++)p.el("rescueTravelNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-hub-arrival",
+    "A single England handoff leads to the real hotel investigation, not another postcard");
+  assert.equal(saved(p).route,"detention");
+  assert.equal(saved(p).hubMatched,false,"Investigation has not been fabricated as completed");
+});
+
+test("GAME-SP4.1G4B Ending B voice follows reaction then a single narrator and cancels stale audio",async()=>{
+  const p=g1cToHandoff("detention",{audio:true});
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.route.banquet.001");
+  await Promise.resolve();
+  const banquetNarrator=p.voices.at(-1);
+  assert.match(banquetNarrator.src,/transition\.route\.banquet\.001\.mp3$/);
+  p.el("handoffContinueButton").click();
+  assert.equal(saved(p).finalStep,0);
+  assert.equal(banquetNarrator.paused,true);
+
+  p.el("chinaFinalNextButton").click();
+  assert.equal(saved(p).finalStep,1);
+  await Promise.resolve();
+  const stephen=p.voices.at(-1);
+  assert.match(stephen.src,/china\.final\.001\.mp3$/);
+  const oldStephen=stephen.onended;
+  assert.equal(typeof oldStephen,"function");
+  p.el("holidayPauseButton").click();
+  assert.equal(stephen.paused,true);
+  p.el("holidayNextButton").click();
+  assert.equal(saved(p).finalStep,2);
+  assert.equal(stephen.onended,null);
+  oldStephen();
+  assert.equal(saved(p).finalStep,2,"Old Stephen MP3 cannot skip the illustrated England card");
+  assert.equal(p.timeouts.size,0,"Pause prevents an extra automatic transition");
+
+  p.el("holidayPauseButton").click();
+  await Promise.resolve();
+  const englandNarrator=p.voices.at(-1);
+  assert.match(englandNarrator.src,/transition\.england\.back\.001\.mp3$/);
+  assert.equal(p.el("transitionNarration").dataset.cue,"transition.england.back.001");
+  const englandEnd=englandNarrator.onended;
+  assert.equal(typeof englandEnd,"function");
+  p.el("chinaFinalNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-alarm");
+  assert.equal(englandNarrator.paused,true);
+  assert.equal(englandNarrator.onended,null);
+  englandEnd();
+  assert.equal(saved(p).rescueAlarmStep,0,
+    "A late England MP3 completion must not skip David's first alarm line");
+  assert.equal(p.el("transitionNarration").hidden,true);
+});
+
+test("GAME-SP4.1G4B production handoff reuses exactly the approved G1A and G1B assets",()=>{
+  const shell="stephen-phone-shell-g1a-v01.webp";
+  const postcard="transition-back-in-england-postcard-collage-v01.webp";
+  const phonePath="public/assets/generated/game/"+shell;
+  const collagePath="public/assets/generated/locations/"+postcard;
+  assert.ok(html.includes("./"+phonePath));
+  assert.ok(css.includes(postcard));
+  assert.ok(read("scripts/build.mjs").includes('"'+phonePath+'"'));
+  assert.ok(read("scripts/build.mjs").includes('"'+postcard+'"'));
+  for(const [manifestName,destination] of [
+    ["game-sp41g1a-phone-shell-v01.json",phonePath],
+    ["game-sp41g1b-england-postcard-collage-v01.json",collagePath]
+  ]){
+    const manifest=JSON.parse(read("generated-assets/manifests/"+manifestName));
+    assert.equal(manifest.destination,destination);
+    assert.equal(manifest.source.provider,"google-drive");
+    const img=fs.readFileSync(path.join(root,destination));
+    assert.equal(img.toString("ascii",0,4),"RIFF");
+    assert.equal(img.toString("ascii",8,12),"WEBP");
+  }
+  const phone=html.slice(html.indexOf('id="chinaFinalScene"'),html.indexOf('id="rescueAlarmScene"'));
+  assert.equal((phone.match(/id="chinaFinalPhone"/g)||[]).length,1);
+  assert.equal((phone.match(/id="chinaFinalEngland"/g)||[]).length,1);
+  assert.equal((phone.match(new RegExp(shell.replace(/\./g,"\\."),"g"))||[]).length,1);
+  assert.match(engine,/case "final-message":[\s\S]*?state\.finalStep === 2 \? transitionNarration\.backEngland/);
+  assert.match(engine,/id:"transition\.england\.back\.001"/);
+});

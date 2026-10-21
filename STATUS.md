@@ -1,5 +1,11 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G4B Dying Phone and England Handoff (21 October 2026)
+
+- Based on `main` after G4A merge `d945217`; branch `agent/game-sp41g4b-banquet-england-handoff` planned as a draft QA PR.
+- Audit confirmed G1A handset, G1B England collage and G1C all-route flow already implemented. G4B adds Ending B-specific full-path tests from the actual accepted banquet/G4A print through Stephen's canonical delivered fragment, 1% warning, 0% shutdown and reaction, a single England narration, and all ten rescue-alarm lines to the unsolved hotel.
+- Regression includes voice/Next stale-callback cancellation and exact re-use of existing Drive-backed assets. No duplicative artwork, dialogue, voice or gameplay state; pending CI, Cloudflare preview and owner approval.
+
 ## CURRENT — GAME-SP4.1G4A Bear Photograph Continuity (21 October 2026)
 
 - Found banquet acceptance used a 🐻 emoji, while the approved Chapter 1 printer still already contains Paul's actual official-and-bear photograph.
