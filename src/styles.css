@@ -5273,7 +5273,7 @@ body:has(#menuScreen:not([hidden])) main {
   pointer-events:none;clip-path:none;
 }
 #holidayScreen #detentionEndingScene .detention-ending-stephen {
-  left:13%;height:52%;bottom:22%;z-index:2;
+  left:16%;height:52%;bottom:22%;z-index:2;
 }
 #holidayScreen #detentionEndingScene .detention-ending-david {
   left:35%;height:50%;z-index:2;
@@ -5282,7 +5282,7 @@ body:has(#menuScreen:not([hidden])) main {
   left:58%;height:54%;z-index:2;
 }
 #holidayScreen #detentionEndingScene .detention-ending-paul {
-  left:81%;height:48%;z-index:2;
+  left:77%;height:48%;z-index:2;
 }
 #holidayScreen #detentionEndingScene .detention-ending-content.story-speech {
   z-index:5;left:3%;right:3%;width:94%;
@@ -5297,10 +5297,10 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen #detentionEndingScene .detention-ending-official {
     bottom:33%;max-width:24%;
   }
-  #holidayScreen #detentionEndingScene .detention-ending-stephen {left:12%;height:43%;bottom:30%;}
+  #holidayScreen #detentionEndingScene .detention-ending-stephen {left:15%;height:43%;bottom:30%;}
   #holidayScreen #detentionEndingScene .detention-ending-david {left:35%;height:41%;}
   #holidayScreen #detentionEndingScene .detention-ending-official {left:59%;height:44%;}
-  #holidayScreen #detentionEndingScene .detention-ending-paul {left:83%;height:39%;}
+  #holidayScreen #detentionEndingScene .detention-ending-paul {left:79%;height:39%;}
 }
 @media (max-width:450px) {
   #holidayScreen #rescueMiniGameScene[data-route="detention"]
@@ -5317,8 +5317,8 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen #detentionEndingScene .detention-ending-official {
     bottom:37%;max-width:25%;
   }
-  #holidayScreen #detentionEndingScene .detention-ending-stephen {left:12%;height:33%;bottom:34%;}
+  #holidayScreen #detentionEndingScene .detention-ending-stephen {left:15%;height:33%;bottom:34%;}
   #holidayScreen #detentionEndingScene .detention-ending-david {left:35%;height:31%;}
   #holidayScreen #detentionEndingScene .detention-ending-official {left:59%;height:35%;}
-  #holidayScreen #detentionEndingScene .detention-ending-paul {left:83%;height:30%;}
+  #holidayScreen #detentionEndingScene .detention-ending-paul {left:80%;height:30%;}
 }

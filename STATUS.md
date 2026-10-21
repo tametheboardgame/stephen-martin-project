@@ -2,6 +2,9 @@
 
 ## CURRENT — GAME-SP4.1G4D–G4F Ending B polish, draft (21 October 2026)
 
+- **Owner feedback (cast spacing):** stamp now approved. Stephen and Paul are too close to the left/right edges respectively despite satisfactory height/foot contact. Moved Stephen right and Paul left at desktop, tablet and mobile breakpoints; David, Official, heights and bottom offsets unchanged. Await fresh CI/deployment and screenshot confirmation.
+
+
 - Owner screenshots: red stamp fell outside the full portrait because its overlay was anchored to a 690px-wide frame. Updated to real approved 1024x1536 image's 2:3 aspect ratio and repositioned the original stamp inside its approval box.
 - Stephen's white shoes visibly floated above the other cast on arrival. Lowered only Stephen's scene-specific position at desktop/tablet/mobile, leaving David, Paul and Official untouched.
 - PR #82 remains draft for updated tests, Cloudflare preview and owner visual feedback.

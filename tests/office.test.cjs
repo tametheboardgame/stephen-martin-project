@@ -5962,10 +5962,28 @@ test("G4E screenshot: red ink stays in the actual 2:3 permit approval box",()=>{
 });
 test("G4F screenshot: Stephen is lowered at all sizes without disturbing Dave Paul Official",()=>{
  const s=css.slice(css.lastIndexOf("/* GAME-SP4.1G4D–G4F:"));
- assert.match(s,/\.detention-ending-stephen \{\s*left:13%;height:52%;bottom:22%;z-index:2;/);
- assert.match(s,/\.detention-ending-stephen \{left:12%;height:43%;bottom:30%;\}/);
- assert.match(s,/\.detention-ending-stephen \{left:12%;height:33%;bottom:34%;\}/);
- for(const a of ["left:35%;height:50%;z-index:2;","left:58%;height:54%;z-index:2;","left:81%;height:48%;z-index:2;"])
+ assert.match(s,/\.detention-ending-stephen \{\s*left:16%;height:52%;bottom:22%;z-index:2;/);
+ assert.match(s,/\.detention-ending-stephen \{left:15%;height:43%;bottom:30%;\}/);
+ assert.match(s,/\.detention-ending-stephen \{left:15%;height:33%;bottom:34%;\}/);
+ for(const a of ["left:35%;height:50%;z-index:2;","left:58%;height:54%;z-index:2;","left:77%;height:48%;z-index:2;"])
   assert.ok(s.includes(a));
  assert.match(s,/\.detention-ending-content\.story-speech \{\s*z-index:5/);
+});
+
+
+test("G4F owner spacing revision: Stephen and Paul move inward without shifting David or Official",()=>{
+  const rules=css.slice(css.lastIndexOf("/* GAME-SP4.1G4D–G4F:"));
+  const checks=[
+    ["desktop Stephen",/\.detention-ending-stephen \{\s*left:16%;height:52%;bottom:22%;z-index:2;/],
+    ["desktop Paul",/\.detention-ending-paul \{\s*left:77%;height:48%;z-index:2;/],
+    ["tablet Stephen",/\.detention-ending-stephen \{left:15%;height:43%;bottom:30%;\}/],
+    ["tablet Paul",/\.detention-ending-paul \{left:79%;height:39%;\}/],
+    ["mobile Stephen",/\.detention-ending-stephen \{left:15%;height:33%;bottom:34%;\}/],
+    ["mobile Paul",/\.detention-ending-paul \{left:80%;height:30%;\}/],
+    ["David unchanged",/\.detention-ending-david \{\s*left:35%;height:50%;z-index:2;/],
+    ["Official unchanged",/\.detention-ending-official \{\s*left:58%;height:54%;z-index:2;/]
+  ];
+  for (const [description,pattern] of checks) assert.match(rules,pattern,description);
+  assert.match(rules,/\.detention-ending-actor,[\s\S]*?object-position:center bottom/);
+  assert.match(rules,/\.detention-ending-content\.story-speech \{\s*z-index:5/);
 });
