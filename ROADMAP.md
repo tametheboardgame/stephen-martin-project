@@ -884,7 +884,7 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 **G3D — Throne room attendant/actor scale and position**
 
-- **21 October progress:** A first CSS-only draft makes the kneeling attendants significantly larger and closer to the standing pair, with rear-layer ordering. The previously approved Stephen/David/Paul and standing positions, artwork and dialogue are unchanged. See [G3D placement audit and QA](docs/story/GAME-SP4.1G3D-THRONE-PERSPECTIVE-QA.md). Owner to review the actual preview before merge.
+- **21 October progress:** First screenshot revealed that simply enlarging kneelers left their heads implausibly above the standing attendants; the revised CSS aligns knee/sandal contact to the foreground floor, groups attendants at the two flanks and clears Ending A's clipped caption. The approved Stephen/David/Paul and standing positions, artwork and dialogue are unchanged. See [G3D placement audit and QA](docs/story/GAME-SP4.1G3D-THRONE-PERSPECTIVE-QA.md). Owner to review the actual preview before merge.
 
 - Audit the locked room art, throne Stephen, David, Paul and **four existing attendants** (`summitThroneAttendantFan`, `Tray`, `Ewer`, `Towel`). Use perspective markers and staging overlays before moving anything.
 - **Increase attendants to believable scale** and place them intentionally: **one standing and one kneeling on each side**, facing inward to Stephen. Kneeling figures should not seem miniature or too far in the foreground. Preserve the intended separate fan/tray/ewer/towel roles and layering.
