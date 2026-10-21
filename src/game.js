@@ -3100,9 +3100,15 @@
   $("rescueAlbumTracklistButton").addEventListener("click",()=>openAlbumArtwork("tracklist"));
   $("rescueAlbumCloseButton").addEventListener("click",closeAlbumArtwork);
   document.addEventListener("keydown",event=>{
-    if (event.key === "Escape" && !$("rescueAlbumViewer").hidden) {
+    if ($("rescueAlbumViewer").hidden) return;
+    if (event.key === "Escape") {
       event.preventDefault();
       closeAlbumArtwork();
+    } else if (event.key === "Tab") {
+      // This is an actual modal, not a preview that traps focus invisibly
+      // behind the stage or lets keyboard controls activate the main game.
+      event.preventDefault();
+      $("rescueAlbumCloseButton").focus?.({preventScroll:true});
     }
   });
   $("rescueSummaryRestartButton").addEventListener("click", startOffice);
