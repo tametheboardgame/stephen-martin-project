@@ -5919,6 +5919,7 @@ body:has(#menuScreen:not([hidden])) main {
 }
 #holidayScreen:has(#rescueEndingSummary[data-route="reassemble"]:not([hidden]))
   .china-footer.story-top-controls .story-toolbar-label {
+  display:inline-block;
   grid-column:1;
   grid-row:1;
   align-self:center;
