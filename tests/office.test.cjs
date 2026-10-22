@@ -5406,9 +5406,9 @@ test("GAME-SP4.1G3B Summit status reflects a rescue attempt, leaving B/C copy un
     for(let i=0;i<6;i++)q.el("hotelFinishButton").click();
     assert.equal(q.el("routeIntroPhaseLabel").textContent,route==="detention"
       ? "Investigation complete · Release office"
-      : "Investigation complete · Rescue briefing");
+      : "Investigation complete · Spa arrival");
     assert.match(q.el("routeIntroStatus").textContent,route==="detention"
-      ? /^Ceremonial release process · 1 of / : /^Rescue briefing · 1 of /);
+      ? /^Ceremonial release process · 1 of / : /^Spa misunderstanding · 1 of /);
   }
 });
 
@@ -6036,4 +6036,46 @@ test("G4G.1 Ending B responsive summary/album boxes shrink and never use interna
   assert.doesNotMatch(styles,/data-route="cult"|data-route="reassemble"/);
   assert.match(html,/id="rescueSummaryHeading"/);
   assert.match(html,/class="bls-albums"/);
+});
+
+
+// GAME-SP4.1G5A: user-visible spa route language only; no scripted lines/voice ID changes.
+test("G5A spa intro, completion and puzzle return use spa wording, not briefing",()=>{
+  const p=voicedSpaIntro();
+  const route=story().SMP_RESCUE_FRAMEWORK.routes.reassemble;
+  assert.equal(p.el("routeIntroPhaseLabel").textContent,"Investigation complete · Spa arrival");
+  assert.equal(p.el("routeIntroStatus").textContent,
+    "Spa misunderstanding · 1 of "+route.intro.length);
+  assert.equal(p.el("routeIntroLine").textContent,route.intro[0].text);
+  for(let i=0;i<route.intro.length;i++){
+    assert.equal(p.el("routeIntroLine").textContent,route.intro[i].text);
+    p.el("routeIntroNextButton").click();
+  }
+  assert.equal(p.el("routeIntroStatus").textContent,
+    "Spa approach complete. "+route.gameTitle+" is next.");
+  assert.doesNotMatch(p.el("routeIntroStatus").textContent,/briefing/i);
+  p.el("routeIntroNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  assert.equal(p.el("rescueMiniGameBackButton").textContent,"Back to spa scene");
+  assert.equal(p.el("rescueMiniGameProgressLabel").textContent,
+    "Cardboard souvenir · six slots and a POWER ON button");
+  p.el("rescueMiniGameBackButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+  assert.equal(p.el("routeIntroPhaseLabel").textContent,"Investigation complete · Spa arrival");
+  assert.equal(p.el("routeIntroStatus").textContent,
+    "Spa approach complete. "+route.gameTitle+" is next.");
+});
+
+test("G5A Ending C chapter jump names spa arrival while A and B retain original option",()=>{
+  assert.match(html,/id="rescueSummaryRouteOption" value="route"/);
+  assert.match(engine,/rescueSummaryRouteOption"\)\.textContent = state\.route === "reassemble"/);
+  assert.match(engine,/Chapter 4, spa arrival" : "Chapter 4, current route briefing"/);
+  const b=toHotelInvestigation("detention");
+  completeHotelIntro(b);
+  b.el("hotelDetentionButton").click();
+  for(let i=0;i<6;i++)b.el("hotelFinishButton").click();
+  assert.equal(b.el("routeIntroPhaseLabel").textContent,"Investigation complete · Release office");
+  assert.match(b.el("routeIntroStatus").textContent,/^Ceremonial release process/);
+  for(let i=0;i<4;i++)b.el("routeIntroNextButton").click();
+  assert.equal(b.el("rescueMiniGameBackButton").textContent,"Back to briefing");
 });
