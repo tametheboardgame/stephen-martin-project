@@ -5671,8 +5671,23 @@ body:has(#menuScreen:not([hidden])) main {
  * for reversibility, but do not render those misleading cut-out cavities.
  * This neutral cardboard mount displays six empty dashed mounting zones.
  * All installed artwork, tap/keyboard/drop targets and save IDs stay put. */
+/* Expand only the background surface, not the six interactive slots.
+ * The approved cucumber/bowl arms protrude slightly beyond the old frame.
+ * Extending the mount by 12% on either side contains them without shifting
+ * the fitted cutouts or the 0/6 through 6/6 puzzle layout. */
 #holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-silhouette {
   box-sizing:border-box;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+}
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-silhouette::before {
+  content:"";
+  position:absolute;
+  top:0;bottom:0;left:-12%;right:-12%;
+  z-index:0;
+  box-sizing:border-box;
+  pointer-events:none;
   border:3px solid #a77948;
   border-radius:18px;
   background:
