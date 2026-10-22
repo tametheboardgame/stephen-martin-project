@@ -23,10 +23,10 @@ jobs:
           node-version: '22'
       - name: Validate scripts, 3 routes, voice and packaged assets
         run: npm run verify
-      - name: Install isolated Chromium for screenshot QA
+      - name: Install Chromium for screenshot QA (runner system libraries preinstalled)
         run: |
           npm install --no-save --package-lock=false --ignore-scripts playwright@1.56.1
-          npx playwright install --with-deps chromium
+          npx playwright install chromium
       - name: Start local game preview
         run: |
           node scripts/preview-server.mjs > /tmp/g5h-preview-server.log 2>&1 &
