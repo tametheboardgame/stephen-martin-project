@@ -5663,3 +5663,81 @@ body:has(#menuScreen:not([hidden])) main {
     height:clamp(45px,13vw,60px);
   }
 }
+
+
+/* GAME-SP4.1G5E v2 — approved direction: NO on-screen slot labels.
+ * The carved grooves in the approved alpha-board asset cannot fit the
+ * independently approved cucumber/bowl arm poses. Keep the source art intact
+ * for reversibility, but do not render those misleading cut-out cavities.
+ * This neutral cardboard mount displays six empty dashed mounting zones.
+ * All installed artwork, tap/keyboard/drop targets and save IDs stay put. */
+/* Expand only the background surface, not the six interactive slots.
+ * The approved cucumber/bowl arms protrude slightly beyond the old frame.
+ * Extending the mount by 12% on either side contains them without shifting
+ * the fitted cutouts or the 0/6 through 6/6 puzzle layout. */
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-silhouette {
+  box-sizing:border-box;
+  /* Preserve the original 3px border box for identical target geometry. */
+  border:3px solid transparent;
+  background:transparent;
+  box-shadow:none;
+}
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-silhouette::before {
+  content:"";
+  position:absolute;
+  top:0;bottom:0;left:-12%;right:-12%;
+  z-index:0;
+  box-sizing:border-box;
+  pointer-events:none;
+  border:3px solid #a77948;
+  border-radius:18px;
+  background:
+    radial-gradient(ellipse at 50% 32%,rgba(255,250,219,.28),transparent 72%),
+    repeating-linear-gradient(92deg,rgba(109,72,34,.025) 0 3px,rgba(255,252,225,.025) 3px 7px),
+    linear-gradient(145deg,#ead3a5,#d8b889 65%,#c99b68);
+  box-shadow:
+    inset 0 0 0 3px rgba(255,242,201,.65),
+    inset 0 0 20px rgba(102,63,31,.10),
+    0 3px 7px rgba(57,36,18,.17);
+}
+/* The board image is retained in the repository and the DOM for rollback,
+ * but hidden so its impossible carved recesses never compete with targets. */
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-board-art {
+  display:none !important;
+}
+/* The old shaped ::before cut-outs follow the obsolete painted cavities.
+ * Disable those pseudo-elements and use deliberate dashed rectangles instead. */
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-slot::before {
+  display:none !important;
+}
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-slot:not([data-filled="true"]) {
+  z-index:6;
+  box-sizing:border-box;
+  border:2px dashed rgba(93,64,32,.86) !important;
+  border-radius:10px;
+  background:rgba(255,249,227,.23) !important;
+  box-shadow:inset 0 0 0 2px rgba(255,253,234,.45);
+}
+/* Labels remain in the DOM for screen readers but are never drawn onto the
+ * cardboard. The matching part names are announced by aria-label in JS. */
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-slot-label {
+  display:none !important;
+}
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-slot:not([data-filled="true"]):is(:hover,:focus-visible,[data-hint="true"]) {
+  background:rgba(255,215,128,.38) !important;
+  border:3px dashed #a65d22 !important;
+  box-shadow:0 0 0 2px rgba(255,247,222,.9),inset 0 0 14px rgba(239,155,58,.15);
+}
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-slot:focus-visible {
+  outline:3px solid #a65d22 !important;
+  outline-offset:3px;
+}
+/* Fitted pieces keep their full colour, proportions and anatomical
+ * placement, with no dashed outline covering the artwork after placement. */
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-slot[data-filled="true"] {
+  z-index:5;
+  border:0 !important;
+  background:transparent !important;
+  opacity:1;
+  box-shadow:none;
+}

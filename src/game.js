@@ -2147,11 +2147,14 @@
             const part = assembly.parts[i];
             const slot = $("assemblySlot"+i);
             const filled = placed.includes(part.id);
-            $("assemblySlotLabel"+i).textContent = filled ? "✓ "+part.label+" fitted" : part.label+" · empty slot";
+            $("assemblySlotLabel"+i).textContent = filled ? "✓ "+part.label+" fitted" : part.label;
             $("assemblySlotArt"+i).hidden = !filled;
             slot.disabled = filled || progress.finished;
             slot.dataset.filled = filled ? "true" : "false";
             slot.dataset.hint = progress.hintVisible && selected === part.id && !filled ? "true" : "false";
+            slot.setAttribute("aria-label",filled
+              ? part.label+" fitted to cardboard standee"
+              : "Mount "+part.label+" in dashed cardboard target");
           }
           $("assemblyFeedback").textContent = state.assemblyFeedback ||
             "Select a labelled foam/cardboard part and tap the matching silhouette slot.";
