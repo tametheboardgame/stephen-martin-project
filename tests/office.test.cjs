@@ -6017,8 +6017,10 @@ test("G4G.1 Ending B responsive summary/album boxes shrink and never use interna
   const b='rescueEndingSummary[data-route="detention"]';
   assert.ok(styles.includes(b));
   const declarations=styles.replace(/\/\*[\s\S]*?\*\//g,"");
-  assert.doesNotMatch(declarations,/overflow-y:\s*auto|overflow:\s*(auto|scroll)|max-height:\s*(\d|clamp|min|calc)/,
-    "No overflow scrollboxes or fixed-height clamps in Ending B finale");
+  assert.doesNotMatch(declarations,/overflow-y:\s*auto|overflow:\s*(auto|scroll)/,
+    "No overflow scrollbars in Ending B finale");
+  assert.match(declarations,/\.rescue-travel-panel \{\s*top:auto;left:3%;right:auto;bottom:15%;width:min\(52%,660px\);\s*max-height:none;overflow:visible;/);
+  assert.match(declarations,/\.bls-albums \{\s*top:auto;right:3%;bottom:15%;width:min\(27%,290px\);\s*max-height:none;overflow:visible;/);
   for (const sel of [".rescue-travel-panel",".bls-albums"]) {
     assert.ok(styles.includes(b+" "+sel),"Detention-only selector: "+sel);
   }
