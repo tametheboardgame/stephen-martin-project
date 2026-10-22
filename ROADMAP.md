@@ -950,6 +950,23 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 **G4H — Ending B polish regression (without optional G4C transitions):** Run the existing banquet/phone/battery/England/hotel/investigation → **current** B route entry → permit puzzle/reveal → actor dialogue/grounding → approved illustrated conclusion → universal end hub. Mute/pause/Next/Skip/Change route/Resume, delayed voice callbacks, 15–25-minute pacing and responsive layouts remain acceptance gates. Test A/C unchanged, but do **not** require or introduce G4C transitions. Keep PR draft until owner approval.
 
+### GAME-SP4.1G5 — Ending C “A Completely Unnecessary Rebuild” owner refinement (approved scope, 22 October 2026)
+
+**Priority:** High; next substantive work after the merged Ending B finale G4G. **Detailed source of truth:** [G5 work package, issue register, QA gates](docs/story/GAME-SP4.1G5-ENDING-C-REFINEMENT-PLAN.md). Owner's ten screenshot/audio issues are enumerated and traced to G5A–G5H.
+
+| Package | Purpose / measurable owner acceptance | Dependency |
+| --- | --- | --- |
+| **G5A** | Remove inaccurate “Rescue briefing” / “Briefing complete” from spa arrival, navigation and status copy only | None; start first |
+| **G5B** | Audit four faulty audio performances/playback causes; identify source filenames, re-record/reintegrate as needed (Paul “It's a spa”, Stephen `reassemble.ending.007`, Paul `.008`, Stephen `.012`); spot-audit remaining route | Owner approval of replacement recordings |
+| **G5C** | Fit 0/6 through 6/6 reassembly at 1366×768 without inner scroll; keep Power On visible; heading/topbar must not collide | None; start after G5A |
+| **G5D** | Vertically centre POWER ON button text and preserve its 44px+ target and keyboard operation | Pair with G5C |
+| **G5E** | Inspect existing silhouette asset and placements; cheap alignment fix **only if genuinely sufficient**; otherwise implement clear labelled slots/boxes, retaining six correct parts and decoys | Owner visual decision after brief alignment diagnosis |
+| **G5F** | Generate owner-approved 16:9 spa finale: David/Paul uncomfortably hugging cardboard Stephen, real Stephen furious/unimpressed behind, all likenesses canonical | Scene/puzzle stabilised and art approval |
+| **G5G** | Wire Ending C image into shared final hub; rescale/reposition live text and album cards, no nested scroll or obscured faces | Locked G5F asset |
+| **G5H** | Complete Ending C playthrough and audio/layout/interaction/save-resume regression; check A/B unchanged | G5A–G5G complete |
+
+**Order / gates:** G5A → G5B audio audit and separate recordings; G5C + G5D responsive fit; G5E placement decision and implementation; G5F art generation/approval; G5G final hub; G5H regression and owner merge approval. Audio replacements can be prepared alongside G5C/D/E. **G4H** Ending B full-route regression stays outstanding but is non-blocking for G5A; optional **G4C** transitions stay deferred. Keep changes small in separate draft PRs and never merge gameplay/art without owner acceptance.
+
 **Revised work order, owner decision 21 October 2026:** **(1)** G4D, G4E and G4F: audit and fix the existing Ending B briefing labels, permit reveal and four-person scene staging, recording any further visible defects in the same B polishing phase; **(2)** G4G: create and approve the bespoke Ending B final illustration; **(3)** G4H: regression of Ending B with the existing transitions; **(4)** **G5, Ending C refinement:** full existing Ending C review, rectify any/all material problems with dialogue bubbles, staging, puzzle interactions, visuals, sound and responsive design, and obtain owner approval; **(5)** revisit **G4C only if** a fresh complete-playthrough shows a worthwhile need for extra illustrated transitions. It is explicitly optional, last and not a dependency for either ending's completion or V1 qualification. Preserve G3F shared ending menu, G1A/B/C phone and England sequence, existing approved assets, and all route/puzzle gating.
 
 #### GAME-SP4.1G0/G1/G2/G3/G4 — Sequenced chapter polish
