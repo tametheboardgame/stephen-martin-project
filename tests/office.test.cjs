@@ -6273,7 +6273,7 @@ test("G5G places Ending C caption lower-left and albums lower-right, without hid
 test("G5G Ending C completed route shows payoff, and A/B summary text is unchanged",()=>{
   const p=g3gComplete("reassemble");
   assert.equal(p.el("rescueEndingSummary").dataset.route,"reassemble");
-  assert.match(p.el("rescueSummaryHeading").textContent,/ENDING C/);
+  assert.equal(p.el("rescueSummaryHeading").textContent,"SOME ASSEMBLY REQUIRED");
   assert.match(p.el("rescueSummaryDisclaimer").textContent,/cardboard Stephen a hero/);
   assert.doesNotMatch(p.el("rescueSummaryDisclaimer").textContent,/deferred/i);
   const a=g3gComplete("cult");
