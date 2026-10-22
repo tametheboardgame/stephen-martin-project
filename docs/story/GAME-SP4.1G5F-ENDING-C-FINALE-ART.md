@@ -1,6 +1,12 @@
 # GAME-SP4.1G5F — Ending C bespoke finale illustration
 
-**State (22 October 2026):** Started. Canonical art inspection complete; concept-generation attempts do **not** pass the character-likeness gate. Do not materialise, register, or deploy unapproved art. Based on G5E merge `0f526a81513c5ea7687773904a3c20af5954c5e7`.
+**State (22 October 2026):** **Owner-approved final composition locked, committed and staged.** Initial failed concepts were discarded; the user's final approved four-character image was committed *exactly* at 1672×941. This branch also prepares G5G shared ending-summary integration and compact route-specific overlays; visual QA/merge remains gated.
+
+**Approved original:** `public/assets/generated/locations/ending-c-finale-standee-celebration-v01.png`
+**Drive staging:** `GAME-SP4.1G5F-ending-c-finale-approved-v01.png`, ID `1K15wi3ZY6qISmj0xJQ4Qx5LwrOrbzILW`.
+**SHA-256:** `6c8bf0a4bd46d43c8997fa5ea1a2fe5c2edc453e7c099199b3946f42bcb00f18`.
+**Manifest:** `generated-assets/manifests/game-sp41g5f-ending-c-finale-standee-celebration-v01.json`.
+**Baseline:** G5E merge `0f526a81513c5ea7687773904a3c20af5954c5e7`.
 
 ## Single-scene payoff
 
@@ -33,3 +39,11 @@ Three initial concept attempts established the gag but **failed canonical castin
 ## G5G integration handoff
 
 Target common `#rescueEndingSummary[data-route="reassemble"]` background, not a separate ending screen. Preserve G3F music links / chapter jumping, A/B routes, spoken script. Make caption/music cards compact and preserve facial visibility in 1366 × 768 browser check.
+
+## G5F/G5G implementation update — 22 October 2026
+
+- Exact approved 1672×941 PNG committed and validated by hash and IHDR dimensions in `scripts/build.mjs`; no unapproved recrop, distortion or scene regeneration.
+- `#rescueEndingSummary[data-route="reassemble"]` now uses the approved artwork. Lower-left compact narrative card and lower-right compact Berserk Llama Syndrome album-links card preserve character faces and avoid internal scrollbars at laptop sizes. Short-height and tablet breakpoints included.
+- At phone widths (600px and below), the **entire** 16:9 artwork appears before the two cards in natural flow to avoid cropping David or real Stephen; controls remain after cards. This deliberately allows normal **page** scrolling rather than nested panel scrolling.
+- Remove obsolete G5C placeholder about images being deferred. Preserve original Ending A/B layouts, route completion gates, all dialogue recordings, replay/chapter jump buttons and original music links.
+- Exact-head GitHub smoke/build and Cloudflare branch-preview acceptance required before owner visual signoff and eventual merge. Verify 1366×768, short laptop, tablet, and phone; ensure all faces visible and panel buttons usable.
