@@ -1,5 +1,12 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G5B Ending C replacement audio (22 October 2026)
+
+- G5A merged to main via PR #85 (merge `abfa6e73c644382a592686351030f9dd2e0bdcc2`), preserving the corrected spa arrival panel.
+- G5B draft PR #86 uses branch `agent/game-sp41g5b-ending-c-audio-replacements`. Four originally faulty MP3s were removed from the branch and replaced with the four owner-regenerated, owner-listened recordings uploaded to the dedicated Google Drive folder, without changing dialogue IDs or mappings.
+- Exact replacements: `reassemble.intro.002.mp3` (Paul), `reassemble.ending.007.mp3` (Stephen), `reassemble.ending.008.mp3` (Paul), `reassemble.ending.012.mp3` (Stephen). Approved bytes protected by `tests/g5b-audio-replacements.test.cjs`, which validates MP3 signatures, exact SHA-256 and script alignment.
+- The game’s deployed `main` remains unchanged pending owner in-game test of Cloudflare PR preview. Merge only after build/tests, dialogue playback and no-repeat check pass, then proceed to G5C/D laptop puzzle scaling and POWER ON alignment.
+
 ## CURRENT — GAME-SP4.1G5A Ending C spa terminology implementation (22 October 2026)
 
 - PR #84 G5 roadmap merged on main at `71ea79d4803185abc96220eeb9deb8697337ff34`. G5A implementation branch `agent/game-sp41g5a-spa-terminology` updates only route UI terminology, puzzle return button and route chapter-jump option. No recorded speech/audio edits or A/B gameplay changes.
