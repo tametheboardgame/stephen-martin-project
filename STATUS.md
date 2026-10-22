@@ -1,5 +1,13 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G5F/G5G Ending C finale art and shared hub (22 October 2026)
+
+- G5E (clean dashed mounting board) was owner-approved and merged in PR #88, merge `0f526a81513c5ea7687773904a3c20af5954c5e7`.
+- User explicitly approved the final group image with correctly dressed/canonical David and Paul hugging the cardboard Stephen and real annoyed Stephen to rear-right. Exact original: `public/assets/generated/locations/ending-c-finale-standee-celebration-v01.png` (1672×941, SHA-256 `6c8bf0a4bd46d43c8997fa5ea1a2fe5c2edc453e7c099199b3946f42bcb00f18`). Original staged in Drive ID `1K15wi3ZY6qISmj0xJQ4Qx5LwrOrbzILW`; manifest recorded.
+- On review branch `agent/game-sp41g5f-ending-c-finale-art` the shared ending hub is route-specifically updated: caption lower-left, compact albums lower-right, all faces in the upper illustration clear. No panel nested scrollbars. Phone mode shows entire landscape image then normal-flow caption, album cards and route navigation controls.
+- Build checks the exact approved PNG hash and image dimensions; tests cover route C summary, A/B unchanged, 1366×768/short-laptop/mobile CSS constraints, links and provenance. **Next:** verify CI and Cloudflare preview, owner inspect laptop + mobile; do not merge G5F/G5G before explicit preview approval.
+- **G5G.1 screenshot correction:** owner approved final illustration, caption and albums, but the 420px upper-left shared playback/menu toolbar covered David's face. On the same PR #89 branch, reduced Ending C-only toolbar to 272px, with three rows (THE END + Pause / Play another ending / Sound + Menu) anchored top-left over the spare background foliage. Tablet scales to 238px; phone uses existing normal-flow flex display. This preserves buttons and all A/B routes. Screenshot review of the narrower menu still required before merge.
+
 ## CURRENT — GAME-SP4.1G5E v2 dashed mounting board (22 October 2026)
 
 - Owner screenshot rejected the first G5E labels: text pills obscure the standee and cannot fix the mismatched carved recesses on the approved cardboard base.

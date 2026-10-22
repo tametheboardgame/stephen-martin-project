@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "workPackage": "GAME-SP4.1G5F",
+  "status": "owner-approved",
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1K15wi3ZY6qISmj0xJQ4Qx5LwrOrbzILW",
+    "fileName": "GAME-SP4.1G5F-ending-c-finale-approved-v01.png"
+  },
+  "expectedSourceName": "GAME-SP4.1G5F-ending-c-finale-approved-v01.png",
+  "destination": "public/assets/generated/locations/ending-c-finale-standee-celebration-v01.png",
+  "dimensions": {
+    "width": 1672,
+    "height": 941
+  },
+  "sha256": "6c8bf0a4bd46d43c8997fa5ea1a2fe5c2edc453e7c099199b3946f42bcb00f18",
+  "transform": {
+    "type": "none",
+    "description": "Exact owner-approved source pixels, no crop or alteration"
+  },
+  "revision": 1
+}

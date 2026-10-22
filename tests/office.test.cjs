@@ -6223,3 +6223,89 @@ test("G5E v2 hides engraved board image and visual slot labels, leaving dashed b
   // Keep the original image asset in the DOM for reversible rollback.
   assert.match(html,/class="assembly-board-art" src="\.\/public\/assets\/generated\/game\/ending-c-cardboard-board-v01\.webp"/);
 });
+
+
+/* GAME-SP4.1G5F/G5G — approved final scene and route-local ending hub. */
+test("G5F uses exact owner-approved 1672x941 final PNG and matching Drive provenance",()=>{
+  const asset="public/assets/generated/locations/ending-c-finale-standee-celebration-v01.png";
+  const data=fs.readFileSync(path.join(root,asset));
+  assert.ok(data.length>200000 && data.length<4*1024*1024);
+  assert.equal(data.subarray(0,8).toString("hex"),"89504e470d0a1a0a");
+  assert.equal(data.toString("ascii",12,16),"IHDR");
+  assert.equal(data.readUInt32BE(16),1672);
+  assert.equal(data.readUInt32BE(20),941);
+  const sha=require("node:crypto").createHash("sha256").update(data).digest("hex");
+  assert.equal(sha,"6c8bf0a4bd46d43c8997fa5ea1a2fe5c2edc453e7c099199b3946f42bcb00f18");
+  const manifest=JSON.parse(read("generated-assets/manifests/game-sp41g5f-ending-c-finale-standee-celebration-v01.json"));
+  assert.equal(manifest.status,"owner-approved");
+  assert.equal(manifest.source.fileId,"1K15wi3ZY6qISmj0xJQ4Qx5LwrOrbzILW");
+  assert.equal(manifest.destination,asset);
+  assert.equal(manifest.sha256,sha);
+  const build=read("scripts/build.mjs");
+  assert.ok(build.includes("Approved Ending C G5F finale artwork packaged: 1/1."));
+  assert.ok(build.includes("readUInt32BE(16) !== 1672"));
+  assert.ok(build.includes("readUInt32BE(20) !== 941"));
+});
+
+test("G5G places Ending C caption lower-left and albums lower-right, without hidden scrollbars",()=>{
+  const styles=css.slice(css.lastIndexOf("/* GAME-SP4.1G5F/G5G"));
+  const clean=styles.replace(/\/\*[\s\S]*?\*\//g,"");
+  assert.ok(styles.length>3000);
+  const route='rescueEndingSummary[data-route="reassemble"]';
+  for(const target of [".rescue-route-intro-stage",".rescue-travel-panel",".bls-albums",".wall-action-strip"])
+    assert.ok(styles.includes(route+" "+target));
+  assert.ok(styles.includes("ending-c-finale-standee-celebration-v01.png"));
+  assert.match(clean,/\.rescue-travel-panel \{\s*top:auto;left:3%;right:auto;bottom:15%;width:min\(50%,620px\);\s*max-height:none;overflow:visible;/);
+  assert.match(clean,/\.bls-albums \{\s*top:auto;right:3%;bottom:15%;width:min\(27%,290px\);\s*max-height:none;overflow:visible;/);
+  assert.match(styles,/@media \(min-width:801px\) and \(max-height:650px\)/);
+  assert.match(styles,/@media \(min-width:601px\) and \(max-width:800px\)/);
+  assert.match(styles,/@media \(max-width:600px\)/);
+  assert.match(styles,/padding:56\.28% 0 12px/);
+  assert.match(styles,/background-size:100% auto/);
+  assert.match(styles,/\.bls-albums \{[\s\S]*?position:relative;/);
+  assert.doesNotMatch(clean,/overflow-y:\s*auto|overflow:\s*(auto|scroll)/);
+  assert.doesNotMatch(styles,/data-route="cult"|data-route="detention"/);
+  assert.equal((html.match(/class="bls-platform-link /g)||[]).length,6);
+  assert.ok(html.includes('id="rescueSummaryJumpButton"'));
+  assert.ok(html.includes('id="rescueSummaryReplayButton"'));
+});
+
+test("G5G Ending C completed route shows payoff, and A/B summary text is unchanged",()=>{
+  const p=g3gComplete("reassemble");
+  assert.equal(p.el("rescueEndingSummary").dataset.route,"reassemble");
+  assert.equal(p.el("rescueSummaryHeading").textContent,"SOME ASSEMBLY REQUIRED");
+  assert.match(p.el("rescueSummaryDisclaimer").textContent,/cardboard Stephen a hero/);
+  assert.doesNotMatch(p.el("rescueSummaryDisclaimer").textContent,/deferred/i);
+  const a=g3gComplete("cult");
+  assert.equal(a.el("rescueEndingSummary").dataset.route,"cult");
+  assert.match(a.el("rescueSummaryDisclaimer").textContent,/Ending A complete/);
+  const b=g3gComplete("detention");
+  assert.equal(b.el("rescueEndingSummary").dataset.route,"detention");
+  assert.match(b.el("rescueSummaryDisclaimer").textContent,/Ending B complete/);
+});
+
+
+test("G5G.1 Ending C toolbar fits the upper-left background without covering David",()=>{
+  const src=css.slice(css.lastIndexOf("/* G5G.1:"));
+  assert.match(src,/#holidayScreen:has\(#rescueEndingSummary\[data-route="reassemble"\]:not\(\[hidden\]\)\)/);
+  assert.match(src,/top:1\.5% !important;/);
+  assert.match(src,/left:1\.5% !important;/);
+  assert.match(src,/right:auto !important;/);
+  assert.match(src,/display:grid !important;/);
+  assert.match(src,/grid-template-columns:minmax\(0,1fr\) minmax\(0,1fr\)/);
+  assert.match(src,/width:272px;/);
+  assert.match(src,/max-width:min\(272px,calc\(100% - 28px\)\) !important;/);
+  assert.match(src,/#holidayPauseButton \{\s*grid-column:2;grid-row:1;/);
+  assert.match(src,/#holidayRouteButton \{\s*grid-column:1\/-1;grid-row:2;/);
+  assert.match(src,/#holidaySoundButton \{\s*grid-column:1;grid-row:3;/);
+  assert.match(src,/#homeButton \{\s*grid-column:2;grid-row:3;/);
+  assert.match(src,/min-height:36px !important;/);
+  assert.match(src,/@media \(min-width:601px\) and \(max-width:800px\)/);
+  assert.match(src,/@media \(max-width:600px\)/);
+  assert.match(src,/position:relative !important;/);
+  assert.match(src,/display:flex !important;/);
+  assert.match(src,/width:94%;max-width:none !important;/);
+  assert.doesNotMatch(src,/data-route="cult"|data-route="detention"/);
+  assert.ok(html.includes('class="china-footer story-top-controls"'),
+    "Retain shared playback, chapter, sound and Menu controls");
+});

@@ -1,4 +1,5 @@
 import { cp, copyFile, mkdir, readFile, readdir, rm, stat } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import vm from "node:vm";
 import { fileURLToPath } from "node:url";
@@ -277,6 +278,25 @@ for (const relative of endingCImages) {
   await copyFile(path.join(root,relative),path.join(output,relative));
 }
 console.log("Approved Ending C scene artworks packaged: " + endingCImages.length + "/20.");
+
+// GAME-SP4.1G5F: exact owner-approved 1672x941 closing artwork. Preserve the
+// signed-off PNG rather than substituting a different drawing or resizing it.
+const endingCFinale = "public/assets/generated/locations/ending-c-finale-standee-celebration-v01.png";
+const endingCFinaleBytes = await readFile(path.join(root, endingCFinale));
+if (endingCFinaleBytes.length < 200000 || endingCFinaleBytes.length > 4 * 1024 * 1024 ||
+    endingCFinaleBytes.subarray(0,8).toString("hex") !== "89504e470d0a1a0a" ||
+    endingCFinaleBytes.toString("ascii",12,16) !== "IHDR" ||
+    endingCFinaleBytes.readUInt32BE(16) !== 1672 ||
+    endingCFinaleBytes.readUInt32BE(20) !== 941 ||
+    createHash("sha256").update(endingCFinaleBytes).digest("hex") !==
+      "6c8bf0a4bd46d43c8997fa5ea1a2fe5c2edc453e7c099199b3946f42bcb00f18") {
+  throw new Error("Ending C finale does not match owner-approved G5F art");
+}
+await mkdir(path.dirname(path.join(output,endingCFinale)),{recursive:true});
+await copyFile(path.join(root,endingCFinale),path.join(output,endingCFinale));
+console.log("Approved Ending C G5F finale artwork packaged: 1/1.");
+
+
 
 
 // The Chapter Two background and sprite remain independently approved WebP
