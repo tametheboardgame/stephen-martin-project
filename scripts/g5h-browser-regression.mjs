@@ -161,7 +161,7 @@ try{
       await p.locator("#detentionPermitButton").click();
       await p.locator("#detentionNextButton").click();
       assert.equal(await phase(p),"rescue-route-ending");
-      for(let i=0;i<16;i++)await p.locator("#detentionEndingNextButton").click();
+      for(let i=0;i<15;i++)await p.locator("#detentionEndingNextButton").click();
     }
     assert.equal(await phase(p),"rescue-ending-summary",route+": missing final hub");
     const title=await p.locator("#rescueSummaryHeading").textContent();
