@@ -5987,3 +5987,26 @@ test("G4F owner spacing revision: Stephen and Paul move inward without shifting 
   assert.match(rules,/\.detention-ending-actor,[\s\S]*?object-position:center bottom/);
   assert.match(rules,/\.detention-ending-content\.story-speech \{\s*z-index:5/);
 });
+
+
+test("G4G approved illustrated Ending B uses actual WebP, detention-only layout and lower-right album cards",()=>{
+  const asset="public/assets/generated/locations/ending-b-finale-ceremonial-release-v01.webp";
+  const bytes=fs.readFileSync(path.join(root,asset));
+  assert.ok(bytes.length>20000 && bytes.length<3*1024*1024);
+  assert.equal(bytes.toString("ascii",0,4),"RIFF");
+  assert.equal(bytes.toString("ascii",8,12),"WEBP");
+  assert.match(engine,/\$\("rescueEndingSummary"\)\.dataset\.route = inSummary \? \(state\.route \|\| "other"\) : "other"/);
+  assert.match(engine,/route === "detention"\s*\?\s*"Ending B complete\. The Office of Ceremonial Misunderstandings/);
+  const styles=css.slice(css.lastIndexOf("/* GAME-SP4.1G4G"));
+  assert.match(styles,/rescueEndingSummary\[data-route="detention"\] \.rescue-route-intro-stage/);
+  assert.match(styles,/ending-b-finale-ceremonial-release-v01\.webp/);
+  assert.match(styles,/rescueEndingSummary\[data-route="detention"\] \.bls-albums \{\s*top:auto;right:3%;bottom:15%/);
+  assert.match(styles,/@media \(max-width:800px\)/);
+  assert.match(styles,/@media \(max-width:450px\)/);
+  assert.match(styles,/bottom:calc\(17% \+ 202px\)/);
+  assert.doesNotMatch(styles,/rescueEndingSummary\[data-route="cult"\]/);
+  assert.doesNotMatch(styles,/rescueEndingSummary\[data-route="reassemble"\]/);
+  assert.match(html,/id="rescueSummaryHeading"/);
+  assert.match(html,/class="bls-albums"/);
+  assert.match(read("scripts/build.mjs"),/Approved Ending B artworks packaged: " \+ endingBImages\.length \+ "\/10/);
+});

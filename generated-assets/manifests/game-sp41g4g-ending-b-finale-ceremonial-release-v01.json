@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "google-drive",
+    "fileId": "1txxGafAlHyfYaccqfY0eXyFl9yFi4RTB"
+  },
+  "expectedSourceName": "ending-b-finale-ceremonial-release-v01.png",
+  "destination": "public/assets/generated/locations/ending-b-finale-ceremonial-release-v01.webp",
+  "transform": {
+    "maxWidth": 1672,
+    "maxHeight": 941,
+    "quality": 88
+  },
+  "revision": 1
+}

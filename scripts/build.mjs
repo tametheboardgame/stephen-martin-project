@@ -206,6 +206,7 @@ console.log("Approved G3C choice cutouts packaged: " + summitChoiceSlugs.length 
 // permit assembled from Stephen's original approved office sprite pixels.
 const endingBImages = [
   "public/assets/generated/locations/ending-b-bureau-office-v01.webp",
+  "public/assets/generated/locations/ending-b-finale-ceremonial-release-v01.webp",
   "public/assets/generated/game/ending-b-puzzle-desk-v01.webp",
   "public/assets/generated/game/ending-b-bear-classification-v01.webp",
   "public/assets/generated/game/ending-b-pauls-takeaway-cup-master-v01.webp",
@@ -235,7 +236,7 @@ for (const relative of endingBImages) {
   await mkdir(path.dirname(path.join(output,relative)),{recursive:true});
   await copyFile(path.join(root,relative),path.join(output,relative));
 }
-console.log("Approved Ending B artworks packaged: " + endingBImages.length + "/9.");
+console.log("Approved Ending B artworks packaged: " + endingBImages.length + "/10.");
 
 // GAME-SP4C: spa lounge and three approved separate alpha characters.
 // Fail the preview build rather than silently showing missing assets.

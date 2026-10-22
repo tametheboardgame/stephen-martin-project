@@ -4,8 +4,8 @@
 
 - G4D–G4F PR #82 approved, merged and verified on main as `7cdf0af19acae182d38f97e89bff8fdaa6e1973a`, 254/254 checks passed before merge.
 - G4G new independent draft branch `agent/game-sp41g4g-ending-b-finale-art`; first concept art brief for “Detained by the Administration” committed. The canonical last narrator joke is David proudly framing his government-issued PLEASE LEAVE certificate.
-- Art concept pending owner **visual approval**; no new PNG, WebP, Drive manifest or game integration yet. Preserve approved actor likenesses and keep top-right album area and bottom live heading/summary clear.
-- Next after art approval: stage original in Drive, manifest and WebP materialise, Ending-B-only shared hub background integration, regression and owner sign-off. Optional G4C transitions remain deferred until after Ending C fixes.
+- **Art approved by owner:** the three men leaving onto the street with the correct ceremonial official and actual release certificate. Approved PNG staged under Google Drive generated-asset staging as `ending-b-finale-ceremonial-release-v01.png`; corresponding 1672×941 optimised WebP added to G4G branch with source-provenance manifest. Finale installed only on the detention-route summary; albums repositioned bottom-right (below the official's head), and a narrower bottom-left live caption avoids overlap. Visual preview/CI checks pending, PR #83 stays draft.
+- Next: verify build, preview at laptop/mobile resolutions, inspect art and caption/album readability, then obtain owner sign-off before merging. G4H full-route regression follows. Optional G4C transitions remain deferred until after Ending C fixes.
 
 ## CURRENT — GAME-SP4.1G4D–G4F Ending B polish, draft (21 October 2026)
 

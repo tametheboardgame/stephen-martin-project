@@ -1698,7 +1698,7 @@
     $("reassembleEndingScene").hidden = !inAssemblyEnding;
     $("rescueEndingSummary").hidden = !inSummary;
     if (inSummary) { $("rescueSummaryJumpSelect").value = ""; $("rescueSummaryJumpButton").disabled = true; }
-    $("rescueEndingSummary").dataset.route = inSummary && state.route === "cult" ? "cult" : "other";
+    $("rescueEndingSummary").dataset.route = inSummary ? (state.route || "other") : "other";
     if (inWall) {
       const position = Number.isInteger(state.wallStep)
         ? Math.max(0, Math.min(state.wallStep, greatWall.lines.length)) : 0;
@@ -2232,8 +2232,9 @@
             : "Stephen was enjoying a massage. The lads bought a cardboard cut-out and spare parts, then congratulated themselves.";
         $("rescueSummaryDisclaimer").textContent = route === "cult"
           ? "Ending A complete. Stephen is exactly where he wants to be."
-          : "Ending "+(route === "detention" ? "B" : "C")
-            + " complete. New illustrations are deferred until the full functional game is approved.";
+          : route === "detention"
+            ? "Ending B complete. The Office of Ceremonial Misunderstandings has finally authorised their departure."
+            : "Ending C complete. New illustrations are deferred until the full functional game is approved.";
       }
     }
     renderTransitionNarration();

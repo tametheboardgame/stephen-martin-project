@@ -1,6 +1,6 @@
 # GAME-SP4.1G4G — Ending B “Detained by the Administration” finale artwork
 
-**Status:** illustration concept, pending owner review and art approval. **Base:** merged G4D–G4F PR #82 (`7cdf0af`). **Non-goal:** no additional transitions (G4C deferred), no new puzzle, no script or voice change.
+**Status:** actual image owner-approved; integrated on draft branch and pending Cloudflare/laptop/mobile visual QA. **Base:** merged G4D–G4F PR #82 (`7cdf0af`). **Non-goal:** no additional transitions (G4C deferred), no new puzzle, no script or voice change.
 
 ## Canonical final joke and visual proposal
 
@@ -23,4 +23,4 @@ The existing last Ending B narrator line: “David proudly frames his government
 5. Keep existing `rescueSummaryHeading` and `rescueSummaryMessage` as accessible live text. Replace the obsolete “new illustrations are deferred” ending-B disclaimer with completed-ending copy. Leave spoken Ending B script and music links untouched.
 6. Draft PR only; verify GitHub CI, real Cloudflare preview, 1366×768 laptop, tablet/mobile responsive layout, title/album overlap, save/resume and correct A/B/C routing before owner-approved merge.
 
-**Art approval gate:** Owner first accepts the generated **actual pixels** and likenesses (especially Stephen/David/Paul/Official), humour and composition. The text brief is a proposal, not permission to publish, stage in Drive or merge.
+**Art approval gate:** Owner explicitly approved the final image after matching the existing official and actual ceremonial release permit, with the cast exiting into the street. The asset and responsive album layout must still be reviewed in a deployed build before merging PR #83. GitHub asset manifest points to approved original source in generated-asset staging.

@@ -5322,3 +5322,48 @@ body:has(#menuScreen:not([hidden])) main {
   #holidayScreen #detentionEndingScene .detention-ending-official {left:59%;height:35%;}
   #holidayScreen #detentionEndingScene .detention-ending-paul {left:80%;height:30%;}
 }
+
+/* GAME-SP4.1G4G — approved Ending B street-exit illustration and lower-right albums.
+ * Scoped strictly to detention: existing Ending A and C layouts remain untouched.
+ * The official's face occupies the upper right; place albums beneath it.
+ * Caption and album card are side-by-side on desktop/tablet and stacked on mobile. */
+#holidayScreen #rescueEndingSummary[data-route="detention"] .rescue-route-intro-stage {
+  background:
+    linear-gradient(to top,rgba(5,19,35,.30),transparent 55%),
+    url("../public/assets/generated/locations/ending-b-finale-ceremonial-release-v01.webp")
+      center/cover no-repeat;
+}
+#holidayScreen #rescueEndingSummary[data-route="detention"] .rescue-travel-panel {
+  top:auto;left:3%;right:auto;bottom:15%;width:min(55%,700px);
+  max-height:33%;
+}
+#holidayScreen #rescueEndingSummary[data-route="detention"] .bls-albums {
+  top:auto;right:3%;bottom:15%;width:min(34%,370px);max-height:64%;
+  overflow-y:auto;
+}
+@media (max-height:650px) and (min-width:801px) {
+  #holidayScreen #rescueEndingSummary[data-route="detention"] .bls-albums {
+    top:auto;bottom:15%;
+  }
+}
+@media (max-width:800px) {
+  #holidayScreen #rescueEndingSummary[data-route="detention"] .rescue-travel-panel {
+    top:auto;left:3%;right:auto;bottom:18%;width:49%;max-height:38%;
+  }
+  #holidayScreen #rescueEndingSummary[data-route="detention"] .bls-albums {
+    top:auto;right:2%;bottom:18%;width:min(44%,310px);max-height:62%;
+  }
+}
+@media (max-width:450px) {
+  #holidayScreen #rescueEndingSummary[data-route="detention"] .rescue-travel-panel {
+    top:auto;left:3%;right:3%;bottom:calc(17% + 202px);
+    width:94%;max-height:19%;padding:7px 9px;
+  }
+  #holidayScreen #rescueEndingSummary[data-route="detention"] .bls-albums {
+    top:auto;right:3%;bottom:17%;width:94%;max-height:195px;
+    overflow-y:auto;padding:5px;
+  }
+  #holidayScreen #rescueEndingSummary[data-route="detention"] .bls-album-cover img {
+    aspect-ratio:auto;height:clamp(55px,14vw,72px);object-fit:contain;
+  }
+}
