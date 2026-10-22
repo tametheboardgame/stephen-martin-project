@@ -2248,7 +2248,7 @@
           ? "Ending A complete. Stephen is exactly where he wants to be."
           : route === "detention"
             ? "Ending B complete. The Office of Ceremonial Misunderstandings has finally authorised their departure."
-            : "Ending C complete. New illustrations are deferred until the full functional game is approved.";
+            : "Ending C complete. They gave the cardboard Stephen a hero’s welcome. The real Stephen is still standing right there.";
       }
     }
     renderTransitionNarration();
