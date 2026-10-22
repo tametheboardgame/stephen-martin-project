@@ -6076,6 +6076,8 @@ test("G5A Ending C chapter jump names spa arrival while A and B retain original 
   for(let i=0;i<6;i++)b.el("hotelFinishButton").click();
   assert.equal(b.el("routeIntroPhaseLabel").textContent,"Investigation complete · Release office");
   assert.match(b.el("routeIntroStatus").textContent,/^Ceremonial release process/);
-  for(let i=0;i<4;i++)b.el("routeIntroNextButton").click();
+  const detentionLines=story().SMP_RESCUE_FRAMEWORK.routes.detention.intro.length;
+  for(let i=0;i<=detentionLines;i++)b.el("routeIntroNextButton").click();
+  assert.equal(saved(b).holidayPhase,"rescue-minigame");
   assert.equal(b.el("rescueMiniGameBackButton").textContent,"Back to briefing");
 });
