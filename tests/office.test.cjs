@@ -5997,7 +5997,7 @@ test("G4G approved illustrated Ending B uses actual WebP, detention-only layout 
   assert.equal(bytes.toString("ascii",8,12),"WEBP");
   assert.match(engine,/\$\("rescueEndingSummary"\)\.dataset\.route = inSummary \? \(state\.route \|\| "other"\) : "other"/);
   assert.match(engine,/route === "detention"\s*\?\s*"Ending B complete\. The Office of Ceremonial Misunderstandings/);
-  const styles=css.slice(css.lastIndexOf("/* GAME-SP4.1G4G"));
+  const styles=css.slice(css.lastIndexOf("/* GAME-SP4.1G4G"),css.indexOf("/* GAME-SP4.1G5A owner screenshot"));
   assert.match(styles,/rescueEndingSummary\[data-route="detention"\] \.rescue-route-intro-stage/);
   assert.match(styles,/ending-b-finale-ceremonial-release-v01\.webp/);
   assert.match(styles,/rescueEndingSummary\[data-route="detention"\] \.bls-albums \{\s*top:auto;right:3%;bottom:15%/);
@@ -6013,7 +6013,7 @@ test("G4G approved illustrated Ending B uses actual WebP, detention-only layout 
 
 
 test("G4G.1 Ending B responsive summary/album boxes shrink and never use internal scrollbars",()=>{
-  const styles=css.slice(css.lastIndexOf("/* GAME-SP4.1G4G"));
+  const styles=css.slice(css.lastIndexOf("/* GAME-SP4.1G4G"),css.indexOf("/* GAME-SP4.1G5A owner screenshot"));
   const b='rescueEndingSummary[data-route="detention"]';
   assert.ok(styles.includes(b));
   const declarations=styles.replace(/\/\*[\s\S]*?\*\//g,"");
