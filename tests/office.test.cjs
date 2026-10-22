@@ -6109,3 +6109,47 @@ test("G5A owner screenshot: spa completed-intro bubble disappears but dialogue a
   assert.equal(summit.el("routeIntroStatus").hidden,false);
   assert.match(summit.el("routeIntroStatus").textContent,/Approach complete/);
 });
+
+
+/* G5C/D: no-scroll laptop and stable, keyboard-accessible Power On gate.
+ * CSS assertions verify the exact route-scoped contract; human screenshot
+ * review remains required for real browser geometry at 1366x768. */
+test("G5C laptop workshop reserves the toolbar/footer and removes nested scrollbars",()=>{
+  const block=css.slice(css.lastIndexOf("/* GAME-SP4.1G5C/D"));
+  assert.ok(block.length>1500, "G5C/D responsive styles should be present");
+  assert.match(block,/@media \(min-width:801px\)/);
+  assert.match(block,/\.rescue-route-intro-stage \{[\s\S]*?padding:clamp\(66px,9vh,82px\) 2% 64px/);
+  assert.match(block,/\.assembly-workshop \{[\s\S]*?overflow:hidden/);
+  assert.match(block,/\.assembly-layout \{[\s\S]*?flex:1 1 0;[\s\S]*?min-height:0/);
+  assert.match(block,/\.assembly-tray \{[\s\S]*?overflow:hidden;[\s\S]*?grid-template-rows:min-content repeat\(3,minmax\(0,1fr\)\)/);
+  assert.match(block,/\.assembly-silhouette \{[\s\S]*?min-height:0/);
+  assert.match(block,/@media \(max-width:800px\)/);
+  assert.match(block,/\.rescue-route-intro-stage \{[\s\S]*?height:auto;[\s\S]*?aspect-ratio:auto;[\s\S]*?overflow:visible/);
+  assert.match(block,/\.assembly-tray \{[\s\S]*?overflow:visible/);
+  assert.match(block,/@media \(max-width:450px\)/);
+  assert.ok(!block.includes('data-route="cult"'),"Other routes must retain their established layouts");
+  assert.ok(!block.includes('data-route="detention"'),"Ending B must be unchanged");
+});
+
+test("G5D Power On is vertically centred, keyboard focused and has a permanently reserved region",()=>{
+  const workshop=html.slice(html.indexOf('<section id="reassembleWorkshop"'),html.indexOf('id="rescueMiniGameProgressLabel"'));
+  const block=css.slice(css.lastIndexOf("/* GAME-SP4.1G5C/D"));
+  assert.match(workshop,/class="assembly-status-actions"[\s\S]*?class="assembly-status-copy"[\s\S]*?id="assemblyFeedback"[\s\S]*?id="assemblyHint"[\s\S]*?class="assembly-power-row"[\s\S]*?id="assemblyPowerButton"/);
+  assert.match(block,/\.assembly-power-row \{[\s\S]*?min-height:48px;[\s\S]*?display:flex;[\s\S]*?align-items:center/);
+  assert.match(block,/#assemblyPowerButton \{[\s\S]*?display:inline-flex;[\s\S]*?align-items:center;[\s\S]*?justify-content:center;[\s\S]*?min-height:48px;[\s\S]*?line-height:1\.2/);
+  assert.match(block,/#assemblyPowerButton:focus-visible/);
+  const p=toAssemblyWorkshop();
+  assert.equal(p.el("assemblyPowerButton").hidden,true,"0/6: power is reserved but inactive");
+  for(let i=0;i<3;i++){
+    p.el("assemblyPiece"+i).click();p.el("assemblySlot"+i).click();
+  }
+  assert.equal(saved(p).rescueProgress.placedParts.length,3);
+  assert.equal(p.el("assemblyPowerButton").hidden,true,"3/6: power still inactive");
+  for(let i=3;i<6;i++){
+    p.el("assemblyPiece"+i).click();p.el("assemblySlot"+i).click();
+  }
+  assert.equal(p.el("assemblyPowerButton").hidden,false,"6/6: button becomes actionable");
+  assert.equal(p.el("assemblyPowerButton").textContent,"POWER ON STEPHEN →");
+  p.el("assemblyPowerButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+});

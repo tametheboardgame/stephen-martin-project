@@ -1,5 +1,12 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G5C/D Ending C reassembly layout (22 October 2026)
+
+- **G5B merged** as PR #86, commit `fd9377769cef601a3cb18a7465ef80c5075b1c1f`. Four owner-approved replacement recordings installed, 263 tests passed.
+- **G5C/G5D review branch:** `agent/game-sp41g5cd-reassembly-responsive`. Target: 1366×768, no internal workshop/tray scrollbar; reserve space for POWER ON at 0/6, 3/6 and 6/6; keep the story toolbar above workshop and exit strip below it. At genuine tablet/phone sizes, allow one natural page scroll.
+- Implementation changes are restricted to Ending C reassembly styling and a structural Power On wrapper in `index.html`. Puzzle IDs, asset artwork, drag/drop, save/resume and audio mapping remain unchanged. The power button uses inline flex vertical alignment, 48px minimum hit height and visible keyboard focus.
+- Added CSS contract checks and 0/3/6 puzzle-state tests. **Next gate:** exact-head GitHub tests and Cloudflare preview, followed by owner laptop/phone visual review. Leave PR draft until owner approval. G5E slot/art redesign follows separately, with no asset edits in G5C/D.
+
 ## CURRENT — GAME-SP4.1G5B Ending C replacement audio (22 October 2026)
 
 - G5A merged to main via PR #85 (merge `abfa6e73c644382a592686351030f9dd2e0bdcc2`), preserving the corrected spa arrival panel.
