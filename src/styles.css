@@ -5663,3 +5663,85 @@ body:has(#menuScreen:not([hidden])) main {
     height:clamp(45px,13vw,60px);
   }
 }
+
+
+/* GAME-SP4.1G5E — labelled mounting target prototype.
+ * The approved cardboard board's carved holes do NOT match the limb PNG
+ * outlines. Show deliberate, soft-backed target labels rather than implying
+ * precision-jigsaw fit. This is only a visual overlay: retain all six hit
+ * regions, filled art, orientation, drag/drop, voice and saved state. */
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-slot:not([data-filled="true"]) {
+  z-index:6;
+}
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-slot:not([data-filled="true"])::before {
+  content:"";
+  display:block;
+  position:absolute;
+  inset:4%;
+  z-index:0;
+  clip-path:none;
+  border-radius:9px;
+  border:1px dashed rgba(88,64,32,.65);
+  background:rgba(255,246,215,.20);
+  box-shadow:0 0 0 1px rgba(255,249,225,.25);
+  pointer-events:none;
+}
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-slot:not([data-filled="true"]) .assembly-slot-label {
+  display:flex !important;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  z-index:7;
+  align-items:center;
+  justify-content:center;
+  box-sizing:border-box;
+  width:92%;
+  max-width:92%;
+  min-height:32px;
+  margin:0;
+  padding:4px 3px;
+  border-radius:7px;
+  border:1px solid rgba(93,65,33,.85);
+  background:rgba(255,245,207,.97);
+  box-shadow:0 2px 5px rgba(48,35,20,.36);
+  color:#473018;
+  font-size:clamp(9px,.77vw,11px);
+  font-weight:900;
+  line-height:1.12;
+  text-align:center;
+  text-wrap:balance;
+  overflow-wrap:normal;
+  pointer-events:none;
+}
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-slot[data-filled="true"] .assembly-slot-label {
+  display:none !important;
+}
+/* The selected target responds as a whole instead of tracing a mismatched
+ * limb silhouette. Avoid background overlays on an already placed piece. */
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"]
+  .assembly-slot:not([data-filled="true"]):is(:hover,:focus-visible,[data-hint="true"])::before {
+  clip-path:none;
+  background:rgba(255,206,112,.38);
+  border:2px solid #cf832e;
+  outline:none;
+  box-shadow:0 0 0 2px rgba(255,242,205,.8);
+}
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"]
+  .assembly-slot:not([data-filled="true"]):is(:hover,:focus-visible,[data-hint="true"]) .assembly-slot-label {
+  background:#ffe39c;
+  border-color:#9e5c23;
+}
+/* Some old limb rules suppress :hover outlines: keyboard indication must
+ * remain visible, even where the soft-backplate is outside the artwork. */
+#holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-slot:focus-visible {
+  outline:3px solid #b35c23 !important;
+  outline-offset:2px;
+}
+@media (max-width:800px) {
+  #holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-slot:not([data-filled="true"]) .assembly-slot-label {
+    min-height:32px;
+    padding:3px 2px;
+    font-size:clamp(9px,2.15vw,11px);
+  }
+}
