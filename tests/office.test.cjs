@@ -6153,3 +6153,59 @@ test("G5D Power On is vertically centred, keyboard focused and has a permanently
   p.el("assemblyPowerButton").click();
   assert.equal(saved(p).holidayPhase,"rescue-route-ending");
 });
+
+
+// G5E: intentional mounting targets replace a false exact-shape promise.
+// Source PNG/WebP assets, six placement IDs and wrong-piece responses stay intact.
+test("G5E standee targets show a readable label until each correct piece is fitted",()=>{
+  assert.match(html,/tap its labelled mounting target on the standee/);
+  const p=toAssemblyWorkshop();
+  const names=["Head","Torso","Left arm","Right arm","Left leg","Right leg"];
+  for(let i=0;i<6;i++){
+    assert.equal(p.el("assemblySlotLabel"+i).textContent,names[i]);
+    assert.equal(p.el("assemblySlot"+i).dataset.filled,"false");
+    assert.equal(p.el("assemblySlot"+i).attributes["aria-label"],
+      "Mount "+names[i]+" in labelled standee target");
+  }
+  // A decoy cannot fill any of the new labelled targets.
+  p.el("assemblyPiece10").click(); // toaster
+  p.el("assemblySlot1").click();
+  assert.equal(saved(p).rescueProgress.placedParts.length,0);
+  assert.equal(p.el("assemblySlot1").dataset.filled,"false");
+  // Correct selection fills the requested target only; other labels remain.
+  p.el("assemblyPiece0").click();
+  p.el("assemblySlot0").click();
+  assert.equal(p.el("assemblySlot0").dataset.filled,"true");
+  assert.match(p.el("assemblySlotLabel0").textContent,/Head fitted/);
+  assert.equal(p.el("assemblySlot0").attributes["aria-label"],
+    "Head fitted to cardboard standee");
+  assert.equal(p.el("assemblySlot1").dataset.filled,"false");
+  assert.equal(p.el("assemblySlotLabel1").textContent,"Torso");
+  // All six must still be mounted before the explicit Power On gate.
+  for(let i=1;i<6;i++){
+    p.el("assemblyPiece"+i).click();
+    p.el("assemblySlot"+i).click();
+  }
+  assert.equal(saved(p).rescueProgress.placedParts.length,6);
+  assert.equal(p.el("assemblyPowerButton").hidden,false);
+  p.el("assemblyPowerButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-ending");
+});
+
+test("G5E labelled slot design is scoped to Ending C and keeps original artwork",()=>{
+  const g5e=css.slice(css.lastIndexOf("/* GAME-SP4.1G5E"));
+  assert.ok(g5e.length>1500);
+  assert.match(g5e,/\.assembly-slot:not\(\[data-filled="true"\]\) \.assembly-slot-label \{[\s\S]*?display:flex !important;/);
+  assert.match(g5e,/\.assembly-slot\[data-filled="true"\] \.assembly-slot-label \{[\s\S]*?display:none !important;/);
+  assert.match(g5e,/clip-path:none/);
+  assert.match(g5e,/:focus-visible/);
+  assert.match(g5e,/@media \(max-width:800px\)/);
+  assert.doesNotMatch(g5e,/data-route="cult"|data-route="detention"/);
+  for(const name of ["head","torso","left-arm","right-arm","left-leg","right-leg"]){
+    assert.match(html,new RegExp('data-slot="'+name+'"'));
+  }
+  assert.equal((html.match(/class="assembly-slot assembly-slot-/g)||[]).length,6);
+  assert.equal((html.match(/class="assembly-piece" type="button" draggable="true"/g)||[]).length,13);
+  assert.match(css,/\.assembly-slot-left-arm \{[\s\S]*?left:73%/);
+  assert.match(css,/\.assembly-slot-right-arm \{[\s\S]*?left:1%/);
+});
