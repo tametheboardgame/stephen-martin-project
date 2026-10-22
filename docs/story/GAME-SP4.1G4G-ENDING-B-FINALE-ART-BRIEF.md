@@ -24,3 +24,7 @@ The existing last Ending B narrator line: “David proudly frames his government
 6. Draft PR only; verify GitHub CI, real Cloudflare preview, 1366×768 laptop, tablet/mobile responsive layout, title/album overlap, save/resume and correct A/B/C routing before owner-approved merge.
 
 **Art approval gate:** Owner explicitly approved the final image after matching the existing official and actual ceremonial release permit, with the cast exiting into the street. The asset and responsive album layout must still be reviewed in a deployed build before merging PR #83. GitHub asset manifest points to approved original source in generated-asset staging.
+
+## G4G.1 owner screenshot review (22 October 2026)
+
+The initial 1465px-wide screenshot has a large Ending B title/description and an unnecessarily tall music card, both with vertical scrollbars. Owner requested noticeably smaller typography and album cards on narrow screens with **no panel scrolling**. The detention-only CSS now scales the headline, summary, covers, labels, platform buttons and panel padding; the boxes have natural height and no internal overflow. Short laptop, 800px/tablet and 600px/phone breakpoints are explicit. Confirm that the official's head remains uncovered, Spotify/Apple/YouTube links still work, and the text does not collide with the bottom chapter/action bar. Do not change Ending A/C or the approved PNG/WebP.

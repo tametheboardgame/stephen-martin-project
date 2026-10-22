@@ -6003,10 +6003,34 @@ test("G4G approved illustrated Ending B uses actual WebP, detention-only layout 
   assert.match(styles,/rescueEndingSummary\[data-route="detention"\] \.bls-albums \{\s*top:auto;right:3%;bottom:15%/);
   assert.match(styles,/@media \(max-width:800px\)/);
   assert.match(styles,/@media \(max-width:450px\)/);
-  assert.match(styles,/bottom:calc\(17% \+ 202px\)/);
+  assert.match(styles,/bottom:calc\(16% \+ 148px\)/);
   assert.doesNotMatch(styles,/rescueEndingSummary\[data-route="cult"\]/);
   assert.doesNotMatch(styles,/rescueEndingSummary\[data-route="reassemble"\]/);
   assert.match(html,/id="rescueSummaryHeading"/);
   assert.match(html,/class="bls-albums"/);
   assert.match(read("scripts/build.mjs"),/Approved Ending B artworks packaged: " \+ endingBImages\.length \+ "\/10/);
+});
+
+
+test("G4G.1 Ending B responsive summary/album boxes shrink and never use internal scrollbars",()=>{
+  const styles=css.slice(css.lastIndexOf("/* GAME-SP4.1G4G"));
+  const b='rescueEndingSummary[data-route="detention"]';
+  assert.ok(styles.includes(b));
+  assert.doesNotMatch(styles,/overflow-y:\s*auto|overflow:\s*(auto|scroll)|max-height:\s*(\d|clamp|min|calc)/,
+    "No overflow scrollboxes or fixed-height clamps in Ending B finale");
+  for (const sel of [".rescue-travel-panel",".bls-albums"]) {
+    assert.ok(styles.includes(b+" "+sel),"Detention-only selector: "+sel);
+  }
+  assert.match(styles,/\.rescue-travel-panel h2 \{\s*font-size:clamp\(17px,1\.8vw,30px\)/);
+  assert.match(styles,/\.rescue-travel-panel p \{\s*font-size:clamp\(11px,1\.08vw,16px\)/);
+  assert.match(styles,/\.bls-albums \{\s*top:auto;right:3%;bottom:15%;width:min\(27%,290px\)/);
+  assert.match(styles,/\.bls-album-cover img \{\s*width:100%;height:auto;max-height:112px/);
+  assert.match(styles,/@media \(max-height:650px\) and \(min-width:801px\)/);
+  assert.match(styles,/@media \(max-width:800px\)/);
+  assert.match(styles,/@media \(max-width:600px\)/);
+  assert.match(styles,/\.rescue-travel-panel \{\s*top:auto;left:3%;right:3%;bottom:calc\(16% \+ 148px\);width:94%/);
+  assert.match(styles,/\.bls-albums \{\s*top:auto;right:3%;bottom:16%;width:min\(76%,245px\)/);
+  assert.doesNotMatch(styles,/data-route="cult"|data-route="reassemble"/);
+  assert.match(html,/id="rescueSummaryHeading"/);
+  assert.match(html,/class="bls-albums"/);
 });
