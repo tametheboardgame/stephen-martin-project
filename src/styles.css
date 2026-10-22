@@ -5677,7 +5677,8 @@ body:has(#menuScreen:not([hidden])) main {
  * the fitted cutouts or the 0/6 through 6/6 puzzle layout. */
 #holidayScreen #rescueMiniGameScene[data-route="reassemble"] .assembly-silhouette {
   box-sizing:border-box;
-  border:0;
+  /* Preserve the original 3px border box for identical target geometry. */
+  border:3px solid transparent;
   background:transparent;
   box-shadow:none;
 }
