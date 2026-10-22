@@ -6002,7 +6002,7 @@ test("G4G approved illustrated Ending B uses actual WebP, detention-only layout 
   assert.match(styles,/ending-b-finale-ceremonial-release-v01\.webp/);
   assert.match(styles,/rescueEndingSummary\[data-route="detention"\] \.bls-albums \{\s*top:auto;right:3%;bottom:15%/);
   assert.match(styles,/@media \(max-width:800px\)/);
-  assert.match(styles,/@media \(max-width:450px\)/);
+  assert.match(styles,/@media \(max-width:600px\)/);
   assert.match(styles,/bottom:calc\(16% \+ 148px\)/);
   assert.doesNotMatch(styles,/rescueEndingSummary\[data-route="cult"\]/);
   assert.doesNotMatch(styles,/rescueEndingSummary\[data-route="reassemble"\]/);
@@ -6016,7 +6016,8 @@ test("G4G.1 Ending B responsive summary/album boxes shrink and never use interna
   const styles=css.slice(css.lastIndexOf("/* GAME-SP4.1G4G"));
   const b='rescueEndingSummary[data-route="detention"]';
   assert.ok(styles.includes(b));
-  assert.doesNotMatch(styles,/overflow-y:\s*auto|overflow:\s*(auto|scroll)|max-height:\s*(\d|clamp|min|calc)/,
+  const declarations=styles.replace(/\/\*[\s\S]*?\*\//g,"");
+  assert.doesNotMatch(declarations,/overflow-y:\s*auto|overflow:\s*(auto|scroll)|max-height:\s*(\d|clamp|min|calc)/,
     "No overflow scrollboxes or fixed-height clamps in Ending B finale");
   for (const sel of [".rescue-travel-panel",".bls-albums"]) {
     assert.ok(styles.includes(b+" "+sel),"Detention-only selector: "+sel);
