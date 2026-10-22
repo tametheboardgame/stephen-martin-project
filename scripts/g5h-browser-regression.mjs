@@ -140,7 +140,7 @@ try{
   assert.equal(await phase(page),"rescue-route-ending");
   let cSteps=0;
   while(await phase(page)==="rescue-route-ending" && cSteps<17){
-    await page.locator("#assemblyEndingNextButton").click();cSteps++;
+    await page.locator("#holidayNextButton").click();cSteps++;
   }
   assert.equal(cSteps,16,"C dialogue must have 15 spoken lines and an end-card transition");
   assert.equal(await phase(page),"rescue-ending-summary");
@@ -178,7 +178,7 @@ try{
       assert.equal(await phase(p),"rescue-route-ending");
       let aSteps=0;
       while(await phase(p)==="rescue-route-ending" && aSteps<16){
-        await p.locator("#summitEndingNextButton").click();aSteps++;
+        await p.locator("#holidayNextButton").click();aSteps++;
       }
       assert.equal(aSteps,15,"A dialogue must have 14 lines plus an end-card transition");
     }else{
@@ -193,7 +193,7 @@ try{
       assert.equal(await phase(p),"rescue-route-ending");
       let bSteps=0;
       while(await phase(p)==="rescue-route-ending" && bSteps<16){
-        await p.locator("#detentionEndingNextButton").click();bSteps++;
+        await p.locator("#holidayNextButton").click();bSteps++;
       }
       assert.equal(bSteps,15,"B dialogue must have 14 lines plus an end-card transition");
     }
