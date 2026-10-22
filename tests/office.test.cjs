@@ -6285,17 +6285,27 @@ test("G5G Ending C completed route shows payoff, and A/B summary text is unchang
 });
 
 
-test("G5G Ending C shared toolbar stays clear of faces and below artwork on phones",()=>{
-  const src=css.slice(css.lastIndexOf("/* G5G toolbar composition"));
+test("G5G.1 Ending C toolbar fits the upper-left background without covering David",()=>{
+  const src=css.slice(css.lastIndexOf("/* G5G.1:"));
   assert.match(src,/#holidayScreen:has\(#rescueEndingSummary\[data-route="reassemble"\]:not\(\[hidden\]\)\)/);
   assert.match(src,/top:1\.5% !important;/);
   assert.match(src,/left:1\.5% !important;/);
   assert.match(src,/right:auto !important;/);
-  assert.match(src,/@media \(max-width:800px\) and \(min-width:601px\)/);
+  assert.match(src,/display:grid !important;/);
+  assert.match(src,/grid-template-columns:minmax\(0,1fr\) minmax\(0,1fr\)/);
+  assert.match(src,/width:272px;/);
+  assert.match(src,/max-width:min\(272px,calc\(100% - 28px\)\) !important;/);
+  assert.match(src,/#holidayPauseButton \{\s*grid-column:2;grid-row:1;/);
+  assert.match(src,/#holidayRouteButton \{\s*grid-column:1\/-1;grid-row:2;/);
+  assert.match(src,/#holidaySoundButton \{\s*grid-column:1;grid-row:3;/);
+  assert.match(src,/#homeButton \{\s*grid-column:2;grid-row:3;/);
+  assert.match(src,/min-height:36px !important;/);
+  assert.match(src,/@media \(min-width:601px\) and \(max-width:800px\)/);
   assert.match(src,/@media \(max-width:600px\)/);
   assert.match(src,/position:relative !important;/);
-  assert.match(src,/width:94%;max-width:none/);
+  assert.match(src,/display:flex !important;/);
+  assert.match(src,/width:94%;max-width:none !important;/);
   assert.doesNotMatch(src,/data-route="cult"|data-route="detention"/);
   assert.ok(html.includes('class="china-footer story-top-controls"'),
-    "Retain the existing shared playback/sound toolbar");
+    "Retain shared playback, chapter, sound and Menu controls");
 });
