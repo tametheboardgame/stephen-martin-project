@@ -173,7 +173,7 @@ try{
     if(route==="cult"){
       for(const correct of [2,1,2]){
         await p.locator("#summitChoice"+correct).click();
-        await p.locator("#summitNextButton").click();
+        await p.locator("#holidayNextButton").click();
       }
       assert.equal(await phase(p),"rescue-route-ending");
       let aSteps=0;
@@ -183,13 +183,13 @@ try{
       assert.equal(aSteps,15,"A dialogue must have 14 lines plus an end-card transition");
     }else{
       await p.locator("#detentionChoice1").click();
-      await p.locator("#detentionNextButton").click();
+      await p.locator("#holidayNextButton").click();
       await p.locator("#detentionChoice2").click();
-      await p.locator("#detentionNextButton").click();
+      await p.locator("#holidayNextButton").click();
       await p.locator("#detentionChoice2").click();
       await p.locator("#detentionStampButton").click();
       await p.locator("#detentionPermitButton").click();
-      await p.locator("#detentionNextButton").click();
+      await p.locator("#holidayNextButton").click();
       assert.equal(await phase(p),"rescue-route-ending");
       let bSteps=0;
       while(await phase(p)==="rescue-route-ending" && bSteps<16){
