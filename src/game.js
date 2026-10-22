@@ -1697,7 +1697,12 @@
     $("detentionEndingScene").hidden = !inDetentionEnding;
     $("reassembleEndingScene").hidden = !inAssemblyEnding;
     $("rescueEndingSummary").hidden = !inSummary;
-    if (inSummary) { $("rescueSummaryJumpSelect").value = ""; $("rescueSummaryJumpButton").disabled = true; }
+    if (inSummary) {
+      $("rescueSummaryJumpSelect").value = "";
+      $("rescueSummaryJumpButton").disabled = true;
+      $("rescueSummaryRouteOption").textContent = state.route === "reassemble"
+        ? "Chapter 4, spa arrival" : "Chapter 4, current route briefing";
+    }
     $("rescueEndingSummary").dataset.route = inSummary ? (state.route || "other") : "other";
     if (inWall) {
       const position = Number.isInteger(state.wallStep)
@@ -1987,13 +1992,13 @@
         // exterior stage; highlight whoever owns the current spoken line.
         $("rescueRouteIntro").dataset.speaker = duringDialogue && (route === "cult" || route === "detention" || route === "reassemble")
           ? line.speaker.toLowerCase() : "";
-        // G4D: B is an administrative release process, not a rescue briefing.
-        // Keep existing Summit and spa status copy and all recorded dialogue.
+        // G5A: each route's UI status describes the actual scene, not a
+        // generic rescue briefing. Spoken dialogue and route state are unchanged.
         $("routeIntroPhaseLabel").textContent = route === "cult"
           ? "Investigation complete · Summit approach"
           : route === "detention"
             ? "Investigation complete · Release office"
-            : "Investigation complete · Rescue briefing";
+            : "Investigation complete · Spa arrival";
         $("routeIntroStatus").textContent = route === "cult"
           ? (duringDialogue
             ? "Rescue attempt · Summit entrance · " + (progress.introStep + 1) + " of " + config.intro.length
@@ -2003,8 +2008,11 @@
               ? "Ceremonial release process · " + (progress.introStep + 1) + " of " + config.intro.length
               : "Administrative approach complete. " + config.gameTitle + " is next.")
             : (duringDialogue
-              ? "Rescue briefing · " + (progress.introStep + 1) + " of " + config.intro.length
-              : "Briefing complete. " + config.gameTitle + " is the next stage.");
+              ? "Spa misunderstanding · " + (progress.introStep + 1) + " of " + config.intro.length
+              : "");
+        // G5A owner review: when the spa dialogue ends, the wide status panel
+        // repeats the footer and continue action. Remove it only for Ending C.
+        $("routeIntroStatus").hidden = route === "reassemble" && !duringDialogue;
         $("routeIntroNextButton").textContent = duringDialogue
           ? "Next line →" : "Continue to " + config.gameTitle + " →";
       }
@@ -2021,6 +2029,9 @@
         $("rescueMiniGameDescription").textContent = rescueHub.routeIntro[route];
         $("rescueMiniGameStatus").textContent = config.workPackage
           + " will supply the playable puzzle. No rounds or ending can be skipped in this preview.";
+        // The puzzle's return control goes back to the current route scene.
+        $("rescueMiniGameBackButton").textContent = playableAssembly
+          ? "Back to spa scene" : "Back to briefing";
         $("rescueMiniGameProgressLabel").textContent = playableSummit
           ? "Summit admissions · three checks to reach Stephen"
           : playableDetention

@@ -956,7 +956,7 @@ Following owner acceptance and merge of Ending B PR #44, continue SP4.0 with the
 
 | Package | Purpose / measurable owner acceptance | Dependency |
 | --- | --- | --- |
-| **G5A** | Remove inaccurate “Rescue briefing” / “Briefing complete” from spa arrival, navigation and status copy only | None; start first |
+| **G5A** | Remove inaccurate “Rescue briefing” / “Briefing complete” from spa arrival, navigation and status copy only | Implementation in draft PR (22 October); owner preview/CI gate |
 | **G5B** | Audit four faulty audio performances/playback causes; identify source filenames, re-record/reintegrate as needed (Paul “It's a spa”, Stephen `reassemble.ending.007`, Paul `.008`, Stephen `.012`); spot-audit remaining route | Owner approval of replacement recordings |
 | **G5C** | Fit 0/6 through 6/6 reassembly at 1366×768 without inner scroll; keep Power On visible; heading/topbar must not collide | None; start after G5A |
 | **G5D** | Vertically centre POWER ON button text and preserve its 44px+ target and keyboard operation | Pair with G5C |

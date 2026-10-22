@@ -5445,3 +5445,11 @@ body:has(#menuScreen:not([hidden])) main {
     width:21px;height:21px;min-width:21px;
   }
 }
+
+/* GAME-SP4.1G5A owner screenshot (22 October): the completed spa intro
+ * needs no second full-width status speech box. After the last spoken line,
+ * only the scene, its footer and the continue action remain. A/B unaffected. */
+#holidayScreen #rescueRouteIntro[data-route="reassemble"]:has(#routeIntroDialogue[hidden]) .rescue-travel-panel,
+#holidayScreen #rescueRouteIntro[data-route="reassemble"] #routeIntroStatus[hidden] {
+  display:none !important;
+}

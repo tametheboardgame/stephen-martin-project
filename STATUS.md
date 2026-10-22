@@ -1,6 +1,13 @@
 # Project status
 
-## CURRENT — GAME-SP4.1G5 Ending C refinement planned (22 October 2026)
+## CURRENT — GAME-SP4.1G5A Ending C spa terminology implementation (22 October 2026)
+
+- PR #84 G5 roadmap merged on main at `71ea79d4803185abc96220eeb9deb8697337ff34`. G5A implementation branch `agent/game-sp41g5a-spa-terminology` updates only route UI terminology, puzzle return button and route chapter-jump option. No recorded speech/audio edits or A/B gameplay changes.
+- Spa intro: “Spa arrival” and “Spa misunderstanding” in place of “Rescue briefing”; completed intro: “Spa approach complete”; assembly back button “Back to spa scene”; C-only chapter checkpoint “Chapter 4, spa arrival”.
+- **Owner screenshot refinement, 22 October:** the full-width 'Spa approach complete. Reassemble Stephen Martin is next.' status box is redundant once route dialogue finishes. Ending C alone now removes its completed-state box (while dialogue still displays and Continue still advances). A/B boxes unchanged. Await refreshed CI and Cloudflare screenshot review.
+- Next: confirm CI and Cloudflare preview for revised G5A, owner approval, then G5B audio audit and G5C/D laptop/power-button refinement.
+
+## PREVIOUS — GAME-SP4.1G5 Ending C refinement planned (22 October 2026)
 
 - **GitHub:** connected, `main` confirmed at `997bf191c319fe4a86a1890d780c98ef53ed3bd4` after owner-approved G4G final illustration / compact albums merged via PR #83.
 - **Owner-reviewed 10 Ending C defects** entered into `ROADMAP.md` G5A–G5H and comprehensive spec `docs/story/GAME-SP4.1G5-ENDING-C-REFINEMENT-PLAN.md`. Includes spa labels, four audio corrections, laptop puzzle scroll, invisible Power On CTA, button alignment, mismatched slot silhouettes and bespoke spa finale.

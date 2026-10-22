@@ -5406,9 +5406,9 @@ test("GAME-SP4.1G3B Summit status reflects a rescue attempt, leaving B/C copy un
     for(let i=0;i<6;i++)q.el("hotelFinishButton").click();
     assert.equal(q.el("routeIntroPhaseLabel").textContent,route==="detention"
       ? "Investigation complete · Release office"
-      : "Investigation complete · Rescue briefing");
+      : "Investigation complete · Spa arrival");
     assert.match(q.el("routeIntroStatus").textContent,route==="detention"
-      ? /^Ceremonial release process · 1 of / : /^Rescue briefing · 1 of /);
+      ? /^Ceremonial release process · 1 of / : /^Spa misunderstanding · 1 of /);
   }
 });
 
@@ -5997,7 +5997,7 @@ test("G4G approved illustrated Ending B uses actual WebP, detention-only layout 
   assert.equal(bytes.toString("ascii",8,12),"WEBP");
   assert.match(engine,/\$\("rescueEndingSummary"\)\.dataset\.route = inSummary \? \(state\.route \|\| "other"\) : "other"/);
   assert.match(engine,/route === "detention"\s*\?\s*"Ending B complete\. The Office of Ceremonial Misunderstandings/);
-  const styles=css.slice(css.lastIndexOf("/* GAME-SP4.1G4G"));
+  const styles=css.slice(css.lastIndexOf("/* GAME-SP4.1G4G"),css.indexOf("/* GAME-SP4.1G5A owner screenshot"));
   assert.match(styles,/rescueEndingSummary\[data-route="detention"\] \.rescue-route-intro-stage/);
   assert.match(styles,/ending-b-finale-ceremonial-release-v01\.webp/);
   assert.match(styles,/rescueEndingSummary\[data-route="detention"\] \.bls-albums \{\s*top:auto;right:3%;bottom:15%/);
@@ -6013,7 +6013,7 @@ test("G4G approved illustrated Ending B uses actual WebP, detention-only layout 
 
 
 test("G4G.1 Ending B responsive summary/album boxes shrink and never use internal scrollbars",()=>{
-  const styles=css.slice(css.lastIndexOf("/* GAME-SP4.1G4G"));
+  const styles=css.slice(css.lastIndexOf("/* GAME-SP4.1G4G"),css.indexOf("/* GAME-SP4.1G5A owner screenshot"));
   const b='rescueEndingSummary[data-route="detention"]';
   assert.ok(styles.includes(b));
   const declarations=styles.replace(/\/\*[\s\S]*?\*\//g,"");
@@ -6036,4 +6036,76 @@ test("G4G.1 Ending B responsive summary/album boxes shrink and never use interna
   assert.doesNotMatch(styles,/data-route="cult"|data-route="reassemble"/);
   assert.match(html,/id="rescueSummaryHeading"/);
   assert.match(html,/class="bls-albums"/);
+});
+
+
+// GAME-SP4.1G5A: user-visible spa route language only; no scripted lines/voice ID changes.
+test("G5A spa intro, completion and puzzle return use spa wording, not briefing",()=>{
+  const p=voicedSpaIntro();
+  const route=story().SMP_RESCUE_FRAMEWORK.routes.reassemble;
+  assert.equal(p.el("routeIntroPhaseLabel").textContent,"Investigation complete · Spa arrival");
+  assert.equal(p.el("routeIntroStatus").textContent,
+    "Spa misunderstanding · 1 of "+route.intro.length);
+  assert.equal(p.el("routeIntroLine").textContent,route.intro[0].text);
+  for(let i=0;i<route.intro.length;i++){
+    assert.equal(p.el("routeIntroLine").textContent,route.intro[i].text);
+    p.el("routeIntroNextButton").click();
+  }
+  assert.equal(p.el("routeIntroStatus").textContent,"");
+  assert.equal(p.el("routeIntroStatus").hidden,true,
+    "Ending C should not display a redundant status bubble after the final line");
+  assert.equal(p.el("routeIntroDialogue").hidden,true);
+  assert.equal(p.el("routeIntroNextButton").textContent,
+    "Continue to "+route.gameTitle+" →");
+  p.el("routeIntroNextButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-minigame");
+  assert.equal(p.el("rescueMiniGameBackButton").textContent,"Back to spa scene");
+  assert.equal(p.el("rescueMiniGameProgressLabel").textContent,
+    "Cardboard souvenir · six slots and a POWER ON button");
+  p.el("rescueMiniGameBackButton").click();
+  assert.equal(saved(p).holidayPhase,"rescue-route-intro");
+  assert.equal(p.el("routeIntroPhaseLabel").textContent,"Investigation complete · Spa arrival");
+  assert.equal(p.el("routeIntroStatus").textContent,"");
+  assert.equal(p.el("routeIntroStatus").hidden,true);
+});
+
+test("G5A Ending C chapter jump names spa arrival while A and B retain original option",()=>{
+  assert.match(html,/id="rescueSummaryRouteOption" value="route"/);
+  assert.match(engine,/rescueSummaryRouteOption"\)\.textContent = state\.route === "reassemble"/);
+  assert.match(engine,/Chapter 4, spa arrival" : "Chapter 4, current route briefing"/);
+  const b=toHotelInvestigation("detention");
+  completeHotelIntro(b);
+  b.el("hotelDetentionButton").click();
+  for(let i=0;i<6;i++)b.el("hotelFinishButton").click();
+  assert.equal(b.el("routeIntroPhaseLabel").textContent,"Investigation complete · Release office");
+  assert.match(b.el("routeIntroStatus").textContent,/^Ceremonial release process/);
+  const detentionLines=story().SMP_RESCUE_FRAMEWORK.routes.detention.intro.length;
+  for(let i=0;i<=detentionLines;i++)b.el("routeIntroNextButton").click();
+  assert.equal(saved(b).holidayPhase,"rescue-minigame");
+  assert.equal(b.el("rescueMiniGameBackButton").textContent,"Back to briefing");
+});
+
+
+test("G5A owner screenshot: spa completed-intro bubble disappears but dialogue and other routes remain available",()=>{
+  const spa=voicedSpaIntro();
+  const config=story().SMP_RESCUE_FRAMEWORK.routes.reassemble;
+  assert.equal(spa.el("routeIntroDialogue").hidden,false);
+  assert.equal(spa.el("routeIntroStatus").hidden,false);
+  for (let i=0;i<config.intro.length;i++)spa.el("routeIntroNextButton").click();
+  assert.equal(spa.el("routeIntroDialogue").hidden,true);
+  assert.equal(spa.el("routeIntroStatus").hidden,true);
+  assert.equal(spa.el("routeIntroStatus").textContent,"");
+  assert.match(css,/#rescueRouteIntro\[data-route="reassemble"\]:has\(#routeIntroDialogue\[hidden\]\) \.rescue-travel-panel,[\s\S]*?display:none !important;/);
+  assert.equal(saved(spa).holidayPhase,"rescue-route-intro");
+  spa.el("routeIntroNextButton").click();
+  assert.equal(saved(spa).holidayPhase,"rescue-minigame");
+
+  const summit=toHotelInvestigation("cult");
+  completeHotelIntro(summit);
+  summit.el("hotelCultButton").click();
+  for(let i=0;i<6;i++)summit.el("hotelFinishButton").click();
+  const a=story().SMP_RESCUE_FRAMEWORK.routes.cult;
+  for(let i=0;i<a.intro.length;i++)summit.el("routeIntroNextButton").click();
+  assert.equal(summit.el("routeIntroStatus").hidden,false);
+  assert.match(summit.el("routeIntroStatus").textContent,/Approach complete/);
 });
