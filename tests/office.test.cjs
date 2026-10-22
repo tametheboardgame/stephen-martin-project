@@ -5987,3 +5987,53 @@ test("G4F owner spacing revision: Stephen and Paul move inward without shifting 
   assert.match(rules,/\.detention-ending-actor,[\s\S]*?object-position:center bottom/);
   assert.match(rules,/\.detention-ending-content\.story-speech \{\s*z-index:5/);
 });
+
+
+test("G4G approved illustrated Ending B uses actual WebP, detention-only layout and lower-right album cards",()=>{
+  const asset="public/assets/generated/locations/ending-b-finale-ceremonial-release-v01.webp";
+  const bytes=fs.readFileSync(path.join(root,asset));
+  assert.ok(bytes.length>20000 && bytes.length<3*1024*1024);
+  assert.equal(bytes.toString("ascii",0,4),"RIFF");
+  assert.equal(bytes.toString("ascii",8,12),"WEBP");
+  assert.match(engine,/\$\("rescueEndingSummary"\)\.dataset\.route = inSummary \? \(state\.route \|\| "other"\) : "other"/);
+  assert.match(engine,/route === "detention"\s*\?\s*"Ending B complete\. The Office of Ceremonial Misunderstandings/);
+  const styles=css.slice(css.lastIndexOf("/* GAME-SP4.1G4G"));
+  assert.match(styles,/rescueEndingSummary\[data-route="detention"\] \.rescue-route-intro-stage/);
+  assert.match(styles,/ending-b-finale-ceremonial-release-v01\.webp/);
+  assert.match(styles,/rescueEndingSummary\[data-route="detention"\] \.bls-albums \{\s*top:auto;right:3%;bottom:15%/);
+  assert.match(styles,/@media \(max-width:800px\)/);
+  assert.match(styles,/@media \(max-width:600px\)/);
+  assert.match(styles,/bottom:calc\(16% \+ 148px\)/);
+  assert.doesNotMatch(styles,/rescueEndingSummary\[data-route="cult"\]/);
+  assert.doesNotMatch(styles,/rescueEndingSummary\[data-route="reassemble"\]/);
+  assert.match(html,/id="rescueSummaryHeading"/);
+  assert.match(html,/class="bls-albums"/);
+  assert.match(read("scripts/build.mjs"),/Approved Ending B artworks packaged: " \+ endingBImages\.length \+ "\/10/);
+});
+
+
+test("G4G.1 Ending B responsive summary/album boxes shrink and never use internal scrollbars",()=>{
+  const styles=css.slice(css.lastIndexOf("/* GAME-SP4.1G4G"));
+  const b='rescueEndingSummary[data-route="detention"]';
+  assert.ok(styles.includes(b));
+  const declarations=styles.replace(/\/\*[\s\S]*?\*\//g,"");
+  assert.doesNotMatch(declarations,/overflow-y:\s*auto|overflow:\s*(auto|scroll)/,
+    "No overflow scrollbars in Ending B finale");
+  assert.match(declarations,/\.rescue-travel-panel \{\s*top:auto;left:3%;right:auto;bottom:15%;width:min\(52%,660px\);\s*max-height:none;overflow:visible;/);
+  assert.match(declarations,/\.bls-albums \{\s*top:auto;right:3%;bottom:15%;width:min\(27%,290px\);\s*max-height:none;overflow:visible;/);
+  for (const sel of [".rescue-travel-panel",".bls-albums"]) {
+    assert.ok(styles.includes(b+" "+sel),"Detention-only selector: "+sel);
+  }
+  assert.match(styles,/\.rescue-travel-panel h2 \{\s*font-size:clamp\(17px,1\.8vw,30px\)/);
+  assert.match(styles,/\.rescue-travel-panel p \{\s*font-size:clamp\(11px,1\.08vw,16px\)/);
+  assert.match(styles,/\.bls-albums \{\s*top:auto;right:3%;bottom:15%;width:min\(27%,290px\)/);
+  assert.match(styles,/\.bls-album-cover img \{\s*width:100%;height:auto;max-height:112px/);
+  assert.match(styles,/@media \(max-height:650px\) and \(min-width:801px\)/);
+  assert.match(styles,/@media \(max-width:800px\)/);
+  assert.match(styles,/@media \(max-width:600px\)/);
+  assert.match(styles,/\.rescue-travel-panel \{\s*top:auto;left:3%;right:3%;bottom:calc\(16% \+ 148px\);width:94%/);
+  assert.match(styles,/\.bls-albums \{\s*top:auto;right:3%;bottom:16%;width:min\(76%,245px\)/);
+  assert.doesNotMatch(styles,/data-route="cult"|data-route="reassemble"/);
+  assert.match(html,/id="rescueSummaryHeading"/);
+  assert.match(html,/class="bls-albums"/);
+});

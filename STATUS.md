@@ -1,5 +1,13 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G4G Ending B finale artwork (21 October 2026)
+
+- G4D–G4F PR #82 approved, merged and verified on main as `7cdf0af19acae182d38f97e89bff8fdaa6e1973a`, 254/254 checks passed before merge.
+- G4G new independent draft branch `agent/game-sp41g4g-ending-b-finale-art`; first concept art brief for “Detained by the Administration” committed. The canonical last narrator joke is David proudly framing his government-issued PLEASE LEAVE certificate.
+- **Art approved by owner:** the three men leaving onto the street with the correct ceremonial official and actual release certificate. Approved PNG staged under Google Drive generated-asset staging as `ending-b-finale-ceremonial-release-v01.png`; corresponding 1672×941 optimised WebP added to G4G branch with source-provenance manifest. Finale installed only on the detention-route summary; albums repositioned bottom-right (below the official's head), and a narrower bottom-left live caption avoids overlap. Visual preview/CI checks pending, PR #83 stays draft.
+- **Owner screenshot feedback (22 October):** Ending B caption heading/summary and album card were oversized and each produced its own vertical scrollbar at a laptop-like viewport. Revised detention-only CSS with smaller responsive fonts/album art and no fixed-height/overflow scrolling, at desktop, short-laptop, tablet and phone breakpoints. Await new Cloudflare owner check before merging.
+- Next: inspect updated laptop/mobile preview for no scrolling and unobstructed official; then owner sign-off and G4H regression. Optional G4C transitions remain deferred until after Ending C fixes.
+
 ## CURRENT — GAME-SP4.1G4D–G4F Ending B polish, draft (21 October 2026)
 
 - **Owner feedback (cast spacing):** stamp now approved. Stephen and Paul are too close to the left/right edges respectively despite satisfactory height/foot contact. Moved Stephen right and Paul left at desktop, tablet and mobile breakpoints; David, Official, heights and bottom offsets unchanged. Await fresh CI/deployment and screenshot confirmation.
