@@ -6155,34 +6155,36 @@ test("G5D Power On is vertically centred, keyboard focused and has a permanently
 });
 
 
-// G5E: intentional mounting targets replace a false exact-shape promise.
-// Source PNG/WebP assets, six placement IDs and wrong-piece responses stay intact.
-test("G5E standee targets show a readable label until each correct piece is fitted",()=>{
-  assert.match(html,/tap its labelled mounting target on the standee/);
+// G5E v2: no on-screen slot labels or carved cut-out recesses.
+// Keep six correct destinations, their accessible names and all seven decoys.
+test("G5E v2 six dashed zones remain accessible and only correct parts fit",()=>{
+  assert.match(html,/matching dashed zone on the cardboard mounting board/);
   const p=toAssemblyWorkshop();
   const names=["Head","Torso","Left arm","Right arm","Left leg","Right leg"];
   for(let i=0;i<6;i++){
-    assert.equal(p.el("assemblySlotLabel"+i).textContent,names[i]);
+    assert.equal(p.el("assemblySlotLabel"+i).textContent,names[i],
+      "DOM label stays for compatibility, even though visual CSS hides it");
     assert.equal(p.el("assemblySlot"+i).dataset.filled,"false");
     assert.equal(p.el("assemblySlot"+i).attributes["aria-label"],
-      "Mount "+names[i]+" in labelled standee target");
+      "Mount "+names[i]+" in dashed cardboard target");
   }
-  // A decoy cannot fill any of the new labelled targets.
+  // Wrong piece doesn't fill a zone or get consumed.
   p.el("assemblyPiece10").click(); // toaster
   p.el("assemblySlot1").click();
   assert.equal(saved(p).rescueProgress.placedParts.length,0);
   assert.equal(p.el("assemblySlot1").dataset.filled,"false");
-  // Correct selection fills the requested target only; other labels remain.
-  p.el("assemblyPiece0").click();
-  p.el("assemblySlot0").click();
-  assert.equal(p.el("assemblySlot0").dataset.filled,"true");
-  assert.match(p.el("assemblySlotLabel0").textContent,/Head fitted/);
-  assert.equal(p.el("assemblySlot0").attributes["aria-label"],
-    "Head fitted to cardboard standee");
-  assert.equal(p.el("assemblySlot1").dataset.filled,"false");
-  assert.equal(p.el("assemblySlotLabel1").textContent,"Torso");
-  // All six must still be mounted before the explicit Power On gate.
-  for(let i=1;i<6;i++){
+  assert.equal(p.el("assemblyPiece10").disabled,false);
+  // Half completed: fitted zones retain artwork; other zones still await parts.
+  for(let i=0;i<3;i++){
+    p.el("assemblyPiece"+i).click();
+    p.el("assemblySlot"+i).click();
+    assert.equal(p.el("assemblySlot"+i).dataset.filled,"true");
+    assert.equal(p.el("assemblySlot"+i).attributes["aria-label"],
+      names[i]+" fitted to cardboard standee");
+  }
+  assert.equal(saved(p).rescueProgress.placedParts.length,3);
+  assert.equal(p.el("assemblyPowerButton").hidden,true);
+  for(let i=3;i<6;i++){
     p.el("assemblyPiece"+i).click();
     p.el("assemblySlot"+i).click();
   }
@@ -6192,20 +6194,24 @@ test("G5E standee targets show a readable label until each correct piece is fitt
   assert.equal(saved(p).holidayPhase,"rescue-route-ending");
 });
 
-test("G5E labelled slot design is scoped to Ending C and keeps original artwork",()=>{
-  const g5e=css.slice(css.lastIndexOf("/* GAME-SP4.1G5E"));
-  assert.ok(g5e.length>1500);
-  assert.match(g5e,/\.assembly-slot:not\(\[data-filled="true"\]\) \.assembly-slot-label \{[\s\S]*?display:flex !important;/);
-  assert.match(g5e,/\.assembly-slot\[data-filled="true"\] \.assembly-slot-label \{[\s\S]*?display:none !important;/);
-  assert.match(g5e,/clip-path:none/);
-  assert.match(g5e,/:focus-visible/);
-  assert.match(g5e,/@media \(max-width:800px\)/);
+test("G5E v2 hides engraved board image and visual slot labels, leaving dashed boxes",()=>{
+  const g5e=css.slice(css.lastIndexOf("/* GAME-SP4.1G5E v2"));
+  assert.ok(g5e.length>1900);
+  assert.match(g5e,/\.assembly-silhouette \{[\s\S]*?background:[\s\S]*?linear-gradient/);
+  assert.match(g5e,/\.assembly-board-art \{[\s\S]*?display:none !important;/);
+  assert.match(g5e,/\.assembly-slot::before \{[\s\S]*?display:none !important;/);
+  assert.match(g5e,/\.assembly-slot:not\(\[data-filled="true"\]\) \{[\s\S]*?border:2px dashed/);
+  assert.match(g5e,/\.assembly-slot-label \{[\s\S]*?display:none !important;/);
+  assert.match(g5e,/\.assembly-slot:focus-visible \{[\s\S]*?outline:3px/);
+  assert.match(g5e,/\.assembly-slot\[data-filled="true"\] \{[\s\S]*?border:0 !important;[\s\S]*?opacity:1/);
   assert.doesNotMatch(g5e,/data-route="cult"|data-route="detention"/);
-  for(const name of ["head","torso","left-arm","right-arm","left-leg","right-leg"]){
+  for(const name of ["head","torso","left-arm","right-arm","left-leg","right-leg"])
     assert.match(html,new RegExp('data-slot="'+name+'"'));
-  }
   assert.equal((html.match(/class="assembly-slot assembly-slot-/g)||[]).length,6);
   assert.equal((html.match(/class="assembly-piece" type="button" draggable="true"/g)||[]).length,13);
+  // Slot hit-box positions and correct anatomical side must not shift.
   assert.match(css,/\.assembly-slot-left-arm \{[\s\S]*?left:73%/);
   assert.match(css,/\.assembly-slot-right-arm \{[\s\S]*?left:1%/);
+  // Keep the original image asset in the DOM for reversible rollback.
+  assert.match(html,/class="assembly-board-art" src="\.\/public\/assets\/generated\/game\/ending-c-cardboard-board-v01\.webp"/);
 });
