@@ -49,6 +49,9 @@ async function openRoute(route,viewport){
   await page.locator("#menuSoundButton").click();
   await page.locator("#resumeButton").click();
   assert.equal(await phase(page),"rescue-minigame");
+  // Manual QA stepping is deterministic only while holiday autoplay is paused.
+  if((await page.locator("#holidayPauseButton").textContent()).includes("Pause"))
+    await page.locator("#holidayPauseButton").click();
   const branch={cult:"#summitAdmissions",detention:"#detentionPaperwork",reassemble:"#reassembleWorkshop"}[route];
   await page.locator(branch).waitFor({state:"visible"});
   return {context,page,failures};
@@ -98,6 +101,8 @@ try{
   // Save and Continue must preserve fitted parts and not enable power early.
   await page.locator("#homeButton").click();
   await page.locator("#resumeButton").click();
+  if((await page.locator("#holidayPauseButton").textContent()).includes("Pause"))
+    await page.locator("#holidayPauseButton").click();
   assert.equal((await progress(page)).placedParts.length,3);
   assert.equal(await page.locator("#assemblyPowerButton").isVisible(),false);
   for(let i=3;i<6;i++){
@@ -116,7 +121,11 @@ try{
   observations.push({case:"C-puzzle-laptop",overflow});
   await page.locator("#assemblyPowerButton").click();
   assert.equal(await phase(page),"rescue-route-ending");
-  for(let i=0;i<16;i++)await page.locator("#assemblyEndingNextButton").click();
+  let cSteps=0;
+  while(await phase(page)==="rescue-route-ending" && cSteps<17){
+    await page.locator("#assemblyEndingNextButton").click();cSteps++;
+  }
+  assert.equal(cSteps,16,"C dialogue must have 15 spoken lines and an end-card transition");
   assert.equal(await phase(page),"rescue-ending-summary");
   assert.equal(await page.locator("#rescueSummaryHeading").textContent(),"SOME ASSEMBLY REQUIRED");
   await screenshot(page,"C-laptop-1366x768-final-hub");
@@ -150,7 +159,11 @@ try{
         await p.locator("#summitNextButton").click();
       }
       assert.equal(await phase(p),"rescue-route-ending");
-      for(let i=0;i<15;i++)await p.locator("#summitEndingNextButton").click();
+      let aSteps=0;
+      while(await phase(p)==="rescue-route-ending" && aSteps<16){
+        await p.locator("#summitEndingNextButton").click();aSteps++;
+      }
+      assert.equal(aSteps,15,"A dialogue must have 14 lines plus an end-card transition");
     }else{
       await p.locator("#detentionChoice1").click();
       await p.locator("#detentionNextButton").click();
@@ -161,7 +174,11 @@ try{
       await p.locator("#detentionPermitButton").click();
       await p.locator("#detentionNextButton").click();
       assert.equal(await phase(p),"rescue-route-ending");
-      for(let i=0;i<15;i++)await p.locator("#detentionEndingNextButton").click();
+      let bSteps=0;
+      while(await phase(p)==="rescue-route-ending" && bSteps<16){
+        await p.locator("#detentionEndingNextButton").click();bSteps++;
+      }
+      assert.equal(bSteps,15,"B dialogue must have 14 lines plus an end-card transition");
     }
     assert.equal(await phase(p),"rescue-ending-summary",route+": missing final hub");
     const title=await p.locator("#rescueSummaryHeading").textContent();
