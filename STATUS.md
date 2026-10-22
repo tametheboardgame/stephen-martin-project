@@ -1,5 +1,12 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G5E labelled standee mounting targets (22 October 2026)
+
+- Owner-approved G5C/D PR #87 **merged** into `main` at `5a2ccb5f181424eb5335c2ede3ec49f0caca5334`.
+- Inspection of approved `ending-c-cardboard-board-v01.webp` and all six part WebPs found the limb silhouette contours/poses are fundamentally different from the engraved board shapes, particularly one raised hand with cucumber and another horizontal bowl, whereas the board has two vertical arm cavities. These are incompatible without destructive art regeneration; repeated CSS nudges are not a reliable alignment fix.
+- G5E prototype branch `agent/game-sp41g5e-labelled-mounting-targets`: intentionally **labelled, soft-backed mounting targets** on existing board. Clear labels for all six empty regions; labels disappear when a correct piece is installed. Correct/incorrect feedback, decoy selection, saved placement IDs, art files, voice IDs, keyboard/touch and left/right anatomy remain unchanged. No original asset replaced or new sprite generated.
+- Acceptance: owner review of real 1366×768 laptop and mobile preview, both empty and partly/completely assembled. Check that labels stay legible, don't cover placed artwork or overlap other controls; then merge only if approved. Later optional GAME-SP4.1J exact silhouette art registration remains a separate authorised decision. Next after G5E is G5F final bespoke spa illustration.
+
 ## CURRENT — GAME-SP4.1G5C/D Ending C reassembly layout (22 October 2026)
 
 - **G5B merged** as PR #86, commit `fd9377769cef601a3cb18a7465ef80c5075b1c1f`. Four owner-approved replacement recordings installed, 263 tests passed.
