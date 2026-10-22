@@ -13,6 +13,9 @@ await mkdir(evidence,{recursive:true});
 const browser=await chromium.launch({headless:true,args:["--no-sandbox"]});
 const observations=[];
 const screenshot=async(page,name)=>{
+  // Do not record a black loading curtain and mistakenly call it an ending
+  // screenshot. The asset loader sets [hidden] only after scene art decodes.
+  await page.locator("#assetLoadingOverlay").waitFor({state:"hidden",timeout:15000});
   await page.screenshot({path:path.join(evidence,name+".png"),fullPage:true,animations:"disabled"});
 };
 const phase=async page=>page.evaluate(()=>JSON.parse(localStorage.getItem("stephen-martin-game-sp1-save-v1")||"null")?.holidayPhase);
