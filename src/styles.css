@@ -5892,3 +5892,36 @@ body:has(#menuScreen:not([hidden])) main {
     padding:8px 10px;
   }
 }
+
+
+/* G5G toolbar composition: real Stephen's head occupies top-right.
+ * Put the shared sound/pause controls over the quieter top-left spa detail
+ * on Ending C ONLY; do not hide them or move them in A/B. */
+#holidayScreen:has(#rescueEndingSummary[data-route="reassemble"]:not([hidden]))
+  .china-footer.story-top-controls {
+  top:1.5% !important;
+  left:1.5% !important;
+  right:auto !important;
+  max-width:min(31%,420px);
+}
+@media (max-width:800px) and (min-width:601px) {
+  #holidayScreen:has(#rescueEndingSummary[data-route="reassemble"]:not([hidden]))
+    .china-footer.story-top-controls {
+    top:1% !important;left:1% !important;right:auto !important;
+    max-width:42%;
+  }
+}
+@media (max-width:600px) {
+  /* At phone widths the artwork remains completely unobstructed: toolbar
+   * follows the story/album/checkpoint content in natural document flow. */
+  #holidayScreen:has(#rescueEndingSummary[data-route="reassemble"]:not([hidden]))
+    .china-footer.story-top-controls {
+    position:relative !important;
+    top:auto !important;bottom:auto !important;
+    left:auto !important;right:auto !important;
+    box-sizing:border-box;
+    width:94%;max-width:none;
+    margin:6px auto;
+    justify-content:center;
+  }
+}
