@@ -5991,3 +5991,55 @@ body:has(#menuScreen:not([hidden])) main {
     display:none;
   }
 }
+
+
+/* GAME-SP4.1G5H viewport finding: at 1366x768 the shared top toolbar
+ * covered "Reassemble Stephen Martin" and the workshop eyebrow. On wide
+ * desktop, seat the exact same operational buttons in spare middle footer
+ * space between the status text and "Back to spa scene". No puzzle geometry,
+ * character artwork, or other ending is moved. */
+@media (min-width:1100px) {
+  #holidayScreen:has(#rescueMiniGameScene[data-route="reassemble"]:not([hidden]))
+    .china-footer.story-top-controls {
+    top:auto !important;
+    right:auto !important;
+    bottom:10px !important;
+    left:35% !important;
+    width:max-content;
+    max-width:min(60%,580px) !important;
+    display:flex;
+    flex-wrap:nowrap;
+    min-height:0;
+    gap:5px;
+    padding:0;
+    border:0;
+    box-shadow:none;
+    background:transparent;
+  }
+  #holidayScreen:has(#rescueMiniGameScene[data-route="reassemble"]:not([hidden]))
+    .china-footer.story-top-controls .story-toolbar-label {
+    display:none;
+  }
+  #holidayScreen:has(#rescueMiniGameScene[data-route="reassemble"]:not([hidden]))
+    .china-footer.story-top-controls .mini-button {
+    min-width:0;
+    min-height:34px !important;
+    padding:5px 7px !important;
+    font-size:11px !important;
+  }
+}
+/* At narrower tablet/phone widths, do not float the long multi-button strip
+ * across an ever-smaller stage heading. Use the accepted natural page flow
+ * after the scene instead, preserving focus targets and controls. */
+@media (max-width:1099px) {
+  #holidayScreen:has(#rescueMiniGameScene[data-route="reassemble"]:not([hidden]))
+    .china-footer.story-top-controls {
+    position:relative !important;
+    top:auto !important;right:auto !important;
+    bottom:auto !important;left:auto !important;
+    box-sizing:border-box;
+    width:94%;max-width:none !important;
+    margin:6px auto;
+    justify-content:center;
+  }
+}
