@@ -84,6 +84,23 @@ try{
   assert.equal(await page.locator("#assemblyPowerButton").isVisible(),false);
   assert.equal(await page.locator(".assembly-piece").count(),13);
   await screenshot(page,"C-laptop-1366x768-0of6");
+  assert.match(await page.locator("#assemblyFeedback").textContent(),/dashed mounting zone/i);
+  const placement=await page.evaluate(()=>{
+    const nav=document.querySelector("#holidayScreen .china-footer.story-top-controls").getBoundingClientRect();
+    const title=document.querySelector("#reassembleWorkshop h2").getBoundingClientRect();
+    const back=document.querySelector("#rescueMiniGameBackButton").getBoundingClientRect();
+    const text=document.createRange();
+    text.selectNodeContents(document.querySelector("#rescueMiniGameProgressLabel"));
+    const status=text.getBoundingClientRect();
+    const overlap=(a,b)=>a.left<b.right && a.right>b.left && a.top<b.bottom && a.bottom>b.top;
+    return {toolbar:{x:nav.x,y:nav.y,w:nav.width,h:nav.height},
+      overlapsTitle:overlap(nav,title),overlapsBack:overlap(nav,back),
+      overlapsFooterStatus:overlap(nav,status)};
+  });
+  assert.equal(placement.overlapsTitle,false,"Ending C toolbar covers puzzle title");
+  assert.equal(placement.overlapsBack,false,"Ending C toolbar covers back button");
+  assert.equal(placement.overlapsFooterStatus,false,"Ending C toolbar covers footer status");
+  observations.push({case:"C-1366x768-controls",placement});
   // Decoy and incorrect anatomy must leave the cardboard unchanged.
   await page.locator("#assemblyPiece10").click();
   await page.locator("#assemblySlot1").click();
