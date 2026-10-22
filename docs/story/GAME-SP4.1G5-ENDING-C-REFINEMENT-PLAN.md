@@ -130,3 +130,7 @@
 ## Files likely involved (verify during each package)
 
 `src/game.js`, `src/reassemble-data.js`, `src/styles.css`, `index.html`, voice mapping/manifests and `public/assets/generated/` where owner-approved, `tests/office.test.cjs`, `scripts/build.mjs`, `ROADMAP.md` and `STATUS.md`.
+
+## G5A screenshot amendment — completed spa dialogue (22 October 2026)
+
+The initial G5A preview revealed a redundant full-width status box reading “Spa approach complete. Reassemble Stephen Martin is next.” Owner requested removal/correction before G5A merge. **Decision:** remove the completed-state box entirely for `reassemble` after its final spoken line; keep the actual spoken dialogue, bottom route footer and Continue button. The state transition is unchanged, and Summit/Detention still use their established completed-intro messages. Test both fresh play and Back to spa scene from the puzzle.

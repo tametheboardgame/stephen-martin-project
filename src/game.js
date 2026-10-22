@@ -2009,7 +2009,10 @@
               : "Administrative approach complete. " + config.gameTitle + " is next.")
             : (duringDialogue
               ? "Spa misunderstanding · " + (progress.introStep + 1) + " of " + config.intro.length
-              : "Spa approach complete. " + config.gameTitle + " is next.");
+              : "");
+        // G5A owner review: when the spa dialogue ends, the wide status panel
+        // repeats the footer and continue action. Remove it only for Ending C.
+        $("routeIntroStatus").hidden = route === "reassemble" && !duringDialogue;
         $("routeIntroNextButton").textContent = duringDialogue
           ? "Next line →" : "Continue to " + config.gameTitle + " →";
       }

@@ -4,7 +4,8 @@
 
 - PR #84 G5 roadmap merged on main at `71ea79d4803185abc96220eeb9deb8697337ff34`. G5A implementation branch `agent/game-sp41g5a-spa-terminology` updates only route UI terminology, puzzle return button and route chapter-jump option. No recorded speech/audio edits or A/B gameplay changes.
 - Spa intro: “Spa arrival” and “Spa misunderstanding” in place of “Rescue briefing”; completed intro: “Spa approach complete”; assembly back button “Back to spa scene”; C-only chapter checkpoint “Chapter 4, spa arrival”.
-- Next: confirm CI and Cloudflare preview, owner visual approval, then G5B audio audit and G5C/D laptop/power-button refinement.
+- **Owner screenshot refinement, 22 October:** the full-width 'Spa approach complete. Reassemble Stephen Martin is next.' status box is redundant once route dialogue finishes. Ending C alone now removes its completed-state box (while dialogue still displays and Continue still advances). A/B boxes unchanged. Await refreshed CI and Cloudflare screenshot review.
+- Next: confirm CI and Cloudflare preview for revised G5A, owner approval, then G5B audio audit and G5C/D laptop/power-button refinement.
 
 ## PREVIOUS — GAME-SP4.1G5 Ending C refinement planned (22 October 2026)
 
