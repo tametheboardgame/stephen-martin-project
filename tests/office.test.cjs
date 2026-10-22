@@ -6197,7 +6197,15 @@ test("G5E v2 six dashed zones remain accessible and only correct parts fit",()=>
 test("G5E v2 hides engraved board image and visual slot labels, leaving dashed boxes",()=>{
   const g5e=css.slice(css.lastIndexOf("/* GAME-SP4.1G5E v2"));
   assert.ok(g5e.length>1900);
-  assert.match(g5e,/\.assembly-silhouette \{[\s\S]*?background:[\s\S]*?linear-gradient/);
+  assert.match(g5e,/\.assembly-silhouette \{[\s\S]*?background:transparent;/);
+  assert.match(g5e,/\.assembly-silhouette::before \{[\s\S]*?top:0;bottom:0;left:-12%;right:-12%;/);
+  assert.match(g5e,/\.assembly-silhouette::before \{[\s\S]*?border:3px solid #a77948;[\s\S]*?linear-gradient/);
+  assert.match(g5e,/\.assembly-silhouette::before \{[\s\S]*?pointer-events:none;/);
+  assert.match(g5e,/\.assembly-silhouette::before \{[\s\S]*?z-index:0;/);
+  // A wider painted mount is a visual surface only. Interactive body slots
+  // must keep their old percentages and placement gestures.
+  assert.match(css,/\.assembly-slot-left-arm \{[\s\S]*?left:73%/);
+  assert.match(css,/\.assembly-slot-right-arm \{[\s\S]*?left:1%/);
   assert.match(g5e,/\.assembly-board-art \{[\s\S]*?display:none !important;/);
   assert.match(g5e,/\.assembly-slot::before \{[\s\S]*?display:none !important;/);
   assert.match(g5e,/\.assembly-slot:not\(\[data-filled="true"\]\) \{[\s\S]*?border:2px dashed/);
