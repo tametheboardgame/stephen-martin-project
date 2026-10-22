@@ -1,6 +1,14 @@
 # Project status
 
-## CURRENT — GAME-SP4.1G5E labelled standee mounting targets (22 October 2026)
+## CURRENT — GAME-SP4.1G5E v2 dashed mounting board (22 October 2026)
+
+- Owner screenshot rejected the first G5E labels: text pills obscure the standee and cannot fix the mismatched carved recesses on the approved cardboard base.
+- G5E v2, PR #88 (same draft branch), **removes all visible slot labels and completely hides the embedded engraved-slot board image** in the puzzle only. Replaces it with a neutral textured cardboard backing and six dashed mounting zones in the unchanged six anatomical regions. Empty regions have dashed borders; hover/focus/hint emphasise the selected zone; fitted regions lose their box and render the approved part artwork.
+- Original `ending-c-cardboard-board-v01.webp` remains intact in Git and the HTML for reversible rollback, but is hidden by route-specific CSS. No art files regenerated or changed. All six original part art assets, seven decoys, Save/Resume, audio, scripts, route A/B, drag/drop and tap selection remain as before.
+- Text instructions and aria-labels now describe dashed zones. Test asserts 0/6, 3/6, 6/6, decoy rejection and CSS hiding old recess/labels.
+- Next: verify exact-head CI and Cloudflare, then owner visual sign-off, especially a partly finished board with the large cucumber arm and horizontal bowl arm. Do not merge until approved.
+
+
 
 - Owner-approved G5C/D PR #87 **merged** into `main` at `5a2ccb5f181424eb5335c2ede3ec49f0caca5334`.
 - Inspection of approved `ending-c-cardboard-board-v01.webp` and all six part WebPs found the limb silhouette contours/poses are fundamentally different from the engraved board shapes, particularly one raised hand with cucumber and another horizontal bowl, whereas the board has two vertical arm cavities. These are incompatible without destructive art regeneration; repeated CSS nudges are not a reliable alignment fix.
