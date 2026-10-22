@@ -16,7 +16,28 @@ const screenshot=async(page,name)=>{
   await page.screenshot({path:path.join(evidence,name+".png"),fullPage:true,animations:"disabled"});
 };
 const phase=async page=>page.evaluate(()=>JSON.parse(localStorage.getItem("stephen-martin-game-sp1-save-v1")||"null")?.holidayPhase);
-const progress=async page=>page.evaluate(()=>JSON.parse(localStorage.getItem("stephen-martin-game-sp1-save-v1")||"null")?.rescueProgress);
+const state=async page=>page.evaluate(()=>JSON.parse(localStorage.getItem("stephen-martin-game-sp1-save-v1")||"null"));
+const progress=async page=>(await state(page))?.rescueProgress;
+/* The modern shared Next control plays both recorded reply beats BEFORE
+ * acknowledging a correct puzzle answer; each next-round choice is hidden
+ * until the response has completed. Do not click the next answer early. */
+async function finishCorrectReply(page,route,round){
+  const key=route==="cult"?"summitResponse":"detentionResponse";
+  let clicks=0;
+  while((await state(page))?.[key]?.correct === true && clicks<7){
+    const response=(await state(page))[key];
+    assert.equal(response.round,round,"Unexpected route response round");
+    assert.ok(await page.locator("#holidayNextButton").isVisible(),
+      route+" must offer visible Next while response is speaking");
+    await page.locator("#holidayNextButton").click();
+    clicks++;
+  }
+  const now=await state(page);
+  assert.equal(now?.[key],undefined,route+" reply must finish before another puzzle choice");
+  assert.equal(now?.rescueProgress?.miniGameStage,round+1);
+  assert.ok(clicks>=2 && clicks<=5,route+" should play response lines before continuation");
+  observations.push({case:route+"-acknowledgement-"+(round+1),nextClicks:clicks});
+}
 const visible=async(page,selector)=>await page.locator(selector).isVisible();
 async function openRoute(route,viewport){
   const context=await browser.newContext({viewport,deviceScaleFactor:1,reducedMotion:"reduce"});
@@ -171,9 +192,13 @@ try{
   for(const route of ["cult","detention"]){
     const {page:p,context:c,failures:errors}=await openRoute(route,{width:1366,height:768});
     if(route==="cult"){
-      for(const correct of [2,1,2]){
+      // Deliberately wrong initial answer verifies round and hint state.
+      await p.locator("#summitChoice0").click();
+      assert.equal((await progress(p)).miniGameStage,0,"Wrong Summit offering must not advance");
+      for(const [round,correct] of [2,1,2].entries()){
+        assert.equal((await progress(p)).miniGameStage,round);
         await p.locator("#summitChoice"+correct).click();
-        await p.locator("#holidayNextButton").click();
+        await finishCorrectReply(p,route,round);
       }
       assert.equal(await phase(p),"rescue-route-ending");
       let aSteps=0;
@@ -182,14 +207,20 @@ try{
       }
       assert.equal(aSteps,15,"A dialogue must have 14 lines plus an end-card transition");
     }else{
+      // Two accepted paperwork answers. Each has spoken Official/Paul reply,
+      // so finish the response before the next set of choices can appear.
       await p.locator("#detentionChoice1").click();
-      await p.locator("#holidayNextButton").click();
+      await finishCorrectReply(p,route,0);
       await p.locator("#detentionChoice2").click();
-      await p.locator("#holidayNextButton").click();
+      await finishCorrectReply(p,route,1);
+      assert.equal((await progress(p)).miniGameStage,2);
+      // Drink reveals the real stamp: it is NOT a completed form.
       await p.locator("#detentionChoice2").click();
+      assert.equal((await progress(p)).finished,false);
       await p.locator("#detentionStampButton").click();
       await p.locator("#detentionPermitButton").click();
-      await p.locator("#holidayNextButton").click();
+      assert.equal((await progress(p)).finished,true);
+      await finishCorrectReply(p,route,2);
       assert.equal(await phase(p),"rescue-route-ending");
       let bSteps=0;
       while(await phase(p)==="rescue-route-ending" && bSteps<16){
