@@ -1,5 +1,14 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G5 Ending C refinement planned (22 October 2026)
+
+- **GitHub:** connected, `main` confirmed at `997bf191c319fe4a86a1890d780c98ef53ed3bd4` after owner-approved G4G final illustration / compact albums merged via PR #83.
+- **Owner-reviewed 10 Ending C defects** entered into `ROADMAP.md` G5A–G5H and comprehensive spec `docs/story/GAME-SP4.1G5-ENDING-C-REFINEMENT-PLAN.md`. Includes spa labels, four audio corrections, laptop puzzle scroll, invisible Power On CTA, button alignment, mismatched slot silhouettes and bespoke spa finale.
+- **Near-term:** Start G5A route-specific wording; G5B first audit source files vs double playback, then provide actual recording IDs/directions; tackle G5C+D no-scroll fit before G5E slot decision. Owner to approve simplified slot concept if alignment cannot be fixed cheaply.
+- **Artwork plan:** real Stephen irritated in the spa background while David/Paul inappropriately hug/present a cardboard Stephen. Not generated or approved. G5F/G5G later, G5H full regression.
+- **Separate outstanding:** G4H Ending B regression (non-blocking); G4C optional extra transition art deferred. Planning branch alone changes no runtime game files.
+
+
 ## CURRENT — GAME-SP4.1G4G Ending B finale artwork (21 October 2026)
 
 - G4D–G4F PR #82 approved, merged and verified on main as `7cdf0af19acae182d38f97e89bff8fdaa6e1973a`, 254/254 checks passed before merge.
