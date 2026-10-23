@@ -94,7 +94,7 @@ async function verifyBrowser(page,label,exceptions=[]){
   });
   assert.ok(result.scrollWidth<=result.viewport[0]+2,label+": page horizontal overflow ("+JSON.stringify(result)+")");
   assert.equal(result.albumLinks,6);
-  assert.ok(result.art.includes("ending-c-finale-standee-celebration-v01.png"),label+": missing Ending C finale");
+  assert.ok(result.art.includes("ending-c-finale-standee-celebration-v01.webp"),label+": missing Ending C finale");
   if(result.viewport[0]>800){
     assert.ok(result.toolbar.w<=280,label+": old toolbar obscures David");
     assert.ok(result.caption.right<=result.album.x+3,label+": caption/album overlap");

@@ -141,3 +141,25 @@ test("GAME-SP4.1A does not preload actors hidden by a different route's CSS",asy
   assert.ok(p.loaded.some(x=>x.endsWith("/correct-route.webp")));
   assert.ok(!p.loaded.some(x=>x.endsWith("/other-route.webp")));
 });
+
+test("V1 loader shares warm-ahead and active-scene decode for the same image",async()=>{
+  const p=harness();
+  let ready=0;
+  p.loader.warm("./one.webp");
+  assert.equal(p.loader.present("menu",p.stage("./one.webp"),()=>ready++),true);
+  await p.settle();
+  assert.equal(ready,1);
+  assert.equal(p.loader.busy(),false);
+  assert.equal(p.loaded.filter(u=>u.endsWith("/one.webp")).length,1,
+    "warm-ahead and scene decode must reuse a single in-flight image");
+  assert.equal(p.loaded.filter(u=>u.endsWith("/background.webp")).length,1);
+});
+test("V1 loader permits retry after a failed warm-ahead decode",async()=>{
+  const p=harness({failure:true});
+  p.loader.warm("./one.webp");
+  await p.settle();
+  p.loader.present("later",p.stage("./one.webp"),()=>{});
+  await p.settle();
+  assert.equal(p.loaded.filter(u=>u.endsWith("/one.webp")).length,2,
+    "failed decode must be retryable, not permanently cached");
+});

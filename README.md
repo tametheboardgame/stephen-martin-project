@@ -6,7 +6,7 @@
 - The Office of Ceremonial Misunderstandings: a bureaucracy and rubber-stamp escape.
 - Total Renewal Spa: a cardboard souvenir rebuilding puzzle and the appearance of unharmed Stephen alongside a ludicrously taped-together cardboard version.
 
-The intended first playthrough is **15–25 minutes**, including one ending. All three ending routes and their illustrated assets have been integrated into `main` by 18 October 2026 (Ending C merge `d3d7534`). **This is a first-version playtest build, not a finished or authorised public release.** The final end-to-end human timing, accessibility, voice and visual consistency checks remain open.
+The intended first playthrough is **15–25 minutes**, including one ending. **V1 gameplay and all three illustrated endings are owner-accepted.** G5H completed automated route A/B/C and viewport regression on 23 October 2026. The V1 final technical audit and delivery optimisation are documented separately. This is a playable V1, **not an authorisation for additional public promotion or launch**.
 
 ## Current work and documentation
 
@@ -28,14 +28,16 @@ Requires Node.js and npm. The application is plain HTML/CSS/JavaScript with stat
 
 `npm run build` creates `dist/` with the whitelisted game scripts, approved artwork and permitted audio. Cloudflare Pages is configured for **no framework**, build command `npm run build` and output directory `dist`. Production tracks `main`; short-lived `agent/*` branches have independent review previews.
 
-## What still needs refining
+## V1 close-out and optimisation
 
-The **GAME-SP4.1** plan focuses on: an accessible current-scene loading screen and smarter image priority, fixed David expression registration in Back in England, lighter Summit entrance, consistently named speech bubbles after choices, speaker highlighting across every scene, illustrated time/travel transitions, selective small expression/movement polish, and completion of currently unvoiced route/ending dialogue as recordings become available. The remaining Ending C board cut-out shape precision is deferred at the owner's request.
+**Status:** Feature-complete, all three endings accepted. The final roadmap is closed for V1; optional new route handoff art, extra acting packs, precision silhouette-registration and a comic pilot were explicitly not made V1 requirements. The historical roadmap preserves their original planning language. See the [final technical audit](docs/story/V1-FINAL-TECHNICAL-AUDIT.md) and [current status](STATUS.md) for authoritative results.
 
-There are **112 presently whitelisted dialogue MP3s** in the repo, but not every line in the three endings is yet voiced. The game plays unvoiced material by text timing with normal pause/next behaviour. Continue recording only from the **approved scripts and file-ID inventory**, without inventing extra real-person details.
+**Audio:** 254 approved dialogue MP3s and two opening song MP3s are included by the build whitelist. G5B's four corrected Ending C recordings are locked to their SHA-256 hashes. Optional future dialogue expansion is not a blocker for this V1.
+
+**Delivery:** The exact owner-approved Ending C PNG stays archived; a pixel-identical lossless WebP is delivered instead. Legacy baseline portraits and 18 reference-only expression crops remain in source history but are excluded from the deployed bundle. Runtime artwork is scene-gated. Verification now includes a post-build output inventory check with `scripts/v1-dist-audit.mjs`.
 
 ## Safety, rights and release gates
 
 The story is satire. Stephen Martin is the only permitted real-world full name in project material; David and Paul are fictional first-name character labels. Do not commit identifying employers, private messages, real-life third parties, identifiable travel/location metadata or unauthorised audio. Art/voice requires owner approval and a recorded asset provenance; no new unreviewed image should be treated as canonical.
 
-GitHub and Cloudflare preview resources can be publicly accessible. **Merging a PR does not mean the project owner authorised public promotion or release.** Obtain separate final sign-off after three complete route playthroughs, responsive/keyboard/touch/audio tests, runtime review and the privacy check.
+GitHub and Cloudflare preview resources can be publicly accessible. The owner has accepted V1 playability and the completed automated three-ending regression suite, and has waived additional formal timed/device tests for this private first version; no unmeasured playthrough timings or physical-device certification are claimed. **Merging the final optimisation PR does not authorise new public marketing or promotion.** Check artwork/voice rights and fictionalisation before any further outward-facing release.

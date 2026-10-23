@@ -12,6 +12,8 @@
   const MAX_WAIT_MS = 7000;
   const SHOW_CONTINUE_MS = 2200;
   const decoded = new Set();
+  // Share simultaneous scene and warm-ahead image decoding per URL.
+  const inFlight = new Map();
   let activeKey = null;
   let activeToken = 0;
   let activeReady = null;
@@ -68,7 +70,9 @@
   }
   function decode(url) {
     if (decoded.has(url)) return Promise.resolve(true);
-    return new Promise(resolve => {
+    const existing = inFlight.get(url);
+    if (existing) return existing;
+    const request = new Promise(resolve => {
       const image = new window.Image();
       let settled = false;
       const finish = good => {
@@ -89,6 +93,10 @@
         finish(image.naturalWidth > 0);
       }
     });
+    // A failure is not permanent: remove its promise so future scenes retry.
+    const shared = request.then(good => { inFlight.delete(url); return good; });
+    inFlight.set(url, shared);
+    return shared;
   }
   function complete(token, interrupted = false) {
     if (token !== activeToken) return;

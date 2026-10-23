@@ -1,5 +1,13 @@
 # Project status
 
+## CURRENT — V1 owner accepted; final optimisation review (23 October 2026)
+
+- All three endings are feature-complete and accepted. G5H PR #90 merged to main (`1469594`), with 271/271 tests and successful Chromium A/B/C browser regression. No recorded human timing or physical-device test is claimed.
+- Final engineering branch `agent/v1-final-audit-optimisation` performs a last bounded code and asset audit, described in `docs/story/V1-FINAL-TECHNICAL-AUDIT.md`.
+- Original G5F PNG remains untouched. Its pixel-identical lossless WebP (1,943,888 B) replaces the 2,715,017 B image in the published game. Three approved baseline portraits and 18 unused reference expression crops remain in Git, not the deployment. Expected distribution reduction: **3,278,517 bytes (3.13 MiB)**. Image decode in-flight work is deduplicated.
+- Final gate is fresh Node suite, production asset output audit, Cloudflare preview and Chromium A/B/C browser regression. Close this branch after all pass.
+- The roadmap has been closed for V1. Further transitions, extra animations, exact cardboard silhouettes, secret payoff and comic are not V1 requirements. No new public marketing/release is authorised by this engineering acceptance.
+
 ## CURRENT — GAME-SP4.1G5H all-ending QA (22 October 2026)
 
 - Approved G5F/G5G artwork and hub layout merged in PR #89, merge `0f16c47285395040d5a31e6c373765c63a69d348`; baseline is stable `main`.

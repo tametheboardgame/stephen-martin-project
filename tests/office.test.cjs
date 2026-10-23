@@ -6254,7 +6254,7 @@ test("G5G places Ending C caption lower-left and albums lower-right, without hid
   const route='rescueEndingSummary[data-route="reassemble"]';
   for(const target of [".rescue-route-intro-stage",".rescue-travel-panel",".bls-albums",".wall-action-strip"])
     assert.ok(styles.includes(route+" "+target));
-  assert.ok(styles.includes("ending-c-finale-standee-celebration-v01.png"));
+  assert.ok(styles.includes("ending-c-finale-standee-celebration-v01.webp"));
   assert.match(clean,/\.rescue-travel-panel \{\s*top:auto;left:3%;right:auto;bottom:15%;width:min\(50%,620px\);\s*max-height:none;overflow:visible;/);
   assert.match(clean,/\.bls-albums \{\s*top:auto;right:3%;bottom:15%;width:min\(27%,290px\);\s*max-height:none;overflow:visible;/);
   assert.match(styles,/@media \(min-width:801px\) and \(max-height:650px\)/);

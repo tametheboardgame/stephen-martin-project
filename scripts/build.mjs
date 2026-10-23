@@ -8,7 +8,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const output = path.join(root, "dist");
 const files = ["index.html", "src/office-data.js", "src/reactions.js", "src/china-data.js", "src/rescue-framework.js", "src/summit-data.js", "src/detention-data.js", "src/reassemble-data.js", "src/asset-loader.js", "src/game.js", "src/styles.css"];
 const imageSource = "public/assets/generated/characters";
-const images = ["stephen-martin-baseline.webp", "david-baseline.webp", "paul-baseline.webp", "stephen-office-seated-neutral-v01.webp", "stephen-office-seated-amused-v01.webp", "stephen-office-seated-confused-v01.webp", "stephen-office-seated-annoyed-v01.webp", "stephen-office-seated-exasperated-v01.webp", "stephen-office-seated-laughing-v01.webp", "david-office-seated-neutral-v01.webp", "david-office-seated-confident-v01.webp", "david-office-seated-systems-expert-v01.webp", "david-office-seated-shocked-v01.webp", "david-office-seated-frustrated-v01.webp", "david-office-seated-serious-v01.webp", "paul-office-seated-neutral-v01.webp", "paul-office-seated-confused-v01.webp", "paul-office-seated-pleased-v01.webp", "stephen-holiday-standing-neutral-v01.webp", "great-wall-summit-promoter-standing-v01.webp", "china-banquet-attendant-standing-v01.webp", "stephen-holiday-forbidden-city-pleased-v01.webp", "china-night-market-spa-representative-v01.webp", "stephen-night-market-skewer-v01.webp", "david-hotel-standing-investigator-v01.webp", "paul-hotel-standing-puzzled-v01.webp", "summit-david-speaking-v01.webp", "summit-paul-wary-v01.webp", "summit-gatekeeper-v01.webp", "summit-stephen-seated-chairman-v02.webp", "summit-throne-david-confrontational-v01.webp", "summit-throne-paul-astonished-v01.webp", "summit-throne-attendant-fan-v01.webp", "summit-throne-attendant-tray-v01.webp", "summit-throne-attendant-ewer-v01.webp", "summit-throne-attendant-towel-v01.webp"];
+const images = ["stephen-office-seated-neutral-v01.webp", "stephen-office-seated-amused-v01.webp", "stephen-office-seated-confused-v01.webp", "stephen-office-seated-annoyed-v01.webp", "stephen-office-seated-exasperated-v01.webp", "stephen-office-seated-laughing-v01.webp", "david-office-seated-neutral-v01.webp", "david-office-seated-confident-v01.webp", "david-office-seated-systems-expert-v01.webp", "david-office-seated-shocked-v01.webp", "david-office-seated-frustrated-v01.webp", "david-office-seated-serious-v01.webp", "paul-office-seated-neutral-v01.webp", "paul-office-seated-confused-v01.webp", "paul-office-seated-pleased-v01.webp", "stephen-holiday-standing-neutral-v01.webp", "great-wall-summit-promoter-standing-v01.webp", "china-banquet-attendant-standing-v01.webp", "stephen-holiday-forbidden-city-pleased-v01.webp", "china-night-market-spa-representative-v01.webp", "stephen-night-market-skewer-v01.webp", "david-hotel-standing-investigator-v01.webp", "paul-hotel-standing-puzzled-v01.webp", "summit-david-speaking-v01.webp", "summit-paul-wary-v01.webp", "summit-gatekeeper-v01.webp", "summit-stephen-seated-chairman-v02.webp", "summit-throne-david-confrontational-v01.webp", "summit-throne-paul-astonished-v01.webp", "summit-throne-attendant-fan-v01.webp", "summit-throne-attendant-tray-v01.webp", "summit-throne-attendant-ewer-v01.webp", "summit-throne-attendant-towel-v01.webp"];
 
 await rm(output, { recursive: true, force: true });
 await mkdir(path.join(output, "src"), { recursive: true });
@@ -39,12 +39,14 @@ const actualNames = (await readdir(path.join(root, expressionDir))).sort();
 if (actualNames.join("|") !== expectedNames.sort().join("|")) {
   throw new Error("Unexpected expression asset set; expected the 18 approved WebP portraits.");
 }
-await mkdir(path.join(output, expressionDir), { recursive: true });
+// Keep all 18 reference crops in the versioned source archive, but do not
+// ship them. Runtime art always resolves to approved seated/standing sprites
+// and never requests /characters/expressions/*.webp. The source check remains
+// so a later visual refactor cannot silently delete the approved masters.
 for (const name of expectedNames) {
   const relative = path.join(expressionDir, name);
-  const source = path.join(root, relative);
-  if (!(await stat(source)).size) throw new Error("Empty approved expression: " + relative);
-  await copyFile(source, path.join(output, relative));
+  if (!(await stat(path.join(root, relative))).size)
+    throw new Error("Empty approved expression reference: " + relative);
 }
 // The background is separate from all three actors, allowing a matching
 // foreground desk layer without flattening characters or interactive controls.
@@ -292,9 +294,22 @@ if (endingCFinaleBytes.length < 200000 || endingCFinaleBytes.length > 4 * 1024 *
       "6c8bf0a4bd46d43c8997fa5ea1a2fe5c2edc453e7c099199b3946f42bcb00f18") {
   throw new Error("Ending C finale does not match owner-approved G5F art");
 }
-await mkdir(path.dirname(path.join(output,endingCFinale)),{recursive:true});
-await copyFile(path.join(root,endingCFinale),path.join(output,endingCFinale));
+// Preserve the exact PNG above as the source-of-truth in Git/Drive, but
+// publish a pixel-identical lossless WebP. A controlled conversion job
+// compares decoded pixels before committing the derivative. The original
+// 2.7MB PNG must NOT ship alongside the compressed delivery artwork.
+const endingCDelivery = endingCFinale.replace(/\.png$/, ".webp");
+const deliveryBytes = await readFile(path.join(root,endingCDelivery));
+if (deliveryBytes.length < 150000 || deliveryBytes.length >= endingCFinaleBytes.length ||
+    deliveryBytes.toString("ascii",0,4) !== "RIFF" ||
+    deliveryBytes.toString("ascii",8,12) !== "WEBP") {
+  throw new Error("Approved Ending C lossless delivery image is missing or invalid");
+}
+await mkdir(path.dirname(path.join(output,endingCDelivery)),{recursive:true});
+await copyFile(path.join(root,endingCDelivery),path.join(output,endingCDelivery));
 console.log("Approved Ending C G5F finale artwork packaged: 1/1.");
+console.log("G5F delivery optimised: "+endingCFinaleBytes.length+
+  "B master PNG -> "+deliveryBytes.length+"B pixel-identical WebP.");
 
 
 

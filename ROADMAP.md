@@ -1,11 +1,32 @@
 # The Stephen Martin Project: Master Roadmap
 
 **Version:** 1.0 (approved 12 October 2026)  
-**Status:** Chapter 2 G1A–C merged 19 October 2026; G3A/G3B Summit approach polish active on draft branch  
+**Status:** V1 story/game feature-complete and owner-accepted 23 October 2026; final code/asset performance audit is the last engineering gate. Historical package statuses below are archived, not active.  
 **Primary deliverable:** Rescue Stephen Martin from China, a **15–25 minute comedy adventure**  
 **Companion deliverables:** One comedy song; optional illustrated comic pilot  
 **Audience:** Adults  
 **Language:** British English
+
+## V1 closing decision — 23 October 2026 (supersedes historical task statuses)
+
+**Decision:** The owner confirms extensive personal playthroughs are sufficient to accept the existing game. Do **not** add more mandatory gameplay, visual or musical scope. Complete the final code/asset audit and optimisation, retest, then call the initial version **DONE**. The original acceptance target of 15–25 minutes remains a design goal, **not an independently measured claim**.
+
+| Roadmap area | Final V1 disposition |
+| --- | --- |
+| Foundation/characters/story, Phases 0–4 | **Complete / owner accepted** |
+| GAME-SP4.1A–E and chapter/ending polish G0–G3 | **Complete** |
+| Ending B G4A/B/D–G and shared ending hub | **Complete** |
+| Ending C G5A–H | **Complete**; G5H merged as PR #90 with 271 tests and browser A/B/C pass |
+| G4H Ending B regression | **Automated completed**, owner accepts prior manual playthrough experience; no further formal human certification scheduled |
+| SP4.1H voice coverage | **Complete for approved V1**: 254 dialogue MP3s and two songs packaged; new recordings are not a V1 dependency |
+| SP4.1I release candidate | **Owner-accepted gameplay**; this final audit/optimisation PR is the last technical checkpoint before marking the V1 repo frozen |
+| G4C extra route handoff images/voice, SP4.1G extra acting packs, SP4.1J exact cardboard contours | **Closed — not needed for V1**; revisit only as a separate V2 request |
+| Optional secret ending, comic pilot or wider musical work | **Closed for the game V1** (not a blocker) |
+| Production promotion/public launch | **Not authorised by closing engineering work**; requires separate consent and rights/privacy review |
+
+**Final audit:** [V1 code/asset/performance audit](docs/story/V1-FINAL-TECHNICAL-AUDIT.md). The locked source art is archived; lossless delivery art and unused-reference deployment pruning are the only planned asset changes. This section takes precedence over every older "Next", "Draft" or "Not started" line retained below for provenance.
+
+---
 
 ## Privacy and fictionalisation rule (approved 12 October 2026)
 
