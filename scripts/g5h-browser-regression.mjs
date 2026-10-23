@@ -1,0 +1,251 @@
+// GAME-SP4.1G5H: bounded Chromium runtime regression and image evidence.
+// A fixture enters each route at its freshly UNSOLVED puzzle, then performs
+// real browser mouse/keyboard actions. It never invents a solved save.
+// Requires Playwright only in the dedicated QA workflow, not the game bundle.
+import { chromium } from "playwright";
+import { mkdir, writeFile } from "node:fs/promises";
+import assert from "node:assert/strict";
+import path from "node:path";
+
+const origin=process.env.G5H_URL || "http://127.0.0.1:8080";
+const evidence=process.env.G5H_EVIDENCE || "g5h-evidence";
+await mkdir(evidence,{recursive:true});
+const browser=await chromium.launch({headless:true,args:["--no-sandbox"]});
+const observations=[];
+const screenshot=async(page,name)=>{
+  // Do not record a black loading curtain and mistakenly call it an ending
+  // screenshot. The asset loader sets [hidden] only after scene art decodes.
+  await page.locator("#assetLoadingOverlay").waitFor({state:"hidden",timeout:15000});
+  await page.screenshot({path:path.join(evidence,name+".png"),fullPage:true,animations:"disabled"});
+};
+const phase=async page=>page.evaluate(()=>JSON.parse(localStorage.getItem("stephen-martin-game-sp1-save-v1")||"null")?.holidayPhase);
+const state=async page=>page.evaluate(()=>JSON.parse(localStorage.getItem("stephen-martin-game-sp1-save-v1")||"null"));
+const progress=async page=>(await state(page))?.rescueProgress;
+/* The modern shared Next control plays both recorded reply beats BEFORE
+ * acknowledging a correct puzzle answer; each next-round choice is hidden
+ * until the response has completed. Do not click the next answer early. */
+async function finishCorrectReply(page,route,round){
+  const key=route==="cult"?"summitResponse":"detentionResponse";
+  let clicks=0;
+  while((await state(page))?.[key]?.correct === true && clicks<7){
+    const response=(await state(page))[key];
+    assert.equal(response.round,round,"Unexpected route response round");
+    assert.ok(await page.locator("#holidayNextButton").isVisible(),
+      route+" must offer visible Next while response is speaking");
+    await page.locator("#holidayNextButton").click();
+    clicks++;
+  }
+  const now=await state(page);
+  assert.equal(now?.[key],undefined,route+" reply must finish before another puzzle choice");
+  assert.equal(now?.rescueProgress?.miniGameStage,round+1);
+  assert.ok(clicks>=2 && clicks<=5,route+" should play response lines before continuation");
+  observations.push({case:route+"-acknowledgement-"+(round+1),nextClicks:clicks});
+}
+const visible=async(page,selector)=>await page.locator(selector).isVisible();
+async function openRoute(route,viewport){
+  const context=await browser.newContext({viewport,deviceScaleFactor:1,reducedMotion:"reduce"});
+  const page=await context.newPage();
+  const failures=[];
+  page.on("pageerror",error=>failures.push("JS: "+error.message));
+  page.on("response",response=>{
+    if(response.status()===404 && new URL(response.url()).origin===origin)
+      failures.push("404: "+response.url());
+  });
+  await page.goto(origin,{waitUntil:"domcontentloaded"});
+  await page.locator("#menuScreen").waitFor({state:"visible"});
+  await page.evaluate(route=>{
+    const f=window.SMP_RESCUE_FRAMEWORK;
+    if(!f||!f.fresh(route))throw Error("Missing route definitions");
+    const shots=window.SMP_OFFICE_SHOTS;
+    const beatId=shots.at(-1).lines.at(-1).id;
+    const saved={version:3,scene:"holiday",beatId,openingSeen:true,holidayFlowVersion:2,
+      holidayPhase:"rescue-minigame",route,pendingPlan:route,hubMatched:true,
+      wallDecision:route==="cult"?"accept":"decline",
+      palaceDecision:route==="detention"?"accept":route==="reassemble"?"decline":null,
+      marketDecision:route==="reassemble"?"accept":null,
+      rescueProgress:f.fresh(route),assemblyPowered:false};
+    localStorage.setItem("stephen-martin-game-sp1-save-v1",JSON.stringify(saved));
+  },route);
+  await page.reload({waitUntil:"domcontentloaded"});
+  await page.locator("#resumeButton").waitFor({state:"visible"});
+  // Explicit user choice makes the route muted, keeping CI deterministic.
+  await page.locator("#menuSoundButton").click();
+  await page.locator("#menuSoundButton").click();
+  await page.locator("#resumeButton").click();
+  assert.equal(await phase(page),"rescue-minigame");
+  // Manual QA stepping is deterministic only while holiday autoplay is paused.
+  if((await page.locator("#holidayPauseButton").textContent()).includes("Pause"))
+    await page.locator("#holidayPauseButton").click();
+  const branch={cult:"#summitAdmissions",detention:"#detentionPaperwork",reassemble:"#reassembleWorkshop"}[route];
+  await page.locator(branch).waitFor({state:"visible"});
+  return {context,page,failures};
+}
+async function verifyBrowser(page,label,exceptions=[]){
+  const result=await page.evaluate(()=>{
+    const stage=document.querySelector("#rescueEndingSummary:not([hidden]) .rescue-route-intro-stage");
+    const toolbar=document.querySelector("#holidayScreen .china-footer.story-top-controls");
+    const album=document.querySelector("#rescueEndingSummary .bls-albums");
+    const caption=document.querySelector("#rescueEndingSummary .rescue-travel-panel");
+    const rect=e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height,right:r.right,bottom:r.bottom}};
+    return {viewport:[innerWidth,innerHeight],scrollWidth:document.documentElement.scrollWidth,
+      stage:stage?rect(stage):null,toolbar:rect(toolbar),album:rect(album),caption:rect(caption),
+      albumLinks:[...document.querySelectorAll("#rescueEndingSummary .bls-platform-link")].length,
+      art:getComputedStyle(stage).backgroundImage};
+  });
+  assert.ok(result.scrollWidth<=result.viewport[0]+2,label+": page horizontal overflow ("+JSON.stringify(result)+")");
+  assert.equal(result.albumLinks,6);
+  assert.ok(result.art.includes("ending-c-finale-standee-celebration-v01.png"),label+": missing Ending C finale");
+  if(result.viewport[0]>800){
+    assert.ok(result.toolbar.w<=280,label+": old toolbar obscures David");
+    assert.ok(result.caption.right<=result.album.x+3,label+": caption/album overlap");
+  }
+  observations.push({case:label,...result});
+  return result;
+}
+try{
+  const {context,page,failures}=await openRoute("reassemble",{width:1366,height:768});
+  assert.equal((await progress(page)).placedParts.length,0);
+  assert.equal(await page.locator("#assemblyPowerButton").isVisible(),false);
+  assert.equal(await page.locator(".assembly-piece").count(),13);
+  await screenshot(page,"C-laptop-1366x768-0of6");
+  assert.match(await page.locator("#assemblyFeedback").textContent(),/dashed mounting zone/i);
+  const placement=await page.evaluate(()=>{
+    const nav=document.querySelector("#holidayScreen .china-footer.story-top-controls").getBoundingClientRect();
+    const title=document.querySelector("#reassembleWorkshop h2").getBoundingClientRect();
+    const back=document.querySelector("#rescueMiniGameBackButton").getBoundingClientRect();
+    const text=document.createRange();
+    text.selectNodeContents(document.querySelector("#rescueMiniGameProgressLabel"));
+    const status=text.getBoundingClientRect();
+    const overlap=(a,b)=>a.left<b.right && a.right>b.left && a.top<b.bottom && a.bottom>b.top;
+    return {toolbar:{x:nav.x,y:nav.y,w:nav.width,h:nav.height},
+      overlapsTitle:overlap(nav,title),overlapsBack:overlap(nav,back),
+      overlapsFooterStatus:overlap(nav,status)};
+  });
+  assert.equal(placement.overlapsTitle,false,"Ending C toolbar covers puzzle title");
+  assert.equal(placement.overlapsBack,false,"Ending C toolbar covers back button");
+  assert.equal(placement.overlapsFooterStatus,false,"Ending C toolbar covers footer status");
+  observations.push({case:"C-1366x768-controls",placement});
+  // Decoy and incorrect anatomy must leave the cardboard unchanged.
+  await page.locator("#assemblyPiece10").click();
+  await page.locator("#assemblySlot1").click();
+  assert.equal((await progress(page)).placedParts.length,0);
+  await page.locator("#assemblyPiece0").click();
+  await page.locator("#assemblySlot1").click();
+  assert.equal((await progress(page)).placedParts.length,0);
+  for(let i=0;i<3;i++){
+    await page.locator("#assemblyPiece"+i).click();
+    if(i===1){await page.locator("#assemblySlot"+i).focus();await page.keyboard.press("Enter");}
+    else await page.locator("#assemblySlot"+i).click();
+  }
+  assert.equal((await progress(page)).placedParts.length,3);
+  await screenshot(page,"C-laptop-1366x768-3of6");
+  // Save and Continue must preserve fitted parts and not enable power early.
+  await page.locator("#homeButton").click();
+  await page.locator("#resumeButton").click();
+  if((await page.locator("#holidayPauseButton").textContent()).includes("Pause"))
+    await page.locator("#holidayPauseButton").click();
+  assert.equal((await progress(page)).placedParts.length,3);
+  assert.equal(await page.locator("#assemblyPowerButton").isVisible(),false);
+  for(let i=3;i<6;i++){
+    await page.locator("#assemblyPiece"+i).click();
+    await page.locator("#assemblySlot"+i).click();
+  }
+  assert.equal((await progress(page)).placedParts.length,6);
+  assert.ok(await visible(page,"#assemblyPowerButton"));
+  await screenshot(page,"C-laptop-1366x768-6of6");
+  const overflow=await page.evaluate(()=>{
+    const pick=q=>{const x=document.querySelector(q);return {scroll:x.scrollHeight,client:x.clientHeight}};
+    return {workshop:pick("#reassembleWorkshop"),tray:pick(".assembly-tray"),board:pick(".assembly-board")};
+  });
+  for(const [name,v] of Object.entries(overflow))
+    assert.ok(v.scroll<=v.client+3,"1366x768 "+name+" unexpected scrollbar: "+JSON.stringify(v));
+  observations.push({case:"C-puzzle-laptop",overflow});
+  await page.locator("#assemblyPowerButton").click();
+  assert.equal(await phase(page),"rescue-route-ending");
+  let cSteps=0;
+  while(await phase(page)==="rescue-route-ending" && cSteps<17){
+    await page.locator("#holidayNextButton").click();cSteps++;
+  }
+  assert.equal(cSteps,16,"C dialogue must have 15 spoken lines and an end-card transition");
+  assert.equal(await phase(page),"rescue-ending-summary");
+  assert.equal(await page.locator("#rescueSummaryHeading").textContent(),"SOME ASSEMBLY REQUIRED");
+  await screenshot(page,"C-laptop-1366x768-final-hub");
+  await verifyBrowser(page,"C-1366x768");
+  const res=await page.evaluate(()=>{
+    const r=document.querySelector("#holidayScreen .china-footer.story-top-controls").getBoundingClientRect();
+    return {w:r.width,h:r.height};
+  });
+  assert.ok(res.w<=280 && res.h<=148,"G5G.1 toolbar expanded again: "+JSON.stringify(res));
+  for(const [width,height] of [[1440,900],[1600,900],[768,1024],[390,844]]){
+    await page.setViewportSize({width,height});
+    await page.waitForTimeout(150);
+    await screenshot(page,"C-"+width+"x"+height+"-final-hub");
+    await verifyBrowser(page,"C-"+width+"x"+height);
+  }
+  // Returning to a safe route checkpoint cannot retain a completed assembly.
+  await page.locator("#rescueSummaryJumpSelect").selectOption("route");
+  await page.locator("#rescueSummaryJumpButton").click();
+  assert.equal(await phase(page),"rescue-route-intro");
+  assert.equal((await progress(page)).placedParts.length,0);
+  await context.close();
+  if(failures.length)throw Error("Ending C browser errors: "+failures.join(" | "));
+
+  // Independent route A/B smoke: existing authentic puzzle interactions
+  // still lead to their correct summary; the Ending C artwork stays isolated.
+  for(const route of ["cult","detention"]){
+    const {page:p,context:c,failures:errors}=await openRoute(route,{width:1366,height:768});
+    if(route==="cult"){
+      // Deliberately wrong initial answer verifies round and hint state.
+      await p.locator("#summitChoice0").click();
+      assert.equal((await progress(p)).miniGameStage,0,"Wrong Summit offering must not advance");
+      for(const [round,correct] of [2,1,2].entries()){
+        assert.equal((await progress(p)).miniGameStage,round);
+        await p.locator("#summitChoice"+correct).click();
+        await finishCorrectReply(p,route,round);
+      }
+      assert.equal(await phase(p),"rescue-route-ending");
+      let aSteps=0;
+      while(await phase(p)==="rescue-route-ending" && aSteps<16){
+        await p.locator("#holidayNextButton").click();aSteps++;
+      }
+      assert.equal(aSteps,15,"A dialogue must have 14 lines plus an end-card transition");
+    }else{
+      // Two accepted paperwork answers. Each has spoken Official/Paul reply,
+      // so finish the response before the next set of choices can appear.
+      await p.locator("#detentionChoice1").click();
+      await finishCorrectReply(p,route,0);
+      await p.locator("#detentionChoice2").click();
+      await finishCorrectReply(p,route,1);
+      assert.equal((await progress(p)).miniGameStage,2);
+      // Drink reveals the real stamp: it is NOT a completed form.
+      await p.locator("#detentionChoice2").click();
+      assert.equal((await progress(p)).finished,false);
+      await p.locator("#detentionStampButton").click();
+      await p.locator("#detentionPermitButton").click();
+      assert.equal((await progress(p)).finished,true);
+      await finishCorrectReply(p,route,2);
+      assert.equal(await phase(p),"rescue-route-ending");
+      let bSteps=0;
+      while(await phase(p)==="rescue-route-ending" && bSteps<16){
+        await p.locator("#holidayNextButton").click();bSteps++;
+      }
+      assert.equal(bSteps,15,"B dialogue must have 14 lines plus an end-card transition");
+    }
+    assert.equal(await phase(p),"rescue-ending-summary",route+": missing final hub");
+    const title=await p.locator("#rescueSummaryHeading").textContent();
+    assert.notEqual(title,"SOME ASSEMBLY REQUIRED");
+    assert.equal(await p.locator("#rescueEndingSummary").getAttribute("data-route"),route);
+    await screenshot(p,route+"-1366x768-summary");
+    observations.push({case:route+"-summary",title});
+    await c.close();
+    if(errors.length)throw Error(route+" browser errors: "+errors.join(" | "));
+  }
+  await writeFile(path.join(evidence,"results.json"),JSON.stringify({ok:true,observations},null,2));
+  console.log("G5H Chromium PASS: unsolved-to-finished Ending C, decoy/anatomy, keyboard, save/resume, 5 viewport screenshots, safe checkpoint, A/B endings.");
+}catch(err){
+  await writeFile(path.join(evidence,"results.json"),JSON.stringify({ok:false,error:String(err?.stack||err),observations},null,2));
+  console.error(err);
+  process.exitCode=1;
+}finally{
+  await browser.close();
+}

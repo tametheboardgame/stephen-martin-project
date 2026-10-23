@@ -2157,7 +2157,7 @@
               : "Mount "+part.label+" in dashed cardboard target");
           }
           $("assemblyFeedback").textContent = state.assemblyFeedback ||
-            "Select a labelled foam/cardboard part and tap the matching silhouette slot.";
+            "Select a named cardboard part and tap its matching dashed mounting zone.";
           $("assemblyHint").hidden = !progress.hintVisible || progress.finished;
           $("assemblyHint").textContent = selectedPart && assembly.parts.some(part => part.id === selected)
             ? "Paul: Match the "+selectedPart.label+" shape to the standee. He faces us, so his left is on your right."
@@ -2812,7 +2812,7 @@
     if (!item || progress.finished || progress.placedParts.includes(id)) return;
     queueAssemblyVoices([]);
     state.assemblySelectedPart = id;
-    state.assemblyFeedback = item.label+" selected. Tap its matching silhouette slot.";
+    state.assemblyFeedback = item.label+" selected. Tap its matching dashed zone.";
     armAssemblyHint(progress);
     renderHoliday();
   }

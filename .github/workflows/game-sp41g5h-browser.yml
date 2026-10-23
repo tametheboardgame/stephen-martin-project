@@ -1,0 +1,49 @@
+name: GAME-SP4.1G5H browser regression
+on:
+  pull_request:
+    paths:
+      - 'scripts/g5h-browser-regression.mjs'
+      - '.github/workflows/game-sp41g5h-browser.yml'
+      - 'src/**'
+      - 'index.html'
+      - 'public/assets/audio/dialogue/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  g5h-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate scripts, 3 routes, voice and packaged assets
+        run: npm run verify
+      - name: Install Chromium for screenshot QA (runner system libraries preinstalled)
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.56.1
+          npx playwright install chromium
+      - name: Start local game preview
+        run: |
+          node scripts/preview-server.mjs > /tmp/g5h-preview-server.log 2>&1 &
+          echo $! > /tmp/g5h-server.pid
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8080/ -o /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/g5h-preview-server.log
+          exit 1
+      - name: Run real-browser Ending C and A/B route QA
+        run: node scripts/g5h-browser-regression.mjs
+      - name: Attach G5H browser screenshots and structured observations
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-sp41g5h-browser-evidence
+          path: g5h-evidence/
+          if-no-files-found: warn
+          retention-days: 14

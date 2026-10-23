@@ -1,5 +1,13 @@
 # Project status
 
+## CURRENT — GAME-SP4.1G5H all-ending QA (22 October 2026)
+
+- Approved G5F/G5G artwork and hub layout merged in PR #89, merge `0f16c47285395040d5a31e6c373765c63a69d348`; baseline is stable `main`.
+- Draft regression-only PR #90 on `agent/game-sp41g5h-regression`: added `scripts/g5h-browser-regression.mjs`, dedicated `.github/workflows/game-sp41g5h-browser.yml` and `docs/story/GAME-SP4.1G5H-REGRESSION-REPORT.md`. **No shipped gameplay, artwork or dialogue changed.**
+- First GitHub Actions `npm run verify` step **successful** (271 existing automated tests, build asset whitelist, 254 dialogue MP3s). Cloudflare preview **successful**. Headless Chromium screenshot QA in progress, screenshots/JSON due in the `game-sp41g5h-browser-evidence` Actions artifact.
+- QA semantics: existing Node mock tests cover complete narrative scene and puzzle state transitions; Chromium QA starts from genuine *unsolved* route checkpoint saves, not an unbroken 15–25-minute human playthrough. Pending manual checks include sound performance by ear, real-device touch, image taste and true 15–25-minute pacing. No public release authorisation claimed.
+- **Gate:** keep PR #90 draft, inspect/fix any browser CI failures and evidence, obtain owner approval before merging test work. G4H's manual B playthrough remains related; optional G4C transitions deliberately deferred.
+
 ## CURRENT — GAME-SP4.1G5F/G5G Ending C finale art and shared hub (22 October 2026)
 
 - G5E (clean dashed mounting board) was owner-approved and merged in PR #88, merge `0f526a81513c5ea7687773904a3c20af5954c5e7`.
