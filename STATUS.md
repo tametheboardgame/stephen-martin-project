@@ -1,12 +1,14 @@
 # Project status
 
-## CURRENT — V1 owner accepted; final optimisation review (23 October 2026)
+## CURRENT — VERSION 1 DONE (23 October 2026)
 
-- All three endings are feature-complete and accepted. G5H PR #90 merged to main (`1469594`), with 271/271 tests and successful Chromium A/B/C browser regression. No recorded human timing or physical-device test is claimed.
-- Final engineering branch `agent/v1-final-audit-optimisation` performs a last bounded code and asset audit, described in `docs/story/V1-FINAL-TECHNICAL-AUDIT.md`.
-- Original G5F PNG remains untouched. Its pixel-identical lossless WebP (1,943,888 B) replaces the 2,715,017 B image in the published game. Three approved baseline portraits and 18 unused reference expression crops remain in Git, not the deployment. Expected distribution reduction: **3,278,517 bytes (3.13 MiB)**. Image decode in-flight work is deduplicated.
-- Final gate is fresh Node suite, production asset output audit, Cloudflare preview and Chromium A/B/C browser regression. Close this branch after all pass.
-- The roadmap has been closed for V1. Further transitions, extra animations, exact cardboard silhouettes, secret payoff and comic are not V1 requirements. No new public marketing/release is authorised by this engineering acceptance.
+- **Owner accepted the finished three-ending game** and explicitly closed all remaining V1 development packages. This status supersedes historical draft/next-action entries below.
+- Final G5H regression PR #90 was merged (`1469594`); final code/asset optimisation PR #91 merged (`3bfee97559ce3b48c423a2f59c5f2b48a0929094`).
+- **Final CI green:** 273/273 Node tests, post-build `scripts/v1-dist-audit.mjs`, Chromium full A/B/C puzzle/ending flow and desktop/tablet/mobile screenshots; Cloudflare deployment succeeded. Browser evidence run: https://github.com/tametheboardgame/stephen-martin-project/actions/runs/39949979678.
+- **Published output:** 363 files, 43,711,985 bytes. Removed 3,278,517 bytes of unnecessary deployment assets: original G5F PNG retained in Git/Drive, pixel-identical 1,943,888-byte WebP used in the game, 3 archival baseline portraits and 18 reference expression crops left in source rather than dist. Runtime scene decode requests reuse in-flight work.
+- Three superseded historical PRs **#41, #42, #76 closed without merge**. Optional new transition cards, extra expressions, precision cardboard slots, secret ending and comic pilot are **closed for V1**, not outstanding blockers.
+- Owner has played the game extensively and accepts that as human playthrough sign-off; no independently measured 15–25-minute session, formal physical-device certification or further public promotion is claimed or authorised. Existing preview/site visibility is not a new release decision.
+- **No further V1 engineering work is required.** Treat any proposed content or feature changes as separately authorised V2 work.
 
 ## CURRENT — GAME-SP4.1G5H all-ending QA (22 October 2026)
 
