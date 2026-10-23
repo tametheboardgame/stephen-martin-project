@@ -5752,7 +5752,7 @@ body:has(#menuScreen:not([hidden])) main {
   padding:0;
   background:
     linear-gradient(to top,rgba(5,20,36,.26),transparent 48%),
-    url("../public/assets/generated/locations/ending-c-finale-standee-celebration-v01.png")
+    url("../public/assets/generated/locations/ending-c-finale-standee-celebration-v01.webp")
       center center / cover no-repeat;
 }
 #holidayScreen #rescueEndingSummary[data-route="reassemble"] .rescue-travel-panel {
@@ -5852,7 +5852,7 @@ body:has(#menuScreen:not([hidden])) main {
     display:flex;flex-direction:column;gap:8px;
     overflow:visible;
     background-color:#183a3e;
-    background-image:url("../public/assets/generated/locations/ending-c-finale-standee-celebration-v01.png");
+    background-image:url("../public/assets/generated/locations/ending-c-finale-standee-celebration-v01.webp");
     background-repeat:no-repeat;
     background-position:center top;
     background-size:100% auto;
