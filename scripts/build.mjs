@@ -307,8 +307,9 @@ if (deliveryBytes.length < 150000 || deliveryBytes.length >= endingCFinaleBytes.
 }
 await mkdir(path.dirname(path.join(output,endingCDelivery)),{recursive:true});
 await copyFile(path.join(root,endingCDelivery),path.join(output,endingCDelivery));
-console.log("Approved Ending C G5F finale artwork packaged: 1/1 ("+
-  endingCFinaleBytes.length+"B original -> "+deliveryBytes.length+"B lossless WebP).");
+console.log("Approved Ending C G5F finale artwork packaged: 1/1.");
+console.log("G5F delivery optimised: "+endingCFinaleBytes.length+
+  "B master PNG -> "+deliveryBytes.length+"B pixel-identical WebP.");
 
 
 
