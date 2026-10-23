@@ -46,3 +46,17 @@ There are three historical open draft PRs (#41, #42, #76). Their original work h
 ## Roadmap close-out recommendation
 
 Mark G0–G5/G5H as complete; treat SP4.1H as complete for the approved shipped 254 dialogue files, not a guarantee of every imaginable optional narrator line. Mark G4H automated portion complete and owner-accepted remaining manual segment; G4C route-specific new transition art, SP4.1G optional animations, SP4.1J precision cardboard registration, secret endings and comic as **declined/deferred for V1**, not blocking tasks. Reclassify SP4.1I as **owner-accepted V1**, with final audit/optimisation merge as its final engineering checkpoint. Avoid carrying unresolved historical “next” flags into the live status header.
+
+## Completed verification — 23 October 2026
+
+The final optimisation was merged as **PR #91**, merge commit `3bfee97559ce3b48c423a2f59c5f2b48a0929094`. Exact change-head `66878b8c6734236e5c1b315c03f71712035dd3bd` passed:
+
+- **273/273 tests**, including new in-flight decode and failed-image retry tests.
+- **Post-build distribution audit PASS:** 363 files, **43,711,985 bytes**, 254 approved dialogue MP3s and 2 songs, exact original G5F PNG SHA, delivered lossless WebP, no unnecessary reference baseline/expression copies.
+- **Chromium real-browser G5H PASS:** Summit A, detention B, spa C, with C 0/3/6 placement and final image, keyboard and save/restore. Desktop 1366×768, 1440×900, 1600×900, tablet 768×1024 and phone 390×844 screenshots, no detected horizontal overflow or caption/album overlap. The 1366×768 Ending C screenshot was reviewed after WebP replacement, with artwork and control placements intact.
+- **Cloudflare deployment successful:** https://1c64cc99.stephen-martin-project.pages.dev.
+- **GitHub logs/evidence:** https://github.com/tametheboardgame/stephen-martin-project/actions/runs/39949979678 (browser) and https://github.com/tametheboardgame/stephen-martin-project/actions/runs/39949979752 (smoke).
+- Superseded draft PRs #41, #42 and #76 closed without merging obsolete branches. No open V1 roadmap packages remain.
+
+**Disposition:** V1 is **DONE and owner accepted**. Do not reopen the history-only work packages. No new public promotion/release was explicitly authorised by this code merge.
+
