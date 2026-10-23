@@ -81,9 +81,15 @@ jobs:
           test -f dist/public/assets/generated/characters/paul-office-seated-neutral-v01.webp
           test -f dist/public/assets/generated/characters/paul-office-seated-confused-v01.webp
           test -f dist/public/assets/generated/characters/paul-office-seated-pleased-v01.webp
-          test -f dist/public/assets/generated/characters/stephen-martin-baseline.webp
-          test -f dist/public/assets/generated/characters/david-baseline.webp
-          test -f dist/public/assets/generated/characters/paul-baseline.webp
+          test -f public/assets/generated/characters/stephen-martin-baseline.webp
+          test ! -e dist/public/assets/generated/characters/stephen-martin-baseline.webp
+          test -f public/assets/generated/characters/david-baseline.webp
+          test ! -e dist/public/assets/generated/characters/david-baseline.webp
+          test -f public/assets/generated/characters/paul-baseline.webp
+          test ! -e dist/public/assets/generated/characters/paul-baseline.webp
+          test -s dist/public/assets/generated/locations/ending-c-finale-standee-celebration-v01.webp
+          test ! -e dist/public/assets/generated/locations/ending-c-finale-standee-celebration-v01.png
+          test ! -e dist/public/assets/generated/characters/expressions
           test ! -e dist/AGENTS.md
           test ! -e dist/docs
           test ! -e dist/.github
