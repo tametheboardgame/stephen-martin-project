@@ -1,7 +1,7 @@
 # The Stephen Martin Project: Master Roadmap
 
 **Version:** 1.0 (approved 12 October 2026)  
-**Status:** V1 story/game feature-complete and owner-accepted 23 October 2026; final code/asset performance audit is the last engineering gate. Historical package statuses below are archived, not active.  
+**Status:** **V1 DONE — owner-accepted and technically verified 23 October 2026**, final hardening PR #91 merged. All package statuses below the V1 close-out decision are historical.  
 **Primary deliverable:** Rescue Stephen Martin from China, a **15–25 minute comedy adventure**  
 **Companion deliverables:** One comedy song; optional illustrated comic pilot  
 **Audience:** Adults  
@@ -19,7 +19,7 @@
 | Ending C G5A–H | **Complete**; G5H merged as PR #90 with 271 tests and browser A/B/C pass |
 | G4H Ending B regression | **Automated completed**, owner accepts prior manual playthrough experience; no further formal human certification scheduled |
 | SP4.1H voice coverage | **Complete for approved V1**: 254 dialogue MP3s and two songs packaged; new recordings are not a V1 dependency |
-| SP4.1I release candidate | **Owner-accepted gameplay**; this final audit/optimisation PR is the last technical checkpoint before marking the V1 repo frozen |
+| SP4.1I release candidate | **Complete / owner accepted**; final code/asset audit PR #91 merged, 273 tests and A/B/C browser regression green |
 | G4C extra route handoff images/voice, SP4.1G extra acting packs, SP4.1J exact cardboard contours | **Closed — not needed for V1**; revisit only as a separate V2 request |
 | Optional secret ending, comic pilot or wider musical work | **Closed for the game V1** (not a blocker) |
 | Production promotion/public launch | **Not authorised by closing engineering work**; requires separate consent and rights/privacy review |
